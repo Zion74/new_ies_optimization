@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# IDE / editor
+.vscode/
+.history/
+.claude/
+
+# Results (too large for git, regenerate locally)
+Results/
+Population Info/
+
+# Gurobi license
+gurobi.lic
