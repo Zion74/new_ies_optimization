@@ -10,6 +10,16 @@ run.py — CCHP 优化实验启动器
   uv run python run.py --mode custom --nind 40 --maxgen 80 --methods std euclidean
   uv run python run.py --check      # 仅做环境检查，不运行优化
 
+论文四组实验（正式模式）：
+  uv run python run.py --exp 1      # 实验1: 德国×5种方法（创新点1主实验）
+  uv run python run.py --exp 2      # 实验2: 松山湖×方案B+C（普适性验证）
+  uv run python run.py --exp 3      # 实验3: 松山湖×方案C 有/无卡诺电池（创新点2）
+  uv run python run.py --exp 4      # 实验4: 松山湖+卡诺×方案B vs C（串联两个创新点）
+  uv run python run.py --exp all    # 依次运行全部4组实验
+
+  加 --test-run 可用测试参数快速验证流程：
+  uv run python run.py --exp 1 --test-run
+
 模式说明：
   test   快速验证流程是否正常（约 5-10 分钟）
   quick  初步结果，3种方法（约 20-40 分钟）
@@ -70,6 +80,38 @@ METHOD_DESC = {
     "pearson":       "方案D — 皮尔逊相关系数",
     "ssr":           "方案E — 供需重叠度SSR",
     "economic_only": "方案A — 单目标经济最优（基准）",
+}
+
+# ── 论文四组实验定义 ──────────────────────────────────────────────────────
+EXPERIMENTS = {
+    "1": {
+        "name": "实验1: 德国案例×5种方法（创新点1-方法对比）",
+        "case": "german",
+        "carnot": False,
+        "methods": ["economic_only", "std", "euclidean", "pearson", "ssr"],
+        "inherit_population": True,
+    },
+    "2": {
+        "name": "实验2: 松山湖案例×方案B+C（普适性验证）",
+        "case": "songshan_lake",
+        "carnot": False,
+        "methods": ["std", "euclidean"],
+        "inherit_population": True,
+    },
+    "3": {
+        "name": "实验3: 松山湖×方案C 有/无卡诺电池（创新点2）",
+        "case": "songshan_lake",
+        "carnot": "both",  # 特殊标记：先跑无卡诺，再跑有卡诺
+        "methods": ["euclidean"],
+        "inherit_population": False,
+    },
+    "4": {
+        "name": "实验4: 松山湖+卡诺×方案B vs C（串联创新点）",
+        "case": "songshan_lake",
+        "carnot": True,
+        "methods": ["std", "euclidean"],
+        "inherit_population": True,
+    },
 }
 
 
@@ -304,6 +346,10 @@ def parse_args():
                         default="german", help="选择案例（默认德国）")
     parser.add_argument("--carnot", action="store_true",
                         help="启用卡诺电池")
+    parser.add_argument("--exp", choices=["1", "2", "3", "4", "all"],
+                        help="运行论文预设实验（1-4 或 all）")
+    parser.add_argument("--test-run", action="store_true",
+                        help="实验模式用测试参数（nind=10, maxgen=5）快速验证")
     return parser.parse_args()
 
 
@@ -316,6 +362,12 @@ def main():
         ok = run_checks(verbose=True)
         sys.exit(0 if ok else 1)
 
+    # ── 论文实验模式 ──────────────────────────────────────────────────────
+    if args.exp is not None:
+        _run_experiments(args)
+        return
+
+    # ── 原有模式（test/quick/full/custom/交互）────────────────────────────
     # 确定运行配置
     if args.mode is None:
         cfg = interactive_menu()
@@ -377,6 +429,99 @@ def main():
         print("\n\n优化过程出错：")
         traceback.print_exc()
         sys.exit(1)
+
+
+def _run_experiments(args):
+    """运行论文预设实验"""
+    from cchp_gasolution import run_comparative_study
+    from case_config import get_case, enable_carnot_battery
+
+    # 确定参数：--test-run 用小参数快速验证，否则用正式参数
+    if args.test_run:
+        nind, maxgen = 10, 5
+        param_desc = "测试参数 (nind=10, maxgen=5)"
+    else:
+        nind, maxgen = 50, 100
+        param_desc = "正式参数 (nind=50, maxgen=100)"
+
+    # 确定要跑哪些实验
+    if args.exp == "all":
+        exp_ids = ["1", "2", "3", "4"]
+    else:
+        exp_ids = [args.exp]
+
+    print("\n" + "=" * 70)
+    print("  论文实验批量运行")
+    print("=" * 70)
+    print(f"  参数: {param_desc}")
+    print(f"  实验: {', '.join(exp_ids)}")
+    print()
+
+    for exp_id in exp_ids:
+        if exp_id not in EXPERIMENTS:
+            continue
+        exp = EXPERIMENTS[exp_id]
+
+        # 实验3 特殊处理：先跑无卡诺，再跑有卡诺
+        if exp.get("carnot") == "both":
+            _run_one_experiment(
+                exp_id + "a", exp["name"] + "（无卡诺电池）",
+                exp["case"], False, exp["methods"], exp["inherit_population"],
+                nind, maxgen,
+            )
+            _run_one_experiment(
+                exp_id + "b", exp["name"] + "（有卡诺电池）",
+                exp["case"], True, exp["methods"], exp["inherit_population"],
+                nind, maxgen,
+            )
+        else:
+            _run_one_experiment(
+                exp_id, exp["name"],
+                exp["case"], exp.get("carnot", False),
+                exp["methods"], exp["inherit_population"],
+                nind, maxgen,
+            )
+
+    print("\n" + "=" * 70)
+    print("  全部实验完成！")
+    print("=" * 70)
+
+
+def _run_one_experiment(exp_id, name, case_name, carnot, methods,
+                        inherit_population, nind, maxgen):
+    """运行单组实验"""
+    from cchp_gasolution import run_comparative_study
+    from case_config import get_case, enable_carnot_battery
+
+    print("\n" + "#" * 70)
+    print(f"  [{exp_id}] {name}")
+    print("#" * 70)
+
+    case_config = get_case(case_name)
+    if carnot:
+        enable_carnot_battery(case_config)
+
+    cb_str = " + 卡诺电池" if carnot else ""
+    print(f"  案例: {case_config['description']}{cb_str}")
+    print(f"  方法: {methods}")
+    print(f"  参数: nind={nind}, maxgen={maxgen}")
+
+    t0 = time.time()
+    try:
+        results, result_dir = run_comparative_study(
+            nind=nind,
+            maxgen=maxgen,
+            pool_type="Process",
+            inherit_population=inherit_population,
+            methods_to_run=methods,
+            case_config=case_config,
+        )
+        elapsed = time.time() - t0
+        print_result_summary(results, elapsed, result_dir)
+    except Exception:
+        print(f"\n  [{exp_id}] 出错：")
+        traceback.print_exc()
+        print(f"  [{exp_id}] 跳过，继续下一组实验\n")
 
 
 if __name__ == "__main__":

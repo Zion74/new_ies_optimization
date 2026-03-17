@@ -1,31 +1,32 @@
-toolName: view_files
-            
-status: success
-          
-            
-filePath: d:\Onedrive\研究生\我的成果\sci\源荷匹配的分布式电热综合能源系统优化规划\代码探索\optimization\gaproblem.py
-          
+松山湖案例集成：
 
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: d:\Onedrive\研究生\我的成果\sci\源荷匹配的分布式电热综合能源系统优化规划\代码探索\optimization\operation.py
-          
+新建 case_config.py — 案例配置系统，支持德国/松山湖两个案例的参数切换
+新建 scripts/generate_songshan_data.py — 基于PDF月度数据合成了松山湖8760小时负荷数据（冷主导，冷电比1.53，年冷负荷291万kW）
+生成了 data/songshan_lake_data.csv 和 data/songshan_lake_typical.xlsx
+卡诺电池集成：
 
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: d:\Onedrive\研究生\我的成果\sci\源荷匹配的分布式电热综合能源系统优化规划\代码探索\optimization\gasolution.py
-          
-你好！不用担心，我一定会用最通俗易懂的语言，结合代码逻辑，把你这个代码库扒得干干净净。
+修改 operation.py — OperationModel 参数化（设备效率从config读取），新增卡诺电池 OEMOF 建模（GenericStorage + 余热回收 Transformer）
+修改 cchp_gaproblem.py — CCHPProblem 接受 case_config，支持卡诺电池2个额外决策变量（功率+容量），经济目标和匹配度计算均从配置读取
+修改 cchp_gasolution.py — run_comparative_study 传递 case_config，结果目录包含案例名
+修改 run.py — 新增 --case 和 --carnot 命令行参数
+目录整理：
+
+数据文件移入 data/（mergedData.csv, typicalDayData.xlsx, optimizationData.xlsx, songshan湖数据）
+辅助脚本移入 scripts/（generate_songshan_data.py, kmeans_clustering.py, test_feasibility.py）
+用法：
+
+
+# 德国案例（默认，与之前完全一致）
+uv run python run.py --mode test
+
+# 松山湖案例
+uv run python run.py --mode test --case songshan_lake
+
+# 松山湖 + 卡诺电池
+uv run python run.py --mode test --case songshan_lake --carnot
+
+
+
 
 这个代码库本质上是在做一个**“双层优化”**的研究。
 *   **外层（规划层）：** 决定“买多大的设备”（比如光伏装多少、电池买多大）。这是由 `geatpy`（遗传算法）控制的。

@@ -335,6 +335,9 @@ def save_method_results(result, result_dir, method_folder_name):
 
     # 5. 保存 Pareto 前沿解（带变量名的完整表格）
     var_names = ["PV", "WT", "GT", "HP", "EC", "AC", "ES", "HS", "CS"]
+    # 卡诺电池启用时多2个决策变量
+    if BestIndi.Phen.shape[1] > 9:
+        var_names = var_names + ["CB_Power", "CB_Capacity"]
 
     if method == "economic_only":
         obj_names = ["Economic_Cost"]

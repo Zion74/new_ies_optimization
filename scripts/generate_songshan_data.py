@@ -108,25 +108,44 @@ def generate_dongguan_climate(n_hours=8760):
 # 2. 负荷数据合成
 # ============================================================
 
-# 松山湖PDF表4/表5 月度数据（万kW 或 万kWh）
+# ============================================================
+# 松山湖PDF关键数据（表4/表5 + 正文）
+# ============================================================
+#
+# PDF核心数据：
+#   - 年总电负荷: 166.64 万kWh
+#   - 空调耗电:   97.05 万kWh (占58.24%)
+#   - 非空调电:   69.59 万kWh (照明、办公、实验设备)
+#   - 年冷负荷:   291.15 万kW (82.7万冷吨)
+#   - 冷电比:     4.18 (= 冷负荷需求 / 空调耗电 ≈ 291/69.7)
+#     注意：这里的"冷电比"是冷负荷与空调耗电之比，不是冷负荷与总电负荷之比
+#   - 峰值冷负荷: 5797.21 kW (A3:924.91 + A4:1395.17 + A5:3477.13)
+#   - 运行时间:   8:00-19:00, 最多3300h; 供冷季4-11月, 最多2800h
+#
+# 表4 逐月数据：
 MONTHLY_COOL_LOAD = {
-    # 月份: 合计供冷量（万kW）
+    # 月份: 合计供冷量（万kW·h）
     1: 2.73, 2: 3.18, 3: 3.05, 4: 11.26,
     5: 20.49, 6: 35.74, 7: 49.34, 8: 47.83,
     9: 47.27, 10: 40.23, 11: 24.79, 12: 5.19,
 }
 
-MONTHLY_ELE_SUPPLY = {
-    # 月份: 合计供电量（万kWh）
-    1: 3.44, 2: 4.35, 3: 5.03, 4: 4.10,
-    5: 8.08, 6: 8.71, 7: 8.70, 8: 7.16,
-    9: 9.23, 10: 11.11, 11: 9.63, 12: 4.05,
-}
+# 表4 逐月空调耗电（从PDF图3推算，按月度冷负荷占比分配97.05万kWh）
+# 空调耗电 ∝ 冷负荷（因为空调耗电就是驱动制冷的电力消耗）
+_TOTAL_AC_ELE = 97.05  # 万kWh
+_COOL_SUM = sum(MONTHLY_COOL_LOAD.values())  # 291.10
+MONTHLY_AC_ELE = {m: MONTHLY_COOL_LOAD[m] / _COOL_SUM * _TOTAL_AC_ELE for m in range(1, 13)}
 
-# 年总电负荷 166.64万kWh，空调耗电97.05万kWh
-# 非空调电负荷 ≈ 69.59万kWh（照明、办公、实验设备等）
+# 非空调电负荷按月均匀分配（照明、办公、实验设备，全年相对稳定）
 ANNUAL_NON_AC_ELE = 69.59  # 万kWh
 ANNUAL_TOTAL_ELE = 166.64  # 万kWh
+MONTHLY_NON_AC_ELE = {m: ANNUAL_NON_AC_ELE / 12 for m in range(1, 13)}
+
+# 每月总电负荷 = 非空调电 + 空调耗电
+MONTHLY_TOTAL_ELE = {m: MONTHLY_NON_AC_ELE[m] + MONTHLY_AC_ELE[m] for m in range(1, 13)}
+
+# 峰值冷负荷
+PEAK_COOL_LOAD = 5797.21  # kW
 
 
 def generate_load_profiles(temperature, n_hours=8760):
@@ -135,7 +154,7 @@ def generate_load_profiles(temperature, n_hours=8760):
 
     松山湖负荷特征：
     - 冷负荷主导（冷电比4.18），峰值5797kW
-    - 电负荷：工作日8:00-19:00高，夜间低
+    - 电负荷 = 非空调基础电 + 空调耗电，年总量166.64万kWh
     - 热负荷：以生活热水为主，全年较小
     - 运行时间：8:00-19:00
     """
@@ -145,69 +164,88 @@ def generate_load_profiles(temperature, n_hours=8760):
     month = np.array([_day_to_month(d) for d in day_of_year])
 
     # ---- 冷负荷 ----
+    # 月度总量严格匹配PDF表4，日内分布基于温度和时间
+    # 两层分配：(1) 月→日：按日最高温度加权 (2) 日→时：按时温度+正弦曲线
     cool_load = np.zeros(n_hours)
     for m in range(1, 13):
         mask = month == m
-        n_hours_month = np.sum(mask)
-        if n_hours_month == 0:
+        if not np.any(mask):
             continue
 
-        total_cool_kwh = MONTHLY_COOL_LOAD[m] * 1e4  # 万kW → kW·h
+        total_cool_kwh = MONTHLY_COOL_LOAD[m] * 1e4  # 万kW·h → kW·h
 
-        # 冷负荷日内分布：8:00-19:00有冷需求，与温度正相关
-        hourly_weight = np.zeros(n_hours)
-        for i in range(n_hours):
-            if not mask[i]:
-                continue
-            h = hour_of_day[i]
-            if 8 <= h <= 19:
-                # 温度越高冷负荷越大
-                T = max(temperature[i] - 18, 0)  # 18°C以上才有冷需求
-                # 日内曲线：午后峰值
-                time_factor = np.sin(np.pi * (h - 8) / 11) ** 0.8
-                hourly_weight[i] = T * time_factor + 0.1
-            else:
-                hourly_weight[i] = 0.02  # 夜间极少量
+        # (1) 月→日分配：按每天最高温度加权，热天分配更多冷量
+        days_in_m = sorted(set(day_of_year[mask]))
+        daily_Tmax = {}
+        for d in days_in_m:
+            d_mask = day_of_year == d
+            daily_Tmax[d] = np.max(temperature[d_mask])
 
-        # 归一化到月度总量
-        w_sum = np.sum(hourly_weight[mask])
-        if w_sum > 0:
-            cool_load[mask] = hourly_weight[mask] / w_sum * total_cool_kwh
+        daily_weight = {d: max(T - 14, 0.1) ** 2.5 for d, T in daily_Tmax.items()}
+        dw_sum = sum(daily_weight.values())
+        daily_cool_kwh = {d: daily_weight[d] / dw_sum * total_cool_kwh for d in days_in_m}
 
-    # 限幅到峰值
-    cool_load = np.clip(cool_load, 0, 5800)
+        # (2) 日→时分配：8:00-19:00有冷需求，午后峰值
+        for d in days_in_m:
+            d_mask = day_of_year == d
+            hourly_weight = np.zeros(n_hours)
+            for i in range(n_hours):
+                if not d_mask[i]:
+                    continue
+                h = hour_of_day[i]
+                if 8 <= h <= 19:
+                    T = max(temperature[i] - 14, 0.1) ** 2.0
+                    time_factor = np.sin(np.pi * (h - 8) / 11) ** 2.5
+                    hourly_weight[i] = T * time_factor + 0.005
+                else:
+                    hourly_weight[i] = 0.002
+
+            hw_sum = np.sum(hourly_weight[d_mask])
+            if hw_sum > 0:
+                cool_load[d_mask] = hourly_weight[d_mask] / hw_sum * daily_cool_kwh[d]
+
+    # 限幅到设计峰值（PDF: 5797 kW）
+    cool_load = np.clip(cool_load, 0, PEAK_COOL_LOAD)
 
     # ---- 电负荷 ----
+    # 电负荷 = 非空调基础电 + 空调耗电
+    # 两部分分别按月度总量控制，避免重复计算
     ele_load = np.zeros(n_hours)
 
-    # 非空调基础电负荷（照明、办公、实验设备）
-    base_monthly = ANNUAL_NON_AC_ELE * 1e4 / 12  # 均匀分布到每月
     for m in range(1, 13):
         mask = month == m
         n_hours_month = np.sum(mask)
         if n_hours_month == 0:
             continue
 
+        # (a) 非空调基础电负荷：工作时间高，夜间低
+        non_ac_total = MONTHLY_NON_AC_ELE[m] * 1e4  # 万kWh → kWh
+        base_weight = np.zeros(n_hours)
         for i in range(n_hours):
             if not mask[i]:
                 continue
             h = hour_of_day[i]
-            # 工作时间高，夜间低
             if 8 <= h <= 19:
-                ele_load[i] = base_monthly / n_hours_month * 2.2
+                base_weight[i] = 2.2
             elif 7 <= h < 8 or 19 < h <= 22:
-                ele_load[i] = base_monthly / n_hours_month * 1.2
+                base_weight[i] = 1.2
             else:
-                ele_load[i] = base_monthly / n_hours_month * 0.4
+                base_weight[i] = 0.4
 
-    # 空调耗电 ≈ 冷负荷 / 平均COP
-    avg_cop = 3.2  # 综合COP（含溴化锂+电制冷+蓄冷）
-    ac_ele = cool_load / avg_cop
-    ele_load += ac_ele
+        bw_sum = np.sum(base_weight[mask])
+        if bw_sum > 0:
+            ele_load[mask] += base_weight[mask] / bw_sum * non_ac_total
 
-    # 添加随机扰动
-    ele_load *= (1 + np.random.normal(0, 0.05, n_hours))
-    ele_load = np.clip(ele_load, 20, 3500)
+        # (b) 空调耗电：与冷负荷同步（空调耗电就是驱动制冷的电力）
+        ac_total = MONTHLY_AC_ELE[m] * 1e4  # 万kWh → kWh
+        cool_month = cool_load[mask]
+        cool_month_sum = np.sum(cool_month)
+        if cool_month_sum > 0:
+            ele_load[mask] += cool_month / cool_month_sum * ac_total
+
+    # 添加小幅随机扰动（±3%）
+    ele_load *= (1 + np.random.normal(0, 0.03, n_hours))
+    ele_load = np.clip(ele_load, 10, 2000)
 
     # ---- 热负荷 ----
     # 松山湖以生活热水为主，全年较小且平稳
