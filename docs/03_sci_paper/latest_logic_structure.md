@@ -49,6 +49,15 @@ SCI 稿需要更强证据，但仍然要守边界：
 6. `Results and discussion`：实验 1-4 + 后验指标 + 敏感性 / 韧性补充。
 7. `Conclusions`：方法、设备、证据链三层收束。
 
+建议把 `Results and discussion` 内部固定为以下顺序：
+
+- 6.1 Experiment 1: German 5-method comparison
+- 6.2 Post-optimization 8760h operational validation
+- 6.3 Experiment 2: Cross-climate validation on Songshan Lake
+- 6.4 Experiment 3: Carnot battery ablation
+- 6.5 Experiment 4: Joint validation under Carnot integration
+- 6.6 Integrated discussion and limitations
+
 ## 5. 术语约束
 
 - SCI 稿主术语：**EQD**。

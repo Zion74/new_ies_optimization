@@ -57,3 +57,8 @@
 
 如果 SCI 主线从“规划层 + 设备层”变成别的结构，先改 `latest_logic_structure.md`，再改本映射表；不要只修改 `main.tex` 和 `sections/`。
 
+## 6. 配套执行文档
+
+- 服务器 full 实验清单：`docs/03_sci_paper/server_full_run_checklist.md`
+- 图表与表格计划：`docs/03_sci_paper/figure_table_plan.md`
+
