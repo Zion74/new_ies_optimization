@@ -38,25 +38,23 @@ from multiprocessing import Pool as ProcessPool
 from multiprocessing.dummy import Pool as ThreadPool
 
 
-# ========== 热力学参数（能质系数计算） ==========
-T0 = 298.15  # 环境温度 25°C (K)
-T_HEAT = 343.15  # 供热温度 70°C (K)
-T_COOL = 280.15  # 供冷温度 7°C (K)
+def _init_worker():
+    """子进程初始化：设置 Gurobi 许可证路径，确保多进程下 Gurobi 可用"""
+    import os
+    os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
 
-# 能质系数（基于卡诺因子）
-LAMBDA_E = 1.0  # 电能权重（基准值）
-LAMBDA_H = 0.6
-LAMBDA_C = 0.5
-# LAMBDA_H = 1 - T0 / T_HEAT  # 热能权重 ≈ 0.131
-# LAMBDA_C = (T0 - T_COOL) / T_COOL  # 冷能权重 ≈ 0.064
 
-# print(f"能质系数: λ_e={LAMBDA_E:.3f}, λ_h={LAMBDA_H:.3f}, λ_c={LAMBDA_C:.3f}")
+# ========== 能质系数默认值（仅作为 config 缺失时的回退） ==========
+# 正常流程下由 case_config.get_case() 自动计算卡诺㶲系数注入 config
+LAMBDA_E = 1.0
+LAMBDA_H = 0.131  # 1 - 298.15/343.15（德国案例默认值）
+LAMBDA_C = 0.064  # 298.15/280.15 - 1（德国案例默认值）
 
 
 class CCHPProblem(ea.Problem):
     """电-热-冷综合能源系统规划问题（CCHP）"""
 
-    def __init__(self, PoolType, method="euclidean", case_config=None):
+    def __init__(self, PoolType, method="euclidean", case_config=None, num_workers=None):
         """
         初始化问题
 
@@ -127,9 +125,9 @@ class CCHPProblem(ea.Problem):
         if self.PoolType == "Thread":
             self.pool = ThreadPool(4)
         elif self.PoolType == "Process":
-            num_cores = int(mp.cpu_count())
+            num_cores = num_workers or min(int(mp.cpu_count()), 8)
             print(f"使用 {num_cores} 核心进行并行计算")
-            self.pool = ProcessPool(num_cores)
+            self.pool = ProcessPool(num_cores, initializer=_init_worker)
 
     def aimFunc(self, pop):
         """目标函数计算"""

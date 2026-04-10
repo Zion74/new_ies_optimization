@@ -1,0 +1,5 @@
+The three compared planning formulations share the same device set, decision variables, tariffs, and typical-day representation; only the objective set changes. The capacity vector contains rated powers of PV, WT, GT, heat pump, EC, AC, ES, HS, and CS.
+
+\textbf{Objectives.} (1) Annualized total cost $f_1$: investment annuities, capacity charge on peak grid import, and typical-day operating cost. (2) $f_2$: matching index---either IEMI \eqref{eq:iemi} or Std, depending on the run; Economic omits $f_2$.
+
+\textbf{Solver.} Bi-objective problems use NSGA-II \cite{deb2002fast} with $N_{\text{ind}}=50$ and $G_{\text{max}}=100$; economic-only planning uses a DE-style genetic algorithm with the same budget. Fitness evaluation parallelizes individuals, and each individual solves 14 linear programs. The IEMI run is warm-started from the final Std population, but the feasible region and search budget are unchanged; warm start is used only to accelerate convergence.

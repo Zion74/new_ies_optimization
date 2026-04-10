@@ -8,6 +8,24 @@
 import copy
 import os as _os
 
+
+def _carnot_lambda(T0, T_heat, T_cool):
+    """
+    基于卡诺㶲系数计算能质系数
+
+    依据热力学第二定律（Bejan, Advanced Engineering Thermodynamics, 2016）：
+    - 电能㶲系数 = 1.0（纯㶲，基准值）
+    - 热能㶲系数 = 1 - T0/T_heat（卡诺供热效率）
+    - 冷能㶲系数 = T0/T_cool - 1（卡诺制冷系数）
+
+    物理意义：λ 不是"权重"，而是"单位转换系数"——
+    将 kW 的能量偏差转换为 kW 的㶲偏差，使不同品位的能流在㶲空间中可比。
+    """
+    lambda_e = 1.0
+    lambda_h = 1.0 - T0 / T_heat
+    lambda_c = T0 / T_cool - 1.0
+    return lambda_e, lambda_h, lambda_c
+
 # 项目根目录（case_config.py 所在目录）
 _BASE = _os.path.dirname(_os.path.abspath(__file__))
 
@@ -97,12 +115,10 @@ GERMAN_CASE = {
     "hs_cs_loss_rate": 0.001, # 热/冷储能损失率
 
     # ---- 热力学参数 ----
-    "T0": 298.15,        # 环境温度 K
+    "T0": 298.15,        # 环境温度 K (25°C)
     "T_heat": 343.15,    # 供热温度 K (70°C)
     "T_cool": 280.15,    # 供冷温度 K (7°C)
-    "lambda_e": 1.0,     # 电能质系数
-    "lambda_h": 0.6,     # 热能质系数
-    "lambda_c": 0.5,     # 冷能质系数
+    # 能质系数由卡诺㶲公式自动计算（见下方 _apply_carnot_lambda）
 
     # ---- 卡诺电池（默认关闭）----
     "enable_carnot_battery": False,
@@ -171,9 +187,7 @@ SONGSHAN_LAKE_CASE = {
     "T0": 300.15,        # 环境温度 K (27°C, 东莞年均温)
     "T_heat": 333.15,    # 供热温度 K (60°C, 生活热水)
     "T_cool": 280.15,    # 供冷温度 K (7°C)
-    "lambda_e": 1.0,
-    "lambda_h": 0.6,
-    "lambda_c": 0.5,
+    # 能质系数由卡诺㶲公式自动计算（见下方 _apply_carnot_lambda）
 
     # ---- 卡诺电池（默认关闭，可通过 --carnot 开启）----
     "enable_carnot_battery": False,
@@ -191,9 +205,21 @@ SONGSHAN_LAKE_CASE = {
 # 工具函数
 # ============================================================
 
+def _apply_carnot_lambda(config):
+    """根据温度参数自动计算并注入卡诺㶲能质系数"""
+    T0 = config["T0"]
+    T_heat = config["T_heat"]
+    T_cool = config["T_cool"]
+    le, lh, lc = _carnot_lambda(T0, T_heat, T_cool)
+    config["lambda_e"] = le
+    config["lambda_h"] = lh
+    config["lambda_c"] = lc
+    return config
+
+
 def get_case(name="german"):
     """
-    获取案例配置的深拷贝
+    获取案例配置的深拷贝（能质系数由卡诺公式自动计算）
 
     Parameters
     ----------
@@ -210,7 +236,9 @@ def get_case(name="german"):
     }
     if name not in cases:
         raise ValueError(f"未知案例: {name}，可选: {list(cases.keys())}")
-    return copy.deepcopy(cases[name])
+    config = copy.deepcopy(cases[name])
+    _apply_carnot_lambda(config)
+    return config
 
 
 def enable_carnot_battery(config):

@@ -1,0 +1,69 @@
+# IEEE 会议论文数据溯源（期刊实验1 子集 + 等权 λ 验证）
+# 归档根目录：论文撰写/会议/（原 研究思路/IEEE会议 已合并至此）
+# 请勿删除 source 路径记录；更新时同步修改本文件。
+
+# ---------------------------------------------------------------------------
+# A. 期刊主结果（卡诺㶲加权欧氏，与论文 Table 一致）
+# ---------------------------------------------------------------------------
+source_result_dir:
+  Results/pipeline_german_50x100_5methods_20260320_214813
+
+canonical_reference:
+  论文撰写/完整实验执行清单.md（仓库内）— 实验1（德国 × 5 方法 × 无卡诺电池）
+
+run_parameters:
+  nind: 50
+  maxgen: 100
+  case: german
+  enable_carnot_battery: false
+  methods_full_run: economic_only, std, euclidean, pearson, ssr
+
+ieee_subset_methods:
+  - economic_only
+  - std
+  - euclidean
+
+matching_objective_euclidean:
+  Carnot exergy weights (case_config._apply_carnot_lambda, German):
+  T0=298.15 K, T_heat=343.15 K, T_cool=280.15 K
+  lambda_e = 1.0
+  lambda_h ≈ 0.131
+  lambda_c ≈ 0.064
+
+archived_in_repo:
+  data/raw_pareto/Pareto_*.csv
+  data/summary_conference.csv  （由 scripts/export_ieee_conference_data.py 生成，默认不过滤）
+
+post_analysis_artifacts (same pipeline directory):
+  data/post_analysis_budget/post_analysis_budget.csv
+  data/post_analysis_budget/post_analysis_results.csv
+
+# ---------------------------------------------------------------------------
+# B. 等权 λ=1 欧氏（会议叙事「三维等权几何距离」；与 A 的数值不可混用）
+# ---------------------------------------------------------------------------
+unit_lambda_source_result_dir:
+  Results/custom_german_unitlambda_10x5_3methods_20260402_173527
+
+unit_lambda_run_parameters:
+  nind: 10
+  maxgen: 5
+  note: 快速烟测；正式对比请用 nind=50 maxgen=100 重跑后重新执行 archive 脚本
+
+unit_lambda_command:
+  uv run python run.py --mode custom --nind 50 --maxgen 100 --case german
+    --methods economic_only std euclidean --unit-lambda --skip-check
+
+archived_in_repo:
+  data/raw_pareto_unit_lambda/Pareto_*.csv
+  data/summary_conference_unit_lambda.csv
+    （汇总时对 Economic_Cost 使用 feasible_max_cost=5e6 EUR 排除数值爆炸的劣解）
+
+repro_archive_command:
+  uv run python scripts/archive_ieee_unit_lambda.py --result-dir Results/<含unitlambda的子目录名>
+
+# ---------------------------------------------------------------------------
+# C. 辅助脚本
+# ---------------------------------------------------------------------------
+scripts:
+  export_ieee_conference_data.py  — Pareto 汇总表
+  archive_ieee_unit_lambda.py     — 从某次 unit-lambda Results 复制到 data/ 并生成 summary_conference_unit_lambda.csv

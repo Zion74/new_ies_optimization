@@ -25,8 +25,8 @@ else:
 import os
 import datetime
 
-# 强制指定 Gurobi 许可证文件路径
-os.environ["GRB_LICENSE_FILE"] = r"C:\gurobi\gurobi.lic"
+# 指定 Gurobi 许可证文件路径（仅在未设置时生效，优先使用系统环境变量）
+os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
 
 import geatpy as ea
 from cchp_gaproblem import CCHPProblem, LAMBDA_E, LAMBDA_H, LAMBDA_C
@@ -85,6 +85,7 @@ def run_single_experiment(
     pool_type="Process",
     initial_population=None,
     case_config=None,
+    num_workers=None,
 ):
     """
     运行单个实验
@@ -116,7 +117,7 @@ def run_single_experiment(
         print("  >> 使用继承的初始种群")
     print("=" * 70)
 
-    problem = CCHPProblem(pool_type, method=method, case_config=case_config)
+    problem = CCHPProblem(pool_type, method=method, case_config=case_config, num_workers=num_workers)
 
     Encoding = "RI"
     Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)
@@ -170,6 +171,8 @@ def run_comparative_study(
     inherit_population=True,
     methods_to_run=None,
     case_config=None,
+    num_workers=None,
+    result_dir_name=None,
 ):
     """
     运行完整的对比实验
@@ -243,10 +246,13 @@ def run_comparative_study(
             print(f"  - {method_info[m][0]}")
 
     # 创建结果目录（统一放在 Results/ 子文件夹下）
-    current_time = datetime.datetime.now().strftime("%m-%d-%H-%M")
     results_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Results")
     os.makedirs(results_root, exist_ok=True)
-    result_dir = os.path.join(results_root, f"CCHP_{case_name}_{current_time}")
+    if result_dir_name is not None:
+        result_dir = os.path.join(results_root, result_dir_name)
+    else:
+        current_time = datetime.datetime.now().strftime("%m-%d-%H-%M")
+        result_dir = os.path.join(results_root, f"CCHP_{case_name}_{current_time}")
     os.makedirs(result_dir, exist_ok=True)
     print(f"\n结果目录: {result_dir}")
 
@@ -274,11 +280,12 @@ def run_comparative_study(
             pool_type=pool_type,
             initial_population=initial_pop,
             case_config=case_config,
+            num_workers=num_workers,
         )
         save_method_results(results[method], result_dir, folder_name)
 
     # 生成对比分析报告
-    generate_comparison_report(results, result_dir, inherit_population)
+    generate_comparison_report(results, result_dir, inherit_population, case_config)
 
     return results, result_dir
 
@@ -353,8 +360,8 @@ def save_method_results(result, result_dir, method_folder_name):
     print(f"  - Pareto: {pareto_path}")
 
 
-def generate_comparison_report(results, result_dir, inherit_population):
-    """生成对比分析报告"""
+def generate_comparison_report(results, result_dir, inherit_population, case_config=None):
+    """生成对比分析报告（能质系数与 case_config 一致，含 --unit-lambda 等权情形）"""
     print("\n" + "=" * 70)
     print("生成对比分析报告")
     print("=" * 70)
@@ -365,10 +372,13 @@ def generate_comparison_report(results, result_dir, inherit_population):
         f"生成时间: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
     )
 
+    le = case_config.get("lambda_e", LAMBDA_E) if case_config else LAMBDA_E
+    lh = case_config.get("lambda_h", LAMBDA_H) if case_config else LAMBDA_H
+    lc = case_config.get("lambda_c", LAMBDA_C) if case_config else LAMBDA_C
     report_lines.append("## 能质系数设置\n\n")
-    report_lines.append(f"- λ_e (电能权重) = {LAMBDA_E:.3f}\n")
-    report_lines.append(f"- λ_h (热能权重) = {LAMBDA_H:.3f}\n")
-    report_lines.append(f"- λ_c (冷能权重) = {LAMBDA_C:.3f}\n\n")
+    report_lines.append(f"- λ_e (电能权重) = {le:.3f}\n")
+    report_lines.append(f"- λ_h (热能权重) = {lh:.3f}\n")
+    report_lines.append(f"- λ_c (冷能权重) = {lc:.3f}\n\n")
 
     report_lines.append("## 实验配置\n\n")
     report_lines.append(f"- 种群继承: {'开启' if inherit_population else '关闭'}\n")

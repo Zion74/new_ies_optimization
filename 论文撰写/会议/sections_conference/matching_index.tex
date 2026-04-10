@@ -1,0 +1,29 @@
+\subsection{Why a vector at each instant}
+
+Let $P_{\text{net},i}(t)$ denote the net imbalance of carrier $i \in \{e,h,c\}$ at hour $t$ (supply minus demand, including storage, in kW). Std-style indices use $\sigma(P_{\text{net},e})+\sigma(P_{\text{net},h})+\sigma(P_{\text{net},c})$ and therefore forget \emph{when} deficits occur relative to other carriers. IEMI instead measures the \emph{combined} mismatch at each $t$.
+
+\subsection{Instantaneous Euclidean Matching Index (IEMI)}
+
+Define the absolute mismatch vector
+\begin{equation}
+    \mathbf{p}(t) = \bigl(|P_{\text{net},e}(t)|,\,|P_{\text{net},h}(t)|,\,|P_{\text{net},c}(t)|\bigr)^\top .
+\end{equation}
+To place different carriers on comparable scales, we use fixed non-negative weights collected in $\mathbf{w}=(w_e,w_h,w_c)^\top$, with values determined by the case operating temperatures. The \textbf{instantaneous Euclidean mismatch} is $\bigl\| \mathbf{w} \odot \mathbf{p}(t) \bigr\|_2$, and
+\begin{equation}
+    \text{IEMI} = \frac{1}{T} \sum_{t=1}^{T} \bigl\| \mathbf{w} \odot \mathbf{p}(t) \bigr\|_2 .
+    \label{eq:iemi}
+\end{equation}
+For the German reference case, $w_e=1$, $w_h=0.131$, and $w_c=0.064$. The focus of this note is the \textbf{$L_2$ geometry over $(e,h,c)$ at fixed $t$}, not weight tuning; keeping $w_i$ fixed isolates temporal-vector aggregation from carrier rescaling.
+
+\subsection{Euclidean ($L_2$) versus linear ($L_1$) aggregation}
+
+An alternative instantaneous index is the Manhattan magnitude
+\begin{equation}
+    \text{MI}_{L1} = \frac{1}{T} \sum_{t=1}^{T} \bigl\| \mathbf{w} \odot \mathbf{p}(t) \bigr\|_1 .
+    \label{eq:mi_l1}
+\end{equation}
+Both \eqref{eq:iemi} and \eqref{eq:mi_l1} are additive over time and vanish only at perfect balance. We adopt $L_2$ because it is the Euclidean length of the weighted mismatch vector in $\mathbb{R}^3$, i.e.\ a scalar measure of \emph{simultaneous} deviation from the origin. This is a geometric choice, not a claim that $L_2$ always penalizes more strongly than $L_1$.
+
+\subsection{Baselines}
+
+\textbf{Std} (volatility baseline): $\text{MI}_{\text{Std}} = \sigma(P_{\text{net},e})+\sigma(P_{\text{net},h})+\sigma(P_{\text{net},c})$. \textbf{Economic}: minimize annualized cost only.

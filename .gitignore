@@ -8,11 +8,14 @@ wheels/
 
 # Virtual environments
 .venv
+venv/
+env/
 
 # IDE / editor
 .vscode/
 .history/
 .claude/
+.idea/
 
 # Results (too large for git, regenerate locally)
 Results/
@@ -20,3 +23,51 @@ Population Info/
 
 # Gurobi license
 gurobi.lic
+
+# Secrets / local env
+.env
+.env.*
+
+# Test & type-check caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Large office binaries (keep slides out of repo unless explicitly needed)
+*.pptx
+
+# Codex / local tool artifacts
+.chrome-headless/
+.codex_shot_test/
+.codex_tmp_*
+.uv-cache/
+
+# LaTeX intermediate build files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.spl
+*.synctex.gz
+*.toc
+
+# Local scratch / generated research artifacts
+tmp_softcopyright_gen.py
+卡诺电池探索/*.csv
+松山湖/单元模块库.zip
+松山湖/汇报/*.html
+松山湖/汇报/*_preview/
+
+# External reference papers should stay local
+论文撰写/相似paper/*.pdf

@@ -32,7 +32,11 @@ import io
 import os
 import argparse
 import time
+import datetime
 import traceback
+
+# Gurobi 许可证路径（主进程和子进程均需要）
+os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
 
 # ── 编码修复（Windows GBK 终端）──────────────────────────────────────────
 if hasattr(sys.stdout, "reconfigure"):
@@ -316,6 +320,55 @@ def _print_config(cfg: dict):
 
 
 # ── 命令行参数解析 ────────────────────────────────────────────────────────
+def _generate_result_dir_name(mode=None, case_name="german", carnot=False,
+                               nind=None, maxgen=None, methods=None, exp_id=None,
+                               unit_lambda=False):
+    """
+    生成描述性的结果文件夹名称
+
+    格式：{mode/exp}_{case}_{carnot}_{nind}x{maxgen}_{methods}_{timestamp}
+    例如：test_german_10x5_std+euclidean_20240317_143022
+         exp1_german_50x100_5methods_20240317_143022
+    """
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    parts = []
+
+    # 模式/实验标识
+    if exp_id is not None:
+        parts.append(f"exp{exp_id}")
+    elif mode is not None:
+        parts.append(mode)
+    else:
+        parts.append("custom")
+
+    # 案例名称
+    parts.append(case_name)
+
+    # 卡诺电池标识
+    if carnot:
+        parts.append("carnot")
+
+    if unit_lambda:
+        parts.append("unitlambda")
+
+    # 参数信息
+    if nind is not None and maxgen is not None:
+        parts.append(f"{nind}x{maxgen}")
+
+    # 方法信息
+    if methods is not None and len(methods) > 0:
+        if len(methods) <= 2:
+            methods_str = "+".join(methods)
+        else:
+            methods_str = f"{len(methods)}methods"
+        parts.append(methods_str)
+
+    parts.append(timestamp)
+
+    return "_".join(parts)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="CCHP 优化实验启动器",
@@ -328,6 +381,9 @@ def parse_args():
   uv run python run.py --mode quick                       # 快速模式
   uv run python run.py --mode full                        # 正式模式
   uv run python run.py --mode custom --nind 40 --maxgen 80 --methods std euclidean
+  uv run python run.py --exp all --test-run               # 四组实验-测试参数
+  uv run python run.py --exp all --quick-run              # 四组实验-快速参数
+  uv run python run.py --exp all                          # 四组实验-正式参数
         """,
     )
     parser.add_argument("--mode", choices=["test", "quick", "full", "custom"],
@@ -346,10 +402,16 @@ def parse_args():
                         default="german", help="选择案例（默认德国）")
     parser.add_argument("--carnot", action="store_true",
                         help="启用卡诺电池")
+    parser.add_argument("--unit-lambda", action="store_true",
+                        help="欧氏匹配度使用等权 λ_e=λ_h=λ_c=1（覆盖卡诺㶲系数）")
     parser.add_argument("--exp", choices=["1", "2", "3", "4", "all"],
                         help="运行论文预设实验（1-4 或 all）")
     parser.add_argument("--test-run", action="store_true",
                         help="实验模式用测试参数（nind=10, maxgen=5）快速验证")
+    parser.add_argument("--quick-run", action="store_true",
+                        help="实验模式用快速参数（nind=20, maxgen=20）初步验证效果")
+    parser.add_argument("--workers", type=int, default=None,
+                        help="并行进程数（默认=CPU核心数）")
     return parser.parse_args()
 
 
@@ -409,6 +471,17 @@ def main():
         print(f"案例: {case_config['description']} [卡诺电池已启用]")
     else:
         print(f"案例: {case_config['description']}")
+    if args.unit_lambda:
+        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = 1.0
+        print("  [unit-lambda] 欧氏匹配度已设为等权 λ_e=λ_h=λ_c=1")
+
+    # 生成描述性结果文件夹名
+    mode_label = args.mode or "interactive"
+    result_dir_name = _generate_result_dir_name(
+        mode=mode_label, case_name=args.case, carnot=args.carnot,
+        nind=cfg["nind"], maxgen=cfg["maxgen"], methods=cfg["methods"],
+        unit_lambda=args.unit_lambda,
+    )
 
     t0 = time.time()
     try:
@@ -419,6 +492,8 @@ def main():
             inherit_population=cfg["inherit_population"],
             methods_to_run=cfg["methods"],
             case_config=case_config,
+            num_workers=args.workers,
+            result_dir_name=result_dir_name,
         )
         elapsed = time.time() - t0
         print_result_summary(results, elapsed, result_dir)
@@ -436,13 +511,21 @@ def _run_experiments(args):
     from cchp_gasolution import run_comparative_study
     from case_config import get_case, enable_carnot_battery
 
-    # 确定参数：--test-run 用小参数快速验证，否则用正式参数
+    # 确定参数：--test-run 用小参数快速验证，--quick-run 用中等参数，否则用正式参数
     if args.test_run:
         nind, maxgen = 10, 5
         param_desc = "测试参数 (nind=10, maxgen=5)"
+        run_level = "test"
+    elif args.quick_run:
+        nind, maxgen = 20, 20
+        param_desc = "快速参数 (nind=20, maxgen=20)"
+        run_level = "quick"
     else:
         nind, maxgen = 50, 100
         param_desc = "正式参数 (nind=50, maxgen=100)"
+        run_level = "full"
+
+    num_workers = args.workers
 
     # 确定要跑哪些实验
     if args.exp == "all":
@@ -450,11 +533,19 @@ def _run_experiments(args):
     else:
         exp_ids = [args.exp]
 
+    # 创建本次运行的共享父文件夹
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    exp_label = "all" if args.exp == "all" else f"exp{args.exp}"
+    parent_dir_name = f"{run_level}_{exp_label}_{nind}x{maxgen}_{timestamp}"
+    results_root = os.path.join(BASE_DIR, "Results", parent_dir_name)
+    os.makedirs(results_root, exist_ok=True)
+
     print("\n" + "=" * 70)
     print("  论文实验批量运行")
     print("=" * 70)
     print(f"  参数: {param_desc}")
     print(f"  实验: {', '.join(exp_ids)}")
+    print(f"  结果汇总目录: {results_root}")
     print()
 
     for exp_id in exp_ids:
@@ -467,28 +558,33 @@ def _run_experiments(args):
             _run_one_experiment(
                 exp_id + "a", exp["name"] + "（无卡诺电池）",
                 exp["case"], False, exp["methods"], exp["inherit_population"],
-                nind, maxgen,
+                nind, maxgen, num_workers, parent_dir=results_root,
+                unit_lambda=args.unit_lambda,
             )
             _run_one_experiment(
                 exp_id + "b", exp["name"] + "（有卡诺电池）",
                 exp["case"], True, exp["methods"], exp["inherit_population"],
-                nind, maxgen,
+                nind, maxgen, num_workers, parent_dir=results_root,
+                unit_lambda=args.unit_lambda,
             )
         else:
             _run_one_experiment(
                 exp_id, exp["name"],
                 exp["case"], exp.get("carnot", False),
                 exp["methods"], exp["inherit_population"],
-                nind, maxgen,
+                nind, maxgen, num_workers, parent_dir=results_root,
+                unit_lambda=args.unit_lambda,
             )
 
     print("\n" + "=" * 70)
     print("  全部实验完成！")
+    print(f"  结果汇总目录: {results_root}")
     print("=" * 70)
 
 
 def _run_one_experiment(exp_id, name, case_name, carnot, methods,
-                        inherit_population, nind, maxgen):
+                        inherit_population, nind, maxgen, num_workers=None, parent_dir=None,
+                        unit_lambda=False):
     """运行单组实验"""
     from cchp_gasolution import run_comparative_study
     from case_config import get_case, enable_carnot_battery
@@ -500,11 +596,25 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
     case_config = get_case(case_name)
     if carnot:
         enable_carnot_battery(case_config)
+    if unit_lambda:
+        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = 1.0
+        print("  [unit-lambda] 欧氏匹配度: λ_e=λ_h=λ_c=1")
 
     cb_str = " + 卡诺电池" if carnot else ""
     print(f"  案例: {case_config['description']}{cb_str}")
     print(f"  方法: {methods}")
     print(f"  参数: nind={nind}, maxgen={maxgen}")
+
+    # 生成描述性子文件夹名
+    subfolder_name = _generate_result_dir_name(
+        exp_id=exp_id, case_name=case_name, carnot=carnot,
+        nind=nind, maxgen=maxgen, methods=methods,
+        unit_lambda=unit_lambda,
+    )
+    if parent_dir is not None:
+        result_dir_name = os.path.join(os.path.basename(parent_dir), subfolder_name)
+    else:
+        result_dir_name = subfolder_name
 
     t0 = time.time()
     try:
@@ -515,6 +625,8 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
             inherit_population=inherit_population,
             methods_to_run=methods,
             case_config=case_config,
+            num_workers=num_workers,
+            result_dir_name=result_dir_name,
         )
         elapsed = time.time() - t0
         print_result_summary(results, elapsed, result_dir)
@@ -525,4 +637,6 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
 
 
 if __name__ == "__main__":
+    from multiprocessing import freeze_support
+    freeze_support()
     main()

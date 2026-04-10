@@ -1,0 +1,15 @@
+\subsection{German benchmark}
+
+We report only the \textbf{German heating-dominated community} used in the shared benchmark. The input data contain 8760 hourly demand and weather profiles. Tariffs and device bounds follow the documented German configuration: electricity price 0.0025~EUR/kWh, gas price 0.0286~EUR/kWh, capacity charge 114.29~EUR/(kW$\cdot$a), and non-zero bounds on all nine technologies. The tariff values are archived benchmark inputs rather than current market calibration, so the conference claim is comparative and methodological rather than prescriptive.
+
+\subsection{Evaluation protocol}
+
+Planning uses the 14 weighted typical days described in Section~\ref{sec:system}; post-optimization assessment re-dispatches selected designs on the full 8760-hour year. Unless otherwise noted, all numbers use $N_{\text{ind}}=50$ and $G_{\text{max}}=100$.
+
+Table~\ref{tab:conf_pareto} is computed directly from the non-dominated sets of the three compared methods. To connect planning outcomes to operation, we then evaluate budget-normalized Pareto points with full-year dispatch. Let $C_{\text{eco}}$ be the annualized cost of the economic optimum and define a budget allowance $\beta \in \{0,10,30,50,100\}\%$ through
+\begin{equation}
+    C_{\text{tar}} = (1 + \beta) C_{\text{eco}}.
+\end{equation}
+For each matching-based method, we choose the Pareto solution with the smallest matching index among designs whose annualized cost does not exceed $1.05\,C_{\text{tar}}$; otherwise the nearest-cost point is used. The resulting 8760-hour indicators form the closed evaluation chain reported in Table~\ref{tab:conf_budget}.
+
+\textbf{Methods compared.} Economic (A), Std (B), and IEMI (C). Std is retained as the principal baseline because it uses the same three carrier net-imbalance trajectories and the same cost-plus-matching structure as IEMI, differing mainly in whether coupling is handled instantaneously or after carrier-wise compression.

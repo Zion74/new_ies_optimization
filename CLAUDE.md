@@ -32,12 +32,23 @@ run.py  →  cchp_gasolution.py  →  cchp_gaproblem.py  →  operation.py
 - `var_ub`：9个决策变量上界 [ppv, pwt, pgt, php, pec, pac, pes, phs, pcs]
 - `invest_coeff`：9个年化投资系数
 - 设备效率：`gt_eta_e`, `gt_eta_h`, `ac_cop`, `ehp_cop`, `ec_cop` 等
-- 能质系数：`lambda_e=1.0`, `lambda_h=0.6`, `lambda_c=0.5`
+- 热力学参数：`T0`, `T_heat`, `T_cool`（环境温度、供热温度、供冷温度）
+- **能质系数由卡诺㶲公式自动计算**（不再硬编码）
 - 卡诺电池参数：`enable_carnot_battery`, `cb_power_ub`, `cb_capacity_ub`, `cb_rte` 等
 
 关键函数：
-- `get_case(name)` → 返回配置的深拷贝
+- `_carnot_lambda(T0, T_heat, T_cool)` → 计算卡诺㶲系数
+  - λ_e = 1.0（电能㶲系数，基准值）
+  - λ_h = 1 - T0/T_heat（热能㶲系数，卡诺供热效率）
+  - λ_c = T0/T_cool - 1（冷能㶲系数，卡诺制冷系数）
+- `get_case(name)` → 返回配置的深拷贝，自动注入卡诺㶲系数
 - `enable_carnot_battery(config)` → 设置 `config["enable_carnot_battery"] = True`
+
+**能质系数实际值**（基于各案例温度参数自动计算）：
+- 德国案例（T0=298.15K, T_heat=343.15K, T_cool=280.15K）：
+  - λ_e=1.000, λ_h=0.131, λ_c=0.064
+- 松山湖案例（T0=300.15K, T_heat=333.15K, T_cool=280.15K）：
+  - λ_e=1.000, λ_h=0.099, λ_c=0.071
 
 ### cchp_gaproblem.py — 优化问题
 
@@ -190,4 +201,7 @@ Pareto CSV 列：`Solution_ID, Economic_Cost, Matching_Index, PV, WT, GT, HP, EC
 - Gurobi 许可证路径硬编码为 `C:\Users\ikun\gurobi.lic`（在 run.py 和 cchp_gaproblem.py 中）
 - 报告中货币符号统一用 €，松山湖案例实际是 ¥（待修复）
 - Thread 模式下 Gurobi 不可用（signal 限制），必须用 Process 模式
+- Process 模式下 Gurobi 可用：`cchp_gaproblem.py` 的 `ProcessPool` 通过 `initializer=_init_worker` 在子进程启动时设置 `GRB_LICENSE_FILE`，已验证正常工作
 - 松山湖负荷数据是合成的（基于PDF月度总量+气候模型），非实测逐时数据
+
+

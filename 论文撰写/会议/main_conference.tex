@@ -1,0 +1,97 @@
+% IEEE conference precursor draft (concept validation).
+% Location: 论文撰写/会议/ （与会议数据、Markdown 草稿同目录）
+% Requires: IEEEtran class (TeX Live / MiKTeX / Overleaf).
+% Journal-length Applied Energy draft: 论文撰写/paper/main.tex
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}
+\setlength{\floatsep}{6pt plus 1pt minus 2pt}
+\setlength{\intextsep}{6pt plus 1pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{0pt}
+
+\begin{document}
+
+\title{An Instantaneous Euclidean Matching Index for Multi-Carrier CCHP Capacity Planning}
+
+\author{
+\IEEEauthorblockN{Haonan Zheng}
+\IEEEauthorblockA{\textit{College of Energy Engineering} \\
+\textit{Zhejiang University} \\
+Hangzhou, China \\
+haonan.zheng@zju.edu.cn}
+\and
+\IEEEauthorblockN{Xiaojie Lin}
+\IEEEauthorblockA{\textit{College of Energy Engineering} \\
+\textit{Zhejiang University} \\
+Hangzhou, China \\
+xiaojie.lin@zju.edu.cn}
+\and
+\IEEEauthorblockN{Xueru Lin}
+\IEEEauthorblockA{\textit{College of Energy Engineering} \\
+\textit{Zhejiang University} \\
+Hangzhou, China \\
+linxueru@zju.edu.cn}
+\and
+\IEEEauthorblockN{Wei Zhong}
+\IEEEauthorblockA{\textit{College of Energy Engineering} \\
+\textit{Zhejiang University} \\
+Hangzhou, China \\
+zhongw@zju.edu.cn}
+\and
+\IEEEauthorblockN{Xu Zhang}
+\IEEEauthorblockA{\textit{State Grid Zhejiang Integrated Energy Service Company} \\
+Hangzhou, China \\
+876101205@qq.com}
+}
+
+\maketitle
+
+\begin{abstract}
+Capacity planning of distributed combined cooling, heating and power (CCHP) systems is usually driven by annual cost, while source--load coordination remains implicit. Conventional matching surrogates first compress each carrier over time and then aggregate the resulting scalars, obscuring simultaneous mismatch of electricity, heat, and cold. We propose the \emph{Instantaneous Euclidean Matching Index} (IEMI), which treats the three net imbalances at each time step as a vector and uses its Euclidean norm as the magnitude of instantaneous multi-carrier mismatch. Coupled with annualized cost in a bi-objective NSGA-II framework, IEMI is compared with cost-only planning and a standard-deviation baseline on a German heating-dominated community benchmark. IEMI widens the reachable Pareto cost span from EUR~209k to EUR~1{,}267k. Under the same +100\% budget allowance relative to the economic optimum, the selected IEMI design reduces peak grid import by 26.7\% and annual grid purchase by 29.9\%, while increasing self-sufficiency from 38.6\% to 57.0\%. The gain appears mainly in the medium-to-high investment region rather than as uniform dominance at all budgets. The $L_2$ choice is used to represent vector magnitude, not to claim a universally harsher penalty than $L_1$ aggregation.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Integrated energy system, CCHP, source--load matching, multi-objective optimization, NSGA-II, Euclidean distance
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+\input{sections_conference/introduction}
+
+\section{System model}
+\label{sec:system}
+\input{sections_conference/system_modeling}
+
+\section{Matching metric: IEMI}
+\label{sec:iemi}
+\input{sections_conference/matching_index}
+
+\section{Bi-objective planning framework}
+\label{sec:opt}
+\input{sections_conference/optimization}
+
+\section{Case study and evaluation protocol}
+\label{sec:case}
+\input{sections_conference/case_studies}
+
+\section{Results and discussion}
+\label{sec:results}
+\input{sections_conference/results}
+
+\section{Conclusion}
+\label{sec:conc}
+\input{sections_conference/conclusions}
+
+\section*{Acknowledgment}
+This work was supported by the National Key R\&D Program of China (No.~2024YFB4206500), the National Natural Science Foundation of China (No.~51806190), and the ``Pioneer'' and ``Leading Goose'' R\&D Program of Zhejiang (No.~2025C02237).
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

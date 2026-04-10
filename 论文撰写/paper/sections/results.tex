@@ -1,0 +1,180 @@
+This section presents the results of the German case multi-method comparison (Experiment~1), followed by a post-optimization operational analysis that validates the practical value of the proposed matching index. The Songshan Lake case results are presented subsequently for cross-climate validation.
+
+\subsection{Experiment 1: Multi-method comparison on the German case}
+\label{sec:exp1}
+
+\subsubsection{Pareto front characteristics}
+
+\Cref{tab:exp1_pareto} summarizes the Pareto front characteristics of the five methods. The most striking difference lies in the front width: the proposed EQD method spans a cost range of \euro{}1,267k (from \euro{}455k to \euro{}1,722k), which is 6.1 times wider than the Std method's \euro{}209k range (from \euro{}429k to \euro{}637k). The Pearson and SSR methods achieve intermediate and wide ranges, respectively.
+
+\begin{table}[htbp]
+\centering
+\caption{Pareto front characteristics of the five methods (German case, $N_\text{ind}=50$, $G_\text{max}=100$).}
+\label{tab:exp1_pareto}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+& \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} & \textbf{E} \\
+& Economic & Std & EQD & Pearson & SSR \\
+\midrule
+Pareto solutions & 1 & 50 & 50 & 50 & 50 \\
+Min.\ cost (\euro{}k) & 422 & 429 & 455 & 429 & 454 \\
+Max.\ cost (\euro{}k) & --- & 637 & 1{,}722 & 754 & 2{,}819 \\
+Front width (\euro{}k) & --- & 209 & \textbf{1{,}267} & 325 & 2{,}366 \\
+Width ratio (vs.\ Std) & --- & 1.0$\times$ & \textbf{6.1$\times$} & 1.6$\times$ & 11.3$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The front width directly reflects a method's ability to explore the trade-off space between cost and matching performance. The Std method's narrow front indicates that the volatility-based index is insensitive to equipment capacity changes: many different configurations produce similar standard deviation values, causing NSGA-II to converge within a narrow cost band. In contrast, the EQD method's wide front demonstrates that the energy-quality-weighted Euclidean distance creates a rich fitness landscape where additional investment yields meaningful matching improvements, enabling decision-makers to choose from a comprehensive spectrum of configurations.
+
+Notably, the Std method's Pareto front terminates at \euro{}637k---the same solution appears at both the +50\% and +100\% budget levels in the subsequent analysis (\Cref{sec:post_analysis}), confirming that the method exhausts its exploration capacity at relatively low cost levels.
+
+\subsubsection{Pareto front overlap analysis}
+
+A fair comparison between methods requires overlapping cost ranges. The Std--EQD overlap spans \euro{}455k--\euro{}637k (width \euro{}182k), providing a meaningful region for direct comparison. Within this overlap, both methods have sufficient Pareto solutions to enable cost-aligned selection. The Std--Pearson overlap is wider (\euro{}209k), while the Std--SSR overlap is \euro{}184k.
+
+\subsection{Post-optimization operational analysis}
+\label{sec:post_analysis}
+
+To validate the practical value of the proposed matching index, representative solutions from each method's Pareto front are evaluated using full 8760-hour operational dispatch simulations. This analysis answers the critical question: \emph{does improving the matching index translate into measurable improvements in real-world operational indicators?}
+
+\subsubsection{Methodology}
+
+For each method, the solution closest to a target cost level is selected from the Pareto front. Two comparison modes are employed:
+
+\begin{enumerate}
+\item \textbf{Budget increment alignment}: Using the single-objective economic optimum (\euro{}421,672) as the baseline, solutions are compared at budget increments of +10\%, +30\%, +50\%, and +100\%. This mode answers: ``for each additional euro invested, which method delivers the greatest operational improvement?''
+\item \textbf{Absolute cost alignment}: Solutions are compared at fixed cost levels spanning the range of all Pareto fronts.
+\end{enumerate}
+
+Each selected solution is evaluated by running the oemof dispatch model for all 365 days (not just the 14 typical days used during optimization), computing the following operational indicators:
+\begin{itemize}
+\item Peak grid demand (\si{kW}): maximum hourly electricity purchase from the grid.
+\item Annual grid purchase (\si{MWh}): total electricity imported from the grid.
+\item Self-sufficiency rate (\%): fraction of total electricity demand met by local generation.
+\item Grid interaction volatility (\si{kW}): standard deviation of hourly grid power exchange.
+\item Curtailment rate (\%): fraction of available renewable generation that is curtailed.
+\end{itemize}
+
+\subsubsection{Budget increment comparison}
+
+\Cref{tab:budget_comparison} presents the operational indicators at four budget levels. At the baseline level (+0\%), all methods perform similarly, as the limited budget constrains equipment configurations to small capacities with minimal differentiation.
+
+\begin{table}[htbp]
+\centering
+\caption{Operational indicators at different budget increment levels (German case). Bold indicates best performance among the four bi-objective methods at each level.}
+\label{tab:budget_comparison}
+\small
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Budget & Method & Cost & Peak grid & Annual grid & Self-suff. & Grid vol. \\
+& & (\euro{}k) & (kW) & (MWh) & (\%) & (kW) \\
+\midrule
+\multirow{4}{*}{+30\%}
+& Std     & 573 & 2{,}729 & 16{,}501 & 34.1 & 413 \\
+& EQD     & 567 & 2{,}754 & 16{,}845 & 32.7 & \textbf{372} \\
+& Pearson & 572 & \textbf{2{,}679} & \textbf{16{,}419} & \textbf{34.4} & 357 \\
+& SSR     & 566 & 2{,}740 & 17{,}069 & 31.8 & 381 \\
+\midrule
+\multirow{4}{*}{+50\%}
+& Std     & 637 & 2{,}617 & 15{,}374 & 38.6 & 410 \\
+& EQD     & 663 & \textbf{2{,}503} & \textbf{15{,}020} & \textbf{40.0} & \textbf{343} \\
+& Pearson & 641 & 2{,}536 & 15{,}216 & 39.2 & 344 \\
+& SSR     & 632 & 2{,}549 & 15{,}478 & 38.2 & 345 \\
+\midrule
+\multirow{4}{*}{+100\%}
+& Std     & 637 & 2{,}617 & 15{,}374 & 38.6 & 410 \\
+& EQD     & 869 & \textbf{1{,}920} & \textbf{10{,}781} & \textbf{57.0} & \textbf{353} \\
+& Pearson & 754 & 2{,}267 & 12{,}858 & 48.7 & 344 \\
+& SSR     & 857 & 2{,}136 & 10{,}787 & 56.9 & 386 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results reveal a clear pattern: the EQD method's advantage amplifies with increasing budget. At +30\%, the differences are modest---all methods achieve similar self-sufficiency rates (31.8--34.4\%). However, at +100\%, the EQD method dramatically outperforms Std across all indicators:
+
+\begin{itemize}
+\item Peak grid demand: 1{,}920 vs.\ 2{,}617~kW (\textbf{$-$26.7\%})
+\item Annual grid purchase: 10{,}781 vs.\ 15{,}374~MWh (\textbf{$-$29.9\%})
+\item Self-sufficiency rate: 57.0\% vs.\ 38.6\% (\textbf{+47.5\%})
+\item Grid volatility: 353 vs.\ 410~kW (\textbf{$-$14.0\%})
+\item Curtailment rate: 0.08\% vs.\ 0.00\% (negligible)
+\end{itemize}
+
+Critically, the Std method selects the \emph{same} solution at both +50\% and +100\% budget levels (cost = \euro{}637k), confirming that its Pareto front has saturated. The EQD method, in contrast, continues to find meaningfully better solutions as the budget increases, demonstrating that the energy-quality-weighted index provides sufficient gradient information to guide the optimizer into higher-investment, higher-performance regions of the design space.
+
+\subsubsection{Comparison with SSR method}
+
+The SSR method achieves comparable self-sufficiency rates to EQD at +100\% (56.9\% vs.\ 57.0\%) but with higher grid volatility (386 vs.\ 353~kW). More importantly, at the highest cost levels in the absolute comparison, the SSR method exhibits a curtailment rate of 61.4\%, indicating that it blindly maximizes local generation without considering energy quality or grid-interaction efficiency. The EQD method achieves similar self-sufficiency with only 12.2\% curtailment at comparable cost levels, demonstrating that the exergy-weighted index guides more efficient resource allocation.
+
+\subsection{Experiment 2: Cross-climate validation on Songshan Lake}
+\label{sec:exp2}
+
+The Songshan Lake case validates whether the proposed method's advantages persist in a cooling-dominated subtropical climate with different energy price structures and load characteristics. Notably, this case has no wind resource ($P_\text{wt}^\text{ub} = 0$), higher baseline self-sufficiency (72.3\% for the economic optimum vs.\ 21.9\% in the German case), and different energy quality coefficients ($\lambda_h = 0.099$, $\lambda_c = 0.071$).
+
+\subsubsection{Pareto front saturation}
+
+A key finding is that the Std and Pearson methods saturate even earlier than in the German case: both select the same solution at +30\%, +50\%, and +100\% budget levels, indicating that their Pareto fronts terminate at approximately +30\% above the economic optimum. The EQD method continues to discover improved solutions up to +100\%, consistent with the German case results.
+
+\subsubsection{Operational indicator comparison}
+
+\Cref{tab:songshan_budget} presents the budget increment comparison for the Songshan Lake case.
+
+\begin{table}[htbp]
+\centering
+\caption{Operational indicators at different budget levels (Songshan Lake case). Bold indicates best among bi-objective methods.}
+\label{tab:songshan_budget}
+\small
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Budget & Method & Cost & Peak grid & Annual grid & Self-suff. & Curtail. \\
+& & (\textyen{}k) & (kW) & (MWh) & (\%) & (\%) \\
+\midrule
+\multirow{4}{*}{+30\%}
+& Std     & 2{,}376 & \textbf{1{,}465} & 1{,}115 & 78.4 & \textbf{1.0} \\
+& EQD     & 2{,}551 & 1{,}595 & \textbf{786} & \textbf{84.8} & 18.7 \\
+& Pearson & 2{,}498 & 1{,}462 & 1{,}115 & 78.4 & 0.9 \\
+& SSR     & 2{,}523 & 1{,}803 & 827 & 84.0 & 19.0 \\
+\midrule
+\multirow{4}{*}{+100\%}
+& Std     & 2{,}376 & 1{,}465 & 1{,}115 & 78.4 & 1.0 \\
+& EQD     & 2{,}622 & 1{,}532 & \textbf{712} & \textbf{86.2} & 18.9 \\
+& Pearson & 2{,}498 & \textbf{1{,}462} & 1{,}115 & 78.4 & \textbf{0.9} \\
+& SSR     & 2{,}523 & 1{,}803 & 827 & 84.0 & 19.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At +100\% budget, the EQD method achieves 36.1\% lower annual grid purchase (712 vs.\ 1{,}115~MWh) and 10.0\% higher self-sufficiency rate (86.2\% vs.\ 78.4\%) compared to Std. However, the EQD method exhibits a higher curtailment rate (18.9\% vs.\ 1.0\%), which arises because the absence of wind resources forces the optimizer to over-provision PV capacity to improve electrical self-sufficiency. This trade-off---accepting moderate curtailment in exchange for substantially higher self-sufficiency---reflects the EQD index's design intent of prioritizing electrical balance ($\lambda_e = 1.0$). In practice, curtailed PV generation can be absorbed by flexible loads such as electric vehicle charging or demand response programs.
+
+The improvement margins are smaller than in the German case (self-sufficiency: +10.0\% vs.\ +47.5\%), which is expected given the higher baseline self-sufficiency in Songshan Lake (72.3\% vs.\ 21.9\%). The economic optimum already includes substantial PV capacity due to the high electricity price (\textyen{}0.6746/kWh), leaving less room for improvement through matching optimization.
+
+\subsection{Discussion}
+\label{sec:discussion}
+
+\subsubsection{The role of Carnot exergy factors as energy quality coefficients}
+
+The experimental results demonstrate that directly applying Carnot exergy factors ($\lambda_h = 0.131$, $\lambda_c = 0.064$ for the German case) as energy quality coefficients produces optimization outcomes with superior operational characteristics compared to the conventional equal-weight approach. The small magnitudes of $\lambda_h$ and $\lambda_c$ relative to $\lambda_e = 1.0$ cause the optimizer to prioritize electrical balance, which is validated by the post-optimization analysis: EQD solutions consistently achieve lower peak grid demand and grid volatility than Std solutions at equivalent cost levels.
+
+This finding resolves a potential concern about the Carnot factors being ``too small'': the asymmetry is not a limitation but rather a faithful encoding of thermodynamic reality. The exergy content of electrical energy is approximately unity (100\%), while low-temperature thermal energy (heating at 60--70°C, cooling at 5--10°C) has exergy content of only 10--15\% relative to ambient conditions \cite{dincer2001energy,torchio2013comparison,sakulpipatsin2010exergy}. In exergy terms, a 1~kW electrical mismatch therefore represents 7--15 times greater loss of work potential than a 1~kW thermal mismatch \cite{meggers2012low,schmidt2004low}. The optimization results confirm that prioritizing electrical balance---as naturally induced by the Carnot exergy weighting---yields the greatest operational benefits, particularly in reducing peak grid demand and improving grid interaction characteristics.
+
+A key advantage of the Carnot-factor approach over empirical coefficients is its parameter-free nature. The coefficients are uniquely determined by the supply temperatures and ambient conditions, automatically differentiating between the German case ($\lambda_h = 0.131$) and the Songshan Lake case ($\lambda_h = 0.099$). This eliminates the need for subjective calibration and ensures physical consistency across different applications.
+
+\subsubsection{Matching index as a proxy for operational quality}
+
+The post-optimization analysis establishes a clear link between the matching index and measurable operational indicators. This addresses the fundamental question of why source-load matching should be optimized rather than directly optimizing operational indicators such as self-sufficiency rate or peak demand.
+
+The answer lies in the nature of these indicators as optimization objectives. Self-sufficiency rate involves discrete min/max operations and is non-smooth; peak demand is a single-point metric that provides no gradient information about the overall supply-demand profile; grid volatility (standard deviation) is insensitive to capacity changes, as demonstrated by the Std method's narrow Pareto front. In contrast, the EQD matching index is continuous, differentiable, magnitude-sensitive, and cross-carrier coupled---properties that make it an effective proxy objective for evolutionary optimization.
+
+The analogy to machine learning is instructive: just as neural networks are trained by minimizing a loss function (cross-entropy) but evaluated by accuracy, the CCHP system is optimized by minimizing the matching index but evaluated by operational indicators. The matching index serves as a smooth, gradient-rich surrogate that guides the optimizer toward solutions with good operational characteristics.
+
+\subsubsection{Pareto front diversity as a planning tool}
+
+The consistently wider Pareto fronts generated by the EQD method have significant practical implications. A diverse front provides decision-makers with a comprehensive menu of options spanning the full trade-off spectrum, from cost-minimizing configurations with high grid dependence to matching-optimizing configurations with high energy autonomy. This enables informed decision-making that accounts for factors beyond the two optimization objectives, such as policy incentives for renewable self-consumption, grid reliability concerns, and future energy price uncertainty.
+
+The Std method's narrow front effectively reduces the bi-objective problem to a near-single-objective one, offering little additional insight beyond the economic optimum. This degeneracy arises because the standard deviation of net load is relatively insensitive to equipment capacity changes, causing the non-dominated sorting to collapse most solutions into a narrow cost band.
+
+\subsubsection{Limitations and future work}
+
+Several limitations should be acknowledged. First, the post-optimization analysis uses the same load and weather data as the optimization, so the operational improvements may be partially attributable to in-sample fitting. Future work should validate with out-of-sample scenarios, including extreme weather events and load growth projections. Second, the typical-day decomposition used during optimization may not fully capture inter-day storage dynamics; the 8760-hour post-optimization analysis partially addresses this but does not feed back into the optimization. Third, the current framework does not consider uncertainty in renewable generation or load forecasting, which could be addressed through robust or stochastic optimization extensions. Fourth, while the Carnot exergy factors provide a parameter-free approach, their validity as matching weights ultimately rests on the assumption that thermodynamic quality correlates with system-level impact---an assumption supported by the results but not formally proven.

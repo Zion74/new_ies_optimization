@@ -1,0 +1,95 @@
+The proposed framework is validated on two representative cases with contrasting energy demand characteristics: a heating-dominated German community and a cooling-dominated campus in Songshan Lake, China. Four groups of experiments are designed to systematically evaluate the two contributions of this work.
+
+\subsection{Case descriptions}
+\label{sec:case_desc}
+
+\subsubsection{Case 1: German community (heating-dominated)}
+
+The first case represents a distributed energy community in Germany with significant heating demand and moderate cooling requirements. The hourly load and weather data span a full year (8760 hours) and include electricity demand, heating demand, cooling demand, solar irradiance, wind speed, and ambient temperature. The electricity tariff is \SI{0.0025}{\text{\euro}/kWh} (flat rate), the natural gas price is \SI{0.0286}{\text{\euro}/kWh}, and the capacity charge is \SI{114.29}{\text{\euro}/(kW \cdot a)}. Both wind and solar resources are available at this site.
+
+\subsubsection{Case 2: Songshan Lake campus (cooling-dominated)}
+
+The second case represents a university campus in Songshan Lake, Dongguan, China, located in a subtropical climate zone. The annual cooling load (\SI{2.91}{GWh}) significantly exceeds the heating load, with a peak cooling demand of \SI{5797}{kW}. The electricity price is \SI{0.6746}{\text{\textyen}/kWh} (uniform research rate), the gas price is \SI{0.45}{\text{\textyen}/kWh}, and no capacity charge applies. Wind resources are negligible at this site ($P_{\text{wt}}^{\text{ub}} = 0$), so only solar generation is considered.
+
+\Cref{tab:case_params} summarizes the key parameters for both cases.
+
+\begin{table}[htbp]
+\centering
+\caption{Key parameters for the two case studies.}
+\label{tab:case_params}
+\small
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Parameter & Unit & German & Songshan Lake \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Energy prices}} \\
+Electricity price & \euro/kWh or \textyen/kWh & 0.0025 & 0.6746 \\
+Gas price & \euro/kWh or \textyen/kWh & 0.0286 & 0.45 \\
+Capacity charge & \euro/(kW$\cdot$a) or \textyen/(kW$\cdot$a) & 114.29 & 0 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Equipment upper bounds (kW)}} \\
+PV & kW & 10{,}000 & 1{,}000 \\
+WT & kW & 10{,}000 & 0 \\
+GT & kW & 10{,}000 & 800 \\
+EHP & kW & 3{,}000 & 300 \\
+EC & kW & 1{,}000 & 5{,}000 \\
+AC & kW & 1{,}000 & 1{,}500 \\
+ES & kW & 20{,}000 & 2{,}000 \\
+HS & kW & 6{,}000 & 500 \\
+CS & kW & 2{,}000 & 3{,}000 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Carnot battery (when enabled)}} \\
+CB power & kW & 2{,}000 & 500 \\
+CB capacity & kWh & 10{,}000 & 3{,}000 \\
+CB round-trip efficiency & -- & 0.60 & 0.60 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Equipment efficiencies}} \\
+GT electrical efficiency & -- & 0.30 & 0.30 \\
+GT thermal efficiency & -- & 0.45 & 0.45 \\
+EHP COP & -- & 3.5 & 3.5 \\
+EC COP & -- & 4.0 & 4.0 \\
+AC COP & -- & 0.7 & 0.7 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Energy quality coefficients (Carnot exergy factors)}} \\
+$T_0$ (ambient) & K & 298.15 & 300.15 \\
+$T_h$ (heating supply) & K & 343.15 & 333.15 \\
+$T_c$ (cooling supply) & K & 280.15 & 280.15 \\
+$\lambda_e$ (electricity) & -- & 1.000 & 1.000 \\
+$\lambda_h$ (heating) & -- & 0.131 & 0.099 \\
+$\lambda_c$ (cooling) & -- & 0.064 & 0.071 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Experimental design}
+\label{sec:exp_design}
+
+Four groups of experiments are designed to validate the two contributions of this work, as summarized in \Cref{tab:experiments}.
+
+\begin{table}[htbp]
+\centering
+\caption{Experimental design overview.}
+\label{tab:experiments}
+\small
+\begin{tabular}{@{}cllp{5.5cm}@{}}
+\toprule
+Exp. & Case & Methods & Purpose \\
+\midrule
+1 & German & A/B/C/D/E & Multi-method comparison (Contribution 1) \\
+2 & Songshan Lake & B vs.\ C (no CB) & Cross-climate validation \\
+3 & Songshan Lake & C (no CB) vs.\ C (with CB) & Carnot battery ablation (Contribution 2) \\
+4 & Songshan Lake & B vs.\ C (both with CB) & Joint validation of both contributions \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The five methods compared in Experiment~1 are:
+\begin{itemize}
+    \item \textbf{Method A} (Economic): Single-objective cost minimization, serving as the baseline.
+    \item \textbf{Method B} (Std): Bi-objective with the net load volatility index (\Cref{eq:mi_std}), representing the conventional approach.
+    \item \textbf{Method C} (EQD): Bi-objective with the proposed energy-quality-weighted Euclidean distance (\Cref{eq:mi_eqd}).
+    \item \textbf{Method D} (Pearson): Bi-objective with the Pearson correlation index (\Cref{eq:mi_pearson}).
+    \item \textbf{Method E} (SSR): Bi-objective with the self-sufficiency rate index (\Cref{eq:mi_ssr}).
+\end{itemize}
+
+All bi-objective experiments use NSGA-II with a population size of $N_{\text{ind}} = 50$ and $G_{\text{max}} = 100$ generations. The single-objective Method~A uses a DE-based genetic algorithm with the same population size and generation count. The 14 typical days are pre-computed by $k$-medoids clustering on the combined load and weather profiles.

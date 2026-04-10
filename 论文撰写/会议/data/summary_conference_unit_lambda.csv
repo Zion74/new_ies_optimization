@@ -1,0 +1,4 @@
+method,n_solutions_total,n_solutions_used_for_range,feasible_max_cost_EUR,economic_cost_min_EUR,economic_cost_max_EUR,pareto_front_width_kEUR,matching_index_min,matching_index_max,width_ratio_vs_std
+economic_only,1,1,5000000.0,928701.334953,928701.334953,0.000000,,,0.000000
+std,3,3,5000000.0,855150.100515,1445591.370440,590.441270,428.286454,470.146215,1.000000
+euclidean,10,9,5000000.0,911954.596007,2078849.171421,1166.894575,872.965306,1824.881806,1.976309

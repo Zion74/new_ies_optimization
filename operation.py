@@ -369,56 +369,59 @@ class OperationModel:
     # 模型优化与储存
     def optimise(self) -> None:
         solver_verbose = False  # 是否输出求解器信息
+        import warnings
+        from pyomo.opt import SolverStatus, TerminationCondition
 
-        # 尝试使用 Gurobi
+        def _check_results(results, solver_name):
+            """检查求解状态：接受 optimal 或 ok+unknown（两个求解器均可能返回后者）"""
+            status = results.solver.status
+            cond = results.solver.termination_condition
+            if status == SolverStatus.ok and cond in (
+                TerminationCondition.optimal,
+                TerminationCondition.unknown,
+            ):
+                return
+            if cond == TerminationCondition.infeasible:
+                raise ValueError(f"{solver_name} returned Infeasible")
+            raise ValueError(f"{solver_name} status: {status}, condition: {cond}")
+
+        def _verify_solution():
+            """验证变量已被赋值（Gurobi 并发时可能返回空结果）"""
+            import pyomo.environ as pyo
+            for v in self.model.component_data_objects(ctype=pyo.Var, active=True):
+                if v.value is not None:
+                    return
+            raise ValueError("Solver returned no variable values (possible license conflict)")
+
+        # 尝试使用 Gurobi（gurobi_direct 走 Python API，子进程安全），失败则 fallback 到 GLPK
+        gurobi_ok = False
         try:
-            solver = "gurobi"
-            # logging.info(f"Attempting to solve with {solver}...")
-            results = self.model.solve(
-                solver=solver, solve_kwargs={"tee": solver_verbose}
-            )
-
-            # 检查求解状态
-            from pyomo.opt import SolverStatus, TerminationCondition
-
-            if (results.solver.status == SolverStatus.ok) and (
-                results.solver.termination_condition == TerminationCondition.optimal
-            ):
-                pass
-            elif (
-                results.solver.termination_condition == TerminationCondition.infeasible
-            ):
-                raise ValueError("Gurobi returned Infeasible")
-            else:
-                # 如果 Gurobi 返回非最优状态，尝试 GLPK
-                raise ValueError(
-                    f"Gurobi status: {results.solver.status}, condition: {results.solver.termination_condition}"
-                )
-
-        except Exception as e:
-            # logging.warning(f"Gurobi failed: {e}. Switching to GLPK...")
-            try:
-                solver = "glpk"
+            solver = "gurobi_direct"
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*termination condition unknown.*")
                 results = self.model.solve(
                     solver=solver, solve_kwargs={"tee": solver_verbose}
                 )
-                from pyomo.opt import SolverStatus, TerminationCondition
+            _check_results(results, "Gurobi")
+            _verify_solution()
+            gurobi_ok = True
+        except Exception:
+            pass
 
-                if (results.solver.status == SolverStatus.ok) and (
-                    results.solver.termination_condition == TerminationCondition.optimal
-                ):
-                    pass
-                elif (
-                    results.solver.termination_condition
-                    == TerminationCondition.infeasible
-                ):
-                    raise ValueError("GLPK returned Infeasible")
-                else:
-                    raise ValueError(
-                        f"GLPK status: {results.solver.status}, condition: {results.solver.termination_condition}"
+        if not gurobi_ok:
+            # 重建模型避免 Gurobi 尝试后的状态污染
+            self.model = solph.Model(self.energy_system)
+            try:
+                with warnings.catch_warnings():
+                    warnings.filterwarnings(
+                        "ignore", message=".*termination condition unknown.*"
                     )
+                    results = self.model.solve(
+                        solver="glpk", solve_kwargs={"tee": solver_verbose}
+                    )
+                _check_results(results, "GLPK")
             except Exception as e2:
-                raise ValueError(f"Both solvers failed. Gurobi: {e}, GLPK: {e2}")
+                raise ValueError(f"GLPK failed: {e2}")
 
         self.energy_system.results["main"] = solph.processing.results(self.model)
         self.energy_system.results["meta"] = solph.processing.meta_results(self.model)
@@ -746,52 +749,59 @@ class HeatEleModel:
     def optimise(self) -> None:
         """模型优化求解"""
         solver_verbose = False
+        import warnings
+        from pyomo.opt import SolverStatus, TerminationCondition
 
-        # 尝试使用 Gurobi
+        def _check_results(results, solver_name):
+            """检查求解状态：接受 optimal 或 ok+unknown（两个求解器均可能返回后者）"""
+            status = results.solver.status
+            cond = results.solver.termination_condition
+            if status == SolverStatus.ok and cond in (
+                TerminationCondition.optimal,
+                TerminationCondition.unknown,
+            ):
+                return
+            if cond == TerminationCondition.infeasible:
+                raise ValueError(f"{solver_name} returned Infeasible")
+            raise ValueError(f"{solver_name} status: {status}, condition: {cond}")
+
+        def _verify_solution():
+            """验证变量已被赋值（Gurobi 并发时可能返回空结果）"""
+            import pyomo.environ as pyo
+            for v in self.model.component_data_objects(ctype=pyo.Var, active=True):
+                if v.value is not None:
+                    return
+            raise ValueError("Solver returned no variable values (possible license conflict)")
+
+        # 尝试使用 Gurobi（gurobi_direct 走 Python API，子进程安全），失败则 fallback 到 GLPK
+        gurobi_ok = False
         try:
-            solver = "gurobi"
-            results = self.model.solve(
-                solver=solver, solve_kwargs={"tee": solver_verbose}
-            )
-
-            from pyomo.opt import SolverStatus, TerminationCondition
-
-            if (results.solver.status == SolverStatus.ok) and (
-                results.solver.termination_condition == TerminationCondition.optimal
-            ):
-                pass
-            elif (
-                results.solver.termination_condition == TerminationCondition.infeasible
-            ):
-                raise ValueError("Gurobi returned Infeasible")
-            else:
-                raise ValueError(
-                    f"Gurobi status: {results.solver.status}, condition: {results.solver.termination_condition}"
-                )
-
-        except Exception as e:
-            try:
-                solver = "glpk"
+            solver = "gurobi_direct"
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*termination condition unknown.*")
                 results = self.model.solve(
                     solver=solver, solve_kwargs={"tee": solver_verbose}
                 )
-                from pyomo.opt import SolverStatus, TerminationCondition
+            _check_results(results, "Gurobi")
+            _verify_solution()
+            gurobi_ok = True
+        except Exception:
+            pass
 
-                if (results.solver.status == SolverStatus.ok) and (
-                    results.solver.termination_condition == TerminationCondition.optimal
-                ):
-                    pass
-                elif (
-                    results.solver.termination_condition
-                    == TerminationCondition.infeasible
-                ):
-                    raise ValueError("GLPK returned Infeasible")
-                else:
-                    raise ValueError(
-                        f"GLPK status: {results.solver.status}, condition: {results.solver.termination_condition}"
+        if not gurobi_ok:
+            # 重建模型避免 Gurobi 尝试后的状态污染
+            self.model = solph.Model(self.energy_system)
+            try:
+                with warnings.catch_warnings():
+                    warnings.filterwarnings(
+                        "ignore", message=".*termination condition unknown.*"
                     )
+                    results = self.model.solve(
+                        solver="glpk", solve_kwargs={"tee": solver_verbose}
+                    )
+                _check_results(results, "GLPK")
             except Exception as e2:
-                raise ValueError(f"Both solvers failed. Gurobi: {e}, GLPK: {e2}")
+                raise ValueError(f"GLPK failed: {e2}")
 
         self.energy_system.results["main"] = solph.processing.results(self.model)
         self.energy_system.results["meta"] = solph.processing.meta_results(self.model)

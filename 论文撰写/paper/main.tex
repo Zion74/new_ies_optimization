@@ -1,0 +1,93 @@
+% Applied Energy (Elsevier) full manuscript. For IEEE-style precursor draft
+% (IEMI / concept validation, single German case), see 论文撰写/会议/main_conference.tex.
+\documentclass[review]{elsarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{subcaption}
+\usepackage{lineno}
+\modulolinenumbers[5]
+
+\journal{Applied Energy}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Energy-quality-weighted source-load matching for optimal planning of distributed combined cooling, heating and power systems with Carnot battery integration}
+
+\author[1]{First Author\corref{cor1}}
+\ead{author1@university.edu.cn}
+\author[1]{Second Author}
+
+\cortext[cor1]{Corresponding author}
+\affiliation[1]{organization={School of Energy and Power Engineering, University Name},
+                city={City},
+                country={China}}
+
+\begin{abstract}
+The optimal planning of distributed combined cooling, heating and power (CCHP) systems requires balancing economic efficiency with the temporal matching between energy supply and demand. Existing source-load matching indices treat electricity, heating, and cooling equally, neglecting the inherent quality differences among various energy forms. This paper proposes an energy-quality-weighted three-dimensional Euclidean distance index for quantifying source-load matching in integrated energy systems. Unlike previous studies that adopt empirically adjusted coefficients, the energy quality coefficients are directly derived from Carnot exergy factors based on the second law of thermodynamics, yielding parameter-free values uniquely determined by supply temperatures and ambient conditions (e.g., $\lambda_e = 1.0$, $\lambda_h = 0.131$, $\lambda_c = 0.064$ for the German case). A bi-objective optimization framework coupling the proposed matching index with annualized total cost is established, incorporating a Carnot battery as a novel electro-thermal coupled storage device. The framework employs NSGA-II to generate Pareto-optimal capacity configurations, with hourly operational dispatch solved via the Open Energy Modelling Framework (oemof). Numerical experiments are conducted on two representative cases: a heating-dominated German community and a cooling-dominated campus in Songshan Lake, China. Results demonstrate that the proposed method generates Pareto fronts 6.1 times wider than the conventional volatility-based method (cost range \euro{}1,267k vs.\ \euro{}209k), providing decision-makers with a comprehensive trade-off space. Post-optimization operational analysis using full 8760-hour simulations confirms that, at equivalent budget levels (+100\%), the proposed method achieves 26.7\% lower peak grid demand, 29.9\% lower annual grid purchase, and 47.5\% higher self-sufficiency rate compared to the volatility-based method, while maintaining near-zero renewable curtailment (0.08\%). The conventional method's Pareto front saturates at low cost levels, offering no additional solutions beyond +50\% budget increment. These findings establish that Carnot-exergy-based energy quality weighting produces a smooth, gradient-rich matching index that effectively guides capacity planning toward solutions with superior grid-interaction characteristics.
+\end{abstract}
+
+\begin{keyword}
+Integrated energy system \sep Source-load matching \sep Energy quality coefficient \sep Exergy analysis \sep Carnot battery \sep Multi-objective optimization \sep NSGA-II \sep CCHP
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+%% ============================================================
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/introduction}
+
+%% ============================================================
+\section{System modeling}
+\label{sec:system}
+\input{sections/system_modeling}
+
+%% ============================================================
+\section{Energy-quality-weighted source-load matching index}
+\label{sec:matching}
+\input{sections/matching_index}
+
+%% ============================================================
+\section{Bi-objective optimization framework}
+\label{sec:optimization}
+\input{sections/optimization}
+
+%% ============================================================
+\section{Case studies}
+\label{sec:cases}
+\input{sections/case_studies}
+
+%% ============================================================
+\section{Results and discussion}
+\label{sec:results}
+\input{sections/results}
+
+%% ============================================================
+\section{Conclusions}
+\label{sec:conclusions}
+\input{sections/conclusions}
+
+\section*{CRediT authorship contribution statement}
+\textbf{First Author}: Conceptualization, Methodology, Software, Validation, Writing -- original draft. \textbf{Second Author}: Supervision, Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Acknowledgements}
+This work was supported by [Funding Agency] under Grant [Number].
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

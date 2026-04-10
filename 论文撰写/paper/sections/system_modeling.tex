@@ -1,0 +1,140 @@
+This section presents the topology and mathematical models of the distributed CCHP system considered in this study. The system comprises distributed generation units, energy conversion devices, energy storage systems, and a novel Carnot battery, all interconnected through four energy buses: electricity, heating, cooling, and natural gas.
+
+\subsection{System topology}
+\label{sec:topology}
+
+The CCHP system topology is illustrated in \Cref{fig:topology}. Four energy buses serve as the backbone of the system, facilitating energy flow among all components:
+
+\begin{itemize}
+    \item \textbf{Electricity bus}: receives power from the utility grid, photovoltaic (PV) panels, wind turbines (WT), and the gas turbine (GT) generator; supplies electricity to end-use demand, the electric chiller (EC), the electric heat pump (EHP), the electrical energy storage (ES), and the Carnot battery (CB).
+    \item \textbf{Heating bus}: receives heat from the GT waste heat recovery unit and the EHP; supplies heat to end-use heating demand, the absorption chiller (AC), and the heat storage (HS). Waste heat recovered from the Carnot battery discharging process also feeds into this bus.
+    \item \textbf{Cooling bus}: receives cooling from the EC and the AC; supplies cooling to end-use cooling demand and the cold storage (CS).
+    \item \textbf{Gas bus}: receives natural gas from the gas network and supplies it to the GT.
+\end{itemize}
+
+The system interacts with the external utility grid through a single point of connection on the electricity bus. Grid power purchase is permitted without upper bound, while power export to the grid is not considered in this study. This configuration reflects the typical operating mode of distributed CCHP systems in China, where feed-in tariffs for small-scale generators are either unavailable or economically unattractive.
+
+\subsection{Component models}
+\label{sec:components}
+
+All component models are formulated as linear input-output relationships suitable for integration into the linear programming-based operational dispatch model. The decision variables in the planning problem are the rated capacities of each component, denoted as $P_{\text{pv}}$, $P_{\text{wt}}$, $P_{\text{gt}}$, $P_{\text{hp}}$, $P_{\text{ec}}$, $P_{\text{ac}}$, $P_{\text{es}}$, $P_{\text{hs}}$, $P_{\text{cs}}$, and optionally $P_{\text{cb}}$ and $E_{\text{cb}}$ for the Carnot battery power and capacity ratings.
+
+\subsubsection{Photovoltaic panels}
+
+The hourly electrical output of the PV array is determined by the installed capacity and the solar irradiance:
+\begin{equation}
+    P_{\text{pv}}(t) = P_{\text{pv}} \cdot \frac{G(t)}{G_{\text{STC}}} \cdot \eta_{\text{pv}}
+    \label{eq:pv}
+\end{equation}
+where $G(t)$ is the solar irradiance at hour $t$ (\si{W/m^2}), $G_{\text{STC}} = \SI{1000}{W/m^2}$ is the irradiance under standard test conditions, and $\eta_{\text{pv}}$ is the overall conversion efficiency accounting for temperature derating and inverter losses.
+
+\subsubsection{Wind turbines}
+
+The wind turbine output is modeled as a linear function of the rated capacity and the wind speed:
+\begin{equation}
+    P_{\text{wt}}(t) = P_{\text{wt}} \cdot f_{\text{wt}}(v(t))
+    \label{eq:wt}
+\end{equation}
+where $f_{\text{wt}}(v)$ is the normalized power curve as a function of wind speed $v(t)$, incorporating cut-in, rated, and cut-out wind speeds.
+
+\subsubsection{Gas turbine with waste heat recovery}
+
+The GT operates in combined heat and power mode. The electrical and thermal outputs are:
+\begin{equation}
+    P_{\text{gt,e}}(t) = P_{\text{gt,fuel}}(t) \cdot \eta_{\text{gt,e}}
+    \label{eq:gt_e}
+\end{equation}
+\begin{equation}
+    Q_{\text{gt,h}}(t) = P_{\text{gt,fuel}}(t) \cdot \eta_{\text{gt,h}}
+    \label{eq:gt_h}
+\end{equation}
+where $P_{\text{gt,fuel}}(t)$ is the fuel input power, $\eta_{\text{gt,e}}$ is the electrical efficiency, and $\eta_{\text{gt,h}}$ is the thermal recovery efficiency. The total fuel-to-useful-energy efficiency is $\eta_{\text{gt,e}} + \eta_{\text{gt,h}}$.
+
+\subsubsection{Electric heat pump}
+
+The EHP converts electricity into heating with a coefficient of performance (COP):
+\begin{equation}
+    Q_{\text{hp}}(t) = P_{\text{hp,e}}(t) \cdot \text{COP}_{\text{hp}}
+    \label{eq:hp}
+\end{equation}
+where $P_{\text{hp,e}}(t)$ is the electrical input and $\text{COP}_{\text{hp}}$ is the heating COP.
+
+\subsubsection{Electric chiller}
+
+The EC produces cooling from electricity:
+\begin{equation}
+    Q_{\text{ec}}(t) = P_{\text{ec,e}}(t) \cdot \text{COP}_{\text{ec}}
+    \label{eq:ec}
+\end{equation}
+where $\text{COP}_{\text{ec}}$ is the cooling COP of the electric chiller.
+
+\subsubsection{Absorption chiller}
+
+The AC is driven by heat from the heating bus to produce cooling:
+\begin{equation}
+    Q_{\text{ac,c}}(t) = Q_{\text{ac,h}}(t) \cdot \text{COP}_{\text{ac}}
+    \label{eq:ac}
+\end{equation}
+where $Q_{\text{ac,h}}(t)$ is the heat input and $\text{COP}_{\text{ac}}$ is the thermal COP.
+
+\subsubsection{Energy storage systems}
+
+Three independent storage systems are modeled for electricity (ES), heating (HS), and cooling (CS). Each follows the generic storage dynamics:
+\begin{equation}
+    E_s(t) = E_s(t-1) \cdot (1 - \sigma_s) + \left[ P_s^{\text{ch}}(t) \cdot \eta_s^{\text{ch}} - \frac{P_s^{\text{dis}}(t)}{\eta_s^{\text{dis}}} \right] \cdot \Delta t
+    \label{eq:storage}
+\end{equation}
+where $E_s(t)$ is the stored energy at hour $t$, $\sigma_s$ is the self-discharge rate, $P_s^{\text{ch}}(t)$ and $P_s^{\text{dis}}(t)$ are the charging and discharging powers, $\eta_s^{\text{ch}}$ and $\eta_s^{\text{dis}}$ are the corresponding efficiencies, and $\Delta t = \SI{1}{h}$. The storage capacity is set proportional to the rated power with a fixed energy-to-power ratio.
+
+\subsection{Carnot battery model}
+\label{sec:carnot}
+
+The Carnot battery is an emerging electro-thermal energy storage technology that stores electricity as thermal energy and recovers it on demand \cite{dumont2022carnot,novotny2022review}. Unlike conventional single-carrier storage, the Carnot battery inherently couples the electrical and thermal domains, offering a unique advantage for multi-energy systems.
+
+\subsubsection{Operating principle}
+
+During the charging phase, a heat pump consumes electricity to upgrade low-grade heat to high-temperature thermal storage. During the discharging phase, a heat engine converts the stored thermal energy back to electricity. The round-trip electrical efficiency is defined as:
+\begin{equation}
+    \eta_{\text{rte}} = \eta_{\text{hp,cb}} \cdot \eta_{\text{he,cb}}
+    \label{eq:cb_rte}
+\end{equation}
+where $\eta_{\text{hp,cb}}$ and $\eta_{\text{he,cb}}$ are the heat pump and heat engine efficiencies of the Carnot battery subsystem, respectively.
+
+\subsubsection{Electrical storage behavior}
+
+The Carnot battery is modeled as a generic electrical storage connected to the electricity bus, with symmetric charging and discharging efficiencies:
+\begin{equation}
+    \eta_{\text{cb}}^{\text{ch}} = \eta_{\text{cb}}^{\text{dis}} = \sqrt{\eta_{\text{rte}}}
+    \label{eq:cb_eff}
+\end{equation}
+
+The state of energy follows \Cref{eq:storage} with the Carnot battery-specific parameters. Two independent decision variables govern the Carnot battery sizing: the rated power $P_{\text{cb}}$ (\si{kW}) and the storage capacity $E_{\text{cb}}$ (\si{kWh}).
+
+\subsubsection{Waste heat recovery}
+
+A distinguishing feature of the Carnot battery is that waste heat generated during the electricity recovery process can be captured and supplied to the heating bus. This is modeled as a transformer connecting the electricity bus to the heating bus:
+\begin{equation}
+    Q_{\text{cb,h}}(t) = P_{\text{cb,dis}}(t) \cdot \frac{1 - \eta_{\text{cb}}^{\text{dis}}}{\eta_{\text{cb}}^{\text{dis}}} \cdot \eta_{\text{hr}}
+    \label{eq:cb_heat}
+\end{equation}
+where $P_{\text{cb,dis}}(t)$ is the discharging power, and $\eta_{\text{hr}}$ is the heat recovery efficiency. This waste heat recovery mechanism creates a synergistic coupling between electrical peak-shaving and thermal supply augmentation, which is particularly beneficial for improving source-load matching across multiple energy carriers.
+
+\subsection{Operational dispatch model}
+\label{sec:dispatch}
+
+For a given set of equipment capacities, the hourly operational dispatch is formulated as a linear programming problem and solved using the Open Energy Modelling Framework (oemof) \cite{hilpert2018oemof}. The oemof-solph package constructs the energy system as a network of buses, sources, sinks, transformers, and storage units, and minimizes the total operational cost over a 24-hour horizon:
+\begin{equation}
+    \min \sum_{t=1}^{24} \left[ c_{\text{ele}}(t) \cdot P_{\text{grid}}(t) + c_{\text{gas}} \cdot P_{\text{gt,fuel}}(t) \right] \cdot \Delta t
+    \label{eq:dispatch}
+\end{equation}
+subject to energy balance constraints on each bus, capacity limits on each component, and storage continuity constraints. The solver attempts Gurobi first for computational efficiency and falls back to GLPK if Gurobi is unavailable.
+
+\subsection{Typical-day decomposition}
+\label{sec:typical_day}
+
+To reduce the computational burden of evaluating 8760 hourly time steps for each candidate solution in the evolutionary algorithm, a typical-day decomposition approach is adopted \cite{kotzur2018impact,dominguez2012selection}. The annual load and weather profiles are represented by 14 typical days, each associated with a weight $w_d$ indicating the number of days it represents. The annual operational cost is approximated as:
+\begin{equation}
+    C_{\text{op}} = \sum_{d=1}^{14} w_d \cdot C_{\text{op},d}
+    \label{eq:typical_day}
+\end{equation}
+where $C_{\text{op},d}$ is the daily operational cost obtained by solving the dispatch model for typical day $d$. Similarly, the source-load matching index is computed as the weighted sum across all typical days. This decomposition reduces the number of dispatch optimizations from 365 to 14 per fitness evaluation, achieving approximately a 26-fold speedup while preserving the seasonal variation in load patterns and renewable resource availability.

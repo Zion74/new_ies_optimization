@@ -1,0 +1,133 @@
+This section develops the energy-quality-weighted source-load matching index, beginning with the thermodynamic basis for energy quality differentiation, followed by the mathematical formulation of the proposed index, and concluding with a comparative analysis against existing matching metrics.
+
+\subsection{Energy quality and exergy analysis}
+\label{sec:energy_quality}
+
+In a multi-energy system supplying electricity, heating, and cooling, the three energy carriers differ fundamentally in their thermodynamic quality---that is, their capacity to perform useful work. Exergy, defined as the maximum work obtainable from an energy flow as it reaches equilibrium with the environment, provides a rigorous measure of this quality \cite{dincer2001energy,bejan2016advanced,hu2020eqc}. The second law of thermodynamics asserts that energy has quality as well as quantity, and that different forms of energy possess different capacities for conversion into useful work \cite{moran2014fundamentals}. The energy quality coefficient (EQC) of an energy carrier is defined as the ratio of its exergy content to its energy content:
+\begin{equation}
+    \lambda = \frac{\text{Ex}}{\text{En}}
+    \label{eq:eqc_def}
+\end{equation}
+where $\text{Ex}$ and $\text{En}$ denote the exergy and energy of the carrier, respectively \cite{chen2022energy,ma2023exergyflex}.
+
+For the three energy carriers considered in this study, the EQCs are determined as follows:
+
+\paragraph{Electricity ($\lambda_e = 1.0$).} Electrical energy is pure exergy; it can be entirely converted into any other form of energy (in principle). Therefore, $\lambda_e = 1.0$ serves as the reference quality level \cite{dincer2001energy,sakulpipatsin2010exergy}.
+
+\paragraph{Heating ($\lambda_h$).} The exergy content of heat depends on the temperature at which it is delivered. For a heat flow at supply temperature $T_h$ in an environment at temperature $T_0$, the Carnot factor gives:
+\begin{equation}
+    \lambda_h = 1 - \frac{T_0}{T_h}
+    \label{eq:lambda_h}
+\end{equation}
+For typical building heating systems operating at 60--70°C, this yields exergy factors in the range of 0.10--0.15, indicating that low-temperature heat contains only 10--15\% of the work potential of an equivalent amount of electrical energy \cite{torchio2013comparison,meggers2012low,schmidt2004low}.
+
+\paragraph{Cooling ($\lambda_c$).} The exergy of cooling at temperature $T_c$ below the environment temperature $T_0$ is:
+\begin{equation}
+    \lambda_c = \frac{T_0}{T_c} - 1
+    \label{eq:lambda_c}
+\end{equation}
+For air conditioning systems operating at 5--10°C, the exergy factor is similarly low (0.05--0.10), reflecting the limited work potential of low-temperature cooling \cite{sakulpipatsin2010exergy}.
+
+Unlike previous studies that adopt empirically adjusted values (e.g., $\lambda_h = 0.6$, $\lambda_c = 0.5$) \cite{chen2023exergy,wang2023exergy}, this work directly applies the Carnot exergy factors from \Cref{eq:lambda_h,eq:lambda_c} without artificial adjustment. The resulting coefficients are automatically determined by the thermodynamic parameters of each case study, as shown in \Cref{tab:lambda_values}.
+
+\begin{table}[htbp]
+\centering
+\caption{Energy quality coefficients derived from Carnot exergy factors.}
+\label{tab:lambda_values}
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Case & $T_0$ (K) & $T_h$ (K) & $T_c$ (K) & $\lambda_e$ & $\lambda_h$ & $\lambda_c$ \\
+\midrule
+German community & 298.15 & 343.15 & 280.15 & 1.000 & 0.131 & 0.064 \\
+Songshan Lake campus & 300.15 & 333.15 & 280.15 & 1.000 & 0.099 & 0.071 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The small magnitudes of $\lambda_h$ and $\lambda_c$ relative to $\lambda_e$ are not a limitation but rather a faithful reflection of thermodynamic reality: in exergy terms, a 1~kW mismatch in electricity represents 8--15 times greater loss of work potential than a 1~kW mismatch in low-temperature heating or cooling \cite{hu2020eqc,li2022exergyflow}. This asymmetry causes the optimizer to prioritize electrical balance---precisely the behavior desired from a grid-interaction perspective, as electrical imbalances directly impact grid frequency and voltage stability, whereas thermal imbalances are buffered by the inherent thermal inertia of buildings and storage systems. The conventional equal-weight approach ($\lambda_e = \lambda_h = \lambda_c = 1.0$) implicitly treats 1~kW of electrical mismatch as equivalent to 1~kW of thermal mismatch, which contradicts the fundamental principles of thermodynamics and leads to suboptimal resource allocation \cite{chen2024joint,duo2025matching}.
+
+A key advantage of this approach over empirical coefficients is that the values are \emph{parameter-free}: they are uniquely determined by the supply temperatures and ambient conditions of each case, eliminating the need for subjective calibration. Different climate zones and system configurations automatically receive differentiated coefficients, as evidenced by the two cases in \Cref{tab:lambda_values}. The validity of this choice is confirmed through post-optimization operational analysis in \Cref{sec:post_analysis}, which demonstrates that the Carnot-factor-weighted index produces solutions with superior grid-interaction characteristics compared to equal-weight alternatives.
+
+\subsection{Proposed matching index: energy-quality-weighted Euclidean distance}
+\label{sec:proposed_index}
+
+For a given system configuration, the net load (supply minus demand) for each energy carrier at hour $t$ is defined as:
+\begin{equation}
+    P_{\text{net},i}(t) = P_{\text{supply},i}(t) - P_{\text{demand},i}(t), \quad i \in \{e, h, c\}
+    \label{eq:net_load}
+\end{equation}
+where $P_{\text{supply},i}(t)$ is the total local generation (including storage discharge) and $P_{\text{demand},i}(t)$ is the end-use demand for carrier $i$. A positive $P_{\text{net},i}(t)$ indicates surplus (potential curtailment or export), while a negative value indicates deficit (requiring grid import or load shedding).
+
+The proposed energy-quality-weighted three-dimensional Euclidean distance matching index is defined as:
+\begin{equation}
+    \text{MI}_{\text{EQD}} = \frac{1}{T} \sum_{t=1}^{T} \sqrt{ \left(\lambda_e \cdot |P_{\text{net},e}(t)|\right)^2 + \left(\lambda_h \cdot |P_{\text{net},h}(t)|\right)^2 + \left(\lambda_c \cdot |P_{\text{net},c}(t)|\right)^2 }
+    \label{eq:mi_eqd}
+\end{equation}
+where $T$ is the total number of hours in the evaluation period (8760 for a full year, or the weighted equivalent when using typical days). The index has units of \si{kW} and represents the average quality-weighted distance from perfect supply-demand balance across all three energy carriers.
+
+The formulation possesses several desirable properties for capacity planning optimization:
+
+\begin{enumerate}
+    \item \textbf{Non-negativity and zero-minimum}: $\text{MI}_{\text{EQD}} \geq 0$, with equality if and only if supply exactly matches demand for all carriers at all hours. This provides a clear optimization direction (minimization).
+    \item \textbf{Quality differentiation}: Through the energy quality coefficients $\lambda_i$, mismatches in high-quality carriers (electricity) are penalized more heavily than those in low-quality carriers (cooling), guiding the optimizer to prioritize electrical balance.
+    \item \textbf{Magnitude sensitivity}: Unlike correlation-based metrics, the Euclidean distance is sensitive to the absolute magnitude of mismatches, not merely their temporal pattern. A system with consistently small mismatches scores better than one with large but correlated mismatches.
+    \item \textbf{Cross-carrier coupling}: The square root of the sum of squares creates a coupled metric where reducing mismatch in one carrier can compensate for increases in another (weighted by quality), reflecting the physical reality of energy conversion between carriers.
+    \item \textbf{Gradient richness}: The continuous, differentiable nature of the Euclidean distance provides smooth fitness landscapes for evolutionary optimization, facilitating the discovery of diverse Pareto-optimal solutions.
+\end{enumerate}
+
+\subsection{Comparison with existing matching indices}
+\label{sec:comparison_indices}
+
+To contextualize the proposed index, four alternative matching metrics are considered in this study. Each captures a different aspect of source-load coordination, and their systematic comparison forms a key contribution of this work.
+
+\subsubsection{Net load volatility (standard deviation method)}
+
+The volatility-based index sums the standard deviations of the net load across all three carriers:
+\begin{equation}
+    \text{MI}_{\text{Std}} = \sigma(P_{\text{net},e}) + \sigma(P_{\text{net},h}) + \sigma(P_{\text{net},c})
+    \label{eq:mi_std}
+\end{equation}
+where $\sigma(\cdot)$ denotes the standard deviation over the evaluation period. This index penalizes temporal fluctuations in the net load but is insensitive to the mean offset: a system with a constant large deficit scores zero volatility despite poor matching. Furthermore, the equal-weight summation ignores energy quality differences.
+
+\subsubsection{Pearson correlation method}
+
+The correlation-based index measures the average linear correlation between supply and demand:
+\begin{equation}
+    \text{MI}_{\text{Pearson}} = \left(1 - \frac{1}{3}\sum_{i \in \{e,h,c\}} r(P_{\text{supply},i}, P_{\text{demand},i})\right) \times 1000
+    \label{eq:mi_pearson}
+\end{equation}
+where $r(\cdot,\cdot)$ is the Pearson correlation coefficient. While this index captures temporal co-movement, it is scale-invariant: doubling the supply capacity does not change the correlation, making it unsuitable for guiding capacity sizing decisions.
+
+\subsubsection{Self-sufficiency rate method}
+
+The self-sufficiency rate (SSR) measures the fraction of total demand met by local generation:
+\begin{equation}
+    \text{MI}_{\text{SSR}} = \left(1 - \frac{\sum_{t}\sum_{i} \min(P_{\text{supply},i}(t), P_{\text{demand},i}(t))}{\sum_{t}\sum_{i} P_{\text{demand},i}(t)}\right) \times 1000
+    \label{eq:mi_ssr}
+\end{equation}
+This index directly quantifies energy autonomy but does not distinguish between well-timed and poorly-timed self-sufficiency. A system that over-produces during off-peak hours and under-produces during peak hours may achieve the same SSR as a well-matched system.
+
+\subsubsection{Single-objective economic optimization}
+
+As a baseline, the pure economic optimization minimizes only the annualized total cost without any matching objective. This serves as the reference case for evaluating the cost premium associated with improved matching.
+
+\Cref{tab:index_comparison} summarizes the theoretical properties of all five approaches. The proposed energy-quality-weighted Euclidean distance is the only index that simultaneously accounts for magnitude sensitivity, energy quality differentiation, and cross-carrier coupling, making it the most comprehensive metric for guiding CCHP capacity planning.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of source-load matching index properties.}
+\label{tab:index_comparison}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Property & Economic & Std & Pearson & SSR & \textbf{EQD (proposed)} \\
+\midrule
+Magnitude sensitivity    & --  & Partial & No  & Yes & \textbf{Yes} \\
+Temporal pattern         & --  & Yes     & Yes & No  & \textbf{Yes} \\
+Energy quality weighting & --  & No      & No  & No  & \textbf{Yes} \\
+Cross-carrier coupling   & --  & No      & No  & No  & \textbf{Yes} \\
+Gradient richness        & --  & Low     & Low & Medium & \textbf{High} \\
+\bottomrule
+\end{tabular}
+\end{table}
