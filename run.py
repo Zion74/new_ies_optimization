@@ -182,7 +182,9 @@ def run_checks(verbose=True) -> bool:
         m.optimise()
         obj = m.get_objective_value()
         assert obj and obj > 0
-        return f"目标值={obj:.2f}"
+        meta = m.energy_system.results.get("meta", {})
+        solver_backend = meta.get("solver", {}).get("backend", "Unknown")
+        return f"目标值={obj:.2f} | 求解器={solver_backend}"
     chk("OperationModel 单次求解", _check_operation)
 
     passed = sum(1 for ok, _, _ in checks if ok)
