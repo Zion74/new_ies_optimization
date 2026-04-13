@@ -25,8 +25,9 @@ else:
 import os
 import datetime
 
-# 指定 Gurobi 许可证文件路径（仅在未设置时生效，优先使用系统环境变量）
-os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
+from solver_config import configure_gurobi_license
+
+configure_gurobi_license()
 
 import geatpy as ea
 from cchp_gaproblem import CCHPProblem, LAMBDA_E, LAMBDA_H, LAMBDA_C

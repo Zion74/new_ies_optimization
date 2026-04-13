@@ -67,3 +67,11 @@
 - 当前 sanity check：`Results/quick_all_20x20_20260410_144724`
 
 但正式终稿只接受 current-code full 结果。
+
+## 7. 结果回来后的回填顺序
+
+1. 先用德国 current-code full 回填 Fig S2 / Fig S3 / Tab S1 / Tab S2
+2. 再用 Songshan current-code full 回填 Fig S4 / Tab S3
+3. 再用 Exp3 full 回填 Fig S5 / Tab S4
+4. 再用 Exp4 full 回填 Fig S6 / Tab S5
+5. 最后判断是否保留 Fig S7 / Fig S8 作为补强证据链

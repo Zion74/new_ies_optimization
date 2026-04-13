@@ -36,17 +36,23 @@ import datetime
 import traceback
 
 # Gurobi 许可证路径（主进程和子进程均需要）
-os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
-
 # ── 编码修复（Windows GBK 终端）──────────────────────────────────────────
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-os.environ["GRB_LICENSE_FILE"] = r"C:\Users\ikun\gurobi.lic"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
+
+from solver_config import (
+    available_solver_names,
+    configure_gurobi_license,
+    iter_solver_display_names,
+    preferred_solver_order,
+)
+
+configure_gurobi_license()
 
 # ── 预设配置 ─────────────────────────────────────────────────────────────
 PRESETS = {
@@ -146,14 +152,12 @@ def run_checks(verbose=True) -> bool:
     )[-1])
 
     def _check_solvers():
-        import pyomo.environ as pyo
-        from pyomo.opt import SolverFactory
-        ok = []
-        for s in ["gurobi", "glpk"]:
-            if SolverFactory(s).available():
-                ok.append(s)
-        assert ok, "没有可用求解器（gurobi / glpk）"
-        return " + ".join(ok) + " 可用"
+        available = available_solver_names(["gurobi_direct", "highs", "glpk"])
+        assert available, "No available solver (gurobi_direct / highs / glpk)"
+        return (
+            f"Available: {iter_solver_display_names(available)} | "
+            f"Priority: {iter_solver_display_names(preferred_solver_order())}"
+        )
     chk("求解器", _check_solvers)
 
     def _check_data():

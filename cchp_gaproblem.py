@@ -37,11 +37,12 @@ import multiprocessing as mp
 from multiprocessing import Pool as ProcessPool
 from multiprocessing.dummy import Pool as ThreadPool
 
+from solver_config import configure_gurobi_license
+
 
 def _init_worker():
-    """子进程初始化：设置 Gurobi 许可证路径，确保多进程下 Gurobi 可用"""
-    import os
-    os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
+    """Synchronize solver-related environment variables in child processes."""
+    configure_gurobi_license()
 
 
 # ========== 能质系数默认值（仅作为 config 缺失时的回退） ==========
@@ -192,14 +193,13 @@ def cal_wind_output(wind_speed_list, pwt):
 
 def sub_aim_func_cchp(args):
     """
-    子目标函数：计算单个方案的目标函数值
+    ??????????????????
 
-    返回: [economic_obj, matching_obj]
+    ??: [economic_obj, matching_obj]
     """
-    # 子进程里显式设置 Gurobi 许可证路径，确保多进程下 Gurobi 可用
-    import os as _os
-    _os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
+    configure_gurobi_license()
 
+    i = args[0]
     i = args[0]
     Vars = args[1]
     operation_list = args[2]

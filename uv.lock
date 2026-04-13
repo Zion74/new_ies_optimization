@@ -66,12 +66,34 @@ wheels = [
 ]
 
 [[package]]
+name = "highspy"
+version = "1.11.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b4/fc/aa1325331c320598ce60cc31060087681cd05123b6fb2a8a571e882b7f05/highspy-1.11.0.tar.gz", hash = "sha256:771e58c076122d207ff1b19759c21d3227f0da5b80dfd89a4145681524969cef", size = 1285415, upload-time = "2025-06-06T00:47:22.562Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c5/62/2c05992b752fd6811f7d9b43ca164492ea07675265f928b6b8dabb0cbe22/highspy-1.11.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:ed032e327f5d40e1f55cc49109bac975f315c39f4ae953fc558abaf23bf767e9", size = 2229943, upload-time = "2025-06-06T00:46:48.379Z" },
+    { url = "https://files.pythonhosted.org/packages/02/62/ff13ac6f30ca59def5ee7b189e9137dd8b603f1a29673108e83c5ab3cc33/highspy-1.11.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:9d50934599182eefb184bda85541e1b5f061a905922bf890a6031ebad53c4890", size = 1905537, upload-time = "2025-06-06T00:46:50.381Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/49/147891535ad26a16e549af633d094b1b3d87f1531c6cb225d9b830b8b337/highspy-1.11.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6d919aee9c56f4ee677763d6ee3ba573fb331737811c07c1a35176639f0ed984", size = 2124557, upload-time = "2025-06-06T00:46:52.423Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/6a/7ceb6f08759f6efd83509def8d3ae75c1798bf27a9d2397cf769f694828a/highspy-1.11.0-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:fcd9a19f3282c3e66fa59e1cd31fe22c77925df65fc808b65928d994d06ae5d5", size = 2450021, upload-time = "2025-06-06T00:46:54.003Z" },
+    { url = "https://files.pythonhosted.org/packages/24/e4/f9932dcf2cd4d64e7f9ebbee41e312fa40fcd9b29e415a0702bb35ea034f/highspy-1.11.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:42a72d950b98cbfaf98153f77b146912df5ff37939fca8560d38d892af37d950", size = 2313234, upload-time = "2025-06-06T00:46:55.978Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/63/8c03d0b4cb5ad2921018f7fedd0917a8e270f3b49c18b0b02d4dbf115860/highspy-1.11.0-cp38-cp38-musllinux_1_2_aarch64.whl", hash = "sha256:fe7a1b4603e1a8c825b623602f37405f6a7b15515a90a01e1b05979f96169456", size = 3103977, upload-time = "2025-06-06T00:46:57.606Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/6c/cef973715fd4d02b88f40ab24351513e5bc0a2cf341d5f6fe3186103b6e8/highspy-1.11.0-cp38-cp38-musllinux_1_2_i686.whl", hash = "sha256:24f9b7dbf50f594b46954a1fc98311e97fec441b6fdcefa1276482770f096bbc", size = 3647864, upload-time = "2025-06-06T00:46:59.301Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/14/fea330f9afb655a7f7a4501fb3490e34b6cce715f1ecfff2b5513fe3a8f4/highspy-1.11.0-cp38-cp38-musllinux_1_2_x86_64.whl", hash = "sha256:9cff681c34a89b5c15d2581eac4775e954dfef866f7210ff128d6f41ef3dc9da", size = 3309860, upload-time = "2025-06-06T00:47:01.362Z" },
+    { url = "https://files.pythonhosted.org/packages/61/17/a15313d482277e44418287b5b21849353282ba6ad55c391f6f769ac67f81/highspy-1.11.0-cp38-cp38-win32.whl", hash = "sha256:a8f82358c522e60f21e823b01f2f42b3e633b053ada5f3b0d685309af3f6b3f2", size = 1710916, upload-time = "2025-06-06T00:47:03.012Z" },
+    { url = "https://files.pythonhosted.org/packages/43/c0/c714bbeaaed4b09df58141fc16534d76ed0898820d897a7226fb6804700c/highspy-1.11.0-cp38-cp38-win_amd64.whl", hash = "sha256:97f5a19669de57dcc9785501bc1580d2c74adf7f063a51abc312447a17db3275", size = 1986274, upload-time = "2025-06-06T00:47:04.573Z" },
+]
+
+[[package]]
 name = "ies-optimization"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "geatpy" },
     { name = "gurobipy" },
+    { name = "highspy" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "oemof-network" },
@@ -88,6 +110,7 @@ dependencies = [
 requires-dist = [
     { name = "geatpy", specifier = "==2.7.0" },
     { name = "gurobipy", specifier = "==11.0.3" },
+    { name = "highspy", specifier = "==1.11.0" },
     { name = "matplotlib", specifier = "==3.3.4" },
     { name = "numpy", specifier = "==1.24.4" },
     { name = "oemof-network", specifier = "==0.4.0" },

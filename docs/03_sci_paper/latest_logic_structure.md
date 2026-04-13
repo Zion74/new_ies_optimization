@@ -71,4 +71,7 @@ SCI 稿需要更强证据，但仍然要守边界：
 - 分节：`论文撰写/paper/sections/`
 - 图表统一落点：`论文撰写/paper/figures/`
 - 对应映射：`docs/03_sci_paper/experiment_figure_code_map.md`
+- 服务器执行清单：`docs/03_sci_paper/server_full_run_checklist.md`
+- 图表计划：`docs/03_sci_paper/figure_table_plan.md`
+- 初稿升级计划：`docs/03_sci_paper/manuscript_upgrade_plan.md`
 

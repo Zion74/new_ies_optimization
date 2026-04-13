@@ -61,4 +61,5 @@
 
 - 服务器 full 实验清单：`docs/03_sci_paper/server_full_run_checklist.md`
 - 图表与表格计划：`docs/03_sci_paper/figure_table_plan.md`
+- 初稿升级计划：`docs/03_sci_paper/manuscript_upgrade_plan.md`
 

@@ -35,10 +35,12 @@ if hasattr(sys.stdout, "reconfigure"):
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ikun\gurobi.lic")
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
+
+from solver_config import configure_gurobi_license
+
+configure_gurobi_license()
 
 # ── 四种模式参数 ─────────────────────────────────────────────────────────
 PIPELINE_MODES = {

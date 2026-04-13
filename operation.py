@@ -59,7 +59,9 @@ cs - cool storage
 """
 
 import logging
+import tempfile
 import warnings
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import pprint as pp
@@ -68,9 +70,189 @@ import oemof.solph as solph
 from oemof.solph import Sink, Source, Transformer
 from oemof.solph.components import GenericStorage
 import matplotlib.pyplot as plt
+from pyomo.opt import ProblemFormat, SolverStatus, TerminationCondition
+
+from solver_config import (
+    configure_gurobi_license,
+    iter_solver_display_names,
+    preferred_solver_order,
+    solver_display_name,
+)
 
 # 忽略 oemof 的 FutureWarning
 warnings.filterwarnings("ignore", category=FutureWarning, module="oemof")
+configure_gurobi_license()
+
+
+def _check_pyomo_results(results, solver_name):
+    """Accept optimal solves and keep error messages readable across solvers."""
+    status = results.solver.status
+    cond = results.solver.termination_condition
+    if status == SolverStatus.ok and cond in (
+        TerminationCondition.optimal,
+        TerminationCondition.unknown,
+    ):
+        return
+    if cond == TerminationCondition.infeasible:
+        raise ValueError(f"{solver_name} returned Infeasible")
+    raise ValueError(f"{solver_name} status: {status}, condition: {cond}")
+
+
+def _verify_model_solution(model):
+    """Guard against empty solution objects when a solver silently fails."""
+    for var in model.component_data_objects(ctype=po.Var, active=True):
+        if var.value is not None:
+            return
+    raise ValueError("Solver returned no variable values")
+
+
+def _build_manual_meta(objective_value, backend_name, message):
+    return {
+        "objective": float(objective_value),
+        "problem": {"name": "IES optimisation model"},
+        "solver": {
+            "status": "ok",
+            "termination_condition": "optimal",
+            "message": message,
+            "backend": backend_name,
+        },
+    }
+
+
+def _solve_with_pyomo_backend(model, solver_name, solver_verbose):
+    backend_name = solver_display_name(solver_name)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore", message=".*termination condition unknown.*"
+        )
+        results = model.solve(
+            solver=solver_name, solve_kwargs={"tee": solver_verbose}
+        )
+    _check_pyomo_results(results, backend_name)
+    _verify_model_solution(model)
+    meta = solph.processing.meta_results(model)
+    meta.setdefault("solver", {})
+    meta["solver"]["backend"] = backend_name
+    return model, meta
+
+
+def _load_highs_solution(model, symbol_map, highs_model, highspy):
+    solution = highs_model.getSolution()
+    if not solution.value_valid:
+        raise ValueError("HiGHS returned no primal solution")
+
+    var_by_symbol = {}
+    for symbol, obj_ref in symbol_map.bySymbol.items():
+        obj = obj_ref()
+        if obj is not None and getattr(obj, "is_variable_type", lambda: False)():
+            var_by_symbol[symbol] = obj
+
+    for col_index, value in enumerate(solution.col_value):
+        col_status, col_name = highs_model.getColName(col_index)
+        if col_status != highspy.HighsStatus.kOk:
+            continue
+        var = var_by_symbol.get(col_name)
+        if var is not None:
+            try:
+                var.set_value(value, skip_validation=True)
+            except TypeError:
+                var.set_value(value)
+
+    _verify_model_solution(model)
+
+
+def _solve_with_highs_backend(model, solver_verbose):
+    try:
+        import highspy
+    except ImportError as exc:
+        raise ValueError(
+            "highspy is not installed. Run `uv sync` after adding the dependency."
+        ) from exc
+
+    with tempfile.TemporaryDirectory(prefix="ies_highs_") as tmp_dir:
+        lp_path = Path(tmp_dir) / "model.lp"
+        _, symbol_map_id = model.write(
+            str(lp_path),
+            format=ProblemFormat.cpxlp,
+            io_options={"symbolic_solver_labels": True},
+        )
+        symbol_map = model.solutions.symbol_map[symbol_map_id]
+
+        highs_model = highspy.Highs()
+        highs_model.setOptionValue("output_flag", bool(solver_verbose))
+
+        read_status = highs_model.readModel(str(lp_path))
+        if read_status != highspy.HighsStatus.kOk:
+            raise ValueError(f"HiGHS could not read LP file: {read_status}")
+
+        run_status = highs_model.run()
+        if run_status != highspy.HighsStatus.kOk:
+            raise ValueError(f"HiGHS run() failed: {run_status}")
+
+        model_status = highs_model.getModelStatus()
+        if model_status != highspy.HighsModelStatus.kOptimal:
+            status_text = highs_model.modelStatusToString(model_status)
+            raise ValueError(f"HiGHS status: {status_text}")
+
+        _load_highs_solution(model, symbol_map, highs_model, highspy)
+        status_text = highs_model.modelStatusToString(model_status)
+        objective_value = highs_model.getObjectiveValue()
+
+    model.es.results = {
+        "Problem": [{"Name": "IES optimisation model"}],
+        "Solver": [
+            {
+                "Status": "ok",
+                "Termination condition": "optimal",
+                "Message": status_text,
+                "Name": "HiGHS",
+            }
+        ],
+    }
+    return model, _build_manual_meta(objective_value, "HiGHS", status_text)
+
+
+def _solve_model_with_priority(instance, solver_verbose):
+    solver_order = preferred_solver_order()
+    last_errors = []
+    model = instance.model
+    meta = None
+    solver_used = None
+
+    for idx, solver_name in enumerate(solver_order):
+        if idx > 0:
+            model = solph.Model(instance.energy_system)
+
+        try:
+            if solver_name == "highs":
+                model, meta = _solve_with_highs_backend(model, solver_verbose)
+            else:
+                model, meta = _solve_with_pyomo_backend(
+                    model, solver_name, solver_verbose
+                )
+            solver_used = solver_name
+            break
+        except Exception as exc:
+            last_errors.append(
+                f"{solver_display_name(solver_name)} failed: {exc}"
+            )
+
+    if solver_used is None:
+        raise ValueError(
+            "All solver attempts failed "
+            f"({iter_solver_display_names(solver_order)}): "
+            + " | ".join(last_errors)
+        )
+
+    meta.setdefault("solver", {})
+    meta["solver"]["backend"] = solver_display_name(solver_used)
+    meta["solver"]["order"] = iter_solver_display_names(solver_order)
+
+    instance.model = model
+    instance.last_solver_used = solver_used
+    instance.last_solver_order = list(solver_order)
+    instance.energy_system.results["main"] = solph.processing.results(model)
+    instance.energy_system.results["meta"] = meta
 
 
 class OperationModel:
@@ -369,62 +551,7 @@ class OperationModel:
     # 模型优化与储存
     def optimise(self) -> None:
         solver_verbose = False  # 是否输出求解器信息
-        import warnings
-        from pyomo.opt import SolverStatus, TerminationCondition
-
-        def _check_results(results, solver_name):
-            """检查求解状态：接受 optimal 或 ok+unknown（两个求解器均可能返回后者）"""
-            status = results.solver.status
-            cond = results.solver.termination_condition
-            if status == SolverStatus.ok and cond in (
-                TerminationCondition.optimal,
-                TerminationCondition.unknown,
-            ):
-                return
-            if cond == TerminationCondition.infeasible:
-                raise ValueError(f"{solver_name} returned Infeasible")
-            raise ValueError(f"{solver_name} status: {status}, condition: {cond}")
-
-        def _verify_solution():
-            """验证变量已被赋值（Gurobi 并发时可能返回空结果）"""
-            import pyomo.environ as pyo
-            for v in self.model.component_data_objects(ctype=pyo.Var, active=True):
-                if v.value is not None:
-                    return
-            raise ValueError("Solver returned no variable values (possible license conflict)")
-
-        # 尝试使用 Gurobi（gurobi_direct 走 Python API，子进程安全），失败则 fallback 到 GLPK
-        gurobi_ok = False
-        try:
-            solver = "gurobi_direct"
-            with warnings.catch_warnings():
-                warnings.filterwarnings("ignore", message=".*termination condition unknown.*")
-                results = self.model.solve(
-                    solver=solver, solve_kwargs={"tee": solver_verbose}
-                )
-            _check_results(results, "Gurobi")
-            _verify_solution()
-            gurobi_ok = True
-        except Exception:
-            pass
-
-        if not gurobi_ok:
-            # 重建模型避免 Gurobi 尝试后的状态污染
-            self.model = solph.Model(self.energy_system)
-            try:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings(
-                        "ignore", message=".*termination condition unknown.*"
-                    )
-                    results = self.model.solve(
-                        solver="glpk", solve_kwargs={"tee": solver_verbose}
-                    )
-                _check_results(results, "GLPK")
-            except Exception as e2:
-                raise ValueError(f"GLPK failed: {e2}")
-
-        self.energy_system.results["main"] = solph.processing.results(self.model)
-        self.energy_system.results["meta"] = solph.processing.meta_results(self.model)
+        _solve_model_with_priority(self, solver_verbose)
 
     # 返回优化结果
     def get_objective_value(self):
@@ -747,64 +874,9 @@ class HeatEleModel:
         self.model = solph.Model(self.energy_system)
 
     def optimise(self) -> None:
-        """模型优化求解"""
+        """Solve the optimisation model."""
         solver_verbose = False
-        import warnings
-        from pyomo.opt import SolverStatus, TerminationCondition
-
-        def _check_results(results, solver_name):
-            """检查求解状态：接受 optimal 或 ok+unknown（两个求解器均可能返回后者）"""
-            status = results.solver.status
-            cond = results.solver.termination_condition
-            if status == SolverStatus.ok and cond in (
-                TerminationCondition.optimal,
-                TerminationCondition.unknown,
-            ):
-                return
-            if cond == TerminationCondition.infeasible:
-                raise ValueError(f"{solver_name} returned Infeasible")
-            raise ValueError(f"{solver_name} status: {status}, condition: {cond}")
-
-        def _verify_solution():
-            """验证变量已被赋值（Gurobi 并发时可能返回空结果）"""
-            import pyomo.environ as pyo
-            for v in self.model.component_data_objects(ctype=pyo.Var, active=True):
-                if v.value is not None:
-                    return
-            raise ValueError("Solver returned no variable values (possible license conflict)")
-
-        # 尝试使用 Gurobi（gurobi_direct 走 Python API，子进程安全），失败则 fallback 到 GLPK
-        gurobi_ok = False
-        try:
-            solver = "gurobi_direct"
-            with warnings.catch_warnings():
-                warnings.filterwarnings("ignore", message=".*termination condition unknown.*")
-                results = self.model.solve(
-                    solver=solver, solve_kwargs={"tee": solver_verbose}
-                )
-            _check_results(results, "Gurobi")
-            _verify_solution()
-            gurobi_ok = True
-        except Exception:
-            pass
-
-        if not gurobi_ok:
-            # 重建模型避免 Gurobi 尝试后的状态污染
-            self.model = solph.Model(self.energy_system)
-            try:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings(
-                        "ignore", message=".*termination condition unknown.*"
-                    )
-                    results = self.model.solve(
-                        solver="glpk", solve_kwargs={"tee": solver_verbose}
-                    )
-                _check_results(results, "GLPK")
-            except Exception as e2:
-                raise ValueError(f"GLPK failed: {e2}")
-
-        self.energy_system.results["main"] = solph.processing.results(self.model)
-        self.energy_system.results["meta"] = solph.processing.meta_results(self.model)
+        _solve_model_with_priority(self, solver_verbose)
 
     def get_objective_value(self):
         """返回优化结果（运行成本）"""
