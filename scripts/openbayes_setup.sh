@@ -12,6 +12,8 @@ set -Eeuo pipefail
 # Optional environment variables:
 #   IES_SKIP_GLPK_INSTALL=1  Skip apt-based GLPK installation
 #   IES_SKIP_RUN_CHECK=1     Skip the final `run.py --check`
+#   IES_RESET_VENV=1         Remove the project `.venv` before syncing
+#   IES_PRUNE_UV_CACHE=1     Remove the local `.uv-cache` before syncing
 
 log() {
   printf '\n[INFO] %s\n' "$*"
@@ -39,6 +41,18 @@ fi
 
 export PATH="${HOME}/.local/bin:${PATH}"
 export PIP_DISABLE_PIP_VERSION_CHECK=1
+
+reset_project_state() {
+  if [[ "${IES_RESET_VENV:-0}" == "1" && -d "${REPO_ROOT}/.venv" ]]; then
+    log "Removing existing virtual environment: ${REPO_ROOT}/.venv"
+    rm -rf "${REPO_ROOT}/.venv"
+  fi
+
+  if [[ "${IES_PRUNE_UV_CACHE:-0}" == "1" && -d "${REPO_ROOT}/.uv-cache" ]]; then
+    log "Removing local uv cache: ${REPO_ROOT}/.uv-cache"
+    rm -rf "${REPO_ROOT}/.uv-cache"
+  fi
+}
 
 ensure_uv() {
   if command -v uv >/dev/null 2>&1; then
@@ -138,6 +152,7 @@ run_project_check() {
 main() {
   cd "${REPO_ROOT}"
   log "Repo root: ${REPO_ROOT}"
+  reset_project_state
   ensure_uv
 
   log "Installing Python ${PYTHON_VERSION} with uv"
