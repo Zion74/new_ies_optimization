@@ -204,6 +204,133 @@ def print_result_summary(results: dict, elapsed: float, result_dir: str):
     print("  实验结果摘要")
     print("=" * 60)
 
+
+def _format_duration(seconds: float) -> str:
+    seconds = max(0, int(round(seconds)))
+    hours, remainder = divmod(seconds, 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+def _format_datetime(dt: datetime.datetime) -> str:
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _methods_tag(methods) -> str:
+    if not methods:
+        return "nomethod"
+    if len(methods) == 1:
+        return methods[0]
+    if len(methods) <= 3:
+        return "+".join(methods)
+    return f"m{len(methods)}"
+
+
+def _variant_tag(carnot: bool) -> str:
+    return "carnot" if carnot else "base"
+
+
+def _generate_batch_result_dir_name(run_level, exp_ids, nind, maxgen,
+                                    num_workers=None, unit_lambda=False):
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    exp_tag = "exp-all" if len(exp_ids) > 1 else f"exp{exp_ids[0]}"
+    parts = [
+        "paper-batch",
+        exp_tag,
+        run_level,
+        f"n{nind}",
+        f"g{maxgen}",
+    ]
+    if num_workers:
+        parts.append(f"w{num_workers}")
+    if unit_lambda:
+        parts.append("unitlambda")
+    parts.append(timestamp)
+    return "__".join(parts)
+
+
+def _build_method_time_rows(results: dict):
+    import numpy as np
+
+    rows = []
+    for method, res in results.items():
+        best_indi = res.get("best_indi")
+        pareto_count = 0
+        min_cost = None
+        min_match = None
+        if best_indi is not None and best_indi.sizes > 0:
+            pareto_count = int(best_indi.sizes)
+            min_cost = float(np.min(best_indi.ObjV[:, 0]))
+            if best_indi.ObjV.shape[1] > 1:
+                min_match = float(np.min(best_indi.ObjV[:, 1]))
+
+        rows.append(
+            {
+                "method": method,
+                "method_label": METHOD_DESC.get(method, method),
+                "elapsed_seconds": float(res.get("time", 0.0)),
+                "elapsed_hms": _format_duration(float(res.get("time", 0.0))),
+                "pareto_count": pareto_count,
+                "min_cost": min_cost,
+                "min_match": min_match,
+            }
+        )
+    return rows
+
+
+def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
+                               num_workers, unit_lambda, started_at, finished_at,
+                               summaries):
+    report_path = os.path.join(results_root, "batch_timing_summary.md")
+    total_elapsed = (finished_at - started_at).total_seconds()
+
+    lines = []
+    lines.append("# 论文批量实验计时汇总\n\n")
+    lines.append(f"- 生成时间: {_format_datetime(datetime.datetime.now())}\n")
+    lines.append(f"- 运行级别: `{run_level}`\n")
+    lines.append(f"- 实验范围: `{', '.join(exp_ids)}`\n")
+    lines.append(f"- 参数: `nind={nind}, maxgen={maxgen}`\n")
+    lines.append(f"- workers: `{num_workers if num_workers is not None else 'default'}`\n")
+    lines.append(f"- unit-lambda: `{'on' if unit_lambda else 'off'}`\n")
+    lines.append(f"- 总开始时间: `{_format_datetime(started_at)}`\n")
+    lines.append(f"- 总结束时间: `{_format_datetime(finished_at)}`\n")
+    lines.append(f"- 总耗时: `{_format_duration(total_elapsed)}` ({total_elapsed/60:.1f} min)\n\n")
+
+    lines.append("## 子实验计时\n\n")
+    lines.append("| 子实验 | 案例 | 变体 | 方法集合 | 开始时间 | 结束时间 | 耗时 | 状态 | 结果目录 |\n")
+    lines.append("|---|---|---|---|---|---|---|---|---|\n")
+    for item in summaries:
+        rel_dir = "-"
+        if item.get("result_dir"):
+            try:
+                rel_dir = os.path.relpath(item["result_dir"], BASE_DIR).replace("\\", "/")
+            except ValueError:
+                rel_dir = str(item["result_dir"]).replace("\\", "/")
+        lines.append(
+            f"| `{item['exp_id']}` | `{item['case_name']}` | `{_variant_tag(item['carnot'])}` | "
+            f"`{_methods_tag(item['methods'])}` | `{_format_datetime(item['started_at'])}` | "
+            f"`{_format_datetime(item['finished_at'])}` | `{_format_duration(item['elapsed'])}` | "
+            f"`{item['status']}` | `{rel_dir}` |\n"
+        )
+
+    lines.append("\n## 方法级耗时\n\n")
+    lines.append("| 子实验 | 方法 | 耗时(s) | 耗时(HH:MM:SS) | Pareto解数 | 最低成本 | 最佳匹配度 |\n")
+    lines.append("|---|---|---:|---|---:|---:|---:|\n")
+    for item in summaries:
+        for method_row in item.get("method_rows", []):
+            min_cost = "-" if method_row["min_cost"] is None else f"{method_row['min_cost']:,.2f}"
+            min_match = "-" if method_row["min_match"] is None else f"{method_row['min_match']:.4f}"
+            lines.append(
+                f"| `{item['exp_id']}` | {method_row['method_label']} | "
+                f"{method_row['elapsed_seconds']:.1f} | `{method_row['elapsed_hms']}` | "
+                f"{method_row['pareto_count']} | {min_cost} | {min_match} |\n"
+            )
+
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+    return report_path
+
     rows = []
     for method, res in results.items():
         bi = res.get("best_indi")
@@ -339,8 +466,6 @@ def _generate_result_dir_name(mode=None, case_name="german", carnot=False,
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
     parts = []
-
-    # 模式/实验标识
     if exp_id is not None:
         parts.append(f"exp{exp_id}")
     elif mode is not None:
@@ -348,31 +473,22 @@ def _generate_result_dir_name(mode=None, case_name="german", carnot=False,
     else:
         parts.append("custom")
 
-    # 案例名称
     parts.append(case_name)
+    parts.append(_variant_tag(carnot))
 
-    # 卡诺电池标识
-    if carnot:
-        parts.append("carnot")
+    if methods:
+        parts.append(_methods_tag(methods))
+
+    if nind is not None:
+        parts.append(f"n{nind}")
+    if maxgen is not None:
+        parts.append(f"g{maxgen}")
 
     if unit_lambda:
         parts.append("unitlambda")
 
-    # 参数信息
-    if nind is not None and maxgen is not None:
-        parts.append(f"{nind}x{maxgen}")
-
-    # 方法信息
-    if methods is not None and len(methods) > 0:
-        if len(methods) <= 2:
-            methods_str = "+".join(methods)
-        else:
-            methods_str = f"{len(methods)}methods"
-        parts.append(methods_str)
-
     parts.append(timestamp)
-
-    return "_".join(parts)
+    return "__".join(parts)
 
 
 def parse_args():
@@ -540,11 +656,17 @@ def _run_experiments(args):
         exp_ids = [args.exp]
 
     # 创建本次运行的共享父文件夹
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    exp_label = "all" if args.exp == "all" else f"exp{args.exp}"
-    parent_dir_name = f"{run_level}_{exp_label}_{nind}x{maxgen}_{timestamp}"
+    parent_dir_name = _generate_batch_result_dir_name(
+        run_level=run_level,
+        exp_ids=exp_ids,
+        nind=nind,
+        maxgen=maxgen,
+        num_workers=num_workers,
+        unit_lambda=args.unit_lambda,
+    )
     results_root = os.path.join(BASE_DIR, "Results", parent_dir_name)
     os.makedirs(results_root, exist_ok=True)
+    batch_started_at = datetime.datetime.now()
 
     print("\n" + "=" * 70)
     print("  论文实验批量运行")
@@ -554,6 +676,7 @@ def _run_experiments(args):
     print(f"  结果汇总目录: {results_root}")
     print()
 
+    experiment_summaries = []
     for exp_id in exp_ids:
         if exp_id not in EXPERIMENTS:
             continue
@@ -561,30 +684,46 @@ def _run_experiments(args):
 
         # 实验3 特殊处理：先跑无卡诺，再跑有卡诺
         if exp.get("carnot") == "both":
-            _run_one_experiment(
+            experiment_summaries.append(_run_one_experiment(
                 exp_id + "a", exp["name"] + "（无卡诺电池）",
                 exp["case"], False, exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
-            )
-            _run_one_experiment(
+            ))
+            experiment_summaries.append(_run_one_experiment(
                 exp_id + "b", exp["name"] + "（有卡诺电池）",
                 exp["case"], True, exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
-            )
+            ))
         else:
-            _run_one_experiment(
+            experiment_summaries.append(_run_one_experiment(
                 exp_id, exp["name"],
                 exp["case"], exp.get("carnot", False),
                 exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
-            )
+            ))
+
+    batch_finished_at = datetime.datetime.now()
+    report_path = _write_batch_timing_report(
+        results_root=results_root,
+        run_level=run_level,
+        exp_ids=exp_ids,
+        nind=nind,
+        maxgen=maxgen,
+        num_workers=num_workers,
+        unit_lambda=args.unit_lambda,
+        started_at=batch_started_at,
+        finished_at=batch_finished_at,
+        summaries=experiment_summaries,
+    )
 
     print("\n" + "=" * 70)
     print("  全部实验完成！")
     print(f"  结果汇总目录: {results_root}")
+    print(f"  总耗时: {_format_duration((batch_finished_at - batch_started_at).total_seconds())}")
+    print(f"  计时汇总: {report_path}")
     print("=" * 70)
 
 
@@ -622,6 +761,7 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
     else:
         result_dir_name = subfolder_name
 
+    started_at = datetime.datetime.now()
     t0 = time.time()
     try:
         results, result_dir = run_comparative_study(
@@ -636,10 +776,39 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
         )
         elapsed = time.time() - t0
         print_result_summary(results, elapsed, result_dir)
+        finished_at = datetime.datetime.now()
+        return {
+            "exp_id": exp_id,
+            "name": name,
+            "case_name": case_name,
+            "carnot": carnot,
+            "methods": list(methods),
+            "status": "success",
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "elapsed": elapsed,
+            "result_dir": result_dir,
+            "method_rows": _build_method_time_rows(results),
+        }
     except Exception:
+        elapsed = time.time() - t0
+        finished_at = datetime.datetime.now()
         print(f"\n  [{exp_id}] 出错：")
         traceback.print_exc()
         print(f"  [{exp_id}] 跳过，继续下一组实验\n")
+        return {
+            "exp_id": exp_id,
+            "name": name,
+            "case_name": case_name,
+            "carnot": carnot,
+            "methods": list(methods),
+            "status": "failed",
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "elapsed": elapsed,
+            "result_dir": os.path.join(parent_dir, subfolder_name) if parent_dir else subfolder_name,
+            "method_rows": [],
+        }
 
 
 if __name__ == "__main__":
