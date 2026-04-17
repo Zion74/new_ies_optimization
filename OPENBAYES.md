@@ -1,323 +1,365 @@
-# OpenBayes 运行手册
+# OpenBayes 与服务器运行手册
 
-这份手册面向本仓库在 OpenBayes 上的运行与结果回传，目标是把第一次上云调试、后续提交任务、结果下载这三件事固定成同一套流程。
+这份文档是本仓库在 OpenBayes / Linux 服务器上的统一运行说明。
+
+它现在合并了原来的：
+
+- `OPENBAYES.md`
+- `OPENBAYES_TASK_COMMANDS.md`
+
+以后优先维护这一份，不再在仓库根目录保留两份并行操作手册。
 
 ## 1. 先给结论
 
-- 这套 IES 优化更像 `CPU + 求解器` 任务，不是 GPU 训练任务。
-- 第一次上云建议先开 `工作空间` 调试，确认环境和求解器可用后，再切到 `提交任务` 跑 full 实验。
-- 现阶段数据文件非常小，直接跟随仓库一起上传或 `git clone` 就够了，不需要额外做复杂的数据绑定。
-- 结果目录默认会写到仓库下的 `Results/`，在 OpenBayes 上建议把仓库放到 `/openbayes/home/ies_optimization`。
+- 这个项目本质上是 `CPU + 求解器` 任务，不是 GPU 训练任务。
+- 如果只是跑优化，优先看 CPU 核数、内存和求解器可用性，不要把 GPU 当成主要加速手段。
+- 当前最稳的流程是：
+  1. 在 OpenBayes 交互空间里把环境调通
+  2. 运行 `run.py --check`
+  3. 再跑 `run.py --exp ...` 或敏感性分析脚本
 
-当前仓库内置数据文件规模：
+## 2. 仓库在服务器上的推荐落点
 
-- `data/mergedData.csv`：约 0.46 MB
-- `data/songshan_lake_data.csv`：约 0.93 MB
-- `data/typicalDayData.xlsx` / `data/songshan_lake_typical.xlsx`：约 6 KB
+推荐把仓库放在：
 
-## 2. 容器怎么选
+```bash
+/openbayes/home/new_ies_optimization
+```
 
-### 镜像
+说明：
 
-优先选：
+- `/openbayes/home` 等价于 `/output`
+- 在 Jupyter 文件浏览器中你通常会看到 `/home`，它实际对应容器中的 `/openbayes/home`
 
-- `ubuntu 22.04-cpu`
+## 3. 第一次进入新服务器后的标准步骤
 
-不建议选 MATLAB、RStudio、VASP、OpenFOAM、Gromacs 之类的专业镜像，因为本项目核心依赖是 Python + `uv` + `pyomo/oemof/geatpy`。
+### 3.1 获取代码
 
-### 接入方式
-
-建议按阶段区分：
-
-- 第一次调试：`工作空间`
-- 跑正式长任务：`提交任务`
-
-原因很简单：
-
-- 工作空间适合交互式检查环境、看文件、试跑 `--check` 和 `--test-run`
-- 提交任务更适合正式实验，不依赖你一直保持网页打开
-
-### 资源规格
-
-建议先保守一点：
-
-- 调试：8 到 16 核 CPU
-- 正式实验：16 到 32 核 CPU 起步，再根据 `--workers` 扩大
-
-不要一开始就默认上 120 核，除非你已经确认：
-
-- 代码能稳定跑通
-- `--workers` 已经调高
-- 求解器不会成为新的瓶颈
-
-## 3. Jupyter 还是 SSH
-
-如果是第一次进入 OpenBayes 工作空间，我建议：
-
-- 优先用 `Jupyter`
-- 在 Jupyter 里打开一个 Terminal，执行环境配置脚本
-
-原因：
-
-- 更容易确认当前目录是不是 `/openbayes/home`
-- 更容易直接看文件、上传压缩包、检查 `Results/`
-- 第一次调试时，图形化文件浏览比纯命令行省心
-
-如果你已经很熟悉命令行，或者后面要做这些事情，则更适合用 `SSH`：
-
-- 长时间 `tail -f` 日志
-- 复制大段命令
-- 从本地终端或编辑器远程操作
-
-一句话建议：
-
-- `第一次配置 -> Jupyter`
-- `后续长时间跑命令 / 看日志 -> SSH`
-
-## 4. 工作目录与数据目录
-
-OpenBayes 常见目录可以这样理解：
-
-- `/openbayes/home`：工作目录，适合放仓库代码和结果
-- `/openbayes/input/input0` 到 `/openbayes/input/input4`：绑定数据目录，适合只读输入
-- `/output`：等价于 `/openbayes/home`
-- `/input0` 到 `/input4`：分别等价于 `/openbayes/input/input0` 到 `/openbayes/input/input4`
-
-如果你是从 Jupyter 文件浏览器进入的，还可以再记一层：
-
-- Jupyter 里看到的 `/home`，实际对应容器里的 `/openbayes/home`
-
-对本仓库，推荐：
-
-- 仓库代码放在 `/openbayes/home/ies_optimization`
-- 结果也保存在这个目录下的 `Results/`
-
-因为当前数据很小，所以前期可以不绑定任何数据集，直接把仓库放进工作目录。
-
-## 5. 第一次进入工作空间后的标准流程
-
-### 5.1 准备代码
-
-如果你走 GitHub：
+如果 GitHub 可以正常拉取：
 
 ```bash
 cd /openbayes/home
-git clone <your_repo_url> ies_optimization
-cd ies_optimization
+git clone https://github.com/Zion74/new_ies_optimization.git
+cd new_ies_optimization
 ```
 
-如果你是本地上传 zip：
+如果 `git clone` 网络不稳，可以先尝试浅克隆：
 
 ```bash
 cd /openbayes/home
-unzip ies_optimization.zip
-cd ies_optimization
+rm -rf new_ies_optimization
+git clone --depth 1 https://github.com/Zion74/new_ies_optimization.git
+cd new_ies_optimization
 ```
 
-### 5.2 一键配置环境
+如果 GitHub 拉取始终失败，就改用本地打包上传 zip 再解压。
 
-仓库已经补了一个脚本：
-
-- `scripts/openbayes_setup.sh`
-
-进入仓库后直接运行：
+### 3.2 设置运行环境标识
 
 ```bash
+export IES_RUNTIME_ENV=cloud
+```
+
+### 3.3 赋予脚本权限并配置环境
+
+```bash
+chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh
 bash scripts/openbayes_setup.sh
 ```
 
-脚本会自动做这些事：
-
-1. 检查并安装 `uv`
-2. 按 `.python-version` 安装 Python 3.8
-3. 根据 `uv.lock` / `pyproject.toml` 同步依赖
-4. 如果容器允许且缺少 `glpsol`，尝试安装 `glpk-utils`
-5. 检查 `gurobi_direct` / `highs` / `glpk` 的可见性
-6. 执行 `uv run python run.py --check`
-
-如果你只想装环境，不想在最后跑检查：
+如果环境损坏或需要强制重建：
 
 ```bash
-IES_SKIP_RUN_CHECK=1 bash scripts/openbayes_setup.sh
+bash scripts/rebuild_openbayes_env.sh
 ```
 
-如果你不希望脚本尝试安装 GLPK 系统包：
-
-```bash
-IES_SKIP_GLPK_INSTALL=1 bash scripts/openbayes_setup.sh
-```
-
-## 6. 建议的验证顺序
-
-不要一上来就跑 full，建议按下面顺序：
+### 3.4 做一次自检
 
 ```bash
 uv run python run.py --check
+```
+
+## 4. 交互空间里最常用的运行命令
+
+### 4.1 论文预设实验
+
+实验 1 测试参数：
+
+```bash
 uv run python run.py --exp 1 --test-run --workers 4
-uv run python run.py --exp 1 --workers 8
 ```
 
-如果 `--exp 1 --test-run` 没问题，再扩大到：
+实验 1 正式参数：
 
 ```bash
-uv run python run.py --exp all --workers 8
+uv run python run.py --exp 1 --workers 28
 ```
 
-或者根据你当时拿到的 CPU 资源调大 `--workers`。
-
-## 7. 后续切换到“提交任务”时怎么复用
-
-当你已经在工作空间调通后，后续提交任务时只需要把同一套流程放进任务命令里：
+全部四组实验正式参数：
 
 ```bash
-cd /openbayes/home
-git clone <your_repo_url> ies_optimization
-cd ies_optimization
-bash scripts/openbayes_setup.sh
-uv run python run.py --exp 1 --workers 16
+uv run python run.py --exp all --workers 28
 ```
 
-如果你改为 OpenBayes CLI 提交任务，建议先用 CLI 查看镜像对应的环境标识，再填到命令里：
+### 4.2 pipeline 一键流程
+
+德国案例正式模式：
 
 ```bash
-bayes gear env
+uv run python run_pipeline.py --full --case german --workers 28
 ```
 
-任务命令模板可以写成：
+松山湖案例正式模式：
 
 ```bash
-bayes gear run task \
-  --resource cpu-xxlarge \
-  --env <ubuntu_22_04_cpu_env_id> \
-  --message "ies-exp1-full" \
-  -- "bash -lc 'set -e; cd /openbayes/home; if [ ! -d ies_optimization ]; then git clone <your_repo_url> ies_optimization; fi; cd ies_optimization; bash scripts/openbayes_setup.sh; uv run python run.py --exp 1 --workers 16'"
+uv run python run_pipeline.py --full --case songshan_lake --workers 28
 ```
 
-上面有两个地方需要你替换：
+### 4.3 参数敏感性分析
 
-- `<ubuntu_22_04_cpu_env_id>`
-- `<your_repo_url>`
+通用敏感性分析：
 
-## 8. 数据怎么上传
+```bash
+uv run python scripts/run_parameter_sensitivity.py --workers 28
+```
 
-### 当前推荐
+只查看将执行的命令：
 
-因为数据很小，先不要折腾数据绑定，最简单的方式是：
+```bash
+uv run python scripts/run_parameter_sensitivity.py --workers 28 --dry-run
+```
 
-- 直接把整个仓库 `git clone` 到 `/openbayes/home`
-- 或者本地打包后上传到工作目录再解压
+自定义参数组：
 
-### 什么情况下才需要绑定数据集
+```bash
+uv run python scripts/run_parameter_sensitivity.py --workers 28 --scales 50x100 80x150 100x200
+```
 
-只有在这些情况下再考虑 `/openbayes/input/input0`：
+### 4.4 只做 exp4 敏感性分析
 
-- 输入文件非常大
-- 需要被多个任务复用
-- 不希望每次任务都重新上传
+```bash
+uv run python scripts/run_exp4_sensitivity.py --workers 28
+```
 
-## 9. 结果怎么传回本地
+这条命令默认等价于：
 
-默认结果目录形如：
+- `case = songshan_lake`
+- `carnot = on`
+- `methods = std euclidean`
+- 参数组默认比较 `50x100 / 80x150 / 100x200`
+
+### 4.5 比较已有结果目录
+
+```bash
+uv run python scripts/compare_parameter_scales.py \
+  Results/<结果目录1> \
+  Results/<结果目录2> \
+  Results/<结果目录3>
+```
+
+## 5. 长时间运行建议
+
+### 5.1 前台运行
+
+适合：
+
+- 想实时盯日志
+- 还在排错
+
+例子：
+
+```bash
+uv run python run.py --exp all --workers 28 2>&1 | tee exp_all_full_w28.log
+```
+
+### 5.2 后台运行
+
+适合：
+
+- 长时间正式实验
+- 不想一直开着终端
+
+例子：
+
+```bash
+nohup uv run python run.py --exp all --workers 28 > exp_all_full_w28.log 2>&1 &
+```
+
+查看日志：
+
+```bash
+tail -f exp_all_full_w28.log
+```
+
+## 6. 新版批量实验结果里会多出什么
+
+新版 `run.py` 已支持批量实验计时汇总。
+
+例如运行：
+
+```bash
+uv run python run.py --exp all --workers 28
+```
+
+批量根目录中会自动生成：
 
 ```text
-/openbayes/home/ies_optimization/Results/CCHP_<case>_<timestamp>/
+batch_timing_summary.md
 ```
 
-最简单的回传方式有两种：
+其中包含：
 
-### 方式 A：网页下载
+- 每个子实验开始时间
+- 每个子实验结束时间
+- 每个子实验总耗时
+- 每个方法的耗时
+- 每个方法的最低成本、最佳匹配度、Pareto 解数
 
-- 在 OpenBayes 文件浏览器中定位到 `Results/`
-- 下载整个结果目录或单个文件
+## 7. 结果目录命名规则
 
-### 方式 B：CLI 下载
+新版目录命名更强调“可读性”。
+
+批量实验父目录示例：
+
+```text
+paper-batch__exp-all__full__n50__g100__w28__20260414_062000
+```
+
+其中：
+
+- `exp-all` 表示论文四组实验全跑
+- `full` 表示正式参数
+- `n50` 表示 `nind=50`
+- `g100` 表示 `maxgen=100`
+- `w28` 表示 `workers=28`
+
+子实验目录示例：
+
+```text
+exp4__songshan_lake__carnot__std+euclidean__n50__g100__20260414_073933
+```
+
+这样可以直接看出：
+
+- 是哪个实验
+- 是哪个案例
+- 是否启用卡诺电池
+- 运行了哪些方法
+- 参数规模是多少
+
+## 8. 服务器上如何继续后续工作
+
+当你已经在服务器上跑出结果后，后续通常有三类操作。
+
+### 8.1 继续跑新的实验
+
+```bash
+cd /openbayes/home/new_ies_optimization
+export IES_RUNTIME_ENV=cloud
+uv run python run.py --exp all --workers 28
+```
+
+### 8.2 跑参数敏感性分析
+
+```bash
+cd /openbayes/home/new_ies_optimization
+export IES_RUNTIME_ENV=cloud
+uv run python scripts/run_parameter_sensitivity.py --workers 28
+```
+
+或者：
+
+```bash
+uv run python scripts/run_exp4_sensitivity.py --workers 28
+```
+
+### 8.3 对已有结果做分析
+
+```bash
+cd /openbayes/home/new_ies_optimization
+uv run python scripts/compare_parameter_scales.py \
+  Results/<结果目录1> \
+  Results/<结果目录2> \
+  Results/<结果目录3>
+```
+
+如果是 pipeline 后验分析：
+
+```bash
+uv run python run_pipeline.py --skip-optimize --result-dir Results/<已有目录> --full
+```
+
+## 9. Task 模式说明
+
+本项目曾尝试通过 `bayes gear run task` 直接从工作空间派生 task，但在部分组织/镜像组合下会遇到“镜像类型不一致”的平台限制。
+
+因此当前更推荐两条路：
+
+1. 直接在交互空间里跑正式实验
+2. 单独新建脚本执行型 task，再上传代码包和启动脚本
+
+如果后续平台环境更稳定，再恢复 CLI 直接派发 task 的工作流。
+
+## 10. 服务器常见问题
+
+### Q1：`run.py --check` 通过，但日志里出现 `Glyph missing from current font`
+
+这是 matplotlib 中文字体警告，不影响优化结果，只影响图片里的中文显示。
+
+如果需要服务器端直接生成可用中文图，可以安装字体：
+
+```bash
+apt-get update -y
+apt-get install -y fonts-noto-cjk
+fc-cache -fv
+```
+
+### Q2：为什么 `git clone` 失败后后续命令都找不到目录
+
+因为仓库没有真正拉下来，后面的 `cd new_ies_optimization` 自然会失败。先重新 clone 成功，再继续。
+
+### Q3：为什么 `rebuild_openbayes_env.sh` 报 `Permission denied`
+
+通常是脚本执行位丢了。先执行：
+
+```bash
+chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh
+```
+
+### Q4：为什么这次实验比上次快很多
+
+先看 `batch_timing_summary.md` 里的 `status` 是否全部为 `success`，再看方法级耗时是否完整。如果都完整，往往说明这次确实更快，而不是漏跑。
+
+### Q5：`nind=50, maxgen=100` 会不会太少
+
+对这个问题最稳的做法不是猜，而是补参数敏感性分析。推荐直接跑：
+
+```bash
+uv run python scripts/run_parameter_sensitivity.py --workers 28
+```
+
+## 11. 结果回传
+
+结果默认写在：
+
+```text
+/openbayes/home/new_ies_optimization/Results/
+```
+
+最简单的方式：
+
+- 在 OpenBayes 文件浏览器里直接下载结果目录
+
+如果你用 CLI：
 
 ```bash
 bayes gear download <task_id> --target ./openbayes_results -u
 ```
 
-如果只想下载某个结果子目录：
+## 12. 和 scripts/README.md 的关系
 
-```bash
-bayes gear download <task_id> \
-  --from ies_optimization/Results/<result_folder> \
-  --target ./openbayes_results \
-  -u
-```
+- `OPENBAYES.md`：告诉你“服务器上怎么做”
+- `scripts/README.md`：告诉你“scripts 里的脚本分别干什么”
 
-## 10. 结果目录建议保留什么
-
-正式实验至少保留：
-
-- `Results/.../comparison_report.md`
-- `Results/.../Pareto_Comparison.png`
-- 各方法目录下的 `ObjV_*.csv`
-- 各方法目录下的 `Phen_*.csv`
-- 各方法目录下的 `Pareto_*.csv`
-
-如果后面要把结果作为论文支撑材料统一归档，也建议保留你运行时的命令记录，例如：
-
-```text
-exp1_workers16_2026-04-13.txt
-```
-
-内容记录：
-
-- 镜像
-- CPU 规格
-- `--workers`
-- 运行命令
-- 是否为 `--test-run`
-
-## 11. 常见问题
-
-### Q1：工作空间里能直接跑 full 吗？
-
-可以，但不推荐长期依赖工作空间跑正式实验。第一次更适合用工作空间调通，正式跑建议切换到提交任务。
-
-### Q2：要不要 GPU？
-
-不用优先考虑 GPU。这套实验主要是 CPU、多进程和求解器负载。
-
-### Q3：如果任务里不方便调试怎么办？
-
-所以第一次一定要先在工作空间里把下面三件事跑通：
-
-```bash
-bash scripts/openbayes_setup.sh
-uv run python run.py --check
-uv run python run.py --exp 1 --test-run --workers 4
-```
-
-确认这三步都稳定后，再把同样命令迁移到提交任务。
-
-### Q4：如果求解器检查失败怎么办？
-
-先看 `scripts/openbayes_setup.sh` 打印出的求解器可见性：
-
-- `gurobi_direct`
-- `highs`
-- `glpk`
-
-只要至少有一个可用，`run.py --check` 理论上就能继续走下去。
-
-如果 `glpk` 缺失而你又想保留开源兜底，可在容器里手动执行：
-
-```bash
-apt-get update -y
-apt-get install -y --no-install-recommends glpk-utils
-```
-
-## 12. 当前推荐的最短路径
-
-第一次上 OpenBayes 时，直接照这个做：
-
-```bash
-cd /openbayes/home
-git clone <your_repo_url> ies_optimization
-cd ies_optimization
-bash scripts/openbayes_setup.sh
-uv run python run.py --exp 1 --test-run --workers 4
-```
-
-如果这一步通过，再考虑更大的 CPU 规格和正式 full 实验。
+如果你只想赶紧把实验跑起来，先看本文件。
+如果你想知道某个分析脚本是否该用，再去看 `scripts/README.md`。

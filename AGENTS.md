@@ -2,6 +2,22 @@
 
 本文档供 AI 助手（Codex/Copilot）在新会话中快速理解本仓库，无需逐文件阅读。
 
+## 0. 项目索引优先规则
+
+当任务涉及以下任一类内容时，优先先读：
+
+- `项目索引目录.md`
+
+触发语境包括但不限于：
+
+- 查看项目结构、理解代码入口、快速建立代码上下文
+- 审视实验数据是否验证论文结论
+- 判断论文结构需不需要修改
+- 判断实验设计是否合理闭环
+- 查找实验目录、结果文件、脚本入口、文档入口
+
+目标是减少无序检索和 token 消耗，后续再按索引文档给出的阅读路径展开。
+
 ## 1. 核心架构
 
 ```
@@ -214,6 +230,7 @@ Pareto CSV 列：`Solution_ID, Economic_Cost, Matching_Index, PV, WT, GT, HP, EC
 
 - `skills/research-doc-maintainer/SKILL.md`
 - `docs/README.md`
+- `项目索引目录.md`
 
 触发语境包括但不限于：
 
@@ -232,9 +249,11 @@ Pareto CSV 列：`Solution_ID, Economic_Cost, Matching_Index, PV, WT, GT, HP, EC
 4. 只要研究逻辑、章节结构、主实验边界、关键图表清单发生变化，至少同步更新：
    - `docs/01_overview/latest_research_architecture.md`
    - `docs/01_overview/three_layer_mapping.md`
+   - `项目索引目录.md`
    - 对应层级的 `latest_logic_structure.md`
    - 对应层级的实验 / 图表 / 代码映射文档
-5. 已被整合替代的旧笔记不要保留在活跃目录中，统一移动到 `docs/99_archive/`。
-6. `研究思路/` 只作为临时想法入口，不再承载“最新版结构说明”。
-7. 不允许在不同目录里同时保留两份“最新版结构说明”。
+5. 只要顶层代码结构、核心入口职责、`scripts/` 目录、结果目录命名规则或 `docs/` 目录结构变化，也必须同步更新 `项目索引目录.md`。
+6. 已被整合替代的旧笔记不要保留在活跃目录中，统一移动到 `docs/99_archive/`。
+7. `研究思路/` 只作为临时想法入口，不再承载“最新版结构说明”。
+8. 不允许在不同目录里同时保留两份“最新版结构说明”。
 

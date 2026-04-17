@@ -331,6 +331,33 @@ def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
 
     return report_path
 
+
+def _run_post_analysis_phase(result_dir, case_config, methods, analysis_mode):
+    from run_pipeline import PIPELINE_MODES, print_comparison_report, run_post_analysis
+
+    cfg = PIPELINE_MODES[analysis_mode]
+    print("\n" + "=" * 70)
+    print(f"  自动进入 Phase 2 后验分析 [{analysis_mode}]")
+    print("=" * 70)
+    print(f"  结果目录: {result_dir}")
+    print(f"  方法: {methods}")
+    print(f"  cost levels: {cfg['cost_levels']}")
+    print(f"  max days: {cfg['post_analysis_days']}")
+
+    t0 = time.time()
+    df_abs, df_budget = run_post_analysis(
+        result_dir,
+        case_config,
+        methods,
+        cost_levels=cfg["cost_levels"],
+        max_days=cfg["post_analysis_days"],
+    )
+    if df_abs is not None or df_budget is not None:
+        print_comparison_report(df_abs, df_budget)
+    elapsed = time.time() - t0
+    print(f"\n  Phase 2 完成，耗时 {_format_duration(elapsed)}")
+    return elapsed
+
     rows = []
     for method, res in results.items():
         bi = res.get("best_indi")
@@ -534,6 +561,8 @@ def parse_args():
                         help="实验模式用快速参数（nind=20, maxgen=20）初步验证效果")
     parser.add_argument("--workers", type=int, default=None,
                         help="并行进程数（默认=CPU核心数）")
+    parser.add_argument("--post-analysis-mode", choices=["test", "quick", "medium", "full"],
+                        help="优化完成后自动执行 Phase 2 后验分析")
     return parser.parse_args()
 
 
@@ -619,6 +648,13 @@ def main():
         )
         elapsed = time.time() - t0
         print_result_summary(results, elapsed, result_dir)
+        if args.post_analysis_mode:
+            _run_post_analysis_phase(
+                result_dir=result_dir,
+                case_config=case_config,
+                methods=cfg["methods"],
+                analysis_mode=args.post_analysis_mode,
+            )
     except KeyboardInterrupt:
         print("\n\n用户中断。")
         sys.exit(0)
@@ -689,12 +725,14 @@ def _run_experiments(args):
                 exp["case"], False, exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
+                post_analysis_mode=args.post_analysis_mode,
             ))
             experiment_summaries.append(_run_one_experiment(
                 exp_id + "b", exp["name"] + "（有卡诺电池）",
                 exp["case"], True, exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
+                post_analysis_mode=args.post_analysis_mode,
             ))
         else:
             experiment_summaries.append(_run_one_experiment(
@@ -703,6 +741,7 @@ def _run_experiments(args):
                 exp["methods"], exp["inherit_population"],
                 nind, maxgen, num_workers, parent_dir=results_root,
                 unit_lambda=args.unit_lambda,
+                post_analysis_mode=args.post_analysis_mode,
             ))
 
     batch_finished_at = datetime.datetime.now()
@@ -729,7 +768,7 @@ def _run_experiments(args):
 
 def _run_one_experiment(exp_id, name, case_name, carnot, methods,
                         inherit_population, nind, maxgen, num_workers=None, parent_dir=None,
-                        unit_lambda=False):
+                        unit_lambda=False, post_analysis_mode=None):
     """运行单组实验"""
     from cchp_gasolution import run_comparative_study
     from case_config import get_case, enable_carnot_battery
@@ -776,6 +815,14 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
         )
         elapsed = time.time() - t0
         print_result_summary(results, elapsed, result_dir)
+        post_elapsed = None
+        if post_analysis_mode:
+            post_elapsed = _run_post_analysis_phase(
+                result_dir=result_dir,
+                case_config=case_config,
+                methods=methods,
+                analysis_mode=post_analysis_mode,
+            )
         finished_at = datetime.datetime.now()
         return {
             "exp_id": exp_id,
@@ -787,6 +834,7 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
             "started_at": started_at,
             "finished_at": finished_at,
             "elapsed": elapsed,
+            "post_analysis_elapsed": post_elapsed,
             "result_dir": result_dir,
             "method_rows": _build_method_time_rows(results),
         }
@@ -806,6 +854,7 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
             "started_at": started_at,
             "finished_at": finished_at,
             "elapsed": elapsed,
+            "post_analysis_elapsed": None,
             "result_dir": os.path.join(parent_dir, subfolder_name) if parent_dir else subfolder_name,
             "method_rows": [],
         }

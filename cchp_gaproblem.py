@@ -233,6 +233,9 @@ def sub_aim_func_cchp(args):
     if config.get("enable_carnot_battery", False) and Vars.shape[1] >= 11:
         cb_power = Vars[i, 9]
         cb_capacity = Vars[i, 10]
+        # E/P 约束：4h ≤ cb_capacity/cb_power ≤ 8h（物理合理性约束）
+        if cb_power > 1e-3 and not (4 * cb_power <= cb_capacity <= 8 * cb_power):
+            return [1e10, 1e10]
 
     # 初始化
     oc = 0  # 运行成本

@@ -58,6 +58,17 @@ SCI 稿需要更强证据，但仍然要守边界：
 - 6.5 Experiment 4: Joint validation under Carnot integration
 - 6.6 Integrated discussion and limitations
 
+建议每个结果子节内部统一采用：
+
+- `trade-off`：先交代 Pareto 权衡与可接受预算区间
+- `configuration mechanism`：再解释关键设备容量如何变化
+- `operational evidence`：再用 `8760h` 或典型日调度兑现规划差异
+- `implication`：最后说明该结果支撑全文哪条主线
+
+结果分析扩充方案单列文档：
+
+- `docs/03_sci_paper/results_analysis_expansion_plan.md`
+
 ## 5. 术语约束
 
 - SCI 稿主术语：**EQD**。
@@ -74,4 +85,5 @@ SCI 稿需要更强证据，但仍然要守边界：
 - 服务器执行清单：`docs/03_sci_paper/server_full_run_checklist.md`
 - 图表计划：`docs/03_sci_paper/figure_table_plan.md`
 - 初稿升级计划：`docs/03_sci_paper/manuscript_upgrade_plan.md`
+- Phase 2 高强度审稿报告：`docs/03_sci_paper/adversarial_review_phase2.md`
 

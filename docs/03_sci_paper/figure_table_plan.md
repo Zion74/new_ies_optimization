@@ -4,6 +4,11 @@
 
 本文件用于把 SCI 的主图、主表、数据来源、脚本来源和当前状态统一下来，避免结果回来后临时拼凑。
 
+结果分析的叙事模块、代表性解筛选原则和图表分层说明，见：
+
+- `docs/03_sci_paper/results_analysis_expansion_plan.md`
+- `docs/03_sci_paper/figure_generation_execution_order.md`
+
 ## 1. 主图计划
 
 | 编号 | 建议标签 | 位置 | 目的 | 数据来源 | 当前状态 | 最终来源 |
@@ -48,6 +53,7 @@
 - Exp3 / Exp4：
   - `run.py --exp 3`
   - `run.py --exp 4`
+  - `scripts/redraw_carnot_figures.py`
 - λ 敏感性：
   - `scripts/lambda_sensitivity.py`
 - 韧性：

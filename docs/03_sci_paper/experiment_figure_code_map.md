@@ -13,6 +13,7 @@
 | S5 | 强证据链 | 证明规划结果在全年运行上可兑现 | 8760h 后验运行指标分析 | `run_pipeline.py`、`scripts/post_analysis.py`、`scripts/enhanced_analysis.py` |
 | S6 | 强证据链 | 证明㶲权重不是随便调参 | λ 敏感性 / 消融实验 | `scripts/lambda_sensitivity.py` |
 | S7 | 强证据链 | 证明高匹配方案在极端场景下更稳 | 电价、气价、负荷、可再生波动情景 | `scripts/resilience_test.py` |
+| S8 | 图表重绘 | 统一生成 Exp3 / Exp4 的论文图 | Exp3a / Exp3b / Exp4 的 Pareto 与 budget 结果 | `scripts/redraw_carnot_figures.py` |
 
 ## 2. 图表清单与落点建议
 
@@ -37,6 +38,7 @@
 - **案例与参数**：`case_config.py`
 - **调度求解**：`operation.py`
 - **后验运行分析**：`scripts/post_analysis.py`、`scripts/enhanced_analysis.py`
+- **Carnot 图表重绘**：`scripts/redraw_carnot_figures.py`
 - **松山湖案例数据**：`scripts/generate_songshan_data.py`
 - **敏感性 / 消融**：`scripts/lambda_sensitivity.py`
 - **韧性 / 极端场景**：`scripts/resilience_test.py`
@@ -62,4 +64,5 @@
 - 服务器 full 实验清单：`docs/03_sci_paper/server_full_run_checklist.md`
 - 图表与表格计划：`docs/03_sci_paper/figure_table_plan.md`
 - 初稿升级计划：`docs/03_sci_paper/manuscript_upgrade_plan.md`
+- **Phase 2 高强度审稿报告**：`docs/03_sci_paper/adversarial_review_phase2.md`
 

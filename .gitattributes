@@ -1,0 +1,28 @@
+# Enforce LF line endings for shell scripts so they run on Linux/OpenBayes
+# even when edited on Windows.
+*.sh       text eol=lf
+*.bash     text eol=lf
+
+# Python / text assets: normalize to LF in repo, let Git auto-detect on checkout.
+*.py       text
+*.md       text
+*.yml      text
+*.yaml     text
+*.toml     text
+*.cfg      text
+*.ini      text
+
+# Windows-specific scripts keep CRLF.
+*.bat      text eol=crlf
+*.cmd      text eol=crlf
+*.ps1      text eol=crlf
+
+# Binary: don't touch.
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.pdf      binary
+*.xlsx     binary
+*.zip      binary
+*.pkl      binary
+*.npz      binary

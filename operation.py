@@ -474,13 +474,16 @@ class OperationModel:
             heat_storage,
             cool_storage,
         )
-        # ---- 卡诺电池（可选）----
-        # 卡诺电池 = 电→热储存→电 的长时储能系统
-        # 在OEMOF中建模为连接电母线的GenericStorage + 余热回收Transformer
+        # ---- 卡诺电池（可选，equivalent planning model）----
+        # 规划层 TI-CB 等效模型：
+        #   - 仅用 GenericStorage 表达 电→储能→电 的对称等效往返链路
+        #   - 不展开 HP-ORC 内部热力循环（详见 docs/辩论确认/carnot_battery_parameters_consensus.md）
+        #   - 已删除旧版 "cb heat recovery" Transformer 支路（物理意义不成立）
+        #   - E/P ∈ [4h, 8h] 约束在 cchp_gaproblem.py 中实施
         if cb_power > 0 and cb_capacity > 0:
             cb_rte = cfg.get("cb_rte", 0.60)
-            cb_loss = cfg.get("cb_loss_rate", 0.005)
-            cb_charge_eff = cb_rte ** 0.5    # ~0.775
+            cb_loss = cfg.get("cb_loss_rate", 0.002)   # 低中温TI-CB基准（从0.005下调）
+            cb_charge_eff = cb_rte ** 0.5    # 对称分配 ~0.775
             cb_discharge_eff = cb_rte ** 0.5
 
             carnot_battery = GenericStorage(
@@ -494,20 +497,6 @@ class OperationModel:
                 outflow_conversion_factor=cb_discharge_eff,
             )
             self.energy_system.add(carnot_battery)
-
-            # 卡诺电池充电余热回收：充电过程中 (1-η_charge) 的能量以热形式释放
-            # 部分可回收供热母线使用，体现能质梯级利用
-            cb_heat_ratio = cfg.get("cb_heat_recovery_ratio", 0.25)
-            if cb_heat_ratio > 0:
-                cb_heat_recovery = Transformer(
-                    label="cb heat recovery",
-                    inputs={ele_bus: solph.Flow()},
-                    outputs={
-                        heat_bus: solph.Flow(nominal_value=cb_power * 0.3),
-                    },
-                    conversion_factors={heat_bus: cb_heat_ratio},
-                )
-                self.energy_system.add(cb_heat_recovery)
         # 初始化模型
         model = solph.Model(self.energy_system)
         # # 创建求解计算电网电功率最大值的子模型

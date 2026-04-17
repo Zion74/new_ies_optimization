@@ -120,15 +120,23 @@ GERMAN_CASE = {
     "T_cool": 280.15,    # 供冷温度 K (7°C)
     # 能质系数由卡诺㶲公式自动计算（见下方 _apply_carnot_lambda）
 
-    # ---- 卡诺电池（默认关闭）----
+    # ---- 卡诺电池（默认关闭；见 docs/辩论确认/carnot_battery_parameters_consensus.md）----
     "enable_carnot_battery": False,
     "cb_power_ub": 2000,       # kW 功率上界
     "cb_capacity_ub": 10000,   # kWh 容量上界
-    "cb_rte": 0.60,            # 往返效率
-    "cb_loss_rate": 0.005,     # 热损失率
-    "cb_invest_power": 10.0,   # €/(kW·a) 功率年化投资
-    "cb_invest_capacity": 2.0, # €/(kWh·a) 容量年化投资
-    "cb_heat_recovery_ratio": 0.25,  # 余热回收比例
+    # E/P 时长约束（4h ≤ capacity/power ≤ 8h）在 cchp_gaproblem.py 中实施
+    "cb_rte": 0.60,            # 往返效率（0.45/0.60/0.65 三档敏感性）
+    "cb_loss_rate": 0.002,     # 热损失率 /h（低中温TI-CB基准，从旧值0.005下调）
+    # 默认成本参数 = reference-literature 情景（Frate 2020 / Zhao 2022 锚定）
+    "cb_invest_power": 37.0,    # €/(kW·a)
+    "cb_invest_capacity": 2.5,  # €/(kWh·a)
+    # 三情景成本表（通过 apply_carnot_scenario(config, "optimistic") 切换）
+    "cb_cost_scenarios": {
+        "reference":    {"cb_invest_power": 37.0, "cb_invest_capacity": 2.5},
+        "optimistic":   {"cb_invest_power": 13.0, "cb_invest_capacity": 2.0},
+        "intermediate": {"cb_invest_power": 22.0, "cb_invest_capacity": 3.0},
+    },
+    "cb_active_scenario": "reference",
 }
 
 
@@ -193,11 +201,18 @@ SONGSHAN_LAKE_CASE = {
     "enable_carnot_battery": False,
     "cb_power_ub": 500,        # kW
     "cb_capacity_ub": 3000,    # kWh
-    "cb_rte": 0.60,
-    "cb_loss_rate": 0.005,
-    "cb_invest_power": 72.0,   # ¥/(kW·a) Rankine PTES
-    "cb_invest_capacity": 15.0,# ¥/(kWh·a)
-    "cb_heat_recovery_ratio": 0.25,
+    # E/P 时长约束（4h ≤ capacity/power ≤ 8h）在 cchp_gaproblem.py 中实施
+    "cb_rte": 0.60,            # 往返效率（0.45/0.60/0.65 三档敏感性）
+    "cb_loss_rate": 0.002,     # 热损失率 /h（低中温TI-CB基准）
+    # 默认成本参数 = reference-literature 情景（换算 1 € ≈ 7.5 ¥）
+    "cb_invest_power": 278.0,  # ¥/(kW·a)
+    "cb_invest_capacity": 18.0,# ¥/(kWh·a)
+    "cb_cost_scenarios": {
+        "reference":    {"cb_invest_power": 278.0, "cb_invest_capacity": 18.0},
+        "optimistic":   {"cb_invest_power": 100.0, "cb_invest_capacity": 15.0},
+        "intermediate": {"cb_invest_power": 170.0, "cb_invest_capacity": 22.0},
+    },
+    "cb_active_scenario": "reference",
 }
 
 
@@ -244,6 +259,37 @@ def get_case(name="german"):
 def enable_carnot_battery(config):
     """在配置中启用卡诺电池"""
     config["enable_carnot_battery"] = True
+    return config
+
+
+def apply_carnot_scenario(config, scenario="reference"):
+    """
+    按情景覆盖卡诺电池投资成本参数
+
+    Parameters
+    ----------
+    config : dict
+        案例配置（深拷贝后的）
+    scenario : str
+        "reference" | "optimistic" | "intermediate"
+        依据 docs/辩论确认/carnot_battery_parameters_consensus.md
+
+    Returns
+    -------
+    dict
+        原 config 对象（原地修改并返回，便于链式调用）
+    """
+    scenarios = config.get("cb_cost_scenarios")
+    if not scenarios:
+        return config
+    if scenario not in scenarios:
+        raise ValueError(
+            f"未知的卡诺电池成本情景: {scenario}，可选: {list(scenarios.keys())}"
+        )
+    params = scenarios[scenario]
+    config["cb_invest_power"] = params["cb_invest_power"]
+    config["cb_invest_capacity"] = params["cb_invest_capacity"]
+    config["cb_active_scenario"] = scenario
     return config
 
 
