@@ -138,30 +138,49 @@ RUN_FLAGS=()
 [[ "${IES_QUICK_RUN}" == "1" ]] && RUN_FLAGS+=(--quick-run)
 [[ -n "${IES_POST_MODE}" ]] && RUN_FLAGS+=(--post-analysis-mode "${IES_POST_MODE}")
 
-# 把 "all" 展开成 "1 2 3 4"（便于逐个记日志）
-if [[ "${IES_EXP}" == "all" ]]; then
-  EXP_LIST="1 2 3 4"
-else
-  EXP_LIST="${IES_EXP}"
-fi
-
 OVERALL_START=$SECONDS
-for EXP in ${EXP_LIST}; do
+
+if [[ "${IES_EXP}" == "all" ]]; then
+  # IES_EXP=all：一次性调 run.py --exp all，让 run.py 自己生成
+  # `Results/paper-batch__exp-all__...__<ts>/` 统一父目录，四组实验 + batch_timing_summary.md
+  # 全部落在同一个子目录下，方便后续打包 / 归档 / 汇总回传。
   hr
-  log "  >>> 开始实验 exp${EXP}"
-  EXP_LOG="${LOG_DIR}/04_exp${EXP}.log"
+  log "  >>> 开始批次：IES_EXP=all（四组实验共享一个 Results/paper-batch__.../ 父目录）"
+  EXP_LOG="${LOG_DIR}/04_exp-all.log"
   EXP_START=$SECONDS
   set +e
-  uv run python run.py --exp "${EXP}" "${RUN_FLAGS[@]}" 2>&1 | tee "${EXP_LOG}"
+  uv run python run.py --exp all "${RUN_FLAGS[@]}" 2>&1 | tee "${EXP_LOG}"
   EXP_RC=${PIPESTATUS[0]}
   set -e
   EXP_ELAPSED=$((SECONDS - EXP_START))
   if [[ ${EXP_RC} -eq 0 ]]; then
-    log "  <<< exp${EXP} 完成，用时 ${EXP_ELAPSED}s"
+    log "  <<< 批次完成，用时 ${EXP_ELAPSED}s"
   else
-    warn "  <<< exp${EXP} 返回非 0（rc=${EXP_RC}，用时 ${EXP_ELAPSED}s），继续下一组"
+    warn "  <<< 批次返回非 0（rc=${EXP_RC}，用时 ${EXP_ELAPSED}s）"
   fi
-done
+else
+  # 非 all：逐个 exp 单独跑，每个 exp 会各自生成 `Results/paper-batch__expN__...__<ts>/`，
+  # 若希望它们也合并到一个父目录，请直接用 IES_EXP=all 或先手工调 run.py --exp all。
+  warn "IES_EXP='${IES_EXP}' 不是 'all'，四组实验将分别生成独立的父目录。"
+  warn "若要统一汇总到单一 Results/paper-batch__.../，请改用 IES_EXP=all。"
+  for EXP in ${IES_EXP}; do
+    hr
+    log "  >>> 开始实验 exp${EXP}"
+    EXP_LOG="${LOG_DIR}/04_exp${EXP}.log"
+    EXP_START=$SECONDS
+    set +e
+    uv run python run.py --exp "${EXP}" "${RUN_FLAGS[@]}" 2>&1 | tee "${EXP_LOG}"
+    EXP_RC=${PIPESTATUS[0]}
+    set -e
+    EXP_ELAPSED=$((SECONDS - EXP_START))
+    if [[ ${EXP_RC} -eq 0 ]]; then
+      log "  <<< exp${EXP} 完成，用时 ${EXP_ELAPSED}s"
+    else
+      warn "  <<< exp${EXP} 返回非 0（rc=${EXP_RC}，用时 ${EXP_ELAPSED}s），继续下一组"
+    fi
+  done
+fi
+
 OVERALL_ELAPSED=$((SECONDS - OVERALL_START))
 
 # ---- 5) 汇总 ----
@@ -171,7 +190,7 @@ log "[5/5] 实验汇总"
   echo "# post_rebuild 实验批次汇总"
   echo ""
   echo "- 时间戳：${TIMESTAMP}"
-  echo "- 实验序列：${EXP_LIST}"
+  echo "- 实验序列：${IES_EXP}"
   echo "- 总用时：${OVERALL_ELAPSED} 秒"
   echo "- 运行标记参数："
   echo "  - workers=${IES_WORKERS:-auto}"
@@ -186,9 +205,25 @@ log "[5/5] 实验汇总"
     echo "- $(basename "$f")  ($(wc -l < "$f") 行)"
   done
   echo ""
-  echo "## 实验产出目录（run.py 自建的时间戳目录）"
+  echo "## 实验产出目录"
   echo ""
-  echo "请到 \`Results/\` 下查找最新产生的 CCHP_* 目录。"
+  if [[ "${IES_EXP}" == "all" ]]; then
+    echo "本批次四组实验统一落在 \`Results/paper-batch__exp-all__...__${TIMESTAMP%_*}_*/\` 下（由 run.py 自动创建）。"
+    echo ""
+    echo "典型结构："
+    echo ""
+    echo "\`\`\`"
+    echo "Results/paper-batch__exp-all__full__n80__g150__w${IES_WORKERS:-*}__<ts>/"
+    echo "├── exp1__german__base__...__n80__g150__<ts>/"
+    echo "├── exp2a__german__base__...__n80__g150__<ts>/"
+    echo "├── exp2b__german__carnot__...__n80__g150__<ts>/"
+    echo "├── exp3__songshan_lake__base__...__n80__g150__<ts>/"
+    echo "├── exp4__songshan_lake__carnot__...__n80__g150__<ts>/"
+    echo "└── batch_timing_summary.md"
+    echo "\`\`\`"
+  else
+    echo "IES_EXP='${IES_EXP}'（非 all）：每组 exp 会各自生成 \`Results/paper-batch__expN__.../\`，不共享父目录。"
+  fi
 } > "${LOG_DIR}/SUMMARY.md"
 
 log "一键实验完成，日志目录：${LOG_DIR}"
