@@ -157,18 +157,30 @@ uv run python run.py --exp 2 --workers 28
 uv run python run.py --exp all --workers 28 --post-analysis-mode medium
 ```
 
-### 4.2 参数敏感性分析（本轮可跳过）
+### 4.2 参数敏感性分析（本轮可跳过，但正式参数已调升）
 
-上一版本（2026-04-14 正式实验）已完成参数规模敏感性分析，结论为
-`nind=50 / maxgen=100` 已收敛。相关报告见：
+2026-04-14 敏感性实验结论（数据源
+`Results/服务器结果/第二次实验/parameter_scale_comparison_fixed.md`）：
 
-- `Results/服务器结果/第二次实验/parameter_sensitivity_report*.md`
-- `Results/服务器结果/第二次实验/parameter_scale_comparison_fixed.md`
+| 方法 | 50→100 成本波动 | 匹配度波动 | 稳定性判断 |
+|---|---|---|---|
+| `economic_only` / `pearson` / `std` | <1.9% | <0.4% | 稳定 |
+| **`euclidean`**（EQD 核心创新） | **2.13%** | 0.33% | **中度波动，建议补充复现** |
+| **`ssr`** | 1.55% | **76.22%** | **波动大，建议增大参数** |
 
-**本轮松山湖数据口径重建只改输入层，不影响算法收敛特性**，沿用上述结论即可，
-**无需再跑敏感性分析**。论文里简单一句"沿用前版敏感性结论"并引用报告。
+80/150 → 100/200 的边际收益：`euclidean` -0.80%、`ssr` 匹配度 -0.93%、`std` -0.73%，
+**80/150 是收敛拐点**，继续往上性价比很低。
 
-若未来需要重跑（例如改了 GA 算子或增加了决策变量维度），命令仍然是：
+**结论**：
+
+- **正式参数已从 `50/100` 调升到 `80/150`**（`run.py` `PRESETS['full']` + `_run_experiments` 默认）
+- 全部四组实验 + Phase2 后验的耗时从 ~4h20m 增加到 ~5h40m，`euclidean` / `ssr` 从 "中度 / 严重波动" 变为 "收敛"
+- 相关共识见 `docs/辩论确认/2026-04-16_Codex对Claude_Phase2回应.md` §4
+
+本轮松山湖数据重建只改输入层，不影响算法收敛特性，**不需要再跑一次敏感性分析**，
+沿用 `80/150` 即可。论文里简单一句"参数 80×150 已满足收敛"并引用报告。
+
+若确需重跑（如改 GA 算子、增加决策变量）：
 
 ```bash
 uv run python scripts/run_parameter_sensitivity.py --workers 28
@@ -255,8 +267,8 @@ paper-batch__exp-all__full__n50__g100__w28__20260414_062000
 
 - `exp-all` 表示论文四组实验全跑
 - `full` 表示正式参数
-- `n50` 表示 `nind=50`
-- `g100` 表示 `maxgen=100`
+- `n80` 表示 `nind=80`（2026-04-17 之前的结果目录会出现 `n50`，属于旧正式参数）
+- `g150` 表示 `maxgen=150`
 - `w28` 表示 `workers=28`
 
 子实验目录示例：
@@ -367,13 +379,18 @@ chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh
 
 先看 `batch_timing_summary.md` 里的 `status` 是否全部为 `success`，再看方法级耗时是否完整。如果都完整，往往说明这次确实更快，而不是漏跑。
 
-### Q5：`nind=50, maxgen=100` 会不会太少
+### Q5：为什么正式参数是 80/150 而不是 50/100 或 100/200
 
-2026-04-14 那一轮已经在 `Results/服务器结果/第二次实验/` 里跑过 `50×100 / 80×150 / 100×200`
-三个规模的对比，结论是 50×100 已收敛，继续加规模只线性增加耗时、边际收益很小。
-参见 `parameter_sensitivity_report*.md` 与 `parameter_scale_comparison_fixed.md`。
+2026-04-14 那轮在 `Results/服务器结果/第二次实验/` 跑了 `50×100 / 80×150 / 100×200` 三个规模。关键发现：
 
-本轮松山湖数据重建只改输入层、未改算法，沿用前版结论即可。若结构确有变动再跑：
+- `euclidean`（EQD 核心创新）在 50×100 下成本波动 2.1%，有 "换参数就换结论" 的风险
+- `ssr` 在 50×100 下匹配度波动 76%，明显未收敛
+- 80×150 → 100×200 的边际收益 <1%，耗时却翻倍
+
+结论：**80×150 是性价比拐点**，已在 `docs/辩论确认/2026-04-16_Codex对Claude_Phase2回应.md` 共识 4 中定形，
+并于 2026-04-17 写进 `run.py` 默认值。
+
+若以后结构有变动（改 GA 算子 / 新增决策变量）再跑一次：
 
 ```bash
 uv run python scripts/run_parameter_sensitivity.py --workers 28

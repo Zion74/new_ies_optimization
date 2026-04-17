@@ -77,11 +77,17 @@ uv run python scripts/resilience_test.py --result-dir <full_result_dir>
 
 用途：若最终保留"强证据链"表达，放入 discussion 或 supplementary。
 
-### 参数敏感性分析：本轮跳过
+### 参数敏感性分析：本轮跳过，但正式参数已从 50/100 调升到 80/150
 
-前一版本已跑过 `50x100 / 80x150 / 100x200`，结论 `50x100` 已收敛（见
-`Results/服务器结果/第二次实验/parameter_sensitivity_report*.md`）。本轮数据
-重建只改输入层，不影响收敛特性，沿用该结论即可。
+前一版本已跑过 `50x100 / 80x150 / 100x200`（见
+`Results/服务器结果/第二次实验/parameter_scale_comparison_fixed.md`），发现：
+
+- `50/100` 对 `euclidean` 成本波动 2.1%、`ssr` 匹配度波动 76%，**不够稳**
+- `80/150 → 100/200` 边际收益 <1%，**80/150 是性价比拐点**
+
+结论已在 `docs/辩论确认/2026-04-16_Codex对Claude_Phase2回应.md` 共识 4 中定形，
+`run.py` 于 2026-04-17 把正式参数默认值改为 `80/150`。本轮数据重建只改输入层，
+不影响收敛特性，沿用该结论即可。
 
 ## 4. 推荐执行顺序
 

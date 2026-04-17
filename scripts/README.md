@@ -154,7 +154,8 @@ uv run python scripts/run_parameter_sensitivity.py --workers 28 --scales 50x100 
 
 推荐场景：
 
-- 你怀疑 `exp4` 结果波动较大，想验证 `50/100` 是否足够
+- 你怀疑 `exp4` 结果波动较大，想复现 / 扩展 2026-04-14 的规模敏感性
+  （已知 `50/100` 对 `euclidean` 和 `ssr` 不够稳，正式参数已改为 `80/150`）
 
 最常用命令：
 

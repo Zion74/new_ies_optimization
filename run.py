@@ -6,7 +6,7 @@ run.py — CCHP 优化实验启动器
   uv run python run.py              # 交互式选择模式
   uv run python run.py --mode test  # 测试模式（nind=10, maxgen=5）
   uv run python run.py --mode quick # 快速模式（nind=20, maxgen=20）
-  uv run python run.py --mode full  # 正式模式（nind=50, maxgen=100，全部5种方法）
+  uv run python run.py --mode full  # 正式模式（nind=80, maxgen=150，全部5种方法）
   uv run python run.py --mode custom --nind 40 --maxgen 80 --methods std euclidean
   uv run python run.py --check      # 仅做环境检查，不运行优化
 
@@ -73,9 +73,12 @@ PRESETS = {
         "methods": ["std", "euclidean", "economic_only"],
     },
     "full": {
-        "desc": "正式模式 — 完整对比实验（约 1-3 小时）",
-        "nind": 50,
-        "maxgen": 100,
+        "desc": "正式模式 — 完整对比实验（约 2-4 小时）",
+        # 2026-04-17 调升：原 50/100 的 `euclidean` 成本波动 2.1%、`ssr` 匹配度波动 76%
+        # （见 Results/服务器结果/第二次实验/parameter_scale_comparison_fixed.md），
+        # 80/150 是收敛拐点，再升到 100/200 的边际收益 <1%，耗时却翻倍。
+        "nind": 80,
+        "maxgen": 150,
         "pool_type": "Process",
         "inherit_population": True,
         "methods": ["std", "euclidean", "pearson", "ssr", "economic_only"],
@@ -789,8 +792,9 @@ def _run_experiments(args):
         param_desc = "快速参数 (nind=20, maxgen=20)"
         run_level = "quick"
     else:
-        nind, maxgen = 50, 100
-        param_desc = "正式参数 (nind=50, maxgen=100)"
+        # 2026-04-17 正式参数从 50/100 提升到 80/150，理由见 PRESETS['full'] 注释
+        nind, maxgen = 80, 150
+        param_desc = "正式参数 (nind=80, maxgen=150)"
         run_level = "full"
 
     num_workers = args.workers
