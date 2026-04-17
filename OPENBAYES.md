@@ -13,10 +13,11 @@
 
 - 这个项目本质上是 `CPU + 求解器` 任务，不是 GPU 训练任务。
 - 如果只是跑优化，优先看 CPU 核数、内存和求解器可用性，不要把 GPU 当成主要加速手段。
-- 当前最稳的流程是：
-  1. 在 OpenBayes 交互空间里把环境调通
-  2. 运行 `run.py --check`
-  3. 再跑 `run.py --exp ...` 或敏感性分析脚本
+- **2026-04-17 之后推荐的最省事流程**（松山湖数据口径已重建、实验编号已重排）：
+  1. `git clone` / `git pull` 拿到最新代码
+  2. 直接跑 `bash scripts/openbayes_run_experiments.sh`——它内部串起"环境准备 → 松山湖数据重生 → sanity check → 四组实验 → Phase2 后验"
+  3. 日志会落在 `logs/post_rebuild_<ts>/`，结果落在 `Results/CCHP_*`
+- 如果需要更细粒度的手工控制，再按第 3-4 节分步走。
 
 ## 2. 仓库在服务器上的推荐落点
 
@@ -60,20 +61,64 @@ cd new_ies_optimization
 export IES_RUNTIME_ENV=cloud
 ```
 
-### 3.3 赋予脚本权限并配置环境
+### 3.3 赋予脚本权限
 
 ```bash
-chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh
+chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh scripts/openbayes_run_experiments.sh
+```
+
+### 3.4 **一键完成 setup + 数据重建 + 四组实验**（推荐）
+
+```bash
+bash scripts/openbayes_run_experiments.sh
+```
+
+这条命令依次做：
+
+1. 跑 `scripts/openbayes_setup.sh`（装 uv / Python / 依赖 / glpk）
+2. 跑 `uv run python scripts/generate_songshan_data.py`（按 2026-04-17 重建版合成松山湖 8760h 数据）
+3. 跑 `uv run python scripts/check_songshan_data.py`（独立口径校验，11 OK / 0 WARN 为正常）
+4. 顺序跑 `uv run python run.py --exp 1/2/3/4`
+5. 每组实验后接 Phase2 后验（`--post-analysis-mode medium`）
+6. 全部日志落到 `logs/post_rebuild_<timestamp>/`，内含 `SUMMARY.md`
+
+**常用环境变量**（全部可选）：
+
+```bash
+# 烟测：10 分钟级全链路跑一遍
+IES_TEST_RUN=1 bash scripts/openbayes_run_experiments.sh
+
+# 只跑其中几组
+IES_EXP="1 2" bash scripts/openbayes_run_experiments.sh
+
+# 环境已好、数据已生成，只想重跑实验
+IES_SKIP_SETUP=1 IES_SKIP_DATA_REGEN=1 IES_SKIP_SANITY=1 \
+  bash scripts/openbayes_run_experiments.sh
+
+# 改并行数
+IES_WORKERS=28 bash scripts/openbayes_run_experiments.sh
+
+# sanity WARN 即阻止（用于 CI）
+IES_STRICT_SANITY=1 bash scripts/openbayes_run_experiments.sh
+```
+
+### 3.5 手动分步（排障时用）
+
+环境准备：
+
+```bash
 bash scripts/openbayes_setup.sh
+# 或强制重建：bash scripts/rebuild_openbayes_env.sh
 ```
 
-如果环境损坏或需要强制重建：
+松山湖数据重生 + 校验（**首次拉代码后必须做一次**，否则 `data/songshan_lake_data.csv` 和 `data/songshan_lake_typical.xlsx` 是旧口径）：
 
 ```bash
-bash scripts/rebuild_openbayes_env.sh
+uv run python scripts/generate_songshan_data.py
+uv run python scripts/check_songshan_data.py
 ```
 
-### 3.4 做一次自检
+自检：
 
 ```bash
 uv run python run.py --check
@@ -81,74 +126,55 @@ uv run python run.py --check
 
 ## 4. 交互空间里最常用的运行命令
 
-### 4.1 论文预设实验
+### 4.1 论文四组实验（2026-04-17 重排后含义）
 
-实验 1 测试参数：
+| 编号 | 案例 | 卡诺电池 | 方法 | 作用 |
+|---|---|---|---|---|
+| `--exp 1` | 德国 | 无 | 5 方法全跑 | 创新点 1：EQD vs std/pearson/ssr/economic 对比 |
+| `--exp 2` | 德国 | **both**（先无 → 再有） | std + euclidean | 创新点 2 核心证据：卡诺电池有/无对比 |
+| `--exp 3` | 松山湖 | 无 | std + euclidean | 普适性验证 |
+| `--exp 4` | 松山湖 | 有 | std + euclidean | 普适性延伸 + 串联两创新点 |
+| `--exp all` | — | — | — | 顺序跑 1/2/3/4 |
+
+注：**旧 exp2 / exp3（松山湖 × 5 方法 / 松山湖 Carnot 有无）已下线**，旧结果已归档到
+`Results/服务器结果/_pre_rebuild_2026-04-17/`，不再引用。
+
+实验 1 烟测：
 
 ```bash
 uv run python run.py --exp 1 --test-run --workers 4
 ```
 
-实验 1 正式参数：
+单组实验正式参数：
 
 ```bash
-uv run python run.py --exp 1 --workers 28
+uv run python run.py --exp 2 --workers 28
 ```
 
-全部四组实验正式参数：
+全部四组 + Phase2 后验（最常见的正式跑法）：
 
 ```bash
-uv run python run.py --exp all --workers 28
+uv run python run.py --exp all --workers 28 --post-analysis-mode medium
 ```
 
-### 4.2 pipeline 一键流程
+### 4.2 参数敏感性分析（本轮可跳过）
 
-德国案例正式模式：
+上一版本（2026-04-14 正式实验）已完成参数规模敏感性分析，结论为
+`nind=50 / maxgen=100` 已收敛。相关报告见：
 
-```bash
-uv run python run_pipeline.py --full --case german --workers 28
-```
+- `Results/服务器结果/第二次实验/parameter_sensitivity_report*.md`
+- `Results/服务器结果/第二次实验/parameter_scale_comparison_fixed.md`
 
-松山湖案例正式模式：
+**本轮松山湖数据口径重建只改输入层，不影响算法收敛特性**，沿用上述结论即可，
+**无需再跑敏感性分析**。论文里简单一句"沿用前版敏感性结论"并引用报告。
 
-```bash
-uv run python run_pipeline.py --full --case songshan_lake --workers 28
-```
-
-### 4.3 参数敏感性分析
-
-通用敏感性分析：
+若未来需要重跑（例如改了 GA 算子或增加了决策变量维度），命令仍然是：
 
 ```bash
 uv run python scripts/run_parameter_sensitivity.py --workers 28
 ```
 
-只查看将执行的命令：
-
-```bash
-uv run python scripts/run_parameter_sensitivity.py --workers 28 --dry-run
-```
-
-自定义参数组：
-
-```bash
-uv run python scripts/run_parameter_sensitivity.py --workers 28 --scales 50x100 80x150 100x200
-```
-
-### 4.4 只做 exp4 敏感性分析
-
-```bash
-uv run python scripts/run_exp4_sensitivity.py --workers 28
-```
-
-这条命令默认等价于：
-
-- `case = songshan_lake`
-- `carnot = on`
-- `methods = std euclidean`
-- 参数组默认比较 `50x100 / 80x150 / 100x200`
-
-### 4.5 比较已有结果目录
+### 4.3 比较已有结果目录
 
 ```bash
 uv run python scripts/compare_parameter_scales.py \
@@ -253,13 +279,27 @@ exp4__songshan_lake__carnot__std+euclidean__n50__g100__20260414_073933
 
 ### 8.1 继续跑新的实验
 
+最推荐（一键）：
+
+```bash
+cd /openbayes/home/new_ies_optimization
+git pull
+export IES_RUNTIME_ENV=cloud
+bash scripts/openbayes_run_experiments.sh
+```
+
+手动模式（已经在 3.4 一键流程里跑过、只想重跑部分实验）：
+
 ```bash
 cd /openbayes/home/new_ies_optimization
 export IES_RUNTIME_ENV=cloud
-uv run python run.py --exp all --workers 28
+uv run python run.py --exp all --workers 28 --post-analysis-mode medium
 ```
 
-### 8.2 跑参数敏感性分析
+### 8.2 跑参数敏感性分析（本轮不需要）
+
+如前述 4.3 节所说，本轮数据口径重建不影响收敛特性，沿用前版结论即可。
+如果确实要重跑：
 
 ```bash
 cd /openbayes/home/new_ies_optimization
@@ -267,11 +307,8 @@ export IES_RUNTIME_ENV=cloud
 uv run python scripts/run_parameter_sensitivity.py --workers 28
 ```
 
-或者：
-
-```bash
-uv run python scripts/run_exp4_sensitivity.py --workers 28
-```
+（`scripts/run_exp4_sensitivity.py` 是旧实验编号残留，对应"松山湖+Carnot × std+euclidean"
+即新 exp4，仍可直接用。）
 
 ### 8.3 对已有结果做分析
 
@@ -283,10 +320,10 @@ uv run python scripts/compare_parameter_scales.py \
   Results/<结果目录3>
 ```
 
-如果是 pipeline 后验分析：
+对已有结果目录补跑 Phase2 后验分析（自动推断 case 和 methods）：
 
 ```bash
-uv run python run_pipeline.py --skip-optimize --result-dir Results/<已有目录> --full
+uv run python scripts/run_existing_post_analysis.py Results/<已有目录> --mode full
 ```
 
 ## 9. Task 模式说明
@@ -332,7 +369,11 @@ chmod +x scripts/openbayes_setup.sh scripts/rebuild_openbayes_env.sh
 
 ### Q5：`nind=50, maxgen=100` 会不会太少
 
-对这个问题最稳的做法不是猜，而是补参数敏感性分析。推荐直接跑：
+2026-04-14 那一轮已经在 `Results/服务器结果/第二次实验/` 里跑过 `50×100 / 80×150 / 100×200`
+三个规模的对比，结论是 50×100 已收敛，继续加规模只线性增加耗时、边际收益很小。
+参见 `parameter_sensitivity_report*.md` 与 `parameter_scale_comparison_fixed.md`。
+
+本轮松山湖数据重建只改输入层、未改算法，沿用前版结论即可。若结构确有变动再跑：
 
 ```bash
 uv run python scripts/run_parameter_sensitivity.py --workers 28

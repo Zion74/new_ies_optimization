@@ -10,11 +10,11 @@ run.py — CCHP 优化实验启动器
   uv run python run.py --mode custom --nind 40 --maxgen 80 --methods std euclidean
   uv run python run.py --check      # 仅做环境检查，不运行优化
 
-论文四组实验（正式模式）：
-  uv run python run.py --exp 1      # 实验1: 德国×5种方法（创新点1主实验）
-  uv run python run.py --exp 2      # 实验2: 松山湖×方案B+C（普适性验证）
-  uv run python run.py --exp 3      # 实验3: 松山湖×方案C 有/无卡诺电池（创新点2）
-  uv run python run.py --exp 4      # 实验4: 松山湖+卡诺×方案B vs C（串联两个创新点）
+论文四组实验（正式模式，2026-04-17 重排后）：
+  uv run python run.py --exp 1      # 实验1: 德国×5方法（创新点1：EQD 方法对比）
+  uv run python run.py --exp 2      # 实验2: 德国×方案B+C 有/无卡诺（创新点2核心证据）
+  uv run python run.py --exp 3      # 实验3: 松山湖×方案B+C（普适性验证）
+  uv run python run.py --exp 4      # 实验4: 松山湖+卡诺×方案B+C（普适性延伸 + 串联创新点）
   uv run python run.py --exp all    # 依次运行全部4组实验
 
   加 --test-run 可用测试参数快速验证流程：
@@ -85,38 +85,43 @@ PRESETS = {
 ALL_METHODS = ["std", "euclidean", "pearson", "ssr", "economic_only"]
 
 METHOD_DESC = {
-    "std":           "方案B — 波动率匹配度（师兄方法）",
-    "euclidean":     "方案C — 能质耦合欧氏距离（本文核心创新）",
-    "pearson":       "方案D — 皮尔逊相关系数",
-    "ssr":           "方案E — 供需重叠度SSR",
+    "std": "方案B — 波动率匹配度（师兄方法）",
+    "euclidean": "方案C — 能质耦合欧氏距离（本文核心创新）",
+    "pearson": "方案D — 皮尔逊相关系数",
+    "ssr": "方案E — 供需重叠度SSR",
     "economic_only": "方案A — 单目标经济最优（基准）",
 }
 
 # ── 论文四组实验定义 ──────────────────────────────────────────────────────
+# 2026-04-17 按 docs/03_sci_paper/experiment_redesign_v2.md 重排：
+# - 德国案例作为核心证据（数据可信度高），Carnot 对比移至德国
+# - 松山湖案例降级为普适性验证
+# - 旧 exp2/exp3（松山湖无 Carnot 方法对比 / 松山湖 Carnot 有无）被下线，
+#   已归档到 Results/服务器结果/_pre_rebuild_2026-04-17/
 EXPERIMENTS = {
     "1": {
-        "name": "实验1: 德国案例×5种方法（创新点1-方法对比）",
+        "name": "实验1: 德国案例×5方法（创新点1：EQD 方法对比）",
         "case": "german",
         "carnot": False,
         "methods": ["economic_only", "std", "euclidean", "pearson", "ssr"],
         "inherit_population": True,
     },
     "2": {
-        "name": "实验2: 松山湖案例×方案B+C（普适性验证）",
+        "name": "实验2: 德国案例×方案B+C 有/无卡诺电池（创新点2：Carnot 核心证据）",
+        "case": "german",
+        "carnot": "both",  # 特殊标记：先跑无卡诺，再跑有卡诺
+        "methods": ["std", "euclidean"],
+        "inherit_population": False,
+    },
+    "3": {
+        "name": "实验3: 松山湖案例×方案B+C（普适性验证）",
         "case": "songshan_lake",
         "carnot": False,
         "methods": ["std", "euclidean"],
         "inherit_population": True,
     },
-    "3": {
-        "name": "实验3: 松山湖×方案C 有/无卡诺电池（创新点2）",
-        "case": "songshan_lake",
-        "carnot": "both",  # 特殊标记：先跑无卡诺，再跑有卡诺
-        "methods": ["euclidean"],
-        "inherit_population": False,
-    },
     "4": {
-        "name": "实验4: 松山湖+卡诺×方案B vs C（串联创新点）",
+        "name": "实验4: 松山湖+卡诺×方案B+C（普适性延伸 + 串联创新点）",
         "case": "songshan_lake",
         "carnot": True,
         "methods": ["std", "euclidean"],
@@ -144,12 +149,15 @@ def run_checks(verbose=True) -> bool:
     if verbose:
         print("\n── 环境检查 ─────────────────────────────────────")
 
-    chk("Python 依赖", lambda: (
-        __import__("geatpy"),
-        __import__("oemof.solph"),
-        __import__("pyomo.environ"),
-        "geatpy / oemof.solph / pyomo OK"
-    )[-1])
+    chk(
+        "Python 依赖",
+        lambda: (
+            __import__("geatpy"),
+            __import__("oemof.solph"),
+            __import__("pyomo.environ"),
+            "geatpy / oemof.solph / pyomo OK",
+        )[-1],
+    )
 
     def _check_solvers():
         available = available_solver_names(["gurobi_direct", "highs", "glpk"])
@@ -158,26 +166,43 @@ def run_checks(verbose=True) -> bool:
             f"Available: {iter_solver_display_names(available)} | "
             f"Priority: {iter_solver_display_names(preferred_solver_order())}"
         )
+
     chk("求解器", _check_solvers)
 
     def _check_data():
         import pandas as pd
+
         df = pd.read_csv(os.path.join(BASE_DIR, "data", "mergedData.csv"))
         assert df.shape == (8760, 6), f"mergedData.csv 行列数异常: {df.shape}"
-        df2 = pd.read_excel(os.path.join(BASE_DIR, "data", "typicalDayData.xlsx"), engine="openpyxl")
+        df2 = pd.read_excel(
+            os.path.join(BASE_DIR, "data", "typicalDayData.xlsx"), engine="openpyxl"
+        )
         assert len(df2) == 14, f"typicalDayData.xlsx 典型日数量异常: {len(df2)}"
         return f"mergedData {df.shape}  typicalDayData {len(df2)} 典型日"
+
     chk("数据文件", _check_data)
 
     def _check_operation():
         from operation import OperationModel
+
         T = 24
         m = OperationModel(
-            "01/01/2019", T,
-            [0.0025]*T, [0.0286]*T,
-            [100.]*T, [80.]*T, [50.]*T,
-            [30.]*T, [20.]*T,
-            500, 200, 100, 100, 500, 200, 100,
+            "01/01/2019",
+            T,
+            [0.0025] * T,
+            [0.0286] * T,
+            [100.0] * T,
+            [80.0] * T,
+            [50.0] * T,
+            [30.0] * T,
+            [20.0] * T,
+            500,
+            200,
+            100,
+            100,
+            500,
+            200,
+            100,
         )
         m.optimise()
         obj = m.get_objective_value()
@@ -185,6 +210,7 @@ def run_checks(verbose=True) -> bool:
         meta = m.energy_system.results.get("meta", {})
         solver_backend = meta.get("solver", {}).get("backend", "Unknown")
         return f"目标值={obj:.2f} | 求解器={solver_backend}"
+
     chk("OperationModel 单次求解", _check_operation)
 
     passed = sum(1 for ok, _, _ in checks if ok)
@@ -230,8 +256,9 @@ def _variant_tag(carnot: bool) -> str:
     return "carnot" if carnot else "base"
 
 
-def _generate_batch_result_dir_name(run_level, exp_ids, nind, maxgen,
-                                    num_workers=None, unit_lambda=False):
+def _generate_batch_result_dir_name(
+    run_level, exp_ids, nind, maxgen, num_workers=None, unit_lambda=False
+):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     exp_tag = "exp-all" if len(exp_ids) > 1 else f"exp{exp_ids[0]}"
     parts = [
@@ -278,9 +305,18 @@ def _build_method_time_rows(results: dict):
     return rows
 
 
-def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
-                               num_workers, unit_lambda, started_at, finished_at,
-                               summaries):
+def _write_batch_timing_report(
+    results_root,
+    run_level,
+    exp_ids,
+    nind,
+    maxgen,
+    num_workers,
+    unit_lambda,
+    started_at,
+    finished_at,
+    summaries,
+):
     report_path = os.path.join(results_root, "batch_timing_summary.md")
     total_elapsed = (finished_at - started_at).total_seconds()
 
@@ -290,20 +326,28 @@ def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
     lines.append(f"- 运行级别: `{run_level}`\n")
     lines.append(f"- 实验范围: `{', '.join(exp_ids)}`\n")
     lines.append(f"- 参数: `nind={nind}, maxgen={maxgen}`\n")
-    lines.append(f"- workers: `{num_workers if num_workers is not None else 'default'}`\n")
+    lines.append(
+        f"- workers: `{num_workers if num_workers is not None else 'default'}`\n"
+    )
     lines.append(f"- unit-lambda: `{'on' if unit_lambda else 'off'}`\n")
     lines.append(f"- 总开始时间: `{_format_datetime(started_at)}`\n")
     lines.append(f"- 总结束时间: `{_format_datetime(finished_at)}`\n")
-    lines.append(f"- 总耗时: `{_format_duration(total_elapsed)}` ({total_elapsed/60:.1f} min)\n\n")
+    lines.append(
+        f"- 总耗时: `{_format_duration(total_elapsed)}` ({total_elapsed / 60:.1f} min)\n\n"
+    )
 
     lines.append("## 子实验计时\n\n")
-    lines.append("| 子实验 | 案例 | 变体 | 方法集合 | 开始时间 | 结束时间 | 耗时 | 状态 | 结果目录 |\n")
+    lines.append(
+        "| 子实验 | 案例 | 变体 | 方法集合 | 开始时间 | 结束时间 | 耗时 | 状态 | 结果目录 |\n"
+    )
     lines.append("|---|---|---|---|---|---|---|---|---|\n")
     for item in summaries:
         rel_dir = "-"
         if item.get("result_dir"):
             try:
-                rel_dir = os.path.relpath(item["result_dir"], BASE_DIR).replace("\\", "/")
+                rel_dir = os.path.relpath(item["result_dir"], BASE_DIR).replace(
+                    "\\", "/"
+                )
             except ValueError:
                 rel_dir = str(item["result_dir"]).replace("\\", "/")
         lines.append(
@@ -314,12 +358,22 @@ def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
         )
 
     lines.append("\n## 方法级耗时\n\n")
-    lines.append("| 子实验 | 方法 | 耗时(s) | 耗时(HH:MM:SS) | Pareto解数 | 最低成本 | 最佳匹配度 |\n")
+    lines.append(
+        "| 子实验 | 方法 | 耗时(s) | 耗时(HH:MM:SS) | Pareto解数 | 最低成本 | 最佳匹配度 |\n"
+    )
     lines.append("|---|---|---:|---|---:|---:|---:|\n")
     for item in summaries:
         for method_row in item.get("method_rows", []):
-            min_cost = "-" if method_row["min_cost"] is None else f"{method_row['min_cost']:,.2f}"
-            min_match = "-" if method_row["min_match"] is None else f"{method_row['min_match']:.4f}"
+            min_cost = (
+                "-"
+                if method_row["min_cost"] is None
+                else f"{method_row['min_cost']:,.2f}"
+            )
+            min_match = (
+                "-"
+                if method_row["min_match"] is None
+                else f"{method_row['min_match']:.4f}"
+            )
             lines.append(
                 f"| `{item['exp_id']}` | {method_row['method_label']} | "
                 f"{method_row['elapsed_seconds']:.1f} | `{method_row['elapsed_hms']}` | "
@@ -333,9 +387,13 @@ def _write_batch_timing_report(results_root, run_level, exp_ids, nind, maxgen,
 
 
 def _run_post_analysis_phase(result_dir, case_config, methods, analysis_mode):
-    from run_pipeline import PIPELINE_MODES, print_comparison_report, run_post_analysis
+    from scripts.post_analysis_report import (
+        POST_ANALYSIS_MODES,
+        print_comparison_report,
+        run_post_analysis,
+    )
 
-    cfg = PIPELINE_MODES[analysis_mode]
+    cfg = POST_ANALYSIS_MODES[analysis_mode]
     print("\n" + "=" * 70)
     print(f"  自动进入 Phase 2 后验分析 [{analysis_mode}]")
     print("=" * 70)
@@ -365,28 +423,39 @@ def _run_post_analysis_phase(result_dir, case_config, methods, analysis_mode):
             rows.append((METHOD_DESC.get(method, method), "—", "—", "—", 0))
             continue
         import numpy as np
+
         min_cost = np.min(bi.ObjV[:, 0])
         best_match = np.min(bi.ObjV[:, 1]) if bi.ObjV.shape[1] > 1 else None
         t = res.get("time", 0)
-        rows.append((
-            METHOD_DESC.get(method, method),
-            f"{min_cost:,.0f} €",
-            f"{best_match:.2f}" if best_match is not None else "—",
-            f"{t:.0f}s",
-            bi.sizes,
-        ))
+        rows.append(
+            (
+                METHOD_DESC.get(method, method),
+                f"{min_cost:,.0f} €",
+                f"{best_match:.2f}" if best_match is not None else "—",
+                f"{t:.0f}s",
+                bi.sizes,
+            )
+        )
 
     col_w = [max(len(str(r[i])) for r in rows) for i in range(5)]
-    col_w = [max(w, len(h)) for w, h in zip(col_w, ["方法", "最低成本", "最佳匹配度", "耗时", "Pareto解数"])]
-    header = "  ".join(h.ljust(col_w[i]) for i, h in enumerate(["方法", "最低成本", "最佳匹配度", "耗时", "Pareto解数"]))
+    col_w = [
+        max(w, len(h))
+        for w, h in zip(col_w, ["方法", "最低成本", "最佳匹配度", "耗时", "Pareto解数"])
+    ]
+    header = "  ".join(
+        h.ljust(col_w[i])
+        for i, h in enumerate(["方法", "最低成本", "最佳匹配度", "耗时", "Pareto解数"])
+    )
     print(f"\n  {header}")
     print("  " + "-" * len(header))
     for row in rows:
         print("  " + "  ".join(str(v).ljust(col_w[i]) for i, v in enumerate(row)))
 
-    print(f"\n  总耗时：{elapsed/60:.1f} 分钟")
+    print(f"\n  总耗时：{elapsed / 60:.1f} 分钟")
     print(f"  结果目录：{result_dir}")
-    print(f"\n  查看 Pareto 对比图：{os.path.join(result_dir, 'Pareto_Comparison.png')}")
+    print(
+        f"\n  查看 Pareto 对比图：{os.path.join(result_dir, 'Pareto_Comparison.png')}"
+    )
     print(f"  查看详细报告：{os.path.join(result_dir, 'comparison_report.md')}")
     print("=" * 60)
 
@@ -436,7 +505,9 @@ def _custom_menu() -> dict:
         if not methods:
             methods = ["std", "euclidean"]
 
-    inherit = input("是否开启种群继承（euclidean 继承 std）？(y/n) [y]：").strip().lower()
+    inherit = (
+        input("是否开启种群继承（euclidean 继承 std）？(y/n) [y]：").strip().lower()
+    )
     inherit_population = inherit in ("", "y")
 
     cfg = {
@@ -473,16 +544,27 @@ def _print_config(cfg: dict):
     print(f"    运行方法           = {cfg['methods']}")
     n = len(cfg["methods"])
     est = cfg["nind"] * cfg["maxgen"] * n * 0.15
-    est_str = (f"约 {est:.0f} 秒" if est < 120
-               else f"约 {est/60:.0f} 分钟" if est < 3600
-               else f"约 {est/3600:.1f} 小时")
+    est_str = (
+        f"约 {est:.0f} 秒"
+        if est < 120
+        else f"约 {est / 60:.0f} 分钟"
+        if est < 3600
+        else f"约 {est / 3600:.1f} 小时"
+    )
     print(f"    预计耗时           ≈ {est_str}（粗略估算）")
 
 
 # ── 命令行参数解析 ────────────────────────────────────────────────────────
-def _generate_result_dir_name(mode=None, case_name="german", carnot=False,
-                               nind=None, maxgen=None, methods=None, exp_id=None,
-                               unit_lambda=False):
+def _generate_result_dir_name(
+    mode=None,
+    case_name="german",
+    carnot=False,
+    nind=None,
+    maxgen=None,
+    methods=None,
+    exp_id=None,
+    unit_lambda=False,
+):
     """
     生成描述性的结果文件夹名称
 
@@ -535,34 +617,56 @@ def parse_args():
   uv run python run.py --exp all                          # 四组实验-正式参数
         """,
     )
-    parser.add_argument("--mode", choices=["test", "quick", "full", "custom"],
-                        help="运行模式（不指定则进入交互菜单）")
-    parser.add_argument("--check", action="store_true",
-                        help="仅做环境检查，不运行优化")
+    parser.add_argument(
+        "--mode",
+        choices=["test", "quick", "full", "custom"],
+        help="运行模式（不指定则进入交互菜单）",
+    )
+    parser.add_argument("--check", action="store_true", help="仅做环境检查，不运行优化")
     parser.add_argument("--nind", type=int, help="种群规模（custom 模式）")
     parser.add_argument("--maxgen", type=int, help="最大代数（custom 模式）")
-    parser.add_argument("--methods", nargs="+", choices=ALL_METHODS,
-                        help="运行方法列表（custom 模式）")
-    parser.add_argument("--no-inherit", action="store_true",
-                        help="关闭种群继承")
-    parser.add_argument("--skip-check", action="store_true",
-                        help="跳过运行前的环境检查")
-    parser.add_argument("--case", choices=["german", "songshan_lake"],
-                        default="german", help="选择案例（默认德国）")
-    parser.add_argument("--carnot", action="store_true",
-                        help="启用卡诺电池")
-    parser.add_argument("--unit-lambda", action="store_true",
-                        help="欧氏匹配度使用等权 λ_e=λ_h=λ_c=1（覆盖卡诺㶲系数）")
-    parser.add_argument("--exp", choices=["1", "2", "3", "4", "all"],
-                        help="运行论文预设实验（1-4 或 all）")
-    parser.add_argument("--test-run", action="store_true",
-                        help="实验模式用测试参数（nind=10, maxgen=5）快速验证")
-    parser.add_argument("--quick-run", action="store_true",
-                        help="实验模式用快速参数（nind=20, maxgen=20）初步验证效果")
-    parser.add_argument("--workers", type=int, default=None,
-                        help="并行进程数（默认=CPU核心数）")
-    parser.add_argument("--post-analysis-mode", choices=["test", "quick", "medium", "full"],
-                        help="优化完成后自动执行 Phase 2 后验分析")
+    parser.add_argument(
+        "--methods", nargs="+", choices=ALL_METHODS, help="运行方法列表（custom 模式）"
+    )
+    parser.add_argument("--no-inherit", action="store_true", help="关闭种群继承")
+    parser.add_argument(
+        "--skip-check", action="store_true", help="跳过运行前的环境检查"
+    )
+    parser.add_argument(
+        "--case",
+        choices=["german", "songshan_lake"],
+        default="german",
+        help="选择案例（默认德国）",
+    )
+    parser.add_argument("--carnot", action="store_true", help="启用卡诺电池")
+    parser.add_argument(
+        "--unit-lambda",
+        action="store_true",
+        help="欧氏匹配度使用等权 λ_e=λ_h=λ_c=1（覆盖卡诺㶲系数）",
+    )
+    parser.add_argument(
+        "--exp",
+        choices=["1", "2", "3", "4", "all"],
+        help="运行论文预设实验（1-4 或 all）",
+    )
+    parser.add_argument(
+        "--test-run",
+        action="store_true",
+        help="实验模式用测试参数（nind=10, maxgen=5）快速验证",
+    )
+    parser.add_argument(
+        "--quick-run",
+        action="store_true",
+        help="实验模式用快速参数（nind=20, maxgen=20）初步验证效果",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=None, help="并行进程数（默认=CPU核心数）"
+    )
+    parser.add_argument(
+        "--post-analysis-mode",
+        choices=["test", "quick", "medium", "full"],
+        help="优化完成后自动执行 Phase 2 后验分析",
+    )
     return parser.parse_args()
 
 
@@ -623,14 +727,20 @@ def main():
     else:
         print(f"案例: {case_config['description']}")
     if args.unit_lambda:
-        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = 1.0
+        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = (
+            1.0
+        )
         print("  [unit-lambda] 欧氏匹配度已设为等权 λ_e=λ_h=λ_c=1")
 
     # 生成描述性结果文件夹名
     mode_label = args.mode or "interactive"
     result_dir_name = _generate_result_dir_name(
-        mode=mode_label, case_name=args.case, carnot=args.carnot,
-        nind=cfg["nind"], maxgen=cfg["maxgen"], methods=cfg["methods"],
+        mode=mode_label,
+        case_name=args.case,
+        carnot=args.carnot,
+        nind=cfg["nind"],
+        maxgen=cfg["maxgen"],
+        methods=cfg["methods"],
         unit_lambda=args.unit_lambda,
     )
 
@@ -718,31 +828,57 @@ def _run_experiments(args):
             continue
         exp = EXPERIMENTS[exp_id]
 
-        # 实验3 特殊处理：先跑无卡诺，再跑有卡诺
+        # carnot="both" 特殊处理：先跑无卡诺(a)，再跑有卡诺(b)，共享父目录
         if exp.get("carnot") == "both":
-            experiment_summaries.append(_run_one_experiment(
-                exp_id + "a", exp["name"] + "（无卡诺电池）",
-                exp["case"], False, exp["methods"], exp["inherit_population"],
-                nind, maxgen, num_workers, parent_dir=results_root,
-                unit_lambda=args.unit_lambda,
-                post_analysis_mode=args.post_analysis_mode,
-            ))
-            experiment_summaries.append(_run_one_experiment(
-                exp_id + "b", exp["name"] + "（有卡诺电池）",
-                exp["case"], True, exp["methods"], exp["inherit_population"],
-                nind, maxgen, num_workers, parent_dir=results_root,
-                unit_lambda=args.unit_lambda,
-                post_analysis_mode=args.post_analysis_mode,
-            ))
+            experiment_summaries.append(
+                _run_one_experiment(
+                    exp_id + "a",
+                    exp["name"] + "（无卡诺电池）",
+                    exp["case"],
+                    False,
+                    exp["methods"],
+                    exp["inherit_population"],
+                    nind,
+                    maxgen,
+                    num_workers,
+                    parent_dir=results_root,
+                    unit_lambda=args.unit_lambda,
+                    post_analysis_mode=args.post_analysis_mode,
+                )
+            )
+            experiment_summaries.append(
+                _run_one_experiment(
+                    exp_id + "b",
+                    exp["name"] + "（有卡诺电池）",
+                    exp["case"],
+                    True,
+                    exp["methods"],
+                    exp["inherit_population"],
+                    nind,
+                    maxgen,
+                    num_workers,
+                    parent_dir=results_root,
+                    unit_lambda=args.unit_lambda,
+                    post_analysis_mode=args.post_analysis_mode,
+                )
+            )
         else:
-            experiment_summaries.append(_run_one_experiment(
-                exp_id, exp["name"],
-                exp["case"], exp.get("carnot", False),
-                exp["methods"], exp["inherit_population"],
-                nind, maxgen, num_workers, parent_dir=results_root,
-                unit_lambda=args.unit_lambda,
-                post_analysis_mode=args.post_analysis_mode,
-            ))
+            experiment_summaries.append(
+                _run_one_experiment(
+                    exp_id,
+                    exp["name"],
+                    exp["case"],
+                    exp.get("carnot", False),
+                    exp["methods"],
+                    exp["inherit_population"],
+                    nind,
+                    maxgen,
+                    num_workers,
+                    parent_dir=results_root,
+                    unit_lambda=args.unit_lambda,
+                    post_analysis_mode=args.post_analysis_mode,
+                )
+            )
 
     batch_finished_at = datetime.datetime.now()
     report_path = _write_batch_timing_report(
@@ -761,14 +897,27 @@ def _run_experiments(args):
     print("\n" + "=" * 70)
     print("  全部实验完成！")
     print(f"  结果汇总目录: {results_root}")
-    print(f"  总耗时: {_format_duration((batch_finished_at - batch_started_at).total_seconds())}")
+    print(
+        f"  总耗时: {_format_duration((batch_finished_at - batch_started_at).total_seconds())}"
+    )
     print(f"  计时汇总: {report_path}")
     print("=" * 70)
 
 
-def _run_one_experiment(exp_id, name, case_name, carnot, methods,
-                        inherit_population, nind, maxgen, num_workers=None, parent_dir=None,
-                        unit_lambda=False, post_analysis_mode=None):
+def _run_one_experiment(
+    exp_id,
+    name,
+    case_name,
+    carnot,
+    methods,
+    inherit_population,
+    nind,
+    maxgen,
+    num_workers=None,
+    parent_dir=None,
+    unit_lambda=False,
+    post_analysis_mode=None,
+):
     """运行单组实验"""
     from cchp_gasolution import run_comparative_study
     from case_config import get_case, enable_carnot_battery
@@ -781,7 +930,9 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
     if carnot:
         enable_carnot_battery(case_config)
     if unit_lambda:
-        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = 1.0
+        case_config["lambda_e"] = case_config["lambda_h"] = case_config["lambda_c"] = (
+            1.0
+        )
         print("  [unit-lambda] 欧氏匹配度: λ_e=λ_h=λ_c=1")
 
     cb_str = " + 卡诺电池" if carnot else ""
@@ -791,8 +942,12 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
 
     # 生成描述性子文件夹名
     subfolder_name = _generate_result_dir_name(
-        exp_id=exp_id, case_name=case_name, carnot=carnot,
-        nind=nind, maxgen=maxgen, methods=methods,
+        exp_id=exp_id,
+        case_name=case_name,
+        carnot=carnot,
+        nind=nind,
+        maxgen=maxgen,
+        methods=methods,
         unit_lambda=unit_lambda,
     )
     if parent_dir is not None:
@@ -855,12 +1010,15 @@ def _run_one_experiment(exp_id, name, case_name, carnot, methods,
             "finished_at": finished_at,
             "elapsed": elapsed,
             "post_analysis_elapsed": None,
-            "result_dir": os.path.join(parent_dir, subfolder_name) if parent_dir else subfolder_name,
+            "result_dir": os.path.join(parent_dir, subfolder_name)
+            if parent_dir
+            else subfolder_name,
             "method_rows": [],
         }
 
 
 if __name__ == "__main__":
     from multiprocessing import freeze_support
+
     freeze_support()
     main()

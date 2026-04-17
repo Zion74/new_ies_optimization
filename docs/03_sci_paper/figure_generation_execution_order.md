@@ -76,7 +76,7 @@ $exp4 = Join-Path $root "exp4_songshan_lake_carnot_50x100_std+euclidean_20260413
 ### 第一步：对现有 `exp1` 做后验分析
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp1" --full --case german
+uv run python scripts/run_existing_post_analysis.py "$exp1" --mode full
 ```
 
 作用：
@@ -114,7 +114,7 @@ $exp1\Pareto_Comparison.png
 
 ### 命令
 
-在完成上一步 `run_pipeline.py --skip-optimize` 后执行：
+在完成上一步 `run_existing_post_analysis.py` 后执行：
 
 ```powershell
 uv run python scripts/enhanced_analysis.py --result-dir "$exp1" --methods Std Euclidean Pearson SSR --latex
@@ -138,7 +138,7 @@ $exp1\post_analysis_budget.csv
 ### 第一步：对现有 `exp2` 做后验分析
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp2" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp2" --mode full
 ```
 
 ### 第二步：增强分析
@@ -181,8 +181,8 @@ $exp2\enhanced_analysis\Fig_Capacity_Evolution_Euclidean.png
 分别运行：
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp3a" --full --case songshan_lake
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp3b" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp3a" --mode full
+uv run python scripts/run_existing_post_analysis.py "$exp3b" --mode full
 ```
 
 再分别运行：
@@ -226,7 +226,7 @@ C:\codex_tmp\carnot_redraw\Fig_Exp3_Carnot_Ablation_Budget.png
 ### 第一步：对现有 `exp4` 做后验分析
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp4" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp4" --mode full
 ```
 
 ### 第二步：增强分析
@@ -326,29 +326,29 @@ uv run python scripts/resilience_test.py --result-dir "$exp1" --case german
 ### A1 德国主图
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp1" --full --case german
+uv run python scripts/run_existing_post_analysis.py "$exp1" --mode full
 uv run python scripts/enhanced_analysis.py --result-dir "$exp1" --methods Std Euclidean Pearson SSR --latex
 ```
 
 ### A2 松山湖跨案例图
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp2" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp2" --mode full
 uv run python scripts/enhanced_analysis.py --result-dir "$exp2" --methods Std Euclidean --latex
 ```
 
 ### A3 有卡诺联合验证图
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp4" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp4" --mode full
 uv run python scripts/enhanced_analysis.py --result-dir "$exp4" --methods Std Euclidean --latex
 ```
 
 ### A4 卡诺消融表
 
 ```powershell
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp3a" --full --case songshan_lake
-uv run python run_pipeline.py --skip-optimize --result-dir "$exp3b" --full --case songshan_lake
+uv run python scripts/run_existing_post_analysis.py "$exp3a" --mode full
+uv run python scripts/run_existing_post_analysis.py "$exp3b" --mode full
 ```
 
 说明：
@@ -372,7 +372,7 @@ uv run python scripts/resilience_test.py --result-dir "$exp1" --case german
 
 ## 6. 每一步跑完后该检查什么
 
-## 6.1 对 `run_pipeline.py --skip-optimize`
+## 6.1 对 `run_existing_post_analysis.py`
 
 检查：
 
@@ -443,11 +443,11 @@ resilience_test_report.md
 
 如果只想先把正文主图补齐，不要一次把所有脚本都跑完。最稳的节奏是：
 
-1. `exp1` 的 `run_pipeline --skip-optimize`
+1. `exp1` 的 `run_existing_post_analysis`
 2. `exp1` 的 `enhanced_analysis`
-3. `exp2` 的 `run_pipeline --skip-optimize`
+3. `exp2` 的 `run_existing_post_analysis`
 4. `exp2` 的 `enhanced_analysis`
-5. `exp4` 的 `run_pipeline --skip-optimize`
+5. `exp4` 的 `run_existing_post_analysis`
 6. `exp4` 的 `enhanced_analysis`
 7. 再补 `exp3a/exp3b`
 8. 最后再跑 `lambda_sensitivity` 和 `resilience`

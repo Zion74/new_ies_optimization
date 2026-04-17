@@ -63,27 +63,50 @@ IES_PRUNE_UV_CACHE=1 bash scripts/rebuild_openbayes_env.sh
 用途：
 
 - 面向 OpenBayes / Linux 服务器的一键实验总控脚本
-- 支持：
-  - 环境准备
-  - 松山湖数据重建
-  - 数据 sanity check
-  - 顺序执行指定实验
-  - 自动记录日志
+- 将"环境准备 → 松山湖数据重建 → sanity check → `run.py --exp ...` → Phase2 后验"串成一次执行
+- 每个阶段日志单独落盘到 `logs/post_rebuild_<timestamp>/`，并生成 `SUMMARY.md`
 
-适用场景：
+最常用命令：
 
-- 你已经决定在服务器上批量跑实验，并希望把“环境准备 + 数据重建 + 正式运行”串成一次执行
+```bash
+bash scripts/openbayes_run_experiments.sh                     # 全量正式跑
+IES_TEST_RUN=1 bash scripts/openbayes_run_experiments.sh      # 10 分钟级烟测
+IES_EXP="1 2" bash scripts/openbayes_run_experiments.sh       # 只跑部分实验
+IES_SKIP_SETUP=1 IES_SKIP_DATA_REGEN=1 IES_SKIP_SANITY=1 \
+  bash scripts/openbayes_run_experiments.sh                   # 跳过准备，只重跑实验
+IES_WORKERS=28 bash scripts/openbayes_run_experiments.sh      # 改并行数
+IES_STRICT_SANITY=1 bash scripts/openbayes_run_experiments.sh # sanity WARN 即中止
+```
 
-### `archive_pre_rebuild_results.bat`
+环境变量一览：
+
+- `IES_EXP`：要跑的实验（`"1 2 3 4"` 或 `"all"`，默认 `all`）
+- `IES_WORKERS`：并行 worker 数（默认由 `run.py` 自动取 CPU 核数）
+- `IES_POST_MODE`：Phase2 后验模式（`test/quick/medium/full`，默认 `medium`）
+- `IES_TEST_RUN`：1=用 `nind=10/maxgen=5` 烟测
+- `IES_QUICK_RUN`：1=用 `nind=20/maxgen=20` 初步验证
+- `IES_SKIP_SETUP` / `IES_SKIP_DATA_REGEN` / `IES_SKIP_SANITY`：跳过对应阶段
+- `IES_STRICT_SANITY`：1=sanity 任一 WARN 即 exit 1
+- `IES_RUN_TAG`：日志目录前缀（默认 `post_rebuild`）
+
+### `archive_pre_rebuild_results.ps1`
 
 用途：
 
-- Windows 下的本地辅助脚本
-- 用于在重建数据或重跑实验前，归档旧结果
+- Windows 本地辅助脚本（PowerShell 5.1+，UTF-8 BOM，不用于 Linux 容器）
+- 在 2026-04-17 松山湖数据口径重建之后，把不可比的旧结果搬到
+  `Results/服务器结果/_pre_rebuild_2026-04-17/` 归档
+- 只动松山湖相关子目录（exp2 / exp3a / exp3b / exp4），不碰德国 exp1
 
-说明：
+最常用命令：
 
-- 这是本地辅助脚本，不用于 OpenBayes Linux 容器
+```powershell
+# 试跑（只打印不动文件）
+pwsh -NoProfile -File scripts\archive_pre_rebuild_results.ps1 -DryRun
+
+# 真归档
+pwsh -NoProfile -File scripts\archive_pre_rebuild_results.ps1
+```
 
 ## 2. 实验运行与参数敏感性脚本
 
@@ -172,7 +195,7 @@ uv run python scripts/compare_parameter_scales.py \
 
 说明：
 
-- 已经被 `run_pipeline.py` 集成
+- 被 `scripts/post_analysis_report.py` 中的 `run_post_analysis` 调用（方案选择 + 调度缓存 + 指标统计）
 - 单独使用时适合对已有结果做后验分析
 
 ### `enhanced_analysis.py`
@@ -217,15 +240,54 @@ uv run python scripts/compare_parameter_scales.py \
 
 用途：
 
-- 生成松山湖案例数据
-- 是松山湖案例的重要数据入口脚本
+- 按 `docs/辩论确认/latest_松山湖数据与模型口径辩论共识.md` 的口径合成松山湖 8760h 负荷/气象
+- 输出 `data/songshan_lake_data.csv` + `data/songshan_lake_typical.xlsx`（14 典型日）
+- 内嵌 sanity check 打印年度总量、峰值、冷电比等关键指标
+- **首次 clone 仓库或换机器必须跑一次**，否则拿到的是旧口径数据
+
+关键口径（2026-04-17 重建版）：
+
+- `ele_load` 只含非空调电（69.59 万 kWh/年），空调耗电由优化模型内生决定
+- `cool_load` 月度对齐表 2（291.14 万 kW·h/年），峰值 clip 到 3460 kW
+- `heat_load` 基于办公园区生活热水假设合成（35.9 万 kWh/年）
+- 气象为合成数据，非 TMY 实测
+
+常用命令：
+
+```bash
+# 默认：按共识重新合成 + 聚类
+uv run python scripts/generate_songshan_data.py
+
+# 将来有实测 8760h CSV：
+uv run python scripts/generate_songshan_data.py --source measured --measured-csv <file>
+
+# 只重聚类，不改 CSV：
+uv run python scripts/generate_songshan_data.py --skip-generation
+
+# 只合成 CSV，不聚类：
+uv run python scripts/generate_songshan_data.py --skip-clustering
+```
 
 ### `check_songshan_data.py`
 
 用途：
 
-- 对松山湖数据做独立校验
-- 常与数据重建流程配合使用
+- 独立的松山湖数据口径校验工具（不依赖重生成）
+- 四类检查：年度总量 / 月度对齐 / 峰值与延时 / 日内形状
+- 通过标准：**11 OK / 0 WARN**
+- 带退出码：`--strict` 模式下任一 WARN 即 `exit 1`，便于接 CI / pre-commit
+
+常用命令：
+
+```bash
+uv run python scripts/check_songshan_data.py                     # 打印报告，WARN 不中止
+uv run python scripts/check_songshan_data.py --strict            # CI 模式
+uv run python scripts/check_songshan_data.py --csv <other.csv>   # 校验任意 CSV
+```
+
+注：校验输出中的 "冷负荷延时 @ 1811h" 是 **INFO 参考值**，不计入 WARN。
+原因见 `docs/辩论确认/latest_松山湖数据与模型口径辩论共识.md` §10.4：PDF 图 5 的
+1811h=1269 kW 标注点与表 2 年总 291 万 kW·h 数学不相容。
 
 ### `test_feasibility.py`
 
@@ -289,14 +351,19 @@ uv run python scripts/compare_parameter_scales.py \
 
 如果你的目标是：
 
-- 配服务器环境：用 `openbayes_setup.sh` / `rebuild_openbayes_env.sh`
-- 跑正式实验：优先用 `run.py` 或 `run_pipeline.py`，必要时配合 `openbayes_run_experiments.sh`
-- 做参数敏感性分析：用 `run_parameter_sensitivity.py`
-- 只验证实验 4 的稳定性：用 `run_exp4_sensitivity.py`
+- **服务器冷启动，一次性跑完所有正式实验**：用 `openbayes_run_experiments.sh`（首选）
+- 配服务器环境（只装依赖）：用 `openbayes_setup.sh` / `rebuild_openbayes_env.sh`
+- 跑单组实验：用 `run.py --exp N`
+- 单组实验后自动接 Phase2：`run.py --exp N --post-analysis-mode medium`
+- 对已有结果目录补跑 Phase2（自动推断 case/methods）：`scripts/run_existing_post_analysis.py <dir> --mode full`
+- 做参数敏感性分析（本轮可跳过，已有历史报告）：用 `run_parameter_sensitivity.py`
+- 只验证 exp4（松山湖+Carnot）稳定性：用 `run_exp4_sensitivity.py`
 - 只比较已完成结果：用 `compare_parameter_scales.py`
-- 画论文图：用 `enhanced_analysis.py`
+- 画论文图：用 `enhanced_analysis.py` / `redraw_carnot_figures.py`
 - 做后验分析：用 `post_analysis.py` 或 `run_existing_post_analysis.py`
-- 重建松山湖数据：用 `generate_songshan_data.py`
+- 重建松山湖数据：用 `generate_songshan_data.py`（**新仓库/新机器必做**）
+- 独立校验松山湖数据口径：用 `check_songshan_data.py`
+- 归档松山湖重建前的旧结果（Windows）：用 `archive_pre_rebuild_results.ps1`
 
 ## 7. 协作建议
 
@@ -304,12 +371,14 @@ uv run python scripts/compare_parameter_scales.py \
 
 1. 先读本文件
 2. 再看仓库根目录的 `OPENBAYES.md`
-3. 明确自己要做的是“配环境 / 跑实验 / 做分析 / 画图”中的哪一种
+3. 明确自己要做的是"配环境 / 跑实验 / 做分析 / 画图"中的哪一种
 
-如果要在服务器上接手运行，建议优先使用：
+服务器上的最短上手路径：
 
-- `scripts/openbayes_setup.sh`
-- `run.py`
-- `scripts/run_parameter_sensitivity.py`
+```bash
+cd /openbayes/home/new_ies_optimization
+git pull
+bash scripts/openbayes_run_experiments.sh
+```
 
-这三者已经覆盖了大多数日常实验需求。
+这一条就覆盖了"配环境 + 重建数据 + 数据校验 + 四组实验 + Phase2 后验"。

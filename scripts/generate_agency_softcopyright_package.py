@@ -41,7 +41,12 @@ PUBLISH_DATE = ""
 PUBLISH_CITY = ""
 SOURCE_LINES_FOR_SUBMISSION = 3000
 
-RESULT_DIR = REPO / "Results" / "test_exp1_10x5_20260318_234055" / "exp1_german_10x5_5methods_20260318_234055"
+RESULT_DIR = (
+    REPO
+    / "Results"
+    / "test_exp1_10x5_20260318_234055"
+    / "exp1_german_10x5_5methods_20260318_234055"
+)
 DATA_DIR = REPO / "data"
 IMAGE_SOURCE_DIR = CURRENT_DIR / "images"
 CAPTURE_TMP = Path(os.environ.get("TEMP", str(REPO))) / "agency_softcopyright_capture"
@@ -64,8 +69,9 @@ SELECTED_SOURCE_FILES = [
     "cchp_gaproblem.py",
     "operation.py",
     "case_config.py",
-    "run_pipeline.py",
+    "scripts/post_analysis_report.py",
     "scripts/generate_songshan_data.py",
+    "scripts/check_songshan_data.py",
     "scripts/kmeans_clustering.py",
     "scripts/kmeansClustering.m",
     "scripts/enhanced_analysis.py",
@@ -74,11 +80,11 @@ SELECTED_SOURCE_FILES = [
     "scripts/resilience_test.py",
 ]
 
-MAIN_FUNCTIONS = (
-    "本软件用于分布式电热综合能源系统优化规划与源荷匹配分析，服务于研究算例计算、方案比选和结果整理。程序可读取德国社区和松山湖校园两类案例的全年逐时电、热、冷负荷数据，以及太阳辐照、风速、环境温度和典型日权重文件，自动完成输入文件定位、案例参数载入和基本校核。用户可在命令行下选择test、quick、full、custom等运行模式，也可按论文预设实验编号直接调用成组计算任务，分别完成不同案例、不同匹配指标和是否配置卡诺电池的对比计算。软件能够围绕光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机、电储能、热储能、冷储能及卡诺电池等设备容量开展联合优化，并在每个候选方案下调用24小时调度模型，对14个典型日逐一求解，统计年化投资、运行费用和容量电费。程序支持波动率、能质加权欧氏距离、Pearson相关系数、自给率等多种源荷匹配评价方法，可在计算结束后生成设备容量结果表、Pareto解集、对比报告、后验分析结果表和图形文件，并按时间戳建立结果目录，便于研究人员复核计算过程、比较不同方案、筛选代表解并整理论文结果。对于需要扩展研究的用户，还可以在案例配置文件中补充新的参数与数据文件，继续开展其他综合能源系统场景的对比分析。"
-)
+MAIN_FUNCTIONS = "本软件用于分布式电热综合能源系统优化规划与源荷匹配分析，服务于研究算例计算、方案比选和结果整理。程序可读取德国社区和松山湖校园两类案例的全年逐时电、热、冷负荷数据，以及太阳辐照、风速、环境温度和典型日权重文件，自动完成输入文件定位、案例参数载入和基本校核。用户可在命令行下选择test、quick、full、custom等运行模式，也可按论文预设实验编号直接调用成组计算任务，分别完成不同案例、不同匹配指标和是否配置卡诺电池的对比计算。软件能够围绕光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机、电储能、热储能、冷储能及卡诺电池等设备容量开展联合优化，并在每个候选方案下调用24小时调度模型，对14个典型日逐一求解，统计年化投资、运行费用和容量电费。程序支持波动率、能质加权欧氏距离、Pearson相关系数、自给率等多种源荷匹配评价方法，可在计算结束后生成设备容量结果表、Pareto解集、对比报告、后验分析结果表和图形文件，并按时间戳建立结果目录，便于研究人员复核计算过程、比较不同方案、筛选代表解并整理论文结果。对于需要扩展研究的用户，还可以在案例配置文件中补充新的参数与数据文件，继续开展其他综合能源系统场景的对比分析。"
 
-TECH_FEATURE = "采用容量规划与运行调度联动求解，支持典型日加权、多指标匹配评价和卡诺电池扩展建模。"
+TECH_FEATURE = (
+    "采用容量规划与运行调度联动求解，支持典型日加权、多指标匹配评价和卡诺电池扩展建模。"
+)
 
 PURPOSE = "用于综合能源系统方案计算与源荷匹配分析"
 DOMAIN = "综合能源系统优化规划与运行分析"
@@ -126,7 +132,14 @@ def clear_body(document: Document) -> None:
             body.remove(child)
 
 
-def set_run_font(run, east_asia: str, size: float, bold: bool = False, color: str | None = None, latin: str = "Times New Roman") -> None:
+def set_run_font(
+    run,
+    east_asia: str,
+    size: float,
+    bold: bool = False,
+    color: str | None = None,
+    latin: str = "Times New Roman",
+) -> None:
     run.bold = bold
     run.font.name = latin
     run.font.size = Pt(size)
@@ -142,9 +155,19 @@ def set_run_font(run, east_asia: str, size: float, bold: bool = False, color: st
     rfonts.set(qn("w:eastAsia"), east_asia)
 
 
-def add_text(paragraph, text: str, east_asia: str = "华文仿宋", size: float = 12, bold: bool = False, color: str | None = None, latin: str = "Times New Roman"):
+def add_text(
+    paragraph,
+    text: str,
+    east_asia: str = "华文仿宋",
+    size: float = 12,
+    bold: bool = False,
+    color: str | None = None,
+    latin: str = "Times New Roman",
+):
     run = paragraph.add_run(text)
-    set_run_font(run, east_asia=east_asia, size=size, bold=bold, color=color, latin=latin)
+    set_run_font(
+        run, east_asia=east_asia, size=size, bold=bold, color=color, latin=latin
+    )
     return run
 
 
@@ -155,7 +178,11 @@ def format_body_paragraph(paragraph) -> None:
 
 
 def add_body_text(document: Document, text: str) -> None:
-    paragraph = document.add_paragraph(style="Body Text Indent" if "Body Text Indent" in [s.name for s in document.styles] else "Normal")
+    paragraph = document.add_paragraph(
+        style="Body Text Indent"
+        if "Body Text Indent" in [s.name for s in document.styles]
+        else "Normal"
+    )
     format_body_paragraph(paragraph)
     add_text(paragraph, text)
 
@@ -231,11 +258,26 @@ def wrap_lines(draw: ImageDraw.ImageDraw, text: str, font, max_width: int) -> li
     return result
 
 
-def draw_window_base(width: int, height: int, title: str, bar_color: str = "#F3F4F6", body_color: str = "#FFFFFF", title_color: str = "#111827") -> tuple[Image.Image, ImageDraw.ImageDraw]:
+def draw_window_base(
+    width: int,
+    height: int,
+    title: str,
+    bar_color: str = "#F3F4F6",
+    body_color: str = "#FFFFFF",
+    title_color: str = "#111827",
+) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     image = Image.new("RGB", (width, height), "#E5E7EB")
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((18, 18, width - 18, height - 18), radius=20, fill=body_color, outline="#CBD5E1", width=2)
-    draw.rounded_rectangle((18, 18, width - 18, 86), radius=20, fill=bar_color, outline="#CBD5E1", width=2)
+    draw.rounded_rectangle(
+        (18, 18, width - 18, height - 18),
+        radius=20,
+        fill=body_color,
+        outline="#CBD5E1",
+        width=2,
+    )
+    draw.rounded_rectangle(
+        (18, 18, width - 18, 86), radius=20, fill=bar_color, outline="#CBD5E1", width=2
+    )
     draw.rectangle((18, 60, width - 18, 86), fill=bar_color, outline=bar_color)
     for idx, color in enumerate(["#EF4444", "#F59E0B", "#22C55E"]):
         x = 42 + idx * 26
@@ -305,7 +347,9 @@ def enum_windows() -> list[dict[str, object]]:
     return windows
 
 
-def wait_for_window(pid: int | None = None, title_contains: str | None = None, timeout: float = 25.0) -> int:
+def wait_for_window(
+    pid: int | None = None, title_contains: str | None = None, timeout: float = 25.0
+) -> int:
     if pid is None and not title_contains:
         raise ValueError("wait_for_window 至少需要 pid 或 title_contains 其一")
     deadline = time.time() + timeout
@@ -403,9 +447,22 @@ def launch_paint_capture(src_path: Path, out_path: Path, target_name: str) -> No
         kill_process_tree(proc)
 
 
-def make_terminal_window(out_path: Path, title: str, command_line: str, body_lines: list[str], footer: str | None = None) -> None:
+def make_terminal_window(
+    out_path: Path,
+    title: str,
+    command_line: str,
+    body_lines: list[str],
+    footer: str | None = None,
+) -> None:
     width, height = 1600, 960
-    image, draw = draw_window_base(width, height, title, bar_color="#111827", body_color="#111827", title_color="#E5E7EB")
+    image, draw = draw_window_base(
+        width,
+        height,
+        title,
+        bar_color="#111827",
+        body_color="#111827",
+        title_color="#E5E7EB",
+    )
     draw.rounded_rectangle((44, 102, width - 44, 160), radius=12, fill="#1F2937")
     mono = get_font(FONT_MONO, 22)
     regular = get_font(FONT_REGULAR, 20)
@@ -426,17 +483,28 @@ def make_terminal_window(out_path: Path, title: str, command_line: str, body_lin
     save_window(image, out_path)
 
 
-def make_explorer_window(out_path: Path, title: str, current_path: str, items: list[tuple[str, str, str]]) -> None:
+def make_explorer_window(
+    out_path: Path, title: str, current_path: str, items: list[tuple[str, str, str]]
+) -> None:
     width, height = 1600, 960
     image, draw = draw_window_base(width, height, title)
     regular = get_font(FONT_REGULAR, 20)
     bold = get_font(FONT_BOLD, 22)
-    draw.rounded_rectangle((52, 108, width - 52, 156), radius=10, fill="#F8FAFC", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (52, 108, width - 52, 156), radius=10, fill="#F8FAFC", outline="#CBD5E1"
+    )
     draw.text((74, 120), current_path, fill="#0F172A", font=regular)
-    draw.rounded_rectangle((52, 172, 314, height - 52), radius=12, fill="#F8FAFC", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (52, 172, 314, height - 52), radius=12, fill="#F8FAFC", outline="#CBD5E1"
+    )
     for idx, name in enumerate(["快速访问", "项目目录", "data", "Results", "images"]):
         draw.text((80, 198 + idx * 48), name, fill="#334155", font=regular)
-    draw.rounded_rectangle((336, 172, width - 52, height - 52), radius=12, fill="#FFFFFF", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (336, 172, width - 52, height - 52),
+        radius=12,
+        fill="#FFFFFF",
+        outline="#CBD5E1",
+    )
     draw.text((370, 196), "名称", fill="#475569", font=bold)
     draw.text((1020, 196), "类型", fill="#475569", font=bold)
     draw.text((1250, 196), "备注", fill="#475569", font=bold)
@@ -451,14 +519,20 @@ def make_explorer_window(out_path: Path, title: str, current_path: str, items: l
     save_window(image, out_path)
 
 
-def make_editor_window(out_path: Path, title: str, path_label: str, body_lines: list[str]) -> None:
+def make_editor_window(
+    out_path: Path, title: str, path_label: str, body_lines: list[str]
+) -> None:
     width, height = 1600, 960
     image, draw = draw_window_base(width, height, title)
     mono = get_font(FONT_MONO, 20)
     regular = get_font(FONT_REGULAR, 18)
-    draw.rounded_rectangle((52, 108, width - 52, 156), radius=10, fill="#F8FAFC", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (52, 108, width - 52, 156), radius=10, fill="#F8FAFC", outline="#CBD5E1"
+    )
     draw.text((74, 122), path_label, fill="#0F172A", font=regular)
-    draw.rounded_rectangle((52, 172, width - 52, height - 52), radius=12, fill="#F8FAFC", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (52, 172, width - 52, height - 52), radius=12, fill="#F8FAFC", outline="#CBD5E1"
+    )
     y = 198
     for idx, raw in enumerate(body_lines[:22], start=1):
         draw.text((78, y), f"{idx:>2}", fill="#94A3B8", font=mono)
@@ -467,7 +541,9 @@ def make_editor_window(out_path: Path, title: str, path_label: str, body_lines: 
     save_window(image, out_path)
 
 
-def make_viewer_window(out_path: Path, title: str, image_path: Path, footer: str) -> None:
+def make_viewer_window(
+    out_path: Path, title: str, image_path: Path, footer: str
+) -> None:
     width, height = 1600, 960
     image, draw = draw_window_base(width, height, title)
     regular = get_font(FONT_REGULAR, 18)
@@ -476,17 +552,26 @@ def make_viewer_window(out_path: Path, title: str, image_path: Path, footer: str
     x = (width - inner.width) // 2
     y = 120
     image.paste(inner, (x, y))
-    draw.rounded_rectangle((x - 12, y - 12, x + inner.width + 12, y + inner.height + 12), radius=12, outline="#CBD5E1", width=2)
+    draw.rounded_rectangle(
+        (x - 12, y - 12, x + inner.width + 12, y + inner.height + 12),
+        radius=12,
+        outline="#CBD5E1",
+        width=2,
+    )
     draw.text((70, height - 56), footer, fill="#475569", font=regular)
     save_window(image, out_path)
 
 
-def make_csv_window(out_path: Path, title: str, columns: list[str], rows: list[list[str]]) -> None:
+def make_csv_window(
+    out_path: Path, title: str, columns: list[str], rows: list[list[str]]
+) -> None:
     width, height = 1600, 960
     image, draw = draw_window_base(width, height, title)
     regular = get_font(FONT_REGULAR, 18)
     bold = get_font(FONT_BOLD, 18)
-    draw.rounded_rectangle((52, 110, width - 52, height - 52), radius=12, fill="#FFFFFF", outline="#CBD5E1")
+    draw.rounded_rectangle(
+        (52, 110, width - 52, height - 52), radius=12, fill="#FFFFFF", outline="#CBD5E1"
+    )
     col_x = [74, 220, 430, 720, 1020, 1280]
     headers = columns[:6]
     for idx, header in enumerate(headers):
@@ -541,7 +626,7 @@ def build_screenshots() -> dict[str, Path]:
             f"Set-Location -LiteralPath '{ps_literal(str(REPO))}'",
             f"Write-Host '软件名称：{SOFTWARE_NAME}' -ForegroundColor Cyan",
             "Write-Host '命令：Get-ChildItem -Force' -ForegroundColor Yellow",
-            "$show = 'AGENTS.md','Readme.md','case_config.py','cchp_gaproblem.py','cchp_gasolution.py','operation.py','run.py','run_pipeline.py','data','Results','scripts'",
+            "$show = 'AGENTS.md','Readme.md','case_config.py','cchp_gaproblem.py','cchp_gasolution.py','operation.py','run.py','data','Results','scripts'",
             "Get-ChildItem -Force | Where-Object { $show -contains $_.Name } | Sort-Object Name | Select-Object Mode,LastWriteTime,Length,Name | Format-Table -AutoSize",
         ],
         screenshots["project_root"],
@@ -657,7 +742,14 @@ def fill_form_document() -> None:
 
     p = document.add_paragraph()
     p.paragraph_format.space_before = Pt(10)
-    add_text(p, "五、软件技术特点（以下内容已按事务所要求整理）", east_asia="黑体", size=14, bold=True, latin="Arial")
+    add_text(
+        p,
+        "五、软件技术特点（以下内容已按事务所要求整理）",
+        east_asia="黑体",
+        size=14,
+        bold=True,
+        latin="Arial",
+    )
 
     tech_table = document.add_table(rows=0, cols=2)
     apply_table_style(tech_table, "Table Grid", "TableGrid")
@@ -691,7 +783,12 @@ def fill_form_document() -> None:
     document.save(str(OUTPUT_FORM))
 
 
-def add_simple_table(document: Document, headers: list[str], rows: list[list[str]], col_widths_cm: list[float] | None = None) -> None:
+def add_simple_table(
+    document: Document,
+    headers: list[str],
+    rows: list[list[str]],
+    col_widths_cm: list[float] | None = None,
+) -> None:
     table = document.add_table(rows=1, cols=len(headers))
     apply_table_style(table, "Table Grid", "TableGrid")
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -716,15 +813,27 @@ def build_manual_document(screenshots: dict[str, Path]) -> None:
 
     add_heading_line(document, "1 引言", "Heading 2")
     add_heading_line(document, "1.1 编写目的", "Heading 3")
-    add_body_text(document, "本说明书用于说明“源荷匹配的分布式电热综合能源系统优化软件”的运行环境、输入数据、命令入口、实验操作流程、结果查看方法和使用注意事项，便于向事务所提交完整、连贯的使用说明材料。该软件为研究型命令行程序，没有独立的登录页面和图形化首页，实际使用入口为项目根目录下的命令行窗口，因此本说明书中的命令行窗口视为软件启动界面。")
+    add_body_text(
+        document,
+        "本说明书用于说明“源荷匹配的分布式电热综合能源系统优化软件”的运行环境、输入数据、命令入口、实验操作流程、结果查看方法和使用注意事项，便于向事务所提交完整、连贯的使用说明材料。该软件为研究型命令行程序，没有独立的登录页面和图形化首页，实际使用入口为项目根目录下的命令行窗口，因此本说明书中的命令行窗口视为软件启动界面。",
+    )
     add_heading_line(document, "1.2 软件概述", "Heading 3")
-    add_body_text(document, "该软件面向分布式冷热电联供系统优化规划问题，围绕“源荷匹配”这一研究主题组织建模、求解和结果分析流程。程序支持德国社区案例和松山湖校园案例两套输入数据，能够对光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机以及冷热电储能容量进行优化，并在启用卡诺电池时扩展为含电热耦合储能的配置方案。")
+    add_body_text(
+        document,
+        "该软件面向分布式冷热电联供系统优化规划问题，围绕“源荷匹配”这一研究主题组织建模、求解和结果分析流程。程序支持德国社区案例和松山湖校园案例两套输入数据，能够对光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机以及冷热电储能容量进行优化，并在启用卡诺电池时扩展为含电热耦合储能的配置方案。",
+    )
     add_heading_line(document, "1.3 参考资料", "Heading 3")
-    add_body_text(document, "主要参考资料包括论文《Energy-quality-weighted source-load matching for optimal planning of distributed combined cooling, heating and power systems with Carnot battery integration》、代码仓库中的 run.py、case_config.py、operation.py、cchp_gaproblem.py、cchp_gasolution.py 和 run_pipeline.py 文件，以及结果目录中的 comparison_report.md 和 post_analysis_results.csv 文件。")
+    add_body_text(
+        document,
+        "主要参考资料包括论文《Energy-quality-weighted source-load matching for optimal planning of distributed combined cooling, heating and power systems with Carnot battery integration》、代码仓库中的 run.py、case_config.py、operation.py、cchp_gaproblem.py、cchp_gasolution.py 和 scripts/post_analysis_report.py 文件，以及结果目录中的 comparison_report.md 和 post_analysis_results.csv 文件。",
+    )
 
     add_heading_line(document, "2 运行环境", "Heading 2")
     add_heading_line(document, "2.1 硬件与软件环境", "Heading 3")
-    add_body_text(document, "本软件建议在64位Windows工作站上运行，内存不低于16GB，磁盘建议使用SSD。开发与运行环境均以 Windows 10/11 为主，程序依赖 Python 3.8、geatpy、oemof-solph、Pyomo 等第三方库，求解器优先使用 Gurobi，不具备 Gurobi 条件时可退回到 GLPK。")
+    add_body_text(
+        document,
+        "本软件建议在64位Windows工作站上运行，内存不低于16GB，磁盘建议使用SSD。开发与运行环境均以 Windows 10/11 为主，程序依赖 Python 3.8、geatpy、oemof-solph、Pyomo 等第三方库，求解器优先使用 Gurobi，不具备 Gurobi 条件时可退回到 GLPK。",
+    )
     add_simple_table(
         document,
         ["项目", "说明"],
@@ -738,14 +847,29 @@ def build_manual_document(screenshots: dict[str, Path]) -> None:
         [4.2, 11.8],
     )
     add_heading_line(document, "2.2 输入数据准备", "Heading 3")
-    add_body_text(document, "程序运行前需要保留 data 目录中的负荷、气象和典型日文件。德国案例使用 mergedData.csv 和 typicalDayData.xlsx，松山湖案例使用 songshan_lake_data.csv 和 songshan_lake_typical.xlsx。用户应确认数据文件与代码目录保持相对路径一致，避免运行时读取失败。")
+    add_body_text(
+        document,
+        "程序运行前需要保留 data 目录中的负荷、气象和典型日文件。德国案例使用 mergedData.csv 和 typicalDayData.xlsx，松山湖案例使用 songshan_lake_data.csv 和 songshan_lake_typical.xlsx。用户应确认数据文件与代码目录保持相对路径一致，避免运行时读取失败。",
+    )
     add_simple_table(
         document,
         ["文件名", "作用", "说明"],
         [
-            ["mergedData.csv", "德国案例逐时数据", "包含8760小时电、热、冷负荷及气象数据"],
-            ["typicalDayData.xlsx", "德国案例典型日权重", "定义14个典型日及对应代表天数"],
-            ["songshan_lake_data.csv", "松山湖案例逐时数据", "包含校园案例逐时负荷和气象数据"],
+            [
+                "mergedData.csv",
+                "德国案例逐时数据",
+                "包含8760小时电、热、冷负荷及气象数据",
+            ],
+            [
+                "typicalDayData.xlsx",
+                "德国案例典型日权重",
+                "定义14个典型日及对应代表天数",
+            ],
+            [
+                "songshan_lake_data.csv",
+                "松山湖案例逐时数据",
+                "包含校园案例逐时负荷和气象数据",
+            ],
             ["songshan_lake_typical.xlsx", "松山湖典型日权重", "用于全年加权计算"],
         ],
         [4.2, 4.8, 7.0],
@@ -758,34 +882,58 @@ def build_manual_document(screenshots: dict[str, Path]) -> None:
 
     add_heading_line(document, "3 软件使用说明", "Heading 2")
     add_heading_line(document, "3.1 查看命令帮助", "Heading 3")
-    add_body_text(document, "在项目根目录打开命令行窗口后，首先执行“uv run python run.py --help”查看程序支持的运行模式、实验编号、案例切换参数和并行设置。命令帮助界面中给出了 test、quick、full、custom 模式，以及 --exp、--case、--carnot、--workers 等参数的说明。首次使用时建议先阅读帮助信息，确认命令格式后再执行正式计算。")
+    add_body_text(
+        document,
+        "在项目根目录打开命令行窗口后，首先执行“uv run python run.py --help”查看程序支持的运行模式、实验编号、案例切换参数和并行设置。命令帮助界面中给出了 test、quick、full、custom 模式，以及 --exp、--case、--carnot、--workers 等参数的说明。首次使用时建议先阅读帮助信息，确认命令格式后再执行正式计算。",
+    )
     document.add_picture(str(screenshots["cli_help"]), width=Cm(15.4))
     add_caption(document, "图3-1 命令帮助界面")
 
     add_heading_line(document, "3.2 运行论文预设实验", "Heading 3")
-    add_body_text(document, "论文中的预设实验可直接通过 --exp 参数调用。以实验1为例，用户在命令行中输入“uv run python run.py --exp 1 --test-run”后，程序会按照德国案例、多方法对比的设定执行测试规模计算。采用 --test-run 时，程序会自动使用较小种群和迭代次数进行流程验证，适合检查环境、求解器和结果目录是否正常。")
-    add_body_text(document, "实验执行结束后，软件会在 Results 目录下生成带时间戳的结果文件夹。文件夹内包含 Economic_only、Std、Euclidean、Pearson、SSR 等方法对应的 CSV 结果文件，以及 Pareto_Comparison.png 和 comparison_report.md 等汇总结果。")
+    add_body_text(
+        document,
+        "论文中的预设实验可直接通过 --exp 参数调用。以实验1为例，用户在命令行中输入“uv run python run.py --exp 1 --test-run”后，程序会按照德国案例、多方法对比的设定执行测试规模计算。采用 --test-run 时，程序会自动使用较小种群和迭代次数进行流程验证，适合检查环境、求解器和结果目录是否正常。",
+    )
+    add_body_text(
+        document,
+        "实验执行结束后，软件会在 Results 目录下生成带时间戳的结果文件夹。文件夹内包含 Economic_only、Std、Euclidean、Pearson、SSR 等方法对应的 CSV 结果文件，以及 Pareto_Comparison.png 和 comparison_report.md 等汇总结果。",
+    )
     document.add_picture(str(screenshots["preset_cmd"]), width=Cm(15.4))
     add_caption(document, "图3-2 预设实验命令及结果摘要")
     document.add_picture(str(screenshots["results_folder"]), width=Cm(15.4))
     add_caption(document, "图3-3 结果目录界面")
 
     add_heading_line(document, "3.3 运行自定义实验", "Heading 3")
-    add_body_text(document, "当用户需要自行指定案例、方法或计算规模时，可使用 custom 模式。例如输入“uv run python run.py --mode custom --case songshan_lake --nind 20 --maxgen 20 --methods std euclidean”后，程序将按松山湖案例执行波动率和欧氏匹配指标的对比计算。如果需要加入卡诺电池，可在命令中附加 --carnot 参数。")
-    add_body_text(document, "自定义实验适用于调节种群规模、最大代数和方法组合。参数越大，求解时间越长。正式提交计算前，建议先在小规模参数下验证命令、数据路径和结果输出是否正确，再扩大规模开展正式实验。")
+    add_body_text(
+        document,
+        "当用户需要自行指定案例、方法或计算规模时，可使用 custom 模式。例如输入“uv run python run.py --mode custom --case songshan_lake --nind 20 --maxgen 20 --methods std euclidean”后，程序将按松山湖案例执行波动率和欧氏匹配指标的对比计算。如果需要加入卡诺电池，可在命令中附加 --carnot 参数。",
+    )
+    add_body_text(
+        document,
+        "自定义实验适用于调节种群规模、最大代数和方法组合。参数越大，求解时间越长。正式提交计算前，建议先在小规模参数下验证命令、数据路径和结果输出是否正确，再扩大规模开展正式实验。",
+    )
     document.add_picture(str(screenshots["custom_cmd"]), width=Cm(15.4))
     add_caption(document, "图3-4 自定义实验命令界面")
 
     add_heading_line(document, "3.4 查看图形和报告结果", "Heading 3")
-    add_body_text(document, "双目标方法运行完成后，软件会输出 Pareto 对比图，用于展示经济成本与匹配指标之间的折中关系。图中不同颜色代表不同方法，用户可据此筛选低成本方案和高匹配方案。对于论文复现任务，通常需要结合该图和后续的报告表格共同判断最优方案。")
+    add_body_text(
+        document,
+        "双目标方法运行完成后，软件会输出 Pareto 对比图，用于展示经济成本与匹配指标之间的折中关系。图中不同颜色代表不同方法，用户可据此筛选低成本方案和高匹配方案。对于论文复现任务，通常需要结合该图和后续的报告表格共同判断最优方案。",
+    )
     document.add_picture(str(screenshots["pareto"]), width=Cm(15.4))
     add_caption(document, "图3-5 Pareto 对比结果图")
 
-    add_body_text(document, "comparison_report.md 用于汇总各方法的最低成本、最佳匹配度、运行时间和 Pareto 解数量，并进一步列出最优方案下的设备容量配置。用户可直接打开该文件查看方法之间的成本和指标差异。")
+    add_body_text(
+        document,
+        "comparison_report.md 用于汇总各方法的最低成本、最佳匹配度、运行时间和 Pareto 解数量，并进一步列出最优方案下的设备容量配置。用户可直接打开该文件查看方法之间的成本和指标差异。",
+    )
     document.add_picture(str(screenshots["report"]), width=Cm(15.4))
     add_caption(document, "图3-6 对比报告预览")
 
-    add_body_text(document, "post_analysis_results.csv 用于保存8760小时后验分析结果。该文件记录不同成本层级下的年总成本、峰值购电、自给率、弃风弃光率和匹配指标，可用于进一步绘图和论文分析。")
+    add_body_text(
+        document,
+        "post_analysis_results.csv 用于保存8760小时后验分析结果。该文件记录不同成本层级下的年总成本、峰值购电、自给率、弃风弃光率和匹配指标，可用于进一步绘图和论文分析。",
+    )
     document.add_picture(str(screenshots["dashboard"]), width=Cm(15.4))
     add_caption(document, "图3-7 后验分析图形结果")
     document.add_picture(str(screenshots["csv_preview"]), width=Cm(15.4))
@@ -793,19 +941,43 @@ def build_manual_document(screenshots: dict[str, Path]) -> None:
 
     add_heading_line(document, "4 主要功能说明", "Heading 2")
     add_heading_line(document, "4.1 案例配置管理", "Heading 3")
-    add_body_text(document, "软件通过 case_config.py 管理案例数据路径、电价曲线、气价曲线、容量上界、投资系数和设备效率等参数。用户可以在已有德国案例和松山湖案例基础上继续添加新案例，只需补充新的配置字典，并准备相应的逐时数据文件和典型日权重文件。")
+    add_body_text(
+        document,
+        "软件通过 case_config.py 管理案例数据路径、电价曲线、气价曲线、容量上界、投资系数和设备效率等参数。用户可以在已有德国案例和松山湖案例基础上继续添加新案例，只需补充新的配置字典，并准备相应的逐时数据文件和典型日权重文件。",
+    )
     add_heading_line(document, "4.2 多目标容量优化", "Heading 3")
-    add_body_text(document, "优化层通过 geatpy 构建问题对象，对光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机以及冷热电储能容量进行搜索。在双目标模式下，软件同时考虑经济成本和匹配指标；在单目标模式下，仅按经济成本求解。程序支持 std、euclidean、pearson、ssr 和 economic_only 五类方法。")
+    add_body_text(
+        document,
+        "优化层通过 geatpy 构建问题对象，对光伏、风电、燃气轮机、电热泵、电制冷机、吸收式制冷机以及冷热电储能容量进行搜索。在双目标模式下，软件同时考虑经济成本和匹配指标；在单目标模式下，仅按经济成本求解。程序支持 std、euclidean、pearson、ssr 和 economic_only 五类方法。",
+    )
     add_heading_line(document, "4.3 调度仿真与指标计算", "Heading 3")
-    add_body_text(document, "每个候选容量方案在评估时都会调用运行调度模型，对14个典型日进行24小时求解。调度模型同时处理电、热、冷、气四类能流，并可在启用卡诺电池时增加电储能与余热回收约束。调度结果进一步用于计算年化成本、峰值购电、弃风弃光率以及多种源荷匹配指标。")
+    add_body_text(
+        document,
+        "每个候选容量方案在评估时都会调用运行调度模型，对14个典型日进行24小时求解。调度模型同时处理电、热、冷、气四类能流，并可在启用卡诺电池时增加电储能与余热回收约束。调度结果进一步用于计算年化成本、峰值购电、弃风弃光率以及多种源荷匹配指标。",
+    )
     add_heading_line(document, "4.4 结果导出与后验分析", "Heading 3")
-    add_body_text(document, "软件在 Results 目录下输出各方法的 Pareto 结果、设备参数表、Markdown 对比报告和图形化结果文件。run_pipeline.py 还可以进一步调用后验分析脚本，对8760小时结果进行再统计，并生成预算分层与敏感性分析所需数据。")
+    add_body_text(
+        document,
+        "软件在 Results 目录下输出各方法的 Pareto 结果、设备参数表、Markdown 对比报告和图形化结果文件。scripts/post_analysis_report.py 还可以进一步调用后验分析逻辑，对 8760 小时结果进行再统计，并生成预算分层与敏感性分析所需数据。",
+    )
 
     add_heading_line(document, "5 注意事项", "Heading 2")
-    add_body_text(document, "（1）本软件为命令行科研程序，正式交付截图时应完整保留命令行窗口边框、目录窗口标题栏和图形窗口界面，不宜只截取局部图块。")
-    add_body_text(document, "（2）如本机已配置 Gurobi，请确认许可证路径可用；若 Gurobi 不可用，程序会回退到 GLPK，但求解效率可能下降。")
-    add_body_text(document, "（3）松山湖案例数据为合成逐时数据，适用于研究验证和方法比较，不直接代表真实工程监测值。")
-    add_body_text(document, "（4）提交事务所前，建议再次检查软件名称、版本号、著作权人名称以及源代码行数口径是否与登记信息表一致。")
+    add_body_text(
+        document,
+        "（1）本软件为命令行科研程序，正式交付截图时应完整保留命令行窗口边框、目录窗口标题栏和图形窗口界面，不宜只截取局部图块。",
+    )
+    add_body_text(
+        document,
+        "（2）如本机已配置 Gurobi，请确认许可证路径可用；若 Gurobi 不可用，程序会回退到 GLPK，但求解效率可能下降。",
+    )
+    add_body_text(
+        document,
+        "（3）松山湖案例数据为合成逐时数据，适用于研究验证和方法比较，不直接代表真实工程监测值。",
+    )
+    add_body_text(
+        document,
+        "（4）提交事务所前，建议再次检查软件名称、版本号、著作权人名称以及源代码行数口径是否与登记信息表一致。",
+    )
     document.save(str(OUTPUT_MANUAL))
 
 

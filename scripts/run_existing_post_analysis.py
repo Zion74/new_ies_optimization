@@ -24,7 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
 from case_config import get_case
-from run_pipeline import PIPELINE_MODES, print_comparison_report, run_post_analysis
+from scripts.post_analysis_report import (
+    POST_ANALYSIS_MODES,
+    print_comparison_report,
+    run_post_analysis,
+)
 
 
 METHOD_MAP = {
@@ -49,7 +53,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         choices=["test", "quick", "medium", "full"],
         default="full",
-        help="Reuse Phase 2 settings from run_pipeline.py.",
+        help="Reuse Phase 2 settings from scripts/post_analysis_report.py.",
     )
     parser.add_argument(
         "--cost-levels",
@@ -111,7 +115,7 @@ def _should_skip(path: Path, skip_existing: bool) -> bool:
 
 def main() -> None:
     args = parse_args()
-    cfg = PIPELINE_MODES[args.mode]
+    cfg = POST_ANALYSIS_MODES[args.mode]
     cost_levels = args.cost_levels or cfg["cost_levels"]
 
     targets: List[Path] = []

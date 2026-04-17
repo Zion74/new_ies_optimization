@@ -46,9 +46,10 @@
 
 ## 4. 各图表对应脚本
 
-- 德国 / Songshan pipeline 结果：
-  - `run_pipeline.py`
-  - `scripts/post_analysis.py`
+- 德国 / Songshan 主实验 + 后验：
+  - `run.py --exp N --post-analysis-mode full`
+  - `scripts/post_analysis_report.py`（被 `run.py` 自动调用）
+  - `scripts/post_analysis.py`（被 `post_analysis_report` 调用）
   - `scripts/enhanced_analysis.py`
 - Exp3 / Exp4：
   - `run.py --exp 3`

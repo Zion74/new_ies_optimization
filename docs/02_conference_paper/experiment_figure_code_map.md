@@ -22,7 +22,7 @@
 
 ## 3. 代码映射
 
-- `run_pipeline.py`：一键串起“优化 + 后验运行分析”，适合会议稿主结果再现。
+- `run.py --exp N --post-analysis-mode full`：一键"优化 + 后验运行分析"，适合会议稿主结果再现（2026-04-17 起替代已下线的 `run_pipeline.py`）。
 - `run.py`：论文实验入口；会议稿主要消费实验 1 的结果，但通常只选三种方法入文。
 - `case_config.py`：案例参数、温度参数与 carrier weights 来源。
 - `cchp_gaproblem.py`：`euclidean` 方法的目标函数实现，是 IEMI / EQD 的代码源头。

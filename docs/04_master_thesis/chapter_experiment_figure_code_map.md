@@ -8,7 +8,7 @@
 |---|---|---|---|---|
 | T2-1 | 德国案例 5 方法对比 | 建立 EQD 主优势 | `run.py --exp 1` | 已有实验框架 |
 | T2-2 | 松山湖 `std vs EQD` | 验证跨案例普适性 | `run.py --exp 2` | 已有实验框架 |
-| T2-3 | 8760h 后验运行指标 | 把规划优势落到运行指标 | `run_pipeline.py`、`scripts/post_analysis.py`、`scripts/enhanced_analysis.py` | 已有脚本 |
+| T2-3 | 8760h 后验运行指标 | 把规划优势落到运行指标 | `scripts/post_analysis_report.py`（`run.py --post-analysis-mode` 触发）、`scripts/run_existing_post_analysis.py`、`scripts/enhanced_analysis.py` | 已有脚本 |
 | T2-4 | λ 敏感性 / 消融 | 证明㶲权重合理性 | `scripts/lambda_sensitivity.py` | 已有脚本 |
 | T2-5 | 韧性支撑分析 | 作为第 2 章 discussion 补充 | `scripts/resilience_test.py` | 已有脚本 |
 

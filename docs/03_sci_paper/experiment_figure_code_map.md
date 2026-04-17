@@ -10,7 +10,7 @@
 | S2 | 规划层 | 验证跨案例普适性 | 松山湖案例 × `std / euclidean` | `run.py --exp 2` |
 | S3 | 设备层 | 验证卡诺电池的配置价值 | 松山湖案例 × `euclidean`，无卡诺 vs 有卡诺 | `run.py --exp 3` |
 | S4 | 设备层 | 验证有卡诺条件下 `std vs EQD` 的差异 | 松山湖 + Carnot × `std / euclidean` | `run.py --exp 4` |
-| S5 | 强证据链 | 证明规划结果在全年运行上可兑现 | 8760h 后验运行指标分析 | `run_pipeline.py`、`scripts/post_analysis.py`、`scripts/enhanced_analysis.py` |
+| S5 | 强证据链 | 证明规划结果在全年运行上可兑现 | 8760h 后验运行指标分析 | `run.py --exp N --post-analysis-mode full`、`scripts/post_analysis_report.py`、`scripts/post_analysis.py`、`scripts/enhanced_analysis.py` |
 | S6 | 强证据链 | 证明㶲权重不是随便调参 | λ 敏感性 / 消融实验 | `scripts/lambda_sensitivity.py` |
 | S7 | 强证据链 | 证明高匹配方案在极端场景下更稳 | 电价、气价、负荷、可再生波动情景 | `scripts/resilience_test.py` |
 | S8 | 图表重绘 | 统一生成 Exp3 / Exp4 的论文图 | Exp3a / Exp3b / Exp4 的 Pareto 与 budget 结果 | `scripts/redraw_carnot_figures.py` |
@@ -34,7 +34,7 @@
 
 ## 3. 代码映射
 
-- **规划核心**：`run.py`、`run_pipeline.py`、`cchp_gasolution.py`、`cchp_gaproblem.py`
+- **规划核心**：`run.py`、`cchp_gasolution.py`、`cchp_gaproblem.py`
 - **案例与参数**：`case_config.py`
 - **调度求解**：`operation.py`
 - **后验运行分析**：`scripts/post_analysis.py`、`scripts/enhanced_analysis.py`
