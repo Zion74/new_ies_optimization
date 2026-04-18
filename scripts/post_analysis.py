@@ -13,7 +13,6 @@
 """
 
 import sys
-import os
 import argparse
 import pandas as pd
 import numpy as np
@@ -23,8 +22,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-from operation import OperationModel
-from case_config import get_case
+from operation import OperationModel  # noqa: E402  (must follow sys.path.insert)
+from case_config import get_case  # noqa: E402  (must follow sys.path.insert)
 
 
 # 不可行解哨兵阈值：GA 对 OEMOF 求解失败的个体会赋予 1e9 级别的惩罚值，
