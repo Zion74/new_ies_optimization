@@ -27,14 +27,23 @@ from operation import OperationModel
 from case_config import get_case
 
 
-def load_pareto_solutions(result_dir, method_name):
+# 不可行解哨兵阈值：GA 对 OEMOF 求解失败的个体会赋予 1e9 级别的惩罚值，
+# 这些值会污染 cost_min/cost_max，导致 absolute Level 2/3 分档全部跳到 1e11 以上。
+# 业务成本上界约 3e6，污染值下界约 4e11，1e8 是 5 个数量级缓冲的安全判别线。
+PARETO_INFEASIBLE_THRESHOLD = 1e8
+
+
+def load_pareto_solutions(
+    result_dir, method_name, infeasible_threshold=PARETO_INFEASIBLE_THRESHOLD
+):
     """
-    加载某个方法的 Pareto 前沿结果
+    加载某个方法的 Pareto 前沿结果，自动过滤 GA 惩罚值留下的不可行解。
 
     Returns
     -------
     pd.DataFrame or None
         列: Solution_ID, Economic_Cost, Matching_Index, PV, WT, GT, HP, EC, AC, ES, HS, CS, [CB_Power, CB_Capacity]
+        仅保留 Economic_Cost <= infeasible_threshold 的行。
     """
     pareto_file = Path(result_dir) / method_name / f"Pareto_{method_name}.csv"
     if not pareto_file.exists():
@@ -42,7 +51,22 @@ def load_pareto_solutions(result_dir, method_name):
         return None
 
     df = pd.read_csv(pareto_file, index_col=0)
-    print(f"  加载 {method_name}: {len(df)} 个 Pareto 解")
+    n_raw = len(df)
+
+    if "Economic_Cost" in df.columns:
+        mask_infeasible = df["Economic_Cost"] > infeasible_threshold
+        n_infeasible = int(mask_infeasible.sum())
+        if n_infeasible > 0:
+            max_cost = float(df.loc[mask_infeasible, "Economic_Cost"].max())
+            print(
+                f"  警告 {method_name}: 检测到 {n_infeasible}/{n_raw} 个不可行解 "
+                f"(Economic_Cost > {infeasible_threshold:.0e}，最大 {max_cost:.2e})，已过滤。"
+                f"这些通常是 GA 对 OEMOF 求解失败的个体赋予的惩罚值；"
+                f"若占比过高（>30%）请考虑回查模型约束或扩大设备上限。"
+            )
+            df = df[~mask_infeasible].copy()
+
+    print(f"  加载 {method_name}: {len(df)} 个 Pareto 解（原始 {n_raw}）")
     return df
 
 
@@ -82,12 +106,12 @@ def select_solutions_at_cost_levels(pareto_dfs, cost_levels=3):
 
     print(f"\n选取 {cost_levels} 个成本水平:")
     for i, cost in enumerate(target_costs):
-        print(f"  水平 {i+1}: {cost:,.0f}")
+        print(f"  水平 {i + 1}: {cost:,.0f}")
 
     # 对每个成本水平，从每个方法的 Pareto 前沿中找最接近的解
     selected = []
     for i, target_cost in enumerate(target_costs):
-        print(f"\n成本水平 {i+1} ({target_cost:,.0f}):")
+        print(f"\n成本水平 {i + 1} ({target_cost:,.0f}):")
         for method, df in pareto_dfs.items():
             if df is None or len(df) == 0:
                 continue
@@ -96,16 +120,20 @@ def select_solutions_at_cost_levels(pareto_dfs, cost_levels=3):
             idx = (df["Economic_Cost"] - target_cost).abs().idxmin()
             sol = df.loc[idx]
 
-            selected.append({
-                "cost_level": i + 1,
-                "target_cost": target_cost,
-                "method": method,
-                "actual_cost": sol["Economic_Cost"],
-                "matching_index": sol.get("Matching_Index", np.nan),
-                "solution": sol,
-            })
+            selected.append(
+                {
+                    "cost_level": i + 1,
+                    "target_cost": target_cost,
+                    "method": method,
+                    "actual_cost": sol["Economic_Cost"],
+                    "matching_index": sol.get("Matching_Index", np.nan),
+                    "solution": sol,
+                }
+            )
 
-            print(f"  {method:15s}: 成本={sol['Economic_Cost']:,.0f}, 匹配度={sol.get('Matching_Index', 'N/A')}")
+            print(
+                f"  {method:15s}: 成本={sol['Economic_Cost']:,.0f}, 匹配度={sol.get('Matching_Index', 'N/A')}"
+            )
 
     return selected
 
@@ -182,7 +210,9 @@ def run_8760h_simulation(solution_row, case_config):
         date_str = date_obj.strftime("%m/%d/%Y")
 
         # 计算可再生能源出力
-        pv_output = cal_solar_output(solar_radiation.tolist(), temperature.tolist(), ppv)
+        pv_output = cal_solar_output(
+            solar_radiation.tolist(), temperature.tolist(), ppv
+        )
         wt_output = cal_wind_output(wind_speed.tolist(), pwt)
 
         # 创建调度模型
@@ -196,7 +226,13 @@ def run_8760h_simulation(solution_row, case_config):
             cool_load.tolist(),
             wt_output,
             pv_output,
-            pgt, php, pec, pac, pes, phs, pcs,
+            pgt,
+            php,
+            pec,
+            pac,
+            pes,
+            phs,
+            pcs,
             config=case_config,
             cb_power=cb_power,
             cb_capacity=cb_capacity,
@@ -226,16 +262,22 @@ def run_8760h_simulation(solution_row, case_config):
                 grid_power_series.append(grid_val)
 
         except Exception as e:
-            print(f"    警告: 第 {day+1} 天调度失败: {e}")
+            print(f"    警告: 第 {day + 1} 天调度失败: {e}")
             continue
 
     # 计算运行指标
     total_renewable_output = total_pv_output + total_wt_output
-    curtailment_rate = (total_ele_overflow / total_renewable_output * 100) if total_renewable_output > 0 else 0
+    curtailment_rate = (
+        (total_ele_overflow / total_renewable_output * 100)
+        if total_renewable_output > 0
+        else 0
+    )
 
     total_external_supply = total_grid_purchase  # 简化：只看电网购入
     total_demand = total_ele_load + total_heat_load + total_cool_load
-    self_sufficiency = (1 - total_external_supply / total_demand) * 100 if total_demand > 0 else 0
+    self_sufficiency = (
+        (1 - total_external_supply / total_demand) * 100 if total_demand > 0 else 0
+    )
 
     grid_volatility = np.std(grid_power_series)
 
@@ -272,12 +314,12 @@ def select_solutions_by_budget_increment(pareto_dfs, base_cost, increments=None)
         increments = [0.0, 0.1, 0.3, 0.5]
 
     print(f"\n基准成本（单目标最优）: {base_cost:,.0f}")
-    print(f"预算增量: {[f'+{x*100:.0f}%' for x in increments]}")
+    print(f"预算增量: {[f'+{x * 100:.0f}%' for x in increments]}")
 
     selected = []
     for i, inc in enumerate(increments):
         target_cost = base_cost * (1 + inc)
-        label = f"+{inc*100:.0f}%" if inc > 0 else "基准"
+        label = f"+{inc * 100:.0f}%" if inc > 0 else "基准"
         print(f"\n预算 {label} (目标成本 {target_cost:,.0f}):")
 
         for method, df in pareto_dfs.items():
@@ -296,19 +338,23 @@ def select_solutions_by_budget_increment(pareto_dfs, base_cost, increments=None)
                 idx = (df["Economic_Cost"] - target_cost).abs().idxmin()
 
             sol = df.loc[idx]
-            selected.append({
-                "cost_level": i + 1,
-                "budget_label": label,
-                "target_cost": target_cost,
-                "method": method,
-                "actual_cost": sol["Economic_Cost"],
-                "matching_index": sol.get("Matching_Index", np.nan),
-                "solution": sol,
-            })
+            selected.append(
+                {
+                    "cost_level": i + 1,
+                    "budget_label": label,
+                    "target_cost": target_cost,
+                    "method": method,
+                    "actual_cost": sol["Economic_Cost"],
+                    "matching_index": sol.get("Matching_Index", np.nan),
+                    "solution": sol,
+                }
+            )
 
             cost_diff = (sol["Economic_Cost"] - base_cost) / base_cost * 100
-            print(f"  {method:15s}: 成本={sol['Economic_Cost']:>12,.0f} ({cost_diff:+.1f}%), "
-                  f"匹配度={sol.get('Matching_Index', 'N/A')}")
+            print(
+                f"  {method:15s}: 成本={sol['Economic_Cost']:>12,.0f} ({cost_diff:+.1f}%), "
+                f"匹配度={sol.get('Matching_Index', 'N/A')}"
+            )
 
     return selected
 
@@ -316,16 +362,30 @@ def select_solutions_by_budget_increment(pareto_dfs, base_cost, increments=None)
 def main():
     parser = argparse.ArgumentParser(description="后验运行指标分析")
     parser.add_argument("--result-dir", required=True, help="实验结果目录")
-    parser.add_argument("--methods", nargs="+", default=["economic_only", "std", "euclidean"],
-                        help="要分析的方法列表")
-    parser.add_argument("--cost-levels", type=int, default=3,
-                        help="成本水平数量（默认3：低/中/高）")
-    parser.add_argument("--case", default="german", choices=["german", "songshan_lake"],
-                        help="案例名称")
-    parser.add_argument("--budget-mode", action="store_true",
-                        help="使用预算增量模式（以economic_only为基准）")
-    parser.add_argument("--increments", nargs="+", type=float, default=None,
-                        help="预算增量百分比，如 0.1 0.3 0.5 表示 +10%% +30%% +50%%")
+    parser.add_argument(
+        "--methods",
+        nargs="+",
+        default=["economic_only", "std", "euclidean"],
+        help="要分析的方法列表",
+    )
+    parser.add_argument(
+        "--cost-levels", type=int, default=3, help="成本水平数量（默认3：低/中/高）"
+    )
+    parser.add_argument(
+        "--case", default="german", choices=["german", "songshan_lake"], help="案例名称"
+    )
+    parser.add_argument(
+        "--budget-mode",
+        action="store_true",
+        help="使用预算增量模式（以economic_only为基准）",
+    )
+    parser.add_argument(
+        "--increments",
+        nargs="+",
+        type=float,
+        default=None,
+        help="预算增量百分比，如 0.1 0.3 0.5 表示 +10%% +30%% +50%%",
+    )
     args = parser.parse_args()
 
     result_dir = Path(args.result_dir)
@@ -371,7 +431,9 @@ def main():
             pareto_dfs, base_cost, increments
         )
     else:
-        selected_solutions = select_solutions_at_cost_levels(pareto_dfs, args.cost_levels)
+        selected_solutions = select_solutions_at_cost_levels(
+            pareto_dfs, args.cost_levels
+        )
 
     # 对每个选出的方案跑 8760h 调度
     print("\n" + "=" * 70)
@@ -381,18 +443,22 @@ def main():
     results = []
     for i, sol_info in enumerate(selected_solutions):
         label = sol_info.get("budget_label", f"水平{sol_info['cost_level']}")
-        print(f"\n[{i+1}/{len(selected_solutions)}] {sol_info['method']} @ {label}")
+        print(f"\n[{i + 1}/{len(selected_solutions)}] {sol_info['method']} @ {label}")
 
         metrics = run_8760h_simulation(sol_info["solution"], case_config)
 
-        results.append({
-            "cost_level": sol_info["cost_level"],
-            "budget_label": sol_info.get("budget_label", f"Level{sol_info['cost_level']}"),
-            "method": sol_info["method"],
-            "annual_cost": sol_info["actual_cost"],
-            "matching_index": sol_info["matching_index"],
-            **metrics,
-        })
+        results.append(
+            {
+                "cost_level": sol_info["cost_level"],
+                "budget_label": sol_info.get(
+                    "budget_label", f"Level{sol_info['cost_level']}"
+                ),
+                "method": sol_info["method"],
+                "annual_cost": sol_info["actual_cost"],
+                "matching_index": sol_info["matching_index"],
+                **metrics,
+            }
+        )
 
         print(f"  峰值购电: {metrics['peak_grid_kW']:.1f} kW")
         print(f"  年购电量: {metrics['annual_grid_purchase_MWh']:.1f} MWh")
@@ -417,14 +483,16 @@ def main():
             continue
 
         label = level_data.iloc[0].get("budget_label", f"Level {level}")
-        print(f"\n{'─'*60}")
+        print(f"\n{'─' * 60}")
         print(f"  {label}")
-        print(f"{'─'*60}")
+        print(f"{'─' * 60}")
         for _, row in level_data.iterrows():
-            print(f"  {row['method']:15s} | 成本={row['annual_cost']:>10,.0f} | "
-                  f"峰值购电={row['peak_grid_kW']:>7.0f}kW | "
-                  f"年购电={row['annual_grid_purchase_MWh']:>8.0f}MWh | "
-                  f"自给率={row['self_sufficiency_%']:>5.1f}%")
+            print(
+                f"  {row['method']:15s} | 成本={row['annual_cost']:>10,.0f} | "
+                f"峰值购电={row['peak_grid_kW']:>7.0f}kW | "
+                f"年购电={row['annual_grid_purchase_MWh']:>8.0f}MWh | "
+                f"自给率={row['self_sufficiency_%']:>5.1f}%"
+            )
 
     print("\n分析完成！")
 
