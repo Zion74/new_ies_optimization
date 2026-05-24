@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from generic_backend_planner import GenericBackendPlanner
+from json_schema_validator import JsonSchemaValidator
 
 
 @dataclass
@@ -32,6 +33,9 @@ class SchemaValidator:
     def validate(resolved: dict[str, Any], project_root: str | Path | None = None) -> ValidationResult:
         project_root = Path(project_root) if project_root else Path.cwd()
         result = ValidationResult()
+
+        for error in JsonSchemaValidator.validate(resolved):
+            result.errors.append(error)
 
         scenario = resolved.get("scenario", {})
         if not scenario.get("id"):

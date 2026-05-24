@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scenario-driven IES design input",
+  "type": "object",
+  "required": ["schema_version", "scenario", "system", "energy_carriers", "data", "prices", "devices"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "scenario": {
+      "type": "object",
+      "required": ["id", "name", "scenario_type"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "scenario_type": {"type": "string", "minLength": 1},
+        "currency": {"type": "string"}
+      }
+    },
+    "system": {
+      "type": "object",
+      "required": ["template"],
+      "additionalProperties": true,
+      "properties": {
+        "template": {"type": "string", "minLength": 1}
+      }
+    },
+    "energy_carriers": {
+      "type": "object",
+      "required": ["demands"],
+      "additionalProperties": true,
+      "properties": {
+        "demands": {"type": "array", "items": {"type": "string"}},
+        "inputs": {"type": "array", "items": {"type": "string"}},
+        "resources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": ["load_file"],
+      "additionalProperties": true,
+      "properties": {
+        "input_type": {"type": "string"},
+        "load_file": {"type": "string", "minLength": 1},
+        "typical_day_file": {"type": "string"}
+      }
+    },
+    "simulation": {"type": "object", "additionalProperties": true},
+    "typical_day": {"type": "object", "additionalProperties": true},
+    "prices": {
+      "type": "object",
+      "required": ["electricity"],
+      "additionalProperties": true
+    },
+    "devices": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["library_id", "enabled"],
+        "additionalProperties": true,
+        "properties": {
+          "library_id": {"type": "string", "minLength": 1},
+          "enabled": {"type": "boolean"},
+          "optimize_capacity": {"type": "boolean"}
+        }
+      }
+    },
+    "optimization": {"type": "object", "additionalProperties": true}
+  }
+}
