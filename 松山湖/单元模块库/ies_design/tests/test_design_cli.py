@@ -93,6 +93,17 @@ def test_export_component_plan_for_future_supported_scenario():
         assert (Path(tmp) / "generic_component_plan.md").exists()
 
 
+def test_future_supported_validate_only_requires_accept_future():
+    third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
+    result = run_cli("--scenario", str(third), "--validate-only")
+    assert result.returncode == 3, result.stderr + result.stdout
+    assert "--accept-future" in result.stdout
+
+    accepted = run_cli("--scenario", str(third), "--validate-only", "--accept-future")
+    assert accepted.returncode == 0, accepted.stderr + accepted.stdout
+    assert "Validation status: future_supported" in accepted.stdout
+
+
 def test_mode_dry_run_accepts_optimizer_overrides():
     result = run_cli(
         "--scenario", str(SONGSHAN),

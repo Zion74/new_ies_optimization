@@ -26,7 +26,7 @@ def main(argv: list[str] | None = None) -> int:
         ("interface unit tests", _run_unit_tests),
         ("songshan validate", lambda: _run_cli("--scenario", str(SONGSHAN), "--validate-only")),
         ("german validate", lambda: _run_cli("--scenario", str(GERMAN), "--validate-only")),
-        ("third placeholder validate", lambda: _run_cli("--scenario", str(THIRD), "--validate-only")),
+        ("third placeholder validate", lambda: _run_cli("--scenario", str(THIRD), "--validate-only", "--accept-future")),
         ("third placeholder component plan", lambda: _run_cli("--scenario", str(THIRD), "--export-component-plan", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_component_plan"))),
         ("songshan demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run")),
         ("german demo dry-run", lambda: _run_cli("--scenario", str(GERMAN), "--mode", "demo", "--dry-run")),

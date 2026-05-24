@@ -52,6 +52,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output", help="Output directory for exported scenario or generated files")
     parser.add_argument("--export-scenario", action="store_true", help="Export parsed Excel scenario package and exit")
     parser.add_argument("--validate-only", action="store_true", help="Validate resolved scenario and exit")
+    parser.add_argument("--accept-future", action="store_true", help="Allow future_supported scenarios to pass validation-only checks")
+    parser.add_argument("--strict-validation", action="store_true", help="Treat non-runnable validation statuses as failures")
     parser.add_argument("--export-component-plan", action="store_true", help="Export future generic backend component plan and exit")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
@@ -158,6 +160,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.validate_only:
+        if args.strict_validation and not validation.runnable:
+            print(f"Strict validation failed: scenario status is {validation.status}, not runnable.")
+            return 3
+        if validation.status == "future_supported" and not args.accept_future:
+            print("Future-supported scenario requires --accept-future for validation-only success.")
+            return 3
         return 0
 
     if args.print_case_config:

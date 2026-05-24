@@ -46,7 +46,7 @@ class ResultExporter:
         cls._write_wide(wide_path, selected, scenario_id)
         cls._write_long(long_path, selected, scenario_id)
         cls._write_xlsx(xlsx_path, selected, scenario_id, resolved)
-        cls._write_report(report_path, selected, scenario_id, scenario_name, currency, result_dir, resolved)
+        cls._write_report(report_path, selected, scenario_id, scenario_name, currency, result_dir, resolved, validation)
         cls._write_resolved_scenario(resolved_path, resolved)
         cls._write_validation_report(validation_path, validation)
 
@@ -132,11 +132,15 @@ class ResultExporter:
         currency: str,
         result_dir: Path,
         resolved: dict[str, Any],
+        validation: Any | None = None,
     ) -> None:
         system = resolved.get("system", {})
+        system_template = resolved.get("system_template", {})
         carriers = resolved.get("energy_carriers", {})
         data = resolved.get("data", {})
         optimization = resolved.get("optimization", {})
+        validation_status = getattr(validation, "status", "")
+        backend = system_template.get("supported_backend", "")
         lines = [
             "# 场景化系统设计结果报告",
             "",
@@ -154,6 +158,8 @@ class ResultExporter:
             "## 系统结构",
             "",
             f"- 系统模板: `{system.get('template', '')}`",
+            f"- 结果来源后端: `{backend or 'unknown'}`",
+            f"- 校验状态: `{validation_status or 'unknown'}`",
             f"- 用户负荷: {', '.join(carriers.get('demands', [])) or '未声明'}",
             f"- 能源输入: {', '.join(carriers.get('inputs', [])) or '未声明'}",
             f"- 资源/环境: {', '.join(carriers.get('resources', [])) or '未声明'}",
@@ -250,9 +256,18 @@ class ResultExporter:
             lines.extend(["未传入校验结果。", ""])
         else:
             ok = getattr(validation, "ok", False)
+            status = getattr(validation, "status", "")
+            backend = getattr(validation, "backend", "")
             errors = list(getattr(validation, "errors", []) or [])
             warnings = list(getattr(validation, "warnings", []) or [])
-            lines.extend([f"- 状态: {'通过' if ok else '未通过'}", f"- 错误数: {len(errors)}", f"- 警告数: {len(warnings)}", ""])
+            lines.extend([
+                f"- 状态: {'通过' if ok else '未通过'}",
+                f"- 校验状态: {status or 'unknown'}",
+                f"- 后端: {backend or 'unknown'}",
+                f"- 错误数: {len(errors)}",
+                f"- 警告数: {len(warnings)}",
+                "",
+            ])
             if errors:
                 lines.extend(["## 错误", ""])
                 lines.extend([f"- {item}" for item in errors])

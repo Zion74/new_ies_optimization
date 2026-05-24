@@ -29,7 +29,7 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
         scenario = ScenarioLoader.load(ROOT / "scenarios" / "songshan_lake" / "scenario.yaml")
         resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
 
-        validation = ValidationResult(warnings=["demo warning"])
+        validation = ValidationResult(warnings=["demo warning"], status="runnable", backend="current_cchp")
 
         outputs = ResultExporter.export(result_dir, resolved, validation=validation)
 
@@ -61,6 +61,8 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
         assert "## 输入数据" in report
         assert "## 系统结构" in report
         assert "## 优化设置" in report
+        assert "结果来源后端: `current_cchp`" in report
+        assert "校验状态: `runnable`" in report
 
         import openpyxl
 
