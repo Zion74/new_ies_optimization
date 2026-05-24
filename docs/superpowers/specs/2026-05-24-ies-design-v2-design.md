@@ -133,6 +133,7 @@ Add a small generic backend planning layer:
 - inspects resolved devices and energy carriers,
 - produces a component plan with buses, devices, abstract types, input carriers, output carriers, and mapped backend component type,
 - reports missing mappings clearly.
+- exports `generic_component_plan.json` and `generic_component_plan.md` for `future_supported` scenarios so users can review the generic mapping before a solver backend exists.
 
 This layer is not required to solve optimization in V2. Its purpose is to make the final 15-scenario expansion concrete and auditable, and to make third-scenario onboarding easier once the real Excel arrives.
 
@@ -176,4 +177,3 @@ V2 is complete when:
 - Songshan Lake and German remain runnable.
 - Third scenario validation communicates the real state honestly.
 - Documentation, task list, tests, and commits exist for each completed task.
-

@@ -1,4 +1,5 @@
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,9 +23,23 @@ def test_generic_backend_planner_maps_hydrogen_placeholder():
     assert any(component["component_type"] == "Transformer" for component in plan["components"])
 
 
+def test_generic_backend_planner_exports_json_and_markdown():
+    scenario = ScenarioLoader.load(ROOT / "scenarios" / "third_placeholder" / "scenario.yaml")
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        outputs = GenericBackendPlanner.export(resolved, tmp)
+        json_text = outputs["component_plan_json"].read_text(encoding="utf-8")
+        markdown = outputs["component_plan_report"].read_text(encoding="utf-8")
+
+    assert '"readiness_status": "planned_not_solved"' in json_text
+    assert '"instance_id": "electrolyzer"' in json_text
+    assert "通用后端组件映射计划" in markdown
+    assert "electrolyzer" in markdown
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
             fn()
             print(f"PASS {name}")
-

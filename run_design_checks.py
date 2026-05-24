@@ -27,6 +27,7 @@ def main(argv: list[str] | None = None) -> int:
         ("songshan validate", lambda: _run_cli("--scenario", str(SONGSHAN), "--validate-only")),
         ("german validate", lambda: _run_cli("--scenario", str(GERMAN), "--validate-only")),
         ("third placeholder validate", lambda: _run_cli("--scenario", str(THIRD), "--validate-only")),
+        ("third placeholder component plan", lambda: _run_cli("--scenario", str(THIRD), "--export-component-plan", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_component_plan"))),
         ("songshan demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run")),
         ("german demo dry-run", lambda: _run_cli("--scenario", str(GERMAN), "--mode", "demo", "--dry-run")),
     ]
@@ -66,4 +67,3 @@ def _run_cli(*args: str) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

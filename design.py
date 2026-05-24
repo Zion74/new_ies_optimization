@@ -29,6 +29,7 @@ def _load_pipeline(root: Path):
     from result_exporter import ResultExporter
     from excel_parser import ExcelScenarioParser
     from typical_day import TypicalDayGenerator
+    from generic_backend_planner import GenericBackendPlanner
 
     return (
         ies_dir,
@@ -40,6 +41,7 @@ def _load_pipeline(root: Path):
         ResultExporter,
         ExcelScenarioParser,
         TypicalDayGenerator,
+        GenericBackendPlanner,
     )
 
 
@@ -50,6 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output", help="Output directory for exported scenario or generated files")
     parser.add_argument("--export-scenario", action="store_true", help="Export parsed Excel scenario package and exit")
     parser.add_argument("--validate-only", action="store_true", help="Validate resolved scenario and exit")
+    parser.add_argument("--export-component-plan", action="store_true", help="Export future generic backend component plan and exit")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
@@ -84,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
         ResultExporter,
         ExcelScenarioParser,
         TypicalDayGenerator,
+        GenericBackendPlanner,
     ) = _load_pipeline(root)
 
     if args.generate_typical_days:
@@ -144,6 +148,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {error}")
     if not validation.ok:
         return 2
+
+    if args.export_component_plan:
+        output_dir = Path(args.output) if args.output else root / "DesignResults" / "component_plans" / scenario_id
+        outputs = GenericBackendPlanner.export(resolved, output_dir)
+        print("Generic component plan exported:")
+        for name, path in outputs.items():
+            print(f"  - {name}: {path}")
+        return 0
 
     if args.validate_only:
         return 0

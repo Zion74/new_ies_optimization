@@ -83,6 +83,16 @@ def test_output_overrides_design_result_root():
         assert f"result_root: {tmp}" in result.stdout
 
 
+def test_export_component_plan_for_future_supported_scenario():
+    third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli("--scenario", str(third), "--export-component-plan", "--output", tmp)
+        assert result.returncode == 0, result.stderr + result.stdout
+        assert "Generic component plan exported" in result.stdout
+        assert (Path(tmp) / "generic_component_plan.json").exists()
+        assert (Path(tmp) / "generic_component_plan.md").exists()
+
+
 def test_mode_dry_run_accepts_optimizer_overrides():
     result = run_cli(
         "--scenario", str(SONGSHAN),
