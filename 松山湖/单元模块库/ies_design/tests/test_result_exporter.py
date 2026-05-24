@@ -6,8 +6,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from defaults_resolver import DefaultsResolver
 from schema_validator import ValidationResult
 from result_exporter import ResultExporter
+from scenario_loader import ScenarioLoader
 
 
 def write_pareto(path: Path):
@@ -24,7 +26,8 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
     with tempfile.TemporaryDirectory() as tmp:
         result_dir = Path(tmp)
         write_pareto(result_dir / "Euclidean" / "Pareto_Euclidean.csv")
-        resolved = {"scenario": {"id": "demo", "name": "Demo", "currency": "CNY"}}
+        scenario = ScenarioLoader.load(ROOT / "scenarios" / "songshan_lake" / "scenario.yaml")
+        resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
 
         validation = ValidationResult(warnings=["demo warning"])
 
@@ -49,7 +52,7 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
         assert "economic_cost" in long_table
 
         resolved_json = outputs["resolved_scenario"].read_text(encoding="utf-8")
-        assert '"id": "demo"' in resolved_json
+        assert '"id": "songshan_lake"' in resolved_json
 
         validation_report = outputs["validation_report"].read_text(encoding="utf-8")
         assert "demo warning" in validation_report
@@ -58,6 +61,30 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
         assert "## 输入数据" in report
         assert "## 系统结构" in report
         assert "## 优化设置" in report
+
+        import openpyxl
+
+        wb = openpyxl.load_workbook(outputs["design_summary_xlsx"], data_only=True)
+        assert "summary_wide" in wb.sheetnames
+        assert "summary_long" in wb.sheetnames
+        assert "device_metadata" in wb.sheetnames
+        metadata = wb["device_metadata"]
+        headers = [cell.value for cell in metadata[1]]
+        assert headers == [
+            "solution_label",
+            "device_id",
+            "device_name",
+            "device_type",
+            "input_carriers",
+            "output_carriers",
+            "capacity_value",
+            "unit",
+            "is_default_device",
+            "is_user_configured",
+        ]
+        rows = list(metadata.iter_rows(min_row=2, values_only=True))
+        assert any(row[1] == "pv" and row[2] == "标准光伏" for row in rows)
+        assert any(row[1] == "chp" and row[6] == 20 for row in rows)
 
 
 if __name__ == "__main__":

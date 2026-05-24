@@ -45,7 +45,7 @@ class ResultExporter:
         cls._write_pareto(pareto_path, pareto_rows)
         cls._write_wide(wide_path, selected, scenario_id)
         cls._write_long(long_path, selected, scenario_id)
-        cls._write_xlsx(xlsx_path, selected, scenario_id)
+        cls._write_xlsx(xlsx_path, selected, scenario_id, resolved)
         cls._write_report(report_path, selected, scenario_id, scenario_name, currency, result_dir, resolved)
         cls._write_resolved_scenario(resolved_path, resolved)
         cls._write_validation_report(validation_path, validation)
@@ -120,20 +120,7 @@ class ResultExporter:
     @staticmethod
     def _write_long(path: Path, rows: list[dict[str, Any]], scenario_id: str) -> None:
         columns = ["scenario_id", "solution_label", "method", "source_solution_id", "item_type", "item_id", "value", "unit"]
-        output_rows = []
-        for row in rows:
-            common = {
-                "scenario_id": scenario_id,
-                "solution_label": row.get("solution_label", ""),
-                "method": row.get("method", ""),
-                "source_solution_id": row.get("Solution_ID", ""),
-            }
-            output_rows.append({**common, "item_type": "objective", "item_id": "economic_cost", "value": row.get("Economic_Cost", ""), "unit": "currency_per_year"})
-            output_rows.append({**common, "item_type": "objective", "item_id": "matching_index", "value": row.get("Matching_Index", ""), "unit": "index"})
-            for key in sorted(row):
-                if key in CORE_COLUMNS or key == "solution_label":
-                    continue
-                output_rows.append({**common, "item_type": "device_capacity", "item_id": key, "value": row.get(key, ""), "unit": "kW"})
+        output_rows = _long_summary_rows(rows, scenario_id)
         _write_dict_rows(path, columns, output_rows)
 
     @staticmethod
@@ -209,7 +196,7 @@ class ResultExporter:
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     @staticmethod
-    def _write_xlsx(path: Path, rows: list[dict[str, Any]], scenario_id: str) -> None:
+    def _write_xlsx(path: Path, rows: list[dict[str, Any]], scenario_id: str, resolved: dict[str, Any]) -> None:
         try:
             import openpyxl
         except ImportError as exc:  # pragma: no cover
@@ -217,19 +204,39 @@ class ResultExporter:
 
         wb = openpyxl.Workbook()
         ws = wb.active
-        ws.title = "design_summary"
+        ws.title = "summary_wide"
         columns = ["scenario_id", "solution_label", "method", "Solution_ID", "Economic_Cost", "Matching_Index"]
         device_columns = sorted({key for row in rows for key in row if key not in CORE_COLUMNS and key != "solution_label"})
         headers = columns + device_columns
         ws.append(headers)
         for row in rows:
             ws.append([scenario_id if column == "scenario_id" else row.get(column, "") for column in headers])
-        for cell in ws[1]:
-            cell.font = openpyxl.styles.Font(bold=True)
-        ws.freeze_panes = "A2"
-        for column_cells in ws.columns:
-            width = max(len(str(cell.value or "")) for cell in column_cells) + 2
-            ws.column_dimensions[column_cells[0].column_letter].width = min(width, 28)
+        _format_sheet(ws, openpyxl)
+
+        long_ws = wb.create_sheet("summary_long")
+        long_columns = ["scenario_id", "solution_label", "method", "source_solution_id", "item_type", "item_id", "value", "unit"]
+        long_ws.append(long_columns)
+        for row in _long_summary_rows(rows, scenario_id):
+            long_ws.append([row.get(column, "") for column in long_columns])
+        _format_sheet(long_ws, openpyxl)
+
+        metadata_ws = wb.create_sheet("device_metadata")
+        metadata_columns = [
+            "solution_label",
+            "device_id",
+            "device_name",
+            "device_type",
+            "input_carriers",
+            "output_carriers",
+            "capacity_value",
+            "unit",
+            "is_default_device",
+            "is_user_configured",
+        ]
+        metadata_ws.append(metadata_columns)
+        for row in _device_metadata_rows(rows, resolved):
+            metadata_ws.append([row.get(column, "") for column in metadata_columns])
+        _format_sheet(metadata_ws, openpyxl)
         wb.save(path)
 
     @staticmethod
@@ -284,6 +291,75 @@ def _write_dict_rows(path: Path, columns: list[str], rows: list[dict[str, Any]])
         writer.writeheader()
         for row in rows:
             writer.writerow({column: row.get(column, "") for column in columns})
+
+
+def _long_summary_rows(rows: list[dict[str, Any]], scenario_id: str) -> list[dict[str, Any]]:
+    output_rows = []
+    for row in rows:
+        common = {
+            "scenario_id": scenario_id,
+            "solution_label": row.get("solution_label", ""),
+            "method": row.get("method", ""),
+            "source_solution_id": row.get("Solution_ID", ""),
+        }
+        output_rows.append({**common, "item_type": "objective", "item_id": "economic_cost", "value": row.get("Economic_Cost", ""), "unit": "currency_per_year"})
+        output_rows.append({**common, "item_type": "objective", "item_id": "matching_index", "value": row.get("Matching_Index", ""), "unit": "index"})
+        for key in sorted(row):
+            if key in CORE_COLUMNS or key == "solution_label":
+                continue
+            output_rows.append({**common, "item_type": "device_capacity", "item_id": key, "value": row.get(key, ""), "unit": "kW"})
+    return output_rows
+
+
+def _device_metadata_rows(rows: list[dict[str, Any]], resolved: dict[str, Any]) -> list[dict[str, Any]]:
+    devices = resolved.get("devices", {})
+    default_devices = set(resolved.get("system_template", {}).get("default_devices", []) or [])
+    output_rows = []
+    for selected in rows:
+        for device_id, device in sorted(devices.items()):
+            if not device.get("enabled", False):
+                continue
+            result_key = _result_capacity_key(device_id, device)
+            output_rows.append({
+                "solution_label": selected.get("solution_label", ""),
+                "device_id": device_id,
+                "device_name": device.get("name", device_id),
+                "device_type": device.get("abstract_type", ""),
+                "input_carriers": ", ".join(device.get("input_carriers", []) or []),
+                "output_carriers": ", ".join(device.get("output_carriers", []) or []),
+                "capacity_value": selected.get(result_key, ""),
+                "unit": device.get("capacity", {}).get("default_unit", "kW"),
+                "is_default_device": str(device.get("library_id") in default_devices).lower(),
+                "is_user_configured": "true",
+            })
+    return output_rows
+
+
+def _result_capacity_key(device_id: str, device: dict[str, Any]) -> str:
+    scenario_field = device.get("capacity", {}).get("scenario_field")
+    if scenario_field:
+        return str(scenario_field)
+    fallback = {
+        "pv": "PV",
+        "wind": "WT",
+        "chp": "GT",
+        "electric_heat_pump": "HP",
+        "electric_chiller": "EC",
+        "absorption_chiller": "AC",
+        "electric_storage": "ES",
+        "heat_storage": "HS",
+        "cold_storage": "CS",
+    }
+    return fallback.get(device_id, device_id)
+
+
+def _format_sheet(ws: Any, openpyxl: Any) -> None:
+    for cell in ws[1]:
+        cell.font = openpyxl.styles.Font(bold=True)
+    ws.freeze_panes = "A2"
+    for column_cells in ws.columns:
+        width = max(len(str(cell.value or "")) for cell in column_cells) + 2
+        ws.column_dimensions[column_cells[0].column_letter].width = min(width, 32)
 
 
 def _knee_point(rows: list[dict[str, Any]]) -> dict[str, Any]:
