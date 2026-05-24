@@ -49,9 +49,10 @@ def _currency_label(case_config=None):
 class MyNSGA2(ea.moea_NSGA2_templet):
     """自定义 NSGA-II 算法"""
 
-    def __init__(self, problem, population, method_name=""):
+    def __init__(self, problem, population, method_name="", currency="€"):
         super().__init__(problem, population)
         self.method_name = method_name
+        self.currency = currency
 
     def logging(self, pop):
         super().logging(pop)
@@ -60,7 +61,7 @@ class MyNSGA2(ea.moea_NSGA2_templet):
         best_eco_val = pop.ObjV[best_eco_idx, 0]
 
         print(f"\n  [{self.method_name}] 第 {self.currentGen} 代")
-        print(f"  ★ 最低成本: {best_eco_val:,.2f} €")
+        print(f"  ★ 最低成本: {best_eco_val:,.2f} {self.currency}")
 
         if pop.ObjV.shape[1] > 1:
             best_match_idx = np.argmin(pop.ObjV[:, 1])
@@ -72,16 +73,17 @@ class MyNSGA2(ea.moea_NSGA2_templet):
 class MySGA(ea.soea_DE_rand_1_bin_templet):
     """单目标差分进化算法（用于方案A）"""
 
-    def __init__(self, problem, population, method_name=""):
+    def __init__(self, problem, population, method_name="", currency="€"):
         super().__init__(problem, population)
         self.method_name = method_name
+        self.currency = currency
 
     def logging(self, pop):
         super().logging(pop)
         best_idx = np.argmin(pop.ObjV[:, 0])
         best_val = pop.ObjV[best_idx, 0]
         print(
-            f"\n  [{self.method_name}] 第 {self.currentGen} 代 | 最优成本: {best_val:,.2f} €"
+            f"\n  [{self.method_name}] 第 {self.currentGen} 代 | 最优成本: {best_val:,.2f} {self.currency}"
         )
 
 
@@ -144,10 +146,10 @@ def run_single_experiment(
 
     if method == "economic_only":
         # 单目标优化
-        algorithm = MySGA(problem, population, method_name=method_names[method])
+        algorithm = MySGA(problem, population, method_name=method_names[method], currency=_currency_label(case_config))
     else:
         # 多目标优化
-        algorithm = MyNSGA2(problem, population, method_name=method_names[method])
+        algorithm = MyNSGA2(problem, population, method_name=method_names[method], currency=_currency_label(case_config))
 
     algorithm.MAXGEN = maxgen
     algorithm.mutOper.Pm = 0.1
