@@ -55,7 +55,13 @@ class TypicalDayGenerator:
         scaled = _scale_vectors(daily_vectors)
         labels = _kmeans_labels(scaled, n_clusters=n_clusters, max_iter=max_iter)
         rows = _labels_to_typical_rows(scaled, labels, n_clusters)
-        return _write_outputs(output_dir, rows, "cluster_from_8760", f"从 {data_file} 聚类生成 {n_clusters} 个典型日。")
+        return _write_outputs(
+            output_dir,
+            rows,
+            "cluster_from_8760",
+            f"从 {data_file} 聚类生成 {n_clusters} 个典型日。",
+            daily_vectors=daily_vectors,
+        )
 
 
 def _read_xlsx(path: Path) -> list[dict[str, Any]]:
@@ -178,29 +184,97 @@ def _distance(left: list[float], right: list[float]) -> float:
     return sum((a - b) ** 2 for a, b in zip(left, right))
 
 
-def _write_outputs(output_dir: Path, rows: list[dict[str, Any]], source: str, description: str) -> dict[str, Path]:
+def _write_outputs(
+    output_dir: Path,
+    rows: list[dict[str, Any]],
+    source: str,
+    description: str,
+    daily_vectors: list[list[float]] | None = None,
+) -> dict[str, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     typical_days = output_dir / "typical_days.csv"
     report = output_dir / "typical_day_report.md"
+    weights_csv = output_dir / "typical_day_weights.csv"
     with typical_days.open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=["typicalDayId", "weight", "days"])
         writer.writeheader()
         writer.writerows(rows)
 
+    with weights_csv.open("w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["typicalDayId", "weight"])
+        writer.writeheader()
+        writer.writerows({"typicalDayId": row["typicalDayId"], "weight": row["weight"]} for row in rows)
+
+    outputs: dict[str, Path] = {"typical_days": typical_days, "report": report, "weights_csv": weights_csv}
+    plot_warnings = _write_visualizations(output_dir, rows, daily_vectors, outputs)
+
     total_weight = sum(int(row["weight"]) for row in rows)
-    report.write_text(
-        "\n".join([
-            "# 典型日生成报告",
-            "",
-            f"- source: {source}",
-            f"- 典型日数量: {len(rows)}",
-            f"- 权重总和: {total_weight}",
-            f"- 说明: {description}",
-            "",
-        ]),
-        encoding="utf-8",
-    )
-    return {"typical_days": typical_days, "report": report}
+    report_lines = [
+        "# 典型日生成报告",
+        "",
+        f"- source: {source}",
+        f"- 典型日数量: {len(rows)}",
+        f"- 权重总和: {total_weight}",
+        f"- 说明: {description}",
+        "",
+        "## 输出文件",
+        "",
+        f"- typical_days: `{typical_days.name}`",
+        f"- typical_day_weights: `{weights_csv.name}`",
+    ]
+    if "weights_png" in outputs:
+        report_lines.append(f"- weights_chart: `{outputs['weights_png'].name}`")
+    if "representative_days_png" in outputs:
+        report_lines.append(f"- representative_days_chart: `{outputs['representative_days_png'].name}`")
+    if plot_warnings:
+        report_lines.extend(["", "## 可视化警告", ""])
+        report_lines.extend(f"- {warning}" for warning in plot_warnings)
+    report.write_text("\n".join(report_lines) + "\n", encoding="utf-8")
+    return outputs
+
+
+def _write_visualizations(
+    output_dir: Path,
+    rows: list[dict[str, Any]],
+    daily_vectors: list[list[float]] | None,
+    outputs: dict[str, Path],
+) -> list[str]:
+    try:
+        import matplotlib.pyplot as plt
+    except Exception as exc:  # pragma: no cover
+        return [f"matplotlib unavailable: {exc}"]
+
+    warnings: list[str] = []
+    weights_png = output_dir / "typical_day_weights.png"
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.bar([str(row["typicalDayId"]) for row in rows], [int(row["weight"]) for row in rows])
+    ax.set_xlabel("Typical day id")
+    ax.set_ylabel("Represented days")
+    ax.set_title("Typical day weights")
+    fig.tight_layout()
+    fig.savefig(weights_png, dpi=150)
+    plt.close(fig)
+    outputs["weights_png"] = weights_png
+
+    if daily_vectors:
+        representative_png = output_dir / "representative_days.png"
+        fig, ax = plt.subplots(figsize=(10, 4))
+        for row in rows:
+            day_idx = int(row["typicalDayId"]) - 1
+            if 0 <= day_idx < len(daily_vectors):
+                ax.plot(range(24), daily_vectors[day_idx][:24], alpha=0.75, label=str(row["typicalDayId"]))
+        ax.set_xlabel("Hour")
+        ax.set_ylabel("First selected variable")
+        ax.set_title("Representative day profiles")
+        if len(rows) <= 14:
+            ax.legend(ncol=2, fontsize=8)
+        fig.tight_layout()
+        fig.savefig(representative_png, dpi=150)
+        plt.close(fig)
+        outputs["representative_days_png"] = representative_png
+    else:
+        warnings.append("representative day profiles require source 8760 vectors")
+    return warnings
 
 
 def _is_number(value: Any) -> bool:

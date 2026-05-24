@@ -21,6 +21,9 @@ def test_monthly_template_generates_12_weighted_days():
 
         rows = read_rows(outputs["typical_days"])
 
+        assert outputs["weights_csv"].exists()
+        if "weights_png" in outputs:
+            assert outputs["weights_png"].exists()
         assert len(rows) == 12
         assert rows[0]["typicalDayId"] == "16"
         assert rows[0]["weight"] == "31"
@@ -56,6 +59,11 @@ def test_cluster_from_8760_generates_requested_number_of_medoid_days():
         )
         rows = read_rows(outputs["typical_days"])
 
+        assert outputs["weights_csv"].exists()
+        if "weights_png" in outputs:
+            assert outputs["weights_png"].exists()
+        if "representative_days_png" in outputs:
+            assert outputs["representative_days_png"].exists()
         assert len(rows) == 14
         assert sum(int(row["weight"]) for row in rows) == 365
         assert all(1 <= int(row["typicalDayId"]) <= 365 for row in rows)
