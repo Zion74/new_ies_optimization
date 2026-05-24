@@ -37,6 +37,7 @@ class ResultExporter:
         pareto_path = result_dir / "pareto_solutions.csv"
         long_path = result_dir / "design_summary.csv"
         wide_path = result_dir / "design_summary_wide.csv"
+        xlsx_path = result_dir / "design_summary.xlsx"
         report_path = result_dir / "design_report.md"
         resolved_path = result_dir / "resolved_scenario.json"
         validation_path = result_dir / "validation_report.md"
@@ -44,7 +45,8 @@ class ResultExporter:
         cls._write_pareto(pareto_path, pareto_rows)
         cls._write_wide(wide_path, selected, scenario_id)
         cls._write_long(long_path, selected, scenario_id)
-        cls._write_report(report_path, selected, scenario_id, scenario_name, currency, result_dir)
+        cls._write_xlsx(xlsx_path, selected, scenario_id)
+        cls._write_report(report_path, selected, scenario_id, scenario_name, currency, result_dir, resolved)
         cls._write_resolved_scenario(resolved_path, resolved)
         cls._write_validation_report(validation_path, validation)
 
@@ -52,6 +54,7 @@ class ResultExporter:
             "pareto_solutions": pareto_path,
             "design_summary": long_path,
             "design_summary_wide": wide_path,
+            "design_summary_xlsx": xlsx_path,
             "design_report": report_path,
             "resolved_scenario": resolved_path,
             "validation_report": validation_path,
@@ -141,7 +144,12 @@ class ResultExporter:
         scenario_name: str,
         currency: str,
         result_dir: Path,
+        resolved: dict[str, Any],
     ) -> None:
+        system = resolved.get("system", {})
+        carriers = resolved.get("energy_carriers", {})
+        data = resolved.get("data", {})
+        optimization = resolved.get("optimization", {})
         lines = [
             "# 场景化系统设计结果报告",
             "",
@@ -149,6 +157,26 @@ class ResultExporter:
             f"- 场景名称: {scenario_name}",
             f"- 结果目录: `{result_dir}`",
             f"- 货币: {currency or '未声明'}",
+            "",
+            "## 输入数据",
+            "",
+            f"- 负荷数据文件: `{data.get('load_file', '')}`",
+            f"- 典型日文件: `{data.get('typical_day_file') or resolved.get('typical_day', {}).get('file', '')}`",
+            f"- 数据类型: {data.get('input_type', '未声明')}",
+            "",
+            "## 系统结构",
+            "",
+            f"- 系统模板: `{system.get('template', '')}`",
+            f"- 用户负荷: {', '.join(carriers.get('demands', [])) or '未声明'}",
+            f"- 能源输入: {', '.join(carriers.get('inputs', [])) or '未声明'}",
+            f"- 资源/环境: {', '.join(carriers.get('resources', [])) or '未声明'}",
+            "",
+            "## 优化设置",
+            "",
+            f"- 模式: {optimization.get('mode', '')}",
+            f"- 方法: {optimization.get('methods', [])}",
+            f"- 种群规模 nind: {optimization.get('nind', '')}",
+            f"- 最大代数 maxgen: {optimization.get('maxgen', '')}",
             "",
             "## 推荐配置",
             "",
@@ -173,9 +201,36 @@ class ResultExporter:
                 "- `pareto_solutions.csv`: 汇总现有优化器输出的所有 Pareto 解，并标记是否超过成本阈值。",
                 "- `design_summary.csv`: 推荐方案长表，适配后续多能源载体和设备扩展。",
                 "- `design_summary_wide.csv`: 推荐方案宽表，便于人工查看和 Excel 展示。",
+                "- `design_summary.xlsx`: Excel 展示版推荐方案表。",
+                "- `resolved_scenario.json`: 本次运行实际使用的完整场景配置。",
+                "- `validation_report.md`: 输入校验报告。",
             ]
         )
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    @staticmethod
+    def _write_xlsx(path: Path, rows: list[dict[str, Any]], scenario_id: str) -> None:
+        try:
+            import openpyxl
+        except ImportError as exc:  # pragma: no cover
+            raise RuntimeError("Excel result export requires openpyxl. Use `uv run python ...`.") from exc
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "design_summary"
+        columns = ["scenario_id", "solution_label", "method", "Solution_ID", "Economic_Cost", "Matching_Index"]
+        device_columns = sorted({key for row in rows for key in row if key not in CORE_COLUMNS and key != "solution_label"})
+        headers = columns + device_columns
+        ws.append(headers)
+        for row in rows:
+            ws.append([scenario_id if column == "scenario_id" else row.get(column, "") for column in headers])
+        for cell in ws[1]:
+            cell.font = openpyxl.styles.Font(bold=True)
+        ws.freeze_panes = "A2"
+        for column_cells in ws.columns:
+            width = max(len(str(cell.value or "")) for cell in column_cells) + 2
+            ws.column_dimensions[column_cells[0].column_letter].width = min(width, 28)
+        wb.save(path)
 
     @staticmethod
     def _write_resolved_scenario(path: Path, resolved: dict[str, Any]) -> None:

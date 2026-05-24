@@ -33,6 +33,7 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
         assert outputs["pareto_solutions"].exists()
         assert outputs["design_summary"].exists()
         assert outputs["design_summary_wide"].exists()
+        assert outputs["design_summary_xlsx"].exists()
         assert outputs["design_report"].exists()
         assert outputs["resolved_scenario"].exists()
         assert outputs["validation_report"].exists()
@@ -52,6 +53,11 @@ def test_exports_standard_design_files_and_filters_infeasible_recommendations():
 
         validation_report = outputs["validation_report"].read_text(encoding="utf-8")
         assert "demo warning" in validation_report
+
+        report = outputs["design_report"].read_text(encoding="utf-8")
+        assert "## 输入数据" in report
+        assert "## 系统结构" in report
+        assert "## 优化设置" in report
 
 
 if __name__ == "__main__":
