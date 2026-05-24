@@ -1,0 +1,140 @@
+﻿schema_version: "1.0"
+
+scenario:
+  id: german
+  name: 德国工业园区案例
+  scenario_type: industrial_park_pv_geothermal_waste_heat
+  description: 热主导型综合能源系统案例
+  location: germany
+  currency: EUR
+
+system:
+  template: cchp_ehc_base
+
+energy_carriers:
+  demands: [electricity, heat, cooling]
+  inputs: [natural_gas]
+  resources: [solar_resource, wind_resource, temperature]
+
+data:
+  input_type: timeseries_8760
+  load_file: data/mergedData.csv
+  typical_day_file: data/typicalDayData.xlsx
+  column_mapping:
+    ele_load_kw: ele_load(kW)
+    heat_load_kw: heat_load(kW)
+    cool_load_kw: cool_load(kW)
+    solar_radiation_w_m2: solarRadiation(W/m-2)
+    wind_speed_m_s: windSpeed(m/s)
+    temperature_c: temperature(C)
+
+simulation:
+  mode: typical_days
+  annualization: weighted
+  time_step_hours: 1
+  dispatch_horizon_hours: 24
+
+typical_day:
+  source: user_selected
+  file: data/typicalDayData.xlsx
+
+prices:
+  electricity:
+    type: flat
+    unit: EUR_per_kWh
+    value: 0.0025
+  gas:
+    type: flat
+    unit: EUR_per_kWh
+    value: 0.0286
+  capacity_charge:
+    unit: EUR_per_kW_year
+    value: 114.29
+
+devices:
+  pv:
+    library_id: pv_standard
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 10000
+    overrides:
+      invest_coeff: 76.44188371
+  wind:
+    library_id: wind_turbine
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 10000
+    overrides:
+      invest_coeff: 110.4233218
+  chp:
+    library_id: chp_gas_turbine
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 10000
+    overrides:
+      eta_e: 0.33
+      eta_h: 0.50
+      invest_coeff: 50.32074101
+  electric_heat_pump:
+    library_id: electric_heat_pump
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 3000
+    overrides:
+      cop: 4.44
+      invest_coeff: 21.21527903
+  electric_chiller:
+    library_id: electric_chiller
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 1000
+    overrides:
+      cop: 2.87
+      invest_coeff: 22.85563566
+  absorption_chiller:
+    library_id: absorption_chiller
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 1000
+    overrides:
+      cop: 0.75
+      invest_coeff: 21.81674313
+  electric_storage:
+    library_id: electric_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 20000
+    overrides:
+      invest_coeff: 35.11456751
+  heat_storage:
+    library_id: heat_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 6000
+    overrides:
+      invest_coeff: 1.689590459
+  cold_storage:
+    library_id: cold_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 2000
+    overrides:
+      invest_coeff: 1.689590459
+
+thermodynamics:
+  T0: 298.15
+  T_heat: 343.15
+  T_cool: 280.15
+
+carnot_battery:
+  enabled: false
+  power_ub_kw: 2000
+  capacity_ub_kwh: 10000
+  round_trip_efficiency: 0.60
+  loss_rate: 0.002
+  invest_power_coeff: 37.0
+  invest_capacity_coeff: 2.5
+
+optimization:
+  mode: test
+  methods: [euclidean]

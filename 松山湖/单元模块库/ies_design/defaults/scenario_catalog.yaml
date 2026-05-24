@@ -1,0 +1,122 @@
+﻿schema_version: "1.0"
+
+scenario_types:
+  industrial_park_pv_geothermal_waste_heat:
+    name: 工业园区分布式光伏地热余热综合能源利用场景
+    source_inputs: [solar_resource, geothermal, waste_heat]
+    demands: [electricity, heat, cooling]
+    recommended_templates: [cchp_ehc_base]
+    candidate_devices: [pv_standard, geothermal_heat_pump, waste_heat_recovery, chp_gas_turbine, electric_chiller, absorption_chiller, electric_storage, heat_storage, cold_storage]
+    notes: 工业园区冷、热、电需求集中，源侧余热利用潜力大。
+
+  island_renewable_multi_energy:
+    name: 海岛可再生能源多元利用综合示范场景
+    source_inputs: [solar_resource, wind_resource, tidal_resource]
+    demands: [electricity, heat, hydrogen, methanol]
+    recommended_templates: [electric_hydrogen_station]
+    candidate_devices: [pv_standard, wind_turbine, tidal_generator, electrolyzer, hydrogen_storage, electric_storage]
+    notes: 需要预留制氢、储氢、甲醇合成或外供甲醇接口。
+
+  green_data_center_wind_pv:
+    name: 绿色数据中心光伏风电耦合供能场景
+    source_inputs: [solar_resource, wind_resource]
+    demands: [electricity, cooling]
+    recommended_templates: [electric_cooling_base]
+    candidate_devices: [pv_standard, wind_turbine, electric_chiller, electric_storage, cold_storage]
+    notes: 数据中心重点关注供电可靠性和冷却负荷。
+
+  rural_pv_wind_biomass:
+    name: 农村光伏风电生物质多能互补综合能源利用场景
+    source_inputs: [solar_resource, wind_resource, biomass]
+    demands: [electricity, heat, cooling, oxygen]
+    recommended_templates: [electric_heat_base]
+    candidate_devices: [pv_standard, wind_turbine, biomass_boiler, electric_storage, heat_storage]
+    notes: 氧需求先预留接口，待电解水或相关设备模块补齐。
+
+  airport_distributed_renewable:
+    name: 大型机场分布式可再生能源利用场景
+    source_inputs: [solar_resource, wind_resource, geothermal, waste_heat]
+    demands: [electricity, heat, cooling]
+    recommended_templates: [cchp_ehc_base, electric_cooling_base]
+    candidate_devices: [pv_standard, wind_turbine, geothermal_heat_pump, electric_chiller, electric_storage, heat_storage, cold_storage]
+    notes: 建筑类场景，冷热电需求明显。
+
+  campus_pv_wind:
+    name: 校园分布式光伏风电综合能源利用场景
+    source_inputs: [solar_resource, wind_resource]
+    demands: [electricity, heat, cooling]
+    recommended_templates: [cchp_ehc_base]
+    candidate_devices: [pv_standard, wind_turbine, chp_gas_turbine, electric_heat_pump, electric_chiller, electric_storage, heat_storage, cold_storage]
+    notes: 与园区建筑场景相近，适合复用冷热电模板。
+
+  highway_transport_green_energy:
+    name: 公路交通绿色综合能源利用场景
+    source_inputs: [solar_resource, wind_resource]
+    demands: [electricity, hydrogen]
+    recommended_templates: [electric_hydrogen_station]
+    candidate_devices: [pv_standard, wind_turbine, electrolyzer, hydrogen_storage, electric_storage]
+    notes: 需要充电站、制氢、储氢和加氢需求接口。
+
+  ship_distributed_renewable:
+    name: 船舶分布式可再生能源利用场景
+    source_inputs: [solar_resource, wind_resource]
+    demands: [electricity, heat, cooling, hydrogen]
+    recommended_templates: [cchp_ehc_base, electric_hydrogen_station]
+    candidate_devices: [pv_standard, wind_turbine, electrolyzer, hydrogen_storage, electric_storage]
+    notes: 独立能源系统，负荷切换频繁，需关注电能质量。
+
+  oilfield_pv_solarthermal_wind:
+    name: 油田多能互补光伏光热风电综合利用场景
+    source_inputs: [solar_resource, solar_thermal, wind_resource]
+    demands: [electricity, heat, steam]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, steam_boiler, heat_storage, electric_storage]
+    notes: 稠油开采等工艺蒸汽需求需要 steam 载体。
+
+  steel_multi_energy:
+    name: 钢铁企业多能互补分布式能源综合利用场景
+    source_inputs: [solar_resource, wind_resource, waste_heat, waste_pressure, biomass]
+    demands: [electricity, heat, steam, hydrogen, natural_gas]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, waste_heat_recovery, steam_boiler, electrolyzer, hydrogen_storage, biomass_boiler]
+    notes: 需要蒸汽、氢、天然气需求和余热余压发电接口。
+
+  aluminum_pv_wind_service:
+    name: 铝业光伏与风电综合能源服务场景
+    source_inputs: [solar_resource, wind_resource]
+    demands: [electricity, heat, steam, hydrogen]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, steam_boiler, electrolyzer, hydrogen_storage]
+    notes: 可预留电锅炉、电解水制氢和储氢模块。
+
+  petrochemical_pv_wind_waste_heat:
+    name: 石化园区光伏风电余热综合利用场景
+    source_inputs: [solar_resource, wind_resource, waste_heat]
+    demands: [electricity, heat, steam, hydrogen]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, waste_heat_recovery, steam_boiler, electrolyzer, hydrogen_storage]
+    notes: 需要处理工艺余热和蒸汽需求。
+
+  mining_pv_wind_waste_heat:
+    name: 矿区光伏风电余热综合利用场景
+    source_inputs: [solar_resource, wind_resource, waste_heat]
+    demands: [electricity, heat, steam, hydrogen]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, waste_heat_recovery, steam_boiler, electrolyzer, hydrogen_storage]
+    notes: 关注矿区生产设备和照明用电，余热供暖或蒸汽利用。
+
+  textile_multi_energy:
+    name: 纺织企业多能互补分布式能源综合利用场景
+    source_inputs: [solar_resource, wind_resource, geothermal, biomass]
+    demands: [electricity, heat, cooling]
+    recommended_templates: [cchp_ehc_base]
+    candidate_devices: [pv_standard, wind_turbine, geothermal_heat_pump, biomass_boiler, electric_chiller, electric_storage, heat_storage, cold_storage]
+    notes: 纺织场景对温湿度稳定性要求高。
+
+  pharmaceutical_multi_energy:
+    name: 医药企业多能互补分布式能源利用场景
+    source_inputs: [solar_resource, wind_resource, waste_heat, biomass]
+    demands: [electricity, heat, steam]
+    recommended_templates: [industrial_steam_hydrogen_base]
+    candidate_devices: [pv_standard, wind_turbine, waste_heat_recovery, biomass_boiler, steam_boiler, electric_storage, heat_storage]
+    notes: 生物医药场景常有恒温恒湿和持续高密度用能需求。

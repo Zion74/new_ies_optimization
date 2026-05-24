@@ -1,0 +1,130 @@
+﻿schema_version: "1.0"
+
+templates:
+  cchp_ehc_base:
+    name: 电-热-冷-气 CCHP 基础系统
+    description: 适用于冷热电联供园区，当前德国和松山湖场景优先使用。
+    supported_backend: current_cchp
+    carriers:
+      demands: [electricity, heat, cooling]
+      inputs: [natural_gas]
+      resources: [solar_resource, wind_resource, temperature]
+    buses:
+      electricity: ele_bus
+      heat: heat_bus
+      cooling: cool_bus
+      natural_gas: gas_bus
+    default_devices:
+      - grid_electricity
+      - natural_gas_source
+      - pv_standard
+      - wind_turbine
+      - chp_gas_turbine
+      - electric_heat_pump
+      - electric_chiller
+      - absorption_chiller
+      - electric_storage
+      - heat_storage
+      - cold_storage
+    optional_devices: []
+    backend_mapping:
+      adapter: current_cchp_case_config
+      decision_variable_order: [pv, wind, chp, electric_heat_pump, electric_chiller, absorption_chiller, electric_storage, heat_storage, cold_storage]
+
+  cchp_ehc_carnot:
+    name: 电-热-冷-气 CCHP + 卡诺电池系统
+    extends: cchp_ehc_base
+    description: 在基础 CCHP 系统上增加卡诺电池和余热回收。
+    supported_backend: current_cchp
+    additional_devices:
+      - carnot_battery
+    backend_mapping:
+      adapter: current_cchp_case_config
+      enable_carnot_battery: true
+      decision_variable_order: [pv, wind, chp, electric_heat_pump, electric_chiller, absorption_chiller, electric_storage, heat_storage, cold_storage, carnot_battery_power, carnot_battery_capacity]
+
+  electric_heat_base:
+    name: 电-热系统
+    description: 面向无冷负荷或电热主导场景的预留模板。
+    supported_backend: future_generic
+    carriers:
+      demands: [electricity, heat]
+      inputs: [natural_gas]
+      resources: [solar_resource, wind_resource, temperature]
+    buses:
+      electricity: ele_bus
+      heat: heat_bus
+      natural_gas: gas_bus
+    default_devices:
+      - grid_electricity
+      - natural_gas_source
+      - pv_standard
+      - wind_turbine
+      - chp_gas_turbine
+      - electric_heat_pump
+      - electric_storage
+      - heat_storage
+
+  electric_cooling_base:
+    name: 电-冷系统
+    description: 面向数据中心和冷负荷主导场景的预留模板。
+    supported_backend: future_generic
+    carriers:
+      demands: [electricity, cooling]
+      inputs: []
+      resources: [solar_resource, wind_resource, temperature]
+    buses:
+      electricity: ele_bus
+      cooling: cool_bus
+    default_devices:
+      - grid_electricity
+      - pv_standard
+      - wind_turbine
+      - electric_chiller
+      - electric_storage
+      - cold_storage
+
+  electric_hydrogen_station:
+    name: 电-氢加氢站系统
+    description: 面向交通加氢站、电解制氢和储氢的预留模板。
+    supported_backend: future_generic
+    carriers:
+      demands: [electricity, hydrogen]
+      inputs: [grid_electricity]
+      resources: [solar_resource, wind_resource, temperature]
+    buses:
+      electricity: ele_bus
+      hydrogen: hydrogen_bus
+    default_devices:
+      - grid_electricity
+      - pv_standard
+      - wind_turbine
+      - electrolyzer
+      - hydrogen_storage
+      - electric_storage
+
+  industrial_steam_hydrogen_base:
+    name: 工业蒸汽-氢综合能源系统
+    description: 面向钢铁、石化、铝业、矿区等含蒸汽和氢需求的预留模板。
+    supported_backend: future_generic
+    carriers:
+      demands: [electricity, heat, steam, hydrogen, natural_gas]
+      inputs: [natural_gas, biomass, waste_heat]
+      resources: [solar_resource, wind_resource, waste_heat, temperature]
+    buses:
+      electricity: ele_bus
+      heat: heat_bus
+      steam: steam_bus
+      hydrogen: hydrogen_bus
+      natural_gas: gas_bus
+    default_devices:
+      - grid_electricity
+      - natural_gas_source
+      - pv_standard
+      - wind_turbine
+      - waste_heat_recovery
+      - steam_boiler
+      - electrolyzer
+      - hydrogen_storage
+      - electric_storage
+      - heat_storage

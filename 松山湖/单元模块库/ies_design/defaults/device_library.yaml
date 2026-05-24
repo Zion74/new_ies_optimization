@@ -1,0 +1,399 @@
+﻿schema_version: "1.0"
+
+carrier_dictionary:
+  electricity:
+    name: 电
+    default_unit: kW
+    category: energy_carrier
+    aliases: [电力, 用电, ele]
+  heat:
+    name: 热
+    default_unit: kW
+    category: energy_carrier
+    aliases: [供热, 热水]
+  cooling:
+    name: 冷
+    default_unit: kW
+    category: energy_carrier
+    aliases: [冷量, 冷负荷]
+  steam:
+    name: 蒸汽
+    default_unit: t/h
+    category: energy_carrier
+    aliases: [汽, 工业蒸汽]
+  hydrogen:
+    name: 氢
+    default_unit: kg/h
+    category: energy_carrier
+    aliases: [氢气, H2]
+  oxygen:
+    name: 氧
+    default_unit: Nm3/h
+    category: energy_carrier
+    aliases: [氧气, O2]
+  methanol:
+    name: 甲醇
+    default_unit: kg/h
+    category: energy_carrier
+  natural_gas:
+    name: 天然气
+    default_unit: kWh
+    category: energy_carrier
+    aliases: [燃气, gas]
+  biomass:
+    name: 生物质
+    default_unit: kWh
+    category: energy_carrier
+  solar_resource:
+    name: 太阳辐射
+    default_unit: W/m2
+    category: renewable_resource
+  wind_resource:
+    name: 风资源
+    default_unit: m/s
+    category: renewable_resource
+  solar_thermal:
+    name: 光热资源
+    default_unit: kW
+    category: renewable_resource
+  geothermal:
+    name: 地热
+    default_unit: kW
+    category: renewable_resource
+  tidal_resource:
+    name: 潮汐资源
+    default_unit: kW
+    category: renewable_resource
+  waste_heat:
+    name: 余热
+    default_unit: kW
+    category: recoverable_energy
+  waste_pressure:
+    name: 余压
+    default_unit: kW
+    category: recoverable_energy
+  temperature:
+    name: 环境温度
+    default_unit: C
+    category: environment
+
+devices:
+  grid_electricity:
+    name: 电网接口
+    abstract_type: external_source
+    unit_group: external
+    input_carriers: []
+    output_carriers: [electricity]
+    economics:
+      price_ref: electricity
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  natural_gas_source:
+    name: 天然气接口
+    abstract_type: external_source
+    unit_group: external
+    input_carriers: []
+    output_carriers: [natural_gas]
+    economics:
+      price_ref: gas
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  pv_standard:
+    name: 标准光伏
+    abstract_type: renewable_power
+    unit_group: source
+    input_carriers: [solar_resource, temperature]
+    output_carriers: [electricity]
+    capacity:
+      primary_var: capacity_kw
+      default_unit: kW
+      scenario_field: PV
+    parameters:
+      derating_factor: 0.9
+      temp_coeff: 0.0035
+      reference_temperature_c: 25
+    economics:
+      invest_coeff: 360
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  wind_turbine:
+    name: 风力发电机
+    abstract_type: renewable_power
+    unit_group: source
+    input_carriers: [wind_resource]
+    output_carriers: [electricity]
+    capacity:
+      primary_var: capacity_kw
+      default_unit: kW
+      scenario_field: WT
+    parameters:
+      cut_in_speed_m_s: 2.5
+      rated_speed_m_s: 9
+      cut_out_speed_m_s: 25
+    economics:
+      invest_coeff: 450
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  chp_gas_turbine:
+    name: 燃气热电联产
+    abstract_type: cogeneration
+    unit_group: converter
+    input_carriers: [natural_gas]
+    output_carriers: [electricity, heat]
+    capacity:
+      primary_var: electric_capacity_kw
+      default_unit: kW
+      scenario_field: GT
+    parameters:
+      eta_e: 0.35
+      eta_h: 0.45
+    economics:
+      invest_coeff: 1200
+      fuel_price_ref: gas
+    carbon:
+      emission_factor_ref: natural_gas
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  electric_heat_pump:
+    name: 电热泵
+    abstract_type: power_to_heat
+    unit_group: converter
+    input_carriers: [electricity]
+    output_carriers: [heat]
+    capacity:
+      primary_var: heat_capacity_kw
+      default_unit: kW
+      scenario_field: HP
+    parameters:
+      cop: 4.0
+    economics:
+      invest_coeff: 800
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  electric_chiller:
+    name: 电制冷机
+    abstract_type: power_to_cooling
+    unit_group: converter
+    input_carriers: [electricity]
+    output_carriers: [cooling]
+    capacity:
+      primary_var: cooling_capacity_kw
+      default_unit: kW
+      scenario_field: EC
+    parameters:
+      cop: 3.5
+    economics:
+      invest_coeff: 600
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  absorption_chiller:
+    name: 吸收式制冷机
+    abstract_type: heat_to_cooling
+    unit_group: converter
+    input_carriers: [heat]
+    output_carriers: [cooling]
+    capacity:
+      primary_var: cooling_capacity_kw
+      default_unit: kW
+      scenario_field: AC
+    parameters:
+      cop: 0.8
+    economics:
+      invest_coeff: 600
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  electric_storage:
+    name: 电储能
+    abstract_type: storage
+    unit_group: storage
+    input_carriers: [electricity]
+    output_carriers: [electricity]
+    capacity:
+      primary_var: power_kw
+      energy_var: capacity_kwh
+      default_unit: kW
+      scenario_field: ES
+    parameters:
+      charge_efficiency: 0.95
+      discharge_efficiency: 0.95
+      loss_rate: 0.0
+    economics:
+      invest_coeff: 300
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  heat_storage:
+    name: 热储能
+    abstract_type: storage
+    unit_group: storage
+    input_carriers: [heat]
+    output_carriers: [heat]
+    capacity:
+      primary_var: power_kw
+      default_unit: kW
+      scenario_field: HS
+    parameters:
+      charge_efficiency: 0.90
+      discharge_efficiency: 0.90
+    economics:
+      invest_coeff: 100
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  cold_storage:
+    name: 冷储能
+    abstract_type: storage
+    unit_group: storage
+    input_carriers: [cooling]
+    output_carriers: [cooling]
+    capacity:
+      primary_var: power_kw
+      default_unit: kW
+      scenario_field: CS
+    parameters:
+      charge_efficiency: 0.90
+      discharge_efficiency: 0.90
+    economics:
+      invest_coeff: 100
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  carnot_battery:
+    name: 卡诺电池
+    abstract_type: multi_output_storage
+    unit_group: storage
+    input_carriers: [electricity]
+    output_carriers: [electricity, heat]
+    capacity:
+      primary_var: power_kw
+      energy_var: capacity_kwh
+      default_unit: kW
+      scenario_fields:
+        power: CB_Power
+        capacity: CB_Capacity
+    parameters:
+      round_trip_efficiency: 0.60
+      heat_recovery_enabled: true
+    constraints:
+      ep_ratio_min_h: 4
+      ep_ratio_max_h: 8
+    economics:
+      invest_power_coeff: 10
+      invest_capacity_coeff: 2
+    implementation:
+      status: implemented
+      backend: current_cchp
+
+  electrolyzer:
+    name: 电解槽
+    abstract_type: power_to_fuel
+    unit_group: converter
+    input_carriers: [electricity, water]
+    output_carriers: [hydrogen, oxygen]
+    capacity:
+      primary_var: hydrogen_capacity_kg_h
+      default_unit: kg/h
+    parameters:
+      efficiency: null
+      water_consumption: null
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  hydrogen_storage:
+    name: 储氢
+    abstract_type: fuel_storage
+    unit_group: storage
+    input_carriers: [hydrogen]
+    output_carriers: [hydrogen]
+    capacity:
+      primary_var: charge_discharge_kg_h
+      energy_var: storage_capacity_kg
+      default_unit: kg
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  steam_boiler:
+    name: 蒸汽锅炉
+    abstract_type: fuel_to_steam
+    unit_group: converter
+    input_carriers: [natural_gas]
+    output_carriers: [steam]
+    capacity:
+      primary_var: steam_capacity_t_h
+      default_unit: t/h
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  waste_heat_recovery:
+    name: 余热回收
+    abstract_type: recoverable_energy_to_heat
+    unit_group: converter
+    input_carriers: [waste_heat]
+    output_carriers: [heat, steam]
+    capacity:
+      primary_var: recovered_heat_kw
+      default_unit: kW
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  geothermal_heat_pump:
+    name: 地源热泵
+    abstract_type: renewable_heat_pump
+    unit_group: converter
+    input_carriers: [electricity, geothermal]
+    output_carriers: [heat, cooling]
+    capacity:
+      primary_var: thermal_capacity_kw
+      default_unit: kW
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  biomass_boiler:
+    name: 生物质锅炉
+    abstract_type: fuel_to_heat
+    unit_group: converter
+    input_carriers: [biomass]
+    output_carriers: [heat, steam]
+    capacity:
+      primary_var: thermal_capacity_kw
+      default_unit: kW
+    implementation:
+      status: reserved
+      backend: future_generic
+
+  tidal_generator:
+    name: 潮汐发电
+    abstract_type: renewable_power
+    unit_group: source
+    input_carriers: [tidal_resource]
+    output_carriers: [electricity]
+    capacity:
+      primary_var: capacity_kw
+      default_unit: kW
+    implementation:
+      status: reserved
+      backend: future_generic

@@ -1,0 +1,53 @@
+﻿schema_version: "1.0"
+
+default_methods: [euclidean]
+default_pool_type: Process
+
+defaults:
+  matching_method: euclidean
+  algorithm: nsga2
+  inherit_population: true
+  workers: 4
+
+modes:
+  test:
+    description: 接口验证模式
+    nind: 10
+    maxgen: 5
+    methods: [euclidean]
+    post_analysis: false
+
+  quick:
+    description: 快速趋势模式
+    nind: 20
+    maxgen: 20
+    methods: [std, euclidean]
+    post_analysis: false
+
+  full:
+    description: 正式优化模式
+    nind: 50
+    maxgen: 100
+    methods: [economic_only, std, euclidean, pearson, ssr]
+    post_analysis: false
+
+  custom:
+    description: 自定义模式，由命令行或 scenario.yaml 覆盖
+    nind: null
+    maxgen: null
+    methods: null
+    post_analysis: false
+
+post_analysis_modes:
+  test:
+    cost_levels: 2
+    post_analysis_days: 14
+  quick:
+    cost_levels: 2
+    post_analysis_days: 365
+  medium:
+    cost_levels: 3
+    post_analysis_days: 365
+  full:
+    cost_levels: 3
+    post_analysis_days: 365

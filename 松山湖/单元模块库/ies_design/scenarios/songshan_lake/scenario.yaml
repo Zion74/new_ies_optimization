@@ -1,0 +1,140 @@
+﻿schema_version: "1.0"
+
+scenario:
+  id: songshan_lake
+  name: 松山湖科研产业园
+  scenario_type: industrial_park_pv_geothermal_waste_heat
+  description: 冷主导型分布式综合能源系统（东莞）
+  location: dongguan
+  currency: CNY
+
+system:
+  template: cchp_ehc_base
+
+energy_carriers:
+  demands: [electricity, heat, cooling]
+  inputs: [natural_gas]
+  resources: [solar_resource, temperature]
+
+data:
+  input_type: timeseries_8760
+  load_file: data/songshan_lake_data.csv
+  typical_day_file: data/songshan_lake_typical.xlsx
+  column_mapping:
+    ele_load_kw: ele_load(kW)
+    heat_load_kw: heat_load(kW)
+    cool_load_kw: cool_load(kW)
+    solar_radiation_w_m2: solarRadiation(W/m-2)
+    wind_speed_m_s: windSpeed(m/s)
+    temperature_c: temperature(C)
+
+simulation:
+  mode: typical_days
+  annualization: weighted
+  time_step_hours: 1
+  dispatch_horizon_hours: 24
+
+typical_day:
+  source: user_selected
+  file: data/songshan_lake_typical.xlsx
+
+prices:
+  electricity:
+    type: flat
+    unit: CNY_per_kWh
+    value: 0.6746
+  gas:
+    type: flat
+    unit: CNY_per_kWh
+    value: 0.45
+  capacity_charge:
+    unit: CNY_per_kW_year
+    value: 0
+
+devices:
+  pv:
+    library_id: pv_standard
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 1000
+    overrides:
+      invest_coeff: 520.0
+  wind:
+    library_id: wind_turbine
+    enabled: false
+    optimize_capacity: false
+    capacity_ub_kw: 0
+    overrides:
+      invest_coeff: 0.0
+  chp:
+    library_id: chp_gas_turbine
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 800
+    overrides:
+      eta_e: 0.423
+      eta_h: 0.42
+      invest_coeff: 380.0
+  electric_heat_pump:
+    library_id: electric_heat_pump
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 300
+    overrides:
+      cop: 4.0
+      invest_coeff: 165.0
+  electric_chiller:
+    library_id: electric_chiller
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 5000
+    overrides:
+      cop: 5.5
+      invest_coeff: 175.0
+  absorption_chiller:
+    library_id: absorption_chiller
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 1500
+    overrides:
+      cop: 0.70
+      invest_coeff: 170.0
+  electric_storage:
+    library_id: electric_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 2000
+    overrides:
+      invest_coeff: 280.0
+  heat_storage:
+    library_id: heat_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 500
+    overrides:
+      invest_coeff: 15.0
+  cold_storage:
+    library_id: cold_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 3000
+    overrides:
+      invest_coeff: 15.0
+
+thermodynamics:
+  T0: 300.15
+  T_heat: 333.15
+  T_cool: 280.15
+
+carnot_battery:
+  enabled: false
+  power_ub_kw: 500
+  capacity_ub_kwh: 3000
+  round_trip_efficiency: 0.60
+  loss_rate: 0.002
+  invest_power_coeff: 278.0
+  invest_capacity_coeff: 18.0
+
+optimization:
+  mode: test
+  methods: [euclidean]
