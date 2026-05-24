@@ -9,12 +9,14 @@
 - `scenarios/german/scenario.yaml`: 德国场景配置草案，对齐现有 `GERMAN_CASE`。
 - `simple_yaml.py`: 项目 YAML 子集读取器，避免第一版额外引入 PyYAML 依赖。
 - `scenario_loader.py`: 场景配置读取。
+- `excel_parser.py`: 读取课题组 Excel 模板并导出标准场景包。
+- `typical_day.py`: 生成每月典型日或从 8760 数据聚类生成典型日。
 - `defaults_resolver.py`: 默认值合并，生成 resolved scenario 字典。
 - `schema_validator.py`: resolved scenario 轻量校验，检查路径、模板、设备、时间序列与当前 CCHP 后端适配边界。
 - `current_cchp_adapter.py`: 将 resolved scenario 转换成现有 `case_config.py` 风格配置。
 - `design_optimizer.py`: 封装现有 `run_comparative_study()` 调用参数，形成新接口到当前 CCHP 优化后端的执行适配层。
-- `result_exporter.py`: 将现有 Pareto 输出汇总为标准设计结果文件：`pareto_solutions.csv`、`design_summary.csv`、`design_summary_wide.csv`、`design_report.md`、`resolved_scenario.json`、`validation_report.md`。
-- `design.py`: 仓库根目录的第一版 CLI 原型，支持场景校验、打印适配后的 CCHP 配置摘要、查看优化执行参数、触发 `mode=test` 优化并导出设计结果包。
+- `result_exporter.py`: 将现有 Pareto 输出汇总为标准设计结果文件：`pareto_solutions.csv`、`design_summary.csv`、`design_summary_wide.csv`、`design_summary.xlsx`、`design_report.md`、`resolved_scenario.json`、`validation_report.md`。
+- `design.py`: 仓库根目录的第一版 CLI 原型，支持场景校验、Excel 导出、典型日生成、打印适配后的 CCHP 配置摘要、查看优化执行参数、触发 `mode=test` 优化并导出设计结果包。
 - `tests/`: 轻量配置校验与适配器回归脚本。
 
 ## CLI 用法
@@ -23,6 +25,8 @@
 python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --validate-only
 python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/german/scenario.yaml" --print-case-config
 python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test --dry-run
+python design.py --generate-typical-days monthly_template --output tmp_typical_days
+uv run python design.py --excel "松山湖/单元模块库/课题组场景整理模板.xlsx" --export-scenario --output tmp_excel_export
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test
 ```
 
@@ -36,12 +40,14 @@ python "松山湖/单元模块库/ies_design/tests/validate_default_configs.py"
 python "松山湖/单元模块库/ies_design/tests/test_resolve_scenarios.py"
 python "松山湖/单元模块库/ies_design/tests/test_current_cchp_adapter.py"
 python "松山湖/单元模块库/ies_design/tests/test_design_optimizer.py"
-python "松山湖/单元模块库/ies_design/tests/test_result_exporter.py"
+uv run python "松山湖/单元模块库/ies_design/tests/test_result_exporter.py"
+uv run python "松山湖/单元模块库/ies_design/tests/test_excel_parser.py"
+python "松山湖/单元模块库/ies_design/tests/test_typical_day.py"
+python "松山湖/单元模块库/ies_design/tests/test_third_placeholder.py"
 python "松山湖/单元模块库/ies_design/tests/test_design_cli.py"
 ```
 
 ## 下一步
 
-- 增强结果导出层，补充 Excel 展示文件和原始结果归档。
-- 实际跑通德国 `--mode test`，确认同一接口跨场景复用。
-- 增加第三个场景的占位样例，先走 schema 与模板校验，后续再接真实数据。
+- 根据真实第三场景数据替换 `third_placeholder`。
+- 后续开发通用 oemof/Pyomo ModelBuilder，支持氢、蒸汽等非 CCHP 场景真实优化。
