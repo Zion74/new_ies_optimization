@@ -119,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
         scenario = ScenarioLoader.load(args.scenario)
 
     if args.mode:
-        scenario.setdefault("optimization", {})["mode"] = args.mode
+        scenario["optimization"] = {"mode": args.mode}
     _apply_cli_overrides(scenario, args)
     resolved = DefaultsResolver(ies_dir / "defaults").resolve(scenario)
     validation = SchemaValidator.validate(resolved, project_root=root)

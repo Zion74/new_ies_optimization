@@ -58,6 +58,14 @@ def test_mode_test_dry_run_prints_optimizer_run_config():
     assert "methods_to_run: ['euclidean']" in result.stdout
 
 
+def test_mode_quick_uses_mode_default_methods_when_methods_not_overridden():
+    result = run_cli("--scenario", str(SONGSHAN), "--mode", "quick", "--dry-run")
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "nind: 20" in result.stdout
+    assert "maxgen: 20" in result.stdout
+    assert "methods_to_run: ['std', 'euclidean']" in result.stdout
+
+
 def test_mode_dry_run_accepts_optimizer_overrides():
     result = run_cli(
         "--scenario", str(SONGSHAN),
