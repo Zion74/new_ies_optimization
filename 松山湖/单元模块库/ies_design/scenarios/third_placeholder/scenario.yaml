@@ -9,7 +9,7 @@ scenario:
   currency: CNY
 
 system:
-  template: cchp_ehc_base
+  template: electric_hydrogen_station
 
 energy_carriers:
   demands: [electricity, hydrogen]

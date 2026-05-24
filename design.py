@@ -131,6 +131,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Validation passed: {scenario_id} ({template_id})")
     else:
         print(f"Validation failed: {scenario_id} ({template_id})")
+    print(f"Validation status: {validation.status}")
+    if getattr(validation, "backend", ""):
+        print(f"Backend: {validation.backend}")
+    if getattr(validation, "unsupported_devices", []):
+        print(f"Unsupported devices: {validation.unsupported_devices}")
+    if getattr(validation, "future_supported_devices", []):
+        print(f"Future-supported devices: {validation.future_supported_devices}")
     for warning in validation.warnings:
         print(f"WARNING: {warning}")
     for error in validation.errors:
@@ -155,6 +162,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.mode:
+        if not validation.runnable:
+            print(
+                f"Scenario '{scenario_id}' is {validation.status} and cannot be optimized by the current solver."
+            )
+            return 3
         run_config = DesignOptimizer.build_run_config(resolved, project_root=root, output_root=args.output)
         if args.dry_run:
             print("optimizer run_config summary")

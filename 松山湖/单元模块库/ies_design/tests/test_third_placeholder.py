@@ -10,15 +10,17 @@ from defaults_resolver import DefaultsResolver
 from schema_validator import SchemaValidator
 
 
-def test_third_placeholder_is_reserved_but_not_current_cchp_runnable():
+def test_third_placeholder_is_future_supported_but_not_currently_runnable():
     scenario = ScenarioLoader.load(ROOT / "scenarios" / "third_placeholder" / "scenario.yaml")
     resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
     validation = SchemaValidator.validate(resolved, project_root=PROJECT_ROOT)
 
     assert resolved["scenario"]["scenario_type"] == "highway_transport_green_energy"
     assert "hydrogen" in resolved["energy_carriers"]["demands"]
-    assert validation.ok is False
-    assert any("electrolyzer" in error and "current_cchp" in error for error in validation.errors)
+    assert validation.ok is True
+    assert validation.status == "future_supported"
+    assert validation.runnable is False
+    assert "electrolyzer" in validation.future_supported_devices
 
 
 if __name__ == "__main__":

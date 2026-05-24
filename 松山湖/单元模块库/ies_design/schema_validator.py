@@ -4,15 +4,25 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from generic_backend_planner import GenericBackendPlanner
+
 
 @dataclass
 class ValidationResult:
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    status: str = "runnable"
+    backend: str = ""
+    unsupported_devices: list[str] = field(default_factory=list)
+    future_supported_devices: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
         return not self.errors
+
+    @property
+    def runnable(self) -> bool:
+        return self.ok and self.status == "runnable"
 
 
 class SchemaValidator:
@@ -58,6 +68,9 @@ class SchemaValidator:
 
         library_devices = resolved.get("device_library", {}).get("devices", {})
         backend = resolved.get("system_template", {}).get("supported_backend")
+        result.backend = backend or ""
+        generic_plan = GenericBackendPlanner.plan(resolved) if backend == "future_generic" else None
+        missing_generic_mappings = set(generic_plan.get("missing_mappings", []) if generic_plan else [])
         for instance_id, device in resolved.get("devices", {}).items():
             library_id = device.get("library_id")
             if library_id not in library_devices:
@@ -65,9 +78,18 @@ class SchemaValidator:
             if device.get("enabled") is True:
                 impl = device.get("implementation", {})
                 if backend == "current_cchp" and impl.get("backend") != "current_cchp":
+                    result.unsupported_devices.append(instance_id)
                     result.errors.append(
                         f"device {instance_id} is enabled but backend {backend} does not support {library_id}"
                     )
+                elif backend == "future_generic":
+                    if instance_id in missing_generic_mappings:
+                        result.unsupported_devices.append(instance_id)
+                        result.errors.append(
+                            f"device {instance_id} has no generic component mapping for {device.get('abstract_type')}"
+                        )
+                    else:
+                        result.future_supported_devices.append(instance_id)
                 if not any(device.get(k) for k in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"]):
                     result.warnings.append(f"enabled device {instance_id} has no capacity/power upper bound")
 
@@ -77,5 +99,13 @@ class SchemaValidator:
         if any(d.get("enabled") for d in resolved.get("devices", {}).values() if "natural_gas" in d.get("input_carriers", [])):
             if not prices.get("gas"):
                 result.errors.append("prices.gas is required when natural_gas devices are enabled")
+
+        if result.errors:
+            result.status = "blocked"
+        elif backend == "future_generic":
+            result.status = "future_supported"
+            result.warnings.append("scenario maps to the future_generic backend but cannot be optimized by the current solver yet")
+        else:
+            result.status = "runnable"
 
         return result
