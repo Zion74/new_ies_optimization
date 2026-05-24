@@ -15,7 +15,13 @@ class DesignOptimizer:
     """Bridge resolved scenario dictionaries to the current CCHP optimizer."""
 
     @classmethod
-    def build_run_config(cls, resolved: dict[str, Any], project_root: str | Path) -> dict[str, Any]:
+    def build_run_config(
+        cls,
+        resolved: dict[str, Any],
+        project_root: str | Path,
+        output_root: str | Path | None = None,
+    ) -> dict[str, Any]:
+        project_root = Path(project_root)
         optimization = resolved.get("optimization", {})
         scenario = resolved.get("scenario", {})
         mode = optimization.get("mode") or "test"
@@ -27,6 +33,7 @@ class DesignOptimizer:
             raise ValueError("optimization.nind and optimization.maxgen are required before running")
 
         scenario_id = scenario.get("id", "scenario")
+        result_root = Path(output_root) if output_root else project_root / "DesignResults"
         return {
             "nind": int(nind),
             "maxgen": int(maxgen),
@@ -35,6 +42,7 @@ class DesignOptimizer:
             "methods_to_run": list(methods),
             "case_config": CurrentCCHPAdapter.to_case_config(resolved, project_root=project_root),
             "num_workers": optimization.get("workers"),
+            "result_root": str(result_root),
             "result_dir_name": cls._result_dir_name(scenario_id, mode),
         }
 
@@ -43,6 +51,7 @@ class DesignOptimizer:
         cls,
         resolved: dict[str, Any],
         project_root: str | Path,
+        output_root: str | Path | None = None,
         runner: Runner | None = None,
     ) -> dict[str, Any]:
         if runner is None:
@@ -50,7 +59,7 @@ class DesignOptimizer:
 
             runner = run_comparative_study
 
-        run_config = cls.build_run_config(resolved, project_root=project_root)
+        run_config = cls.build_run_config(resolved, project_root=project_root, output_root=output_root)
         results, result_dir = runner(**run_config)
         return {
             "results": results,

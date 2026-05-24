@@ -66,6 +66,23 @@ def test_mode_quick_uses_mode_default_methods_when_methods_not_overridden():
     assert "methods_to_run: ['std', 'euclidean']" in result.stdout
 
 
+def test_mode_demo_dry_run_uses_demo_defaults():
+    result = run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run")
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "nind: 6" in result.stdout
+    assert "maxgen: 3" in result.stdout
+    assert "methods_to_run: ['euclidean']" in result.stdout
+    assert "num_workers: 2" in result.stdout
+    assert "DesignResults" in result.stdout
+
+
+def test_output_overrides_design_result_root():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run", "--output", tmp)
+        assert result.returncode == 0, result.stderr + result.stdout
+        assert f"result_root: {tmp}" in result.stdout
+
+
 def test_mode_dry_run_accepts_optimizer_overrides():
     result = run_cli(
         "--scenario", str(SONGSHAN),

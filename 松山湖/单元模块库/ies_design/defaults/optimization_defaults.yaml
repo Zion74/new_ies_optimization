@@ -17,6 +17,14 @@ modes:
     methods: [euclidean]
     post_analysis: false
 
+  demo:
+    description: 现场演示模式
+    nind: 6
+    maxgen: 3
+    methods: [euclidean]
+    workers: 2
+    post_analysis: false
+
   quick:
     description: 快速趋势模式
     nind: 20

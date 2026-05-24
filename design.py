@@ -51,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--export-scenario", action="store_true", help="Export parsed Excel scenario package and exit")
     parser.add_argument("--validate-only", action="store_true", help="Validate resolved scenario and exit")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
-    parser.add_argument("--mode", choices=["test", "quick", "full", "custom"], help="Override optimization mode")
+    parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
     parser.add_argument("--maxgen", type=int, help="Override optimization generations")
     parser.add_argument("--workers", type=int, help="Override optimization worker count")
@@ -155,7 +155,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.mode:
-        run_config = DesignOptimizer.build_run_config(resolved, project_root=root)
+        run_config = DesignOptimizer.build_run_config(resolved, project_root=root, output_root=args.output)
         if args.dry_run:
             print("optimizer run_config summary")
             print(f"scenario: {run_config['case_config']['name']}")
@@ -165,11 +165,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"inherit_population: {run_config['inherit_population']}")
             print(f"methods_to_run: {run_config['methods_to_run']}")
             print(f"num_workers: {run_config['num_workers']}")
+            print(f"result_root: {run_config['result_root']}")
             print(f"result_dir_name: {run_config['result_dir_name']}")
             return 0
 
         print("Starting optimizer...")
-        result = DesignOptimizer.run(resolved, project_root=root)
+        result = DesignOptimizer.run(resolved, project_root=root, output_root=args.output)
         print(f"Optimization completed: {result['result_dir']}")
         exported = ResultExporter.export(result["result_dir"], resolved, validation=validation)
         print("Design result package exported:")

@@ -1,4 +1,5 @@
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,16 @@ def test_build_run_config_uses_resolved_optimization_defaults():
     assert run_config["methods_to_run"] == ["euclidean"]
     assert run_config["case_config"]["name"] == "songshan_lake"
     assert run_config["case_config"]["var_ub"][0] == 1000
+    assert run_config["result_root"].endswith("DesignResults")
+
+
+def test_build_run_config_accepts_output_root():
+    resolved = resolve("songshan_lake")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        run_config = DesignOptimizer.build_run_config(resolved, project_root=PROJECT_ROOT, output_root=tmp)
+
+        assert run_config["result_root"] == str(Path(tmp))
 
 
 def test_run_passes_current_cchp_arguments_to_injected_runner():
@@ -50,6 +61,7 @@ def test_run_passes_current_cchp_arguments_to_injected_runner():
     assert calls[0]["methods_to_run"] == ["euclidean"]
     assert calls[0]["case_config"]["name"] == "german"
     assert calls[0]["num_workers"] == 4
+    assert calls[0]["result_root"].endswith("DesignResults")
     assert calls[0]["result_dir_name"].startswith("design__german__test")
 
 

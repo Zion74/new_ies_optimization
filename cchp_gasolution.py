@@ -173,6 +173,7 @@ def run_comparative_study(
     methods_to_run=None,
     case_config=None,
     num_workers=None,
+    result_root=None,
     result_dir_name=None,
 ):
     """
@@ -246,8 +247,8 @@ def run_comparative_study(
         if m in method_info:
             print(f"  - {method_info[m][0]}")
 
-    # 创建结果目录（统一放在 Results/ 子文件夹下）
-    results_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Results")
+    # 创建结果目录。论文实验默认仍放在 Results；设计接口可传入 DesignResults 或自定义目录。
+    results_root = result_root or os.path.join(os.path.dirname(os.path.abspath(__file__)), "Results")
     os.makedirs(results_root, exist_ok=True)
     if result_dir_name is not None:
         result_dir = os.path.join(results_root, result_dir_name)
