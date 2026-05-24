@@ -95,7 +95,7 @@ def _read_key_value_sheet(ws: Any) -> dict[str, Any]:
         key = _clean(row[0] if len(row) > 0 else None)
         if not key:
             continue
-        data[str(key)] = _clean(row[1] if len(row) > 1 else None)
+        data[_canonical_field(str(key))] = _clean(row[1] if len(row) > 1 else None)
     return data
 
 
@@ -103,7 +103,7 @@ def _read_table(ws: Any) -> list[dict[str, Any]]:
     rows = list(ws.iter_rows(values_only=True))
     if not rows:
         return []
-    headers = [str(_clean(cell) or "") for cell in rows[0]]
+    headers = [_canonical_field(str(_clean(cell) or "")) for cell in rows[0]]
     output: list[dict[str, Any]] = []
     for row in rows[1:]:
         item = {headers[idx]: _clean(row[idx] if idx < len(row) else None) for idx in range(len(headers)) if headers[idx]}
@@ -125,7 +125,7 @@ def _build_scenario(
     scenario_type = str(info.get("scenario_type") or "industrial_park_pv_geothermal_waste_heat")
 
     carriers = _energy_carriers(energy_rows)
-    devices = _devices(device_rows)
+    devices = _devices(device_rows, warnings)
     prices = _prices(price_rows)
 
     if not devices:
@@ -183,11 +183,13 @@ def _energy_carriers(rows: list[dict[str, Any]]) -> dict[str, list[str]]:
     return carriers
 
 
-def _devices(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def _devices(rows: list[dict[str, Any]], warnings: list[str]) -> dict[str, dict[str, Any]]:
     devices: dict[str, dict[str, Any]] = {}
-    for row in rows:
+    for idx, row in enumerate(rows, start=2):
         device_id = row.get("device_id")
         library_id = row.get("library_id")
+        if _is_enabled(row.get("enabled"), None) and (not device_id or not library_id):
+            warnings.append(f"06_候选设备配置 row {idx} is enabled but missing device_id or library_id")
         if not device_id or not library_id or not _is_enabled(row.get("enabled"), None):
             continue
         config: dict[str, Any] = {
@@ -219,6 +221,65 @@ def _prices(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         elif param_type == "capacity_charge" or param_id == "capacity_charge":
             prices["capacity_charge"] = {"unit": row.get("unit") or "CNY_per_kW_year", "value": row.get("value") or 0}
     return prices
+
+
+FIELD_ALIASES = {
+    "场景编号": "scenario_id",
+    "场景ID": "scenario_id",
+    "场景id": "scenario_id",
+    "编号": "scenario_id",
+    "场景名称": "scenario_name",
+    "名称": "scenario_name",
+    "场景类型": "scenario_type",
+    "类型": "scenario_type",
+    "地点": "location",
+    "位置": "location",
+    "币种": "currency",
+    "货币": "currency",
+    "条目ID": "item_id",
+    "条目编号": "item_id",
+    "能源ID": "item_id",
+    "能源载体": "carrier_id",
+    "载体ID": "carrier_id",
+    "分组": "item_group",
+    "类型分组": "item_group",
+    "项目分组": "item_group",
+    "启用": "enabled",
+    "是否启用": "enabled",
+    "必需": "required",
+    "是否必需": "required",
+    "设备编号": "device_id",
+    "设备ID": "device_id",
+    "设备id": "device_id",
+    "设备库编号": "library_id",
+    "设备库ID": "library_id",
+    "库设备ID": "library_id",
+    "优化容量": "optimize_capacity",
+    "是否优化容量": "optimize_capacity",
+    "容量上限": "capacity_ub",
+    "装机上限": "capacity_ub",
+    "功率上限": "power_ub",
+    "参数编号": "param_id",
+    "参数ID": "param_id",
+    "参数类型": "param_type",
+    "数值": "value",
+    "值": "value",
+    "单位": "unit",
+    "需求ID": "demand_id",
+    "负荷ID": "demand_id",
+    "输入ID": "input_id",
+    "资源ID": "input_id",
+}
+
+
+def _canonical_field(value: str) -> str:
+    text = value.strip()
+    if not text:
+        return text
+    if text in FIELD_ALIASES:
+        return FIELD_ALIASES[text]
+    normalized = text.replace(" ", "_")
+    return FIELD_ALIASES.get(normalized, normalized)
 
 
 def _warn_missing_required_info(info: dict[str, Any], warnings: list[str]) -> None:
