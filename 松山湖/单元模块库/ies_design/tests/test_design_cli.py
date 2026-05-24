@@ -93,6 +93,15 @@ def test_export_component_plan_for_future_supported_scenario():
         assert (Path(tmp) / "generic_component_plan.md").exists()
 
 
+def test_export_component_plan_for_current_cchp_scenario():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli("--scenario", str(SONGSHAN), "--export-component-plan", "--output", tmp)
+        assert result.returncode == 0, result.stderr + result.stdout
+        plan = (Path(tmp) / "generic_component_plan.json").read_text(encoding="utf-8")
+        assert '"backend": "current_cchp"' in plan
+        assert '"instance_id": "pv"' in plan
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")
