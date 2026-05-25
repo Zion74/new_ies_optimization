@@ -22,7 +22,7 @@ class GenericBackendPlanner:
         parameter_gaps: list[dict[str, Any]] = []
         capacity_variables: list[dict[str, Any]] = []
 
-        for instance_id, device in resolved.get("devices", {}).items():
+        for instance_id, device in _enabled_devices(resolved).items():
             if not device.get("enabled", False):
                 continue
 
@@ -213,6 +213,25 @@ def _device_parameter_gaps(instance_id: str, device: dict[str, Any], mapping: di
     if capacity.get("energy_var") and not any(device.get(key) not in (None, "") for key in ["capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"]):
         gaps.append({"device_id": instance_id, "field": f"capacity.{capacity.get('energy_var')}", "reason": "储能类设备建议提供能量容量边界"})
     return gaps
+
+
+def _enabled_devices(resolved: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    devices = dict(resolved.get("devices", {}) or {})
+    carnot = resolved.get("carnot_battery", {}) or {}
+    if carnot.get("enabled"):
+        library_device = resolved.get("device_library", {}).get("devices", {}).get("carnot_battery", {})
+        merged = dict(library_device)
+        merged["enabled"] = True
+        merged["optimize_capacity"] = True
+        merged["power_ub_kw"] = carnot.get("power_ub_kw", 0)
+        merged["capacity_ub_kwh"] = carnot.get("capacity_ub_kwh", 0)
+        merged.setdefault("parameters", {})
+        merged["parameters"]["round_trip_efficiency"] = carnot.get("round_trip_efficiency")
+        merged.setdefault("economics", {})
+        merged["economics"]["invest_power_coeff"] = carnot.get("invest_power_coeff")
+        merged["economics"]["invest_capacity_coeff"] = carnot.get("invest_capacity_coeff")
+        devices["carnot_battery"] = merged
+    return devices
 
 
 def _device_capacity_variables(instance_id: str, device: dict[str, Any]) -> list[dict[str, Any]]:

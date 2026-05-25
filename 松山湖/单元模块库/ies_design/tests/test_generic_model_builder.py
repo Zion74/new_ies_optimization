@@ -37,9 +37,16 @@ def test_generic_model_builder_exports_reports():
     assert "动态容量变量" in report
 
 
+def test_generic_model_builder_includes_carnot_capacity_variables():
+    spec = GenericModelBuilder.build(resolve("songshan_lake_carnot"), build_oemof=False)
+
+    assert any(component["id"] == "carnot_battery" for component in spec["components"])
+    assert any(item["device_id"] == "carnot_battery" and item["role"] == "primary_capacity" for item in spec["capacity_variables"])
+    assert any(item["device_id"] == "carnot_battery" and item["role"] == "energy_capacity" for item in spec["capacity_variables"])
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
             fn()
             print(f"PASS {name}")
-

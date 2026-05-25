@@ -59,6 +59,17 @@ def test_generic_backend_planner_exports_current_cchp_scenario_too():
     assert any(item["device_id"] == "pv" and item["variable_name"] == "capacity_kw" for item in plan["capacity_variables"])
 
 
+def test_generic_backend_planner_includes_top_level_carnot_device():
+    scenario = ScenarioLoader.load(ROOT / "scenarios" / "songshan_lake_carnot" / "scenario.yaml")
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+    plan = GenericBackendPlanner.plan(resolved)
+
+    assert any(component["instance_id"] == "carnot_battery" for component in plan["components"])
+    assert any(item["device_id"] == "carnot_battery" and item["variable_name"] == "power_kw" for item in plan["capacity_variables"])
+    assert any(item["device_id"] == "carnot_battery" and item["variable_name"] == "capacity_kwh" for item in plan["capacity_variables"])
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
