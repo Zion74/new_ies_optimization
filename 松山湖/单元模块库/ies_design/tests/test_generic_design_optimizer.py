@@ -1,0 +1,47 @@
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from defaults_resolver import DefaultsResolver
+from generic_design_optimizer import GenericDesignOptimizer
+from scenario_loader import ScenarioLoader
+
+
+def resolve(name: str):
+    scenario = ScenarioLoader.load(ROOT / "scenarios" / name / "scenario.yaml")
+    return DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+
+def test_generic_design_optimizer_runs_variable_dimension_demo_search():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake_carnot"))
+
+    result = optimizer.run_demo_search(levels=[0.0, 0.5, 1.0])
+
+    assert result["status"] == "build_only"
+    assert result["scenario_id"] == "songshan_lake_carnot"
+    assert result["capacity_variable_count"] == 10
+    assert len(result["solutions"]) == 3
+    assert result["solutions"][0]["solution_id"] == 0
+    assert result["solutions"][0]["dispatch_solved"] is False
+    assert result["solutions"][1]["capacity_assignment"]["carnot_battery"]["power_kw"] == 250
+    assert result["solutions"][2]["capacity_assignment"]["carnot_battery"]["capacity_kwh"] == 3000
+
+
+def test_generic_design_optimizer_rejects_levels_outside_unit_interval():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake_carnot"))
+
+    try:
+        optimizer.run_demo_search(levels=[-0.1])
+    except ValueError as exc:
+        assert "between 0 and 1" in str(exc)
+    else:
+        raise AssertionError("expected ValueError")
+
+
+if __name__ == "__main__":
+    for name, fn in sorted(globals().items()):
+        if name.startswith("test_"):
+            fn()
+            print(f"PASS {name}")
