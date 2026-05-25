@@ -14,6 +14,7 @@ DESIGN = PROJECT_ROOT / "design.py"
 SONGSHAN = IES_DIR / "scenarios" / "songshan_lake" / "scenario.yaml"
 GERMAN = IES_DIR / "scenarios" / "german" / "scenario.yaml"
 THIRD = IES_DIR / "scenarios" / "third_placeholder" / "scenario.yaml"
+SONGSHAN_CARNOT = IES_DIR / "scenarios" / "songshan_lake_carnot" / "scenario.yaml"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -27,9 +28,11 @@ def main(argv: list[str] | None = None) -> int:
         ("songshan validate", lambda: _run_cli("--scenario", str(SONGSHAN), "--validate-only")),
         ("german validate", lambda: _run_cli("--scenario", str(GERMAN), "--validate-only")),
         ("third placeholder validate", lambda: _run_cli("--scenario", str(THIRD), "--validate-only", "--accept-future")),
+        ("songshan carnot validate", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--validate-only")),
         ("third placeholder component plan", lambda: _run_cli("--scenario", str(THIRD), "--export-component-plan", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_component_plan"))),
         ("songshan demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run")),
         ("german demo dry-run", lambda: _run_cli("--scenario", str(GERMAN), "--mode", "demo", "--dry-run")),
+        ("songshan carnot demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--mode", "demo", "--dry-run")),
     ]
     if args.run_demo:
         checks.append(("songshan demo solve", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo")))

@@ -36,6 +36,16 @@ def test_resolves_german_with_wind_and_capacity_charge():
     assert resolved["data"]["load_file"].endswith("data/mergedData.csv")
 
 
+def test_resolves_songshan_lake_carnot_as_third_computable_scenario():
+    resolved = resolve("songshan_lake_carnot")
+    assert resolved["scenario"]["id"] == "songshan_lake_carnot"
+    assert resolved["system"]["template"] == "cchp_ehc_carnot"
+    assert resolved["system_template"]["supported_backend"] == "current_cchp"
+    assert resolved["carnot_battery"]["enabled"] is True
+    assert resolved["carnot_battery"]["power_ub_kw"] == 500
+    assert "carnot_battery" in resolved["system_template"]["default_devices"]
+
+
 def test_reserved_device_metadata_is_available_but_not_enabled_for_cchp():
     resolved = resolve("songshan_lake")
     assert "electrolyzer" in resolved["device_library"]["devices"]
