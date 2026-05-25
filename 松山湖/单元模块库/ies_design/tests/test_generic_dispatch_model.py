@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = ROOT.parents[2]
 sys.path.insert(0, str(ROOT))
 
 from defaults_resolver import DefaultsResolver
@@ -56,6 +57,24 @@ def test_dispatch_model_builds_oemof_nodes_from_applied_capacities():
     assert oemof["node_count"] > 0
     node_specs = {item["id"]: item for item in oemof["node_specs"]}
     assert node_specs["pv"]["outputs"]["electricity"]["nominal_value"] == 500
+
+
+def test_dispatch_model_can_solve_real_grid_electric_dispatch_slice():
+    model = GenericDispatchModel(resolve("songshan_lake"))
+    vector = [0.0 for _ in model.capacity_space.upper_bounds]
+
+    result = model.evaluate(
+        vector,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        dispatch_periods=24,
+    )
+
+    dispatch = result["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_electric"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["termination_condition"] == "optimal"
+    assert dispatch["objective_value"] > 0
 
 
 def test_dispatch_model_rejects_wrong_vector_length():

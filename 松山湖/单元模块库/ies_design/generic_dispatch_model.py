@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import Any
 
 from generic_capacity_space import GenericCapacitySpace
+from generic_dispatch_inputs import GenericDispatchInputs
 from generic_model_builder import GenericModelBuilder
 from generic_oemof_factory import GenericOemofFactory
 
@@ -20,7 +21,13 @@ class GenericDispatchModel:
         self.model_spec = GenericModelBuilder.build(resolved, build_oemof=False)
         self.capacity_space = GenericCapacitySpace.from_model_spec(self.model_spec)
 
-    def evaluate(self, vector: list[float]) -> dict[str, Any]:
+    def evaluate(
+        self,
+        vector: list[float],
+        project_root: str | None = None,
+        solve_electric_dispatch: bool = False,
+        dispatch_periods: int = 24,
+    ) -> dict[str, Any]:
         assignment = self.capacity_space.vector_to_assignment(vector)
         applied_components = _apply_capacity_assignment(
             self.model_spec.get("components", []),
@@ -28,6 +35,12 @@ class GenericDispatchModel:
         )
         oemof_build = GenericOemofFactory.build(
             {**self.model_spec, "components": applied_components},
+        )
+        real_dispatch = _solve_real_electric_dispatch(
+            self.resolved,
+            project_root=project_root,
+            enabled=solve_electric_dispatch,
+            periods=dispatch_periods,
         )
         return {
             "status": "build_only",
@@ -42,6 +55,7 @@ class GenericDispatchModel:
                 "capacity_applied": True,
                 "components": applied_components,
                 "oemof": _oemof_summary(oemof_build),
+                "real_dispatch": real_dispatch,
             },
         }
 
@@ -87,6 +101,33 @@ def _oemof_summary(result: dict[str, Any]) -> dict[str, Any]:
         "node_count": result.get("node_count", 0),
         "node_specs": result.get("node_specs", []),
         "skipped_components": result.get("skipped_components", []),
+    }
+
+
+def _solve_real_electric_dispatch(
+    resolved: dict[str, Any],
+    project_root: str | None,
+    enabled: bool,
+    periods: int,
+) -> dict[str, Any]:
+    if not enabled:
+        return {"scope": "", "dispatch_solved": False, "skipped": True, "reason": "not requested"}
+    if not project_root:
+        return {"scope": "grid_electric", "dispatch_solved": False, "skipped": True, "reason": "project_root is required"}
+    spec = GenericDispatchInputs.build_grid_electric_spec(
+        resolved,
+        project_root=project_root,
+        periods=periods,
+    )
+    result = GenericOemofFactory.solve_dispatch(spec, periods=periods, solver_names=["glpk"])
+    return {
+        "scope": "grid_electric",
+        "dispatch_solved": result.get("dispatch_solved", False),
+        "solver": result.get("solver", ""),
+        "termination_condition": result.get("termination_condition", ""),
+        "objective_value": result.get("objective_value"),
+        "error": result.get("error", ""),
+        "node_count": result.get("node_count", 0),
     }
 
 
