@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 from generic_capacity_space import GenericCapacitySpace
@@ -20,6 +21,10 @@ class GenericDispatchModel:
 
     def evaluate(self, vector: list[float]) -> dict[str, Any]:
         assignment = self.capacity_space.vector_to_assignment(vector)
+        applied_components = _apply_capacity_assignment(
+            self.model_spec.get("components", []),
+            assignment,
+        )
         return {
             "status": "build_only",
             "dispatch_solved": False,
@@ -30,8 +35,25 @@ class GenericDispatchModel:
                 "scenario": self.model_spec.get("scenario", {}),
                 "component_count": len(self.model_spec.get("components", [])),
                 "capacity_variable_count": len(self.capacity_space.variables),
+                "capacity_applied": True,
+                "components": applied_components,
             },
         }
+
+
+def _apply_capacity_assignment(
+    components: list[dict[str, Any]],
+    assignment: dict[str, dict[str, float]],
+) -> list[dict[str, Any]]:
+    applied = deepcopy(components)
+    for component in applied:
+        component_id = component.get("id", "")
+        values = assignment.get(component_id, {})
+        component["applied_capacities"] = {
+            variable.get("variable_name", ""): values.get(variable.get("variable_name", ""), 0.0)
+            for variable in component.get("capacity_variables", []) or []
+        }
+    return applied
 
 
 def _investment_cost(resolved: dict[str, Any], assignment: dict[str, dict[str, float]]) -> float:
@@ -74,4 +96,3 @@ def _float(value: Any) -> float:
         return float(value)
     except (TypeError, ValueError):
         return 0.0
-

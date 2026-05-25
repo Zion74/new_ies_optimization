@@ -28,6 +28,23 @@ def test_dispatch_model_evaluates_capacity_vector_with_dynamic_assignment():
     assert "generic_model" in result
 
 
+def test_dispatch_model_applies_capacity_vector_to_component_specs():
+    model = GenericDispatchModel(resolve("songshan_lake_carnot"))
+    vector = [ub * 0.5 for ub in model.capacity_space.upper_bounds]
+
+    result = model.evaluate(vector)
+
+    components = {
+        item["id"]: item
+        for item in result["generic_model"]["components"]
+    }
+    assert result["generic_model"]["capacity_applied"] is True
+    assert components["pv"]["applied_capacities"]["capacity_kw"] == 500
+    assert components["chp"]["applied_capacities"]["electric_capacity_kw"] == 400
+    assert components["carnot_battery"]["applied_capacities"]["power_kw"] == 250
+    assert components["carnot_battery"]["applied_capacities"]["capacity_kwh"] == 1500
+
+
 def test_dispatch_model_rejects_wrong_vector_length():
     model = GenericDispatchModel(resolve("songshan_lake_carnot"))
 
@@ -44,4 +61,3 @@ if __name__ == "__main__":
         if name.startswith("test_"):
             fn()
             print(f"PASS {name}")
-
