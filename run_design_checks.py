@@ -35,6 +35,7 @@ def main(argv: list[str] | None = None) -> int:
         ("german demo dry-run", lambda: _run_cli("--scenario", str(GERMAN), "--mode", "demo", "--dry-run")),
         ("songshan carnot demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--mode", "demo", "--dry-run")),
         ("songshan carnot generic model build", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--build-generic-model", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_carnot_generic_model"))),
+        ("songshan carnot generic design search", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--run-generic-design", "--generic-search-levels", "0", "0.5", "1", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_carnot_generic_design"))),
     ]
     if args.run_demo:
         checks.append(("songshan demo solve", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo")))
