@@ -25,6 +25,7 @@ def test_generic_design_optimizer_runs_variable_dimension_demo_search():
     assert len(result["solutions"]) == 3
     assert result["solutions"][0]["solution_id"] == 0
     assert result["solutions"][0]["dispatch_solved"] is False
+    assert result["solutions"][1]["generic_model"]["capacity_applied"] is True
     assert result["solutions"][1]["capacity_assignment"]["carnot_battery"]["power_kw"] == 250
     assert result["solutions"][2]["capacity_assignment"]["carnot_battery"]["capacity_kwh"] == 3000
 

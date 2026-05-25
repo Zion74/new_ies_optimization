@@ -39,6 +39,7 @@ class GenericDesignOptimizer:
                 "investment_cost": evaluation["investment_cost"],
                 "dispatch_solved": evaluation["dispatch_solved"],
                 "capacity_assignment": evaluation["capacity_assignment"],
+                "generic_model": evaluation.get("generic_model", {}),
                 "status": evaluation["status"],
             })
 
@@ -112,6 +113,7 @@ def _build_design_report(result: dict[str, Any]) -> str:
         f"- 容量变量数量: {result.get('capacity_variable_count', 0)}",
         f"- 候选方案数量: {len(result.get('solutions', []) or [])}",
         "- 内层调度求解: 尚未真实求解，当前结果来自通用组件构建层与投资成本近似计算。",
+        f"- 容量变量已应用到组件规格: {_all_solutions_capacity_applied(result)}",
         "",
         "## 容量变量",
         "",
@@ -142,3 +144,11 @@ def _build_design_report(result: dict[str, Any]) -> str:
 
     lines.extend(["", "## 后续补齐", "", f"- {result.get('next_step', '')}"])
     return "\n".join(lines) + "\n"
+
+
+def _all_solutions_capacity_applied(result: dict[str, Any]) -> bool:
+    solutions = result.get("solutions", []) or []
+    return bool(solutions) and all(
+        solution.get("generic_model", {}).get("capacity_applied") is True
+        for solution in solutions
+    )
