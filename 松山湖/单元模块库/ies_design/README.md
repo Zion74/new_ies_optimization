@@ -17,6 +17,7 @@
 - `current_cchp_adapter.py`: 将 resolved scenario 转换成现有 `case_config.py` 风格配置。
 - `design_optimizer.py`: 封装现有 `run_comparative_study()` 调用参数，形成新接口到当前 CCHP 优化后端的执行适配层。
 - `generic_model_builder.py`: 将通用组件计划转成可审计的母线、负荷、组件和动态容量变量规格。
+- `generic_oemof_factory.py`: 将已应用容量的通用组件规格转成 OEMOF 节点，并已通过最小电力调度求解 smoke test。
 - `generic_capacity_space.py`: 将 `capacity_variables` 转成可变维度的容量优化变量空间。
 - `generic_dispatch_model.py`: 当前 `build_only` 的通用调度评价接口，输出容量映射、写回 `applied_capacities` 的组件规格、投资成本近似和构建缺口。
 - `generic_design_optimizer.py`: 当前 `build_only` 的通用容量设计搜索接口，后续可替换为 NSGA-II/DE。
@@ -57,6 +58,6 @@ uv run python run_design_checks.py
 
 ## 下一步
 
-- 将 `GenericDispatchModel` 从 `build_only` 推进到真实 OEMOF/Pyomo 调度求解。
+- 将 `GenericDispatchModel` 从 `build_only` 推进到真实场景数据驱动的 OEMOF/Pyomo 调度求解。
 - 将 `GenericDesignOptimizer` 的 demo levels 替换为 NSGA-II/DE 等外层容量优化器。
 - 根据师弟整理的真实第三场景 Excel，新增更独立的非松山湖场景并验证通用后端。
