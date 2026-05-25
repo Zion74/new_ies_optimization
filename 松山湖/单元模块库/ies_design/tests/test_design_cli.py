@@ -7,6 +7,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[4]
 DESIGN = PROJECT_ROOT / "design.py"
 SONGSHAN = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "songshan_lake" / "scenario.yaml"
 GERMAN = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "german" / "scenario.yaml"
+CARNOT = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "songshan_lake_carnot" / "scenario.yaml"
 EXCEL_TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理模板.xlsx"
 
 
@@ -118,6 +119,24 @@ def test_build_generic_model_requires_accept_future():
     result = run_cli("--scenario", str(third), "--build-generic-model")
     assert result.returncode == 3, result.stderr + result.stdout
     assert "--accept-future" in result.stdout
+
+
+def test_run_generic_design_exports_build_only_search_results():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(CARNOT),
+            "--run-generic-design",
+            "--generic-search-levels", "0", "0.5", "1",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        assert "Generic design search artifacts exported" in result.stdout
+        assert (Path(tmp) / "generic_design_solutions.json").exists()
+        assert (Path(tmp) / "generic_design_solutions.csv").exists()
+        assert (Path(tmp) / "generic_design_report.md").exists()
+        report = (Path(tmp) / "generic_design_report.md").read_text(encoding="utf-8")
+        assert "build_only" in report
+        assert "songshan_lake_carnot" in report
 
 
 def test_future_supported_validate_only_requires_accept_future():

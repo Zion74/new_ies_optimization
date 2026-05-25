@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import csv
+import json
+from pathlib import Path
 from typing import Any, Iterable
 
 from generic_dispatch_model import GenericDispatchModel
@@ -49,6 +52,30 @@ class GenericDesignOptimizer:
             "next_step": "replace demo levels with NSGA-II/DE candidates and solve dispatch in GenericDispatchModel",
         }
 
+    @classmethod
+    def export_demo_search(
+        cls,
+        resolved: dict[str, Any],
+        output_dir: str | Path,
+        levels: Iterable[float] | None = None,
+    ) -> dict[str, Path]:
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        result = cls(resolved).run_demo_search(levels=levels)
+
+        json_path = output_dir / "generic_design_solutions.json"
+        csv_path = output_dir / "generic_design_solutions.csv"
+        report_path = output_dir / "generic_design_report.md"
+
+        json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        _write_solutions_csv(csv_path, result)
+        report_path.write_text(_build_design_report(result), encoding="utf-8")
+        return {
+            "generic_design_solutions": json_path,
+            "generic_design_solutions_csv": csv_path,
+            "generic_design_report": report_path,
+        }
+
 
 def _validate_levels(levels: list[float]) -> None:
     if not levels:
@@ -56,3 +83,62 @@ def _validate_levels(levels: list[float]) -> None:
     for level in levels:
         if level < 0 or level > 1:
             raise ValueError(f"demo search level must be between 0 and 1, got {level}")
+
+
+def _write_solutions_csv(path: Path, result: dict[str, Any]) -> None:
+    variable_names = result.get("capacity_variable_names", []) or []
+    columns = ["solution_id", "level", "status", "dispatch_solved", "investment_cost", *variable_names]
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        for solution in result.get("solutions", []):
+            row = {
+                "solution_id": solution.get("solution_id", ""),
+                "level": solution.get("level", ""),
+                "status": solution.get("status", ""),
+                "dispatch_solved": solution.get("dispatch_solved", ""),
+                "investment_cost": solution.get("investment_cost", ""),
+            }
+            row.update(dict(zip(variable_names, solution.get("vector", []) or [])))
+            writer.writerow(row)
+
+
+def _build_design_report(result: dict[str, Any]) -> str:
+    lines = [
+        "# GenericDesignOptimizer 设计搜索报告",
+        "",
+        f"- 场景 ID: `{result.get('scenario_id', '')}`",
+        f"- 当前状态: `{result.get('status', '')}`",
+        f"- 容量变量数量: {result.get('capacity_variable_count', 0)}",
+        f"- 候选方案数量: {len(result.get('solutions', []) or [])}",
+        "- 内层调度求解: 尚未真实求解，当前结果来自通用组件构建层与投资成本近似计算。",
+        "",
+        "## 容量变量",
+        "",
+    ]
+    for name in result.get("capacity_variable_names", []) or []:
+        lines.append(f"- `{name}`")
+
+    lines.extend([
+        "",
+        "## 候选方案",
+        "",
+        "| ID | Level | Status | Dispatch Solved | Investment Cost |",
+        "|---:|---:|---|---|---:|",
+    ])
+    for solution in result.get("solutions", []) or []:
+        lines.append(
+            f"| {solution.get('solution_id', '')} | {solution.get('level', '')} | "
+            f"{solution.get('status', '')} | {solution.get('dispatch_solved', '')} | "
+            f"{solution.get('investment_cost', '')} |"
+        )
+
+    lines.extend(["", "## 构建缺口", ""])
+    gaps = result.get("build_gaps", []) or []
+    if gaps:
+        lines.extend(f"- [{gap.get('category', '')}] {gap.get('target', '')}: {gap.get('message', '')}" for gap in gaps)
+    else:
+        lines.append("- 当前通用组件构建层未发现阻断性缺口。")
+
+    lines.extend(["", "## 后续补齐", "", f"- {result.get('next_step', '')}"])
+    return "\n".join(lines) + "\n"

@@ -31,6 +31,7 @@ def _load_pipeline(root: Path):
     from typical_day import TypicalDayGenerator
     from generic_backend_planner import GenericBackendPlanner
     from generic_model_builder import GenericModelBuilder
+    from generic_design_optimizer import GenericDesignOptimizer
 
     return (
         ies_dir,
@@ -44,6 +45,7 @@ def _load_pipeline(root: Path):
         TypicalDayGenerator,
         GenericBackendPlanner,
         GenericModelBuilder,
+        GenericDesignOptimizer,
     )
 
 
@@ -58,6 +60,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--strict-validation", action="store_true", help="Treat non-runnable validation statuses as failures")
     parser.add_argument("--export-component-plan", action="store_true", help="Export future generic backend component plan and exit")
     parser.add_argument("--build-generic-model", action="store_true", help="Build and export generic model component artifacts and exit")
+    parser.add_argument("--run-generic-design", action="store_true", help="Run build-only generic capacity design search and export artifacts")
+    parser.add_argument("--generic-search-levels", nargs="+", type=float, help="Unit interval levels for generic build-only design search")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
@@ -94,6 +98,7 @@ def main(argv: list[str] | None = None) -> int:
         TypicalDayGenerator,
         GenericBackendPlanner,
         GenericModelBuilder,
+        GenericDesignOptimizer,
     ) = _load_pipeline(root)
 
     if args.generate_typical_days:
@@ -175,6 +180,25 @@ def main(argv: list[str] | None = None) -> int:
         output_dir = Path(args.output) if args.output else root / "DesignResults" / "generic_models" / scenario_id
         outputs = GenericModelBuilder.export(resolved, output_dir)
         print("Generic model build artifacts exported:")
+        for name, path in outputs.items():
+            print(f"  - {name}: {path}")
+        return 0
+
+    if args.run_generic_design:
+        if validation.status == "future_supported" and not args.accept_future:
+            print("Future-supported scenario requires --accept-future for generic design search.")
+            return 3
+        output_dir = Path(args.output) if args.output else root / "DesignResults" / "generic_designs" / scenario_id
+        try:
+            outputs = GenericDesignOptimizer.export_demo_search(
+                resolved,
+                output_dir,
+                levels=args.generic_search_levels,
+            )
+        except ValueError as exc:
+            print(f"Generic design search failed: {exc}")
+            return 3
+        print("Generic design search artifacts exported:")
         for name, path in outputs.items():
             print(f"  - {name}: {path}")
         return 0
