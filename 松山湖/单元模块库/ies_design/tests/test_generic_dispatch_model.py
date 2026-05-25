@@ -45,6 +45,19 @@ def test_dispatch_model_applies_capacity_vector_to_component_specs():
     assert components["carnot_battery"]["applied_capacities"]["capacity_kwh"] == 1500
 
 
+def test_dispatch_model_builds_oemof_nodes_from_applied_capacities():
+    model = GenericDispatchModel(resolve("songshan_lake_carnot"))
+    vector = [ub * 0.5 for ub in model.capacity_space.upper_bounds]
+
+    result = model.evaluate(vector)
+
+    oemof = result["generic_model"]["oemof"]
+    assert oemof["created"] is True
+    assert oemof["node_count"] > 0
+    node_specs = {item["id"]: item for item in oemof["node_specs"]}
+    assert node_specs["pv"]["outputs"]["electricity"]["nominal_value"] == 500
+
+
 def test_dispatch_model_rejects_wrong_vector_length():
     model = GenericDispatchModel(resolve("songshan_lake_carnot"))
 

@@ -5,6 +5,7 @@ from typing import Any
 
 from generic_capacity_space import GenericCapacitySpace
 from generic_model_builder import GenericModelBuilder
+from generic_oemof_factory import GenericOemofFactory
 
 
 class GenericDispatchModel:
@@ -25,6 +26,9 @@ class GenericDispatchModel:
             self.model_spec.get("components", []),
             assignment,
         )
+        oemof_build = GenericOemofFactory.build(
+            {**self.model_spec, "components": applied_components},
+        )
         return {
             "status": "build_only",
             "dispatch_solved": False,
@@ -37,6 +41,7 @@ class GenericDispatchModel:
                 "capacity_variable_count": len(self.capacity_space.variables),
                 "capacity_applied": True,
                 "components": applied_components,
+                "oemof": _oemof_summary(oemof_build),
             },
         }
 
@@ -73,6 +78,16 @@ def _investment_cost(resolved: dict[str, Any], assignment: dict[str, dict[str, f
             else:
                 total += value * invest_coeff
     return total
+
+
+def _oemof_summary(result: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "created": result.get("created", False),
+        "error": result.get("error", ""),
+        "node_count": result.get("node_count", 0),
+        "node_specs": result.get("node_specs", []),
+        "skipped_components": result.get("skipped_components", []),
+    }
 
 
 def _devices_with_top_level_carnot(resolved: dict[str, Any]) -> dict[str, dict[str, Any]]:
