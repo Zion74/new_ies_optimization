@@ -37,16 +37,16 @@ class GenericOemofFactory:
             nodes = []
             node_specs: list[dict[str, Any]] = []
             skipped_components: list[dict[str, str]] = []
-            zero_profile = [0.0] * periods
 
             for demand in spec.get("demand_sinks", []) or []:
                 carrier = demand.get("input_carrier", "")
                 if carrier not in buses:
                     skipped_components.append({"id": demand.get("id", ""), "reason": f"missing bus {carrier}"})
                     continue
+                profile = _profile(demand, periods)
                 node = Sink(
                     label=demand.get("id", ""),
-                    inputs={buses[carrier]: solph.Flow(fix=zero_profile, nominal_value=1)},
+                    inputs={buses[carrier]: solph.Flow(fix=profile, nominal_value=1)},
                 )
                 nodes.append(node)
                 node_specs.append({
@@ -84,6 +84,63 @@ class GenericOemofFactory:
                 "skipped_components": [],
             }
 
+    @classmethod
+    def solve_dispatch(
+        cls,
+        spec: dict[str, Any],
+        periods: int = 24,
+        solver_names: list[str] | None = None,
+    ) -> dict[str, Any]:
+        build = cls.build(spec, periods=periods)
+        if not build.get("created"):
+            return {
+                **_build_summary(build),
+                "dispatch_solved": False,
+                "solver": "",
+                "termination_condition": "",
+                "objective_value": None,
+                "error": build.get("error", ""),
+            }
+
+        try:
+            import oemof.solph as solph
+        except Exception as exc:
+            return {
+                **_build_summary(build),
+                "dispatch_solved": False,
+                "solver": "",
+                "termination_condition": "",
+                "objective_value": None,
+                "error": f"oemof unavailable: {exc}",
+            }
+
+        errors = []
+        for solver in solver_names or ["glpk"]:
+            try:
+                model = solph.Model(build["energy_system"])
+                result = model.solve(solver=solver)
+                termination = str(result.solver.termination_condition)
+                solved = termination.lower() == "optimal"
+                return {
+                    **_build_summary(build),
+                    "dispatch_solved": solved,
+                    "solver": solver,
+                    "termination_condition": termination,
+                    "objective_value": float(model.objective()),
+                    "error": "" if solved else f"termination_condition={termination}",
+                }
+            except Exception as exc:
+                errors.append(f"{solver}: {exc}")
+
+        return {
+            **_build_summary(build),
+            "dispatch_solved": False,
+            "solver": "",
+            "termination_condition": "",
+            "objective_value": None,
+            "error": "; ".join(errors),
+        }
+
 
 def _build_node(
     component: dict[str, Any],
@@ -104,8 +161,8 @@ def _build_node(
     if component_type == "Source" and outputs:
         output = outputs[0]
         return {
-            "node": Source(label=component_id, outputs={buses[output]: solph.Flow(nominal_value=primary_capacity)}),
-            "spec": _node_spec(component_id, component_type, {}, {output: primary_capacity}),
+            "node": Source(label=component_id, outputs={buses[output]: solph.Flow(**_flow_kwargs(primary_capacity, component))}),
+            "spec": _node_spec(component_id, component_type, {}, {output: primary_capacity}, component),
             "reason": "",
         }
 
@@ -113,7 +170,7 @@ def _build_node(
         input_carrier = inputs[0]
         return {
             "node": Sink(label=component_id, inputs={buses[input_carrier]: solph.Flow(nominal_value=primary_capacity)}),
-            "spec": _node_spec(component_id, component_type, {input_carrier: primary_capacity}, {}),
+            "spec": _node_spec(component_id, component_type, {input_carrier: primary_capacity}, {}, component),
             "reason": "",
         }
 
@@ -129,6 +186,7 @@ def _build_node(
                 component_type,
                 {inputs[0]: None},
                 {carrier: primary_capacity for carrier in outputs},
+                component,
             ),
             "reason": "",
         }
@@ -143,7 +201,7 @@ def _build_node(
                 nominal_storage_capacity=energy_capacity,
             ),
             "spec": {
-                **_node_spec(component_id, component_type, {carrier: primary_capacity}, {carrier: primary_capacity}),
+                **_node_spec(component_id, component_type, {carrier: primary_capacity}, {carrier: primary_capacity}, component),
                 "nominal_storage_capacity": energy_capacity,
             },
             "reason": "",
@@ -167,7 +225,10 @@ def _node_spec(
     component_type: str,
     inputs: dict[str, float | None],
     outputs: dict[str, float | None],
+    component: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    component = component or {}
+    variable_costs = _float(component.get("variable_costs"))
     return {
         "id": component_id,
         "component_type": component_type,
@@ -176,9 +237,35 @@ def _node_spec(
             for carrier, value in inputs.items()
         },
         "outputs": {
-            carrier: {"nominal_value": value}
+            carrier: {"nominal_value": value, "variable_costs": variable_costs}
             for carrier, value in outputs.items()
         },
+    }
+
+
+def _profile(item: dict[str, Any], periods: int) -> list[float]:
+    values = item.get("profile")
+    if values is None:
+        return [0.0] * periods
+    values = [_float(value) for value in values]
+    if len(values) >= periods:
+        return values[:periods]
+    return values + [0.0] * (periods - len(values))
+
+
+def _flow_kwargs(nominal_value: float, component: dict[str, Any]) -> dict[str, float]:
+    kwargs = {"nominal_value": nominal_value}
+    if "variable_costs" in component:
+        kwargs["variable_costs"] = _float(component.get("variable_costs"))
+    return kwargs
+
+
+def _build_summary(result: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "created": result.get("created", False),
+        "node_count": result.get("node_count", 0),
+        "node_specs": result.get("node_specs", []),
+        "skipped_components": result.get("skipped_components", []),
     }
 
 
