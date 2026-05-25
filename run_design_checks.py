@@ -30,9 +30,11 @@ def main(argv: list[str] | None = None) -> int:
         ("third placeholder validate", lambda: _run_cli("--scenario", str(THIRD), "--validate-only", "--accept-future")),
         ("songshan carnot validate", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--validate-only")),
         ("third placeholder component plan", lambda: _run_cli("--scenario", str(THIRD), "--export-component-plan", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_component_plan"))),
+        ("third placeholder generic model build", lambda: _run_cli("--scenario", str(THIRD), "--build-generic-model", "--accept-future", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_generic_model"))),
         ("songshan demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo", "--dry-run")),
         ("german demo dry-run", lambda: _run_cli("--scenario", str(GERMAN), "--mode", "demo", "--dry-run")),
         ("songshan carnot demo dry-run", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--mode", "demo", "--dry-run")),
+        ("songshan carnot generic model build", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--build-generic-model", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_carnot_generic_model"))),
     ]
     if args.run_demo:
         checks.append(("songshan demo solve", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo")))

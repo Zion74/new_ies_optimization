@@ -30,6 +30,7 @@ def _load_pipeline(root: Path):
     from excel_parser import ExcelScenarioParser
     from typical_day import TypicalDayGenerator
     from generic_backend_planner import GenericBackendPlanner
+    from generic_model_builder import GenericModelBuilder
 
     return (
         ies_dir,
@@ -42,6 +43,7 @@ def _load_pipeline(root: Path):
         ExcelScenarioParser,
         TypicalDayGenerator,
         GenericBackendPlanner,
+        GenericModelBuilder,
     )
 
 
@@ -55,6 +57,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--accept-future", action="store_true", help="Allow future_supported scenarios to pass validation-only checks")
     parser.add_argument("--strict-validation", action="store_true", help="Treat non-runnable validation statuses as failures")
     parser.add_argument("--export-component-plan", action="store_true", help="Export future generic backend component plan and exit")
+    parser.add_argument("--build-generic-model", action="store_true", help="Build and export generic model component artifacts and exit")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
@@ -90,6 +93,7 @@ def main(argv: list[str] | None = None) -> int:
         ExcelScenarioParser,
         TypicalDayGenerator,
         GenericBackendPlanner,
+        GenericModelBuilder,
     ) = _load_pipeline(root)
 
     if args.generate_typical_days:
@@ -155,6 +159,22 @@ def main(argv: list[str] | None = None) -> int:
         output_dir = Path(args.output) if args.output else root / "DesignResults" / "component_plans" / scenario_id
         outputs = GenericBackendPlanner.export(resolved, output_dir)
         print("Generic component plan exported:")
+        for name, path in outputs.items():
+            print(f"  - {name}: {path}")
+        if args.build_generic_model:
+            model_outputs = GenericModelBuilder.export(resolved, output_dir)
+            print("Generic model build artifacts exported:")
+            for name, path in model_outputs.items():
+                print(f"  - {name}: {path}")
+        return 0
+
+    if args.build_generic_model:
+        if validation.status == "future_supported" and not args.accept_future:
+            print("Future-supported scenario requires --accept-future for generic model build.")
+            return 3
+        output_dir = Path(args.output) if args.output else root / "DesignResults" / "generic_models" / scenario_id
+        outputs = GenericModelBuilder.export(resolved, output_dir)
+        print("Generic model build artifacts exported:")
         for name, path in outputs.items():
             print(f"  - {name}: {path}")
         return 0

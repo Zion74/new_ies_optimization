@@ -102,6 +102,24 @@ def test_export_component_plan_for_current_cchp_scenario():
         assert '"instance_id": "pv"' in plan
 
 
+def test_build_generic_model_for_future_supported_scenario():
+    third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli("--scenario", str(third), "--build-generic-model", "--accept-future", "--output", tmp)
+        assert result.returncode == 0, result.stderr + result.stdout
+        assert "Generic model build artifacts exported" in result.stdout
+        assert (Path(tmp) / "generic_model_components.json").exists()
+        assert (Path(tmp) / "generic_model_build_report.md").exists()
+        assert (Path(tmp) / "generic_model_build_gaps.csv").exists()
+
+
+def test_build_generic_model_requires_accept_future():
+    third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
+    result = run_cli("--scenario", str(third), "--build-generic-model")
+    assert result.returncode == 3, result.stderr + result.stdout
+    assert "--accept-future" in result.stdout
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")
