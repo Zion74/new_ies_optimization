@@ -18,7 +18,7 @@
 - `design_optimizer.py`: 封装现有 `run_comparative_study()` 调用参数，形成新接口到当前 CCHP 优化后端的执行适配层。
 - `generic_model_builder.py`: 将通用组件计划转成可审计的母线、负荷、组件和动态容量变量规格。
 - `generic_capacity_space.py`: 将 `capacity_variables` 转成可变维度的容量优化变量空间。
-- `generic_dispatch_model.py`: 当前 `build_only` 的通用调度评价接口，输出容量映射、投资成本近似和构建缺口。
+- `generic_dispatch_model.py`: 当前 `build_only` 的通用调度评价接口，输出容量映射、写回 `applied_capacities` 的组件规格、投资成本近似和构建缺口。
 - `generic_design_optimizer.py`: 当前 `build_only` 的通用容量设计搜索接口，后续可替换为 NSGA-II/DE。
 - `result_exporter.py`: 将现有 Pareto 输出汇总为标准设计结果文件：`pareto_solutions.csv`、`design_summary.csv`、`design_summary_wide.csv`、`design_summary.xlsx`、`design_report.md`、`resolved_scenario.json`、`validation_report.md`。
 - `design.py`: 仓库根目录的第一版 CLI 原型，支持场景校验、Excel 导出、典型日生成、打印适配后的 CCHP 配置摘要、查看优化执行参数、触发 `mode=test` 优化并导出设计结果包。
