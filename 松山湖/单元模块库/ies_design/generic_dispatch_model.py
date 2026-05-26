@@ -163,6 +163,7 @@ def _solve_real_electric_dispatch(
         "pv_capacity_kw": pv_capacity,
         "storage_power_kw": storage_power,
         "storage_capacity_kwh": storage_capacity,
+        "dispatch_summary": result.get("dispatch_summary", {"flow_totals": [], "storage_content": []}),
         "error": result.get("error", ""),
         "node_count": result.get("node_count", 0),
     }

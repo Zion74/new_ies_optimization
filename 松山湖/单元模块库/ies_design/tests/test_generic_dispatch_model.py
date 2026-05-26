@@ -127,6 +127,12 @@ def test_dispatch_model_can_solve_real_grid_pv_storage_dispatch_slice():
     assert dispatch["pv_capacity_kw"] == 1000
     assert dispatch["storage_power_kw"] == 100
     assert dispatch["storage_capacity_kwh"] == 350
+    flow_totals = {
+        (item["from"], item["to"]): item
+        for item in dispatch["dispatch_summary"]["flow_totals"]
+    }
+    assert ("grid_electricity", "electricity") in flow_totals
+    assert ("electricity", "electricity_demand") in flow_totals
 
 
 def test_dispatch_model_rejects_wrong_vector_length():

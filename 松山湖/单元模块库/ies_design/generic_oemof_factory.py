@@ -99,11 +99,13 @@ class GenericOemofFactory:
                 "solver": "",
                 "termination_condition": "",
                 "objective_value": None,
+                "dispatch_summary": _empty_dispatch_summary(),
                 "error": build.get("error", ""),
             }
 
         try:
             import oemof.solph as solph
+            from oemof.solph import processing
         except Exception as exc:
             return {
                 **_build_summary(build),
@@ -111,6 +113,7 @@ class GenericOemofFactory:
                 "solver": "",
                 "termination_condition": "",
                 "objective_value": None,
+                "dispatch_summary": _empty_dispatch_summary(),
                 "error": f"oemof unavailable: {exc}",
             }
 
@@ -127,6 +130,7 @@ class GenericOemofFactory:
                     "solver": solver,
                     "termination_condition": termination,
                     "objective_value": float(model.objective()),
+                    "dispatch_summary": _dispatch_summary(processing.results(model)),
                     "error": "" if solved else f"termination_condition={termination}",
                 }
             except Exception as exc:
@@ -138,6 +142,7 @@ class GenericOemofFactory:
             "solver": "",
             "termination_condition": "",
             "objective_value": None,
+            "dispatch_summary": _empty_dispatch_summary(),
             "error": "; ".join(errors),
         }
 
@@ -287,6 +292,50 @@ def _build_summary(result: dict[str, Any]) -> dict[str, Any]:
         "node_specs": result.get("node_specs", []),
         "skipped_components": result.get("skipped_components", []),
     }
+
+
+def _dispatch_summary(results: dict[Any, dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    flow_totals: list[dict[str, Any]] = []
+    storage_content: list[dict[str, Any]] = []
+    for (source, target), payload in results.items():
+        sequences = payload.get("sequences")
+        if sequences is None:
+            continue
+        source_label = _label(source)
+        target_label = _label(target)
+        if "flow" in sequences:
+            series = sequences["flow"].dropna()
+            flow_totals.append({
+                "from": source_label,
+                "to": target_label,
+                "sum": _clean_float(series.sum()),
+                "max": _clean_float(series.max()),
+            })
+        if "storage_content" in sequences:
+            series = sequences["storage_content"].dropna()
+            storage_content.append({
+                "storage": source_label,
+                "max": _clean_float(series.max()),
+                "final": _clean_float(series.iloc[-1] if len(series) else 0.0),
+            })
+    return {"flow_totals": flow_totals, "storage_content": storage_content}
+
+
+def _empty_dispatch_summary() -> dict[str, list[dict[str, Any]]]:
+    return {"flow_totals": [], "storage_content": []}
+
+
+def _label(node: Any) -> str:
+    if node is None:
+        return "None"
+    return str(getattr(node, "label", node))
+
+
+def _clean_float(value: Any) -> float:
+    number = _float(value)
+    if abs(number) < 1e-9:
+        return 0.0
+    return round(number, 10)
 
 
 def _float(value: Any) -> float:
