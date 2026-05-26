@@ -227,6 +227,24 @@ def test_run_generic_design_can_export_grid_pv_storage_cchp_dispatch_status():
         assert '"absorption_chiller_capacity_kw": 1500.0' in data
 
 
+def test_run_generic_design_can_export_random_capacity_search_results():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(SONGSHAN),
+            "--run-generic-design",
+            "--generic-search-strategy", "random",
+            "--generic-candidates", "3",
+            "--generic-random-seed", "11",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        data = (Path(tmp) / "generic_design_solutions.json").read_text(encoding="utf-8")
+        report = (Path(tmp) / "generic_design_report.md").read_text(encoding="utf-8")
+        assert '"status": "capacity_search"' in data
+        assert '"candidate_count": 3' in data
+        assert "random" in report
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")

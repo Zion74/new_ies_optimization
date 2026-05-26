@@ -22,7 +22,7 @@
 - `generic_oemof_factory.py`: 将已应用容量的通用组件规格转成 OEMOF 节点，并已通过最小电力调度求解 smoke test。
 - `generic_capacity_space.py`: 将 `capacity_variables` 转成可变维度的容量优化变量空间。
 - `generic_dispatch_model.py`: 当前 `build_only` 的通用调度评价接口，输出容量映射、写回 `applied_capacities` 的组件规格、投资成本近似和构建缺口。
-- `generic_design_optimizer.py`: 当前 `build_only` 的通用容量设计搜索接口，后续可替换为 NSGA-II/DE。
+- `generic_design_optimizer.py`: 通用容量设计搜索接口，支持 demo levels 和可复现 random 候选搜索，后续可替换为 NSGA-II/DE。
 - `result_exporter.py`: 将现有 Pareto 输出汇总为标准设计结果文件：`pareto_solutions.csv`、`design_summary.csv`、`design_summary_wide.csv`、`design_summary.xlsx`、`design_report.md`、`resolved_scenario.json`、`validation_report.md`。
 - `design.py`: 仓库根目录的第一版 CLI 原型，支持场景校验、Excel 导出、典型日生成、打印适配后的 CCHP 配置摘要、查看优化执行参数、触发 `mode=test` 优化并导出设计结果包。
 - `tests/`: 轻量配置校验与适配器回归脚本。
@@ -39,6 +39,7 @@ uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenari
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 0.5 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage --dispatch-periods 24 --output tmp_generic_design_electric
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_heat_cool --dispatch-periods 24 --output tmp_generic_design_ehc
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_cchp
+uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-strategy random --generic-candidates 8 --generic-random-seed 1 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_random
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test
 ```
 
@@ -64,5 +65,5 @@ uv run python run_design_checks.py
 ## 下一步
 
 - 将当前 `grid + pv + electric_storage + chp + electric_heat_pump + electric_chiller + absorption_chiller + electric/heat/cooling_load` 真实调度切片继续扩展到冷热储能、卡诺电池和更多 15 场景设备。
-- 将 `GenericDesignOptimizer` 的 demo levels 替换为 NSGA-II/DE 等外层容量优化器。
+- 将 `GenericDesignOptimizer` 的 random 候选生成器替换为 NSGA-II/DE 等正式外层容量优化器。
 - 根据师弟整理的真实第三场景 Excel，新增更独立的非松山湖场景并验证通用后端。

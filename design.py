@@ -62,6 +62,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--build-generic-model", action="store_true", help="Build and export generic model component artifacts and exit")
     parser.add_argument("--run-generic-design", action="store_true", help="Run build-only generic capacity design search and export artifacts")
     parser.add_argument("--generic-search-levels", nargs="+", type=float, help="Unit interval levels for generic build-only design search")
+    parser.add_argument("--generic-search-strategy", choices=["demo", "random"], default="demo", help="Generic capacity search strategy")
+    parser.add_argument("--generic-candidates", type=int, default=8, help="Candidate count for random generic capacity search")
+    parser.add_argument("--generic-random-seed", type=int, default=1, help="Random seed for generic capacity search")
     parser.add_argument("--solve-electric-dispatch", action="store_true", help="Also solve a minimal real-data grid-electric dispatch slice in generic design search")
     parser.add_argument("--electric-dispatch-scope", choices=["grid", "grid_pv", "grid_pv_storage", "grid_pv_storage_heat_cool", "grid_pv_storage_cchp"], default="grid", help="Optional real dispatch slice scope")
     parser.add_argument("--dispatch-periods", type=int, default=24, help="Number of hours for optional generic dispatch slice")
@@ -193,15 +196,27 @@ def main(argv: list[str] | None = None) -> int:
             return 3
         output_dir = Path(args.output) if args.output else root / "DesignResults" / "generic_designs" / scenario_id
         try:
-            outputs = GenericDesignOptimizer.export_demo_search(
-                resolved,
-                output_dir,
-                levels=args.generic_search_levels,
-                project_root=root,
-                solve_electric_dispatch=args.solve_electric_dispatch,
-                electric_dispatch_scope=args.electric_dispatch_scope,
-                dispatch_periods=args.dispatch_periods,
-            )
+            if args.generic_search_strategy == "random":
+                outputs = GenericDesignOptimizer.export_capacity_search(
+                    resolved,
+                    output_dir,
+                    candidate_count=args.generic_candidates,
+                    random_seed=args.generic_random_seed,
+                    project_root=root,
+                    solve_electric_dispatch=args.solve_electric_dispatch,
+                    electric_dispatch_scope=args.electric_dispatch_scope,
+                    dispatch_periods=args.dispatch_periods,
+                )
+            else:
+                outputs = GenericDesignOptimizer.export_demo_search(
+                    resolved,
+                    output_dir,
+                    levels=args.generic_search_levels,
+                    project_root=root,
+                    solve_electric_dispatch=args.solve_electric_dispatch,
+                    electric_dispatch_scope=args.electric_dispatch_scope,
+                    dispatch_periods=args.dispatch_periods,
+                )
         except ValueError as exc:
             print(f"Generic design search failed: {exc}")
             return 3

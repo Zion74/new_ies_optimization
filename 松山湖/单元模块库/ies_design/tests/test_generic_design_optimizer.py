@@ -131,6 +131,40 @@ def test_generic_design_optimizer_can_include_cchp_dispatch_status():
     assert dispatch["absorption_chiller_capacity_kw"] == 1500
 
 
+def test_generic_design_optimizer_runs_reproducible_capacity_search():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    first = optimizer.run_capacity_search(candidate_count=4, random_seed=7)
+    second = optimizer.run_capacity_search(candidate_count=4, random_seed=7)
+
+    assert first["status"] == "capacity_search"
+    assert first["search_strategy"] == "random"
+    assert first["candidate_count"] == 4
+    assert first["solutions"][0]["solution_id"] == 0
+    assert first["solutions"] == second["solutions"]
+    assert all("total_objective" in item for item in first["solutions"])
+
+
+def test_generic_design_optimizer_capacity_search_can_solve_cchp_dispatch():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    result = optimizer.run_capacity_search(
+        candidate_count=2,
+        random_seed=3,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv_storage_cchp",
+        dispatch_periods=24,
+    )
+
+    assert result["status"] == "capacity_search"
+    assert len(result["solutions"]) == 2
+    assert any(
+        solution["generic_model"]["real_dispatch"]["dispatch_solved"] is True
+        for solution in result["solutions"]
+    )
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

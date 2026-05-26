@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import random
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -33,32 +34,104 @@ class GenericDesignOptimizer:
                 lower + (upper - lower) * level
                 for lower, upper in zip(self.capacity_space.lower_bounds, self.capacity_space.upper_bounds)
             ]
-            evaluation = self.dispatch_model.evaluate(
-                vector,
-                project_root=str(project_root) if project_root else None,
+            solutions.append(self._evaluate_solution(
+                solution_id=solution_id,
+                vector=vector,
+                level=level,
+                project_root=project_root,
                 solve_electric_dispatch=solve_electric_dispatch,
                 electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
-            )
-            solutions.append({
-                "solution_id": solution_id,
-                "level": level,
-                "vector": vector,
-                "investment_cost": evaluation["investment_cost"],
-                "dispatch_solved": evaluation["dispatch_solved"],
-                "capacity_assignment": evaluation["capacity_assignment"],
-                "generic_model": evaluation.get("generic_model", {}),
-                "status": evaluation["status"],
-            })
+            ))
 
         return {
             "status": "build_only",
+            "search_strategy": "demo_levels",
+            "candidate_count": len(solutions),
             "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
             "capacity_variable_count": len(self.capacity_space.variables),
             "capacity_variable_names": self.capacity_space.names,
             "solutions": solutions,
             "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
             "next_step": "replace demo levels with NSGA-II/DE candidates and solve full dispatch in GenericDispatchModel",
+        }
+
+    def run_capacity_search(
+        self,
+        candidate_count: int = 8,
+        random_seed: int = 1,
+        project_root: str | Path | None = None,
+        solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
+        dispatch_periods: int = 24,
+    ) -> dict[str, Any]:
+        if candidate_count < 1:
+            raise ValueError("candidate_count must be at least 1")
+
+        vectors = _capacity_search_vectors(
+            lower_bounds=self.capacity_space.lower_bounds,
+            upper_bounds=self.capacity_space.upper_bounds,
+            candidate_count=candidate_count,
+            random_seed=random_seed,
+        )
+        solutions = [
+            self._evaluate_solution(
+                solution_id=solution_id,
+                vector=vector,
+                level="",
+                project_root=project_root,
+                solve_electric_dispatch=solve_electric_dispatch,
+                electric_dispatch_scope=electric_dispatch_scope,
+                dispatch_periods=dispatch_periods,
+                search_strategy="random",
+            )
+            for solution_id, vector in enumerate(vectors)
+        ]
+        return {
+            "status": "capacity_search",
+            "search_strategy": "random",
+            "candidate_count": len(solutions),
+            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
+            "capacity_variable_count": len(self.capacity_space.variables),
+            "capacity_variable_names": self.capacity_space.names,
+            "solutions": solutions,
+            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
+            "next_step": "replace random candidate generation with NSGA-II/DE while reusing GenericDispatchModel.evaluate",
+        }
+
+    def _evaluate_solution(
+        self,
+        solution_id: int,
+        vector: list[float],
+        level: float | str,
+        project_root: str | Path | None,
+        solve_electric_dispatch: bool,
+        electric_dispatch_scope: str,
+        dispatch_periods: int,
+        search_strategy: str = "demo_levels",
+    ) -> dict[str, Any]:
+        evaluation = self.dispatch_model.evaluate(
+            vector,
+            project_root=str(project_root) if project_root else None,
+            solve_electric_dispatch=solve_electric_dispatch,
+            electric_dispatch_scope=electric_dispatch_scope,
+            dispatch_periods=dispatch_periods,
+        )
+        real_dispatch = evaluation.get("generic_model", {}).get("real_dispatch", {}) or {}
+        dispatch_objective = _objective_value(real_dispatch)
+        investment_cost = evaluation["investment_cost"]
+        return {
+            "solution_id": solution_id,
+            "level": level,
+            "search_strategy": search_strategy,
+            "vector": vector,
+            "investment_cost": investment_cost,
+            "dispatch_objective": dispatch_objective,
+            "total_objective": investment_cost + dispatch_objective,
+            "dispatch_solved": bool(real_dispatch.get("dispatch_solved", evaluation["dispatch_solved"])),
+            "capacity_assignment": evaluation["capacity_assignment"],
+            "generic_model": evaluation.get("generic_model", {}),
+            "status": evaluation["status"],
         }
 
     @classmethod
@@ -95,6 +168,42 @@ class GenericDesignOptimizer:
             "generic_design_report": report_path,
         }
 
+    @classmethod
+    def export_capacity_search(
+        cls,
+        resolved: dict[str, Any],
+        output_dir: str | Path,
+        candidate_count: int = 8,
+        random_seed: int = 1,
+        project_root: str | Path | None = None,
+        solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
+        dispatch_periods: int = 24,
+    ) -> dict[str, Path]:
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        result = cls(resolved).run_capacity_search(
+            candidate_count=candidate_count,
+            random_seed=random_seed,
+            project_root=project_root,
+            solve_electric_dispatch=solve_electric_dispatch,
+            electric_dispatch_scope=electric_dispatch_scope,
+            dispatch_periods=dispatch_periods,
+        )
+
+        json_path = output_dir / "generic_design_solutions.json"
+        csv_path = output_dir / "generic_design_solutions.csv"
+        report_path = output_dir / "generic_design_report.md"
+
+        json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        _write_solutions_csv(csv_path, result)
+        report_path.write_text(_build_design_report(result), encoding="utf-8")
+        return {
+            "generic_design_solutions": json_path,
+            "generic_design_solutions_csv": csv_path,
+            "generic_design_report": report_path,
+        }
+
 
 def _validate_levels(levels: list[float]) -> None:
     if not levels:
@@ -104,9 +213,47 @@ def _validate_levels(levels: list[float]) -> None:
             raise ValueError(f"demo search level must be between 0 and 1, got {level}")
 
 
+def _capacity_search_vectors(
+    lower_bounds: list[float],
+    upper_bounds: list[float],
+    candidate_count: int,
+    random_seed: int,
+) -> list[list[float]]:
+    rng = random.Random(random_seed)
+    vectors: list[list[float]] = []
+    if candidate_count >= 1:
+        vectors.append(list(upper_bounds))
+    while len(vectors) < candidate_count:
+        vectors.append([
+            lower + (upper - lower) * rng.random()
+            for lower, upper in zip(lower_bounds, upper_bounds)
+        ])
+    return vectors
+
+
+def _objective_value(dispatch: dict[str, Any]) -> float:
+    if not dispatch.get("dispatch_solved"):
+        return 0.0
+    value = dispatch.get("objective_value")
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def _write_solutions_csv(path: Path, result: dict[str, Any]) -> None:
     variable_names = result.get("capacity_variable_names", []) or []
-    columns = ["solution_id", "level", "status", "dispatch_solved", "investment_cost", *variable_names]
+    columns = [
+        "solution_id",
+        "level",
+        "search_strategy",
+        "status",
+        "dispatch_solved",
+        "investment_cost",
+        "dispatch_objective",
+        "total_objective",
+        *variable_names,
+    ]
     with path.open("w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=columns)
         writer.writeheader()
@@ -114,9 +261,12 @@ def _write_solutions_csv(path: Path, result: dict[str, Any]) -> None:
             row = {
                 "solution_id": solution.get("solution_id", ""),
                 "level": solution.get("level", ""),
+                "search_strategy": solution.get("search_strategy", ""),
                 "status": solution.get("status", ""),
                 "dispatch_solved": solution.get("dispatch_solved", ""),
                 "investment_cost": solution.get("investment_cost", ""),
+                "dispatch_objective": solution.get("dispatch_objective", ""),
+                "total_objective": solution.get("total_objective", ""),
             }
             row.update(dict(zip(variable_names, solution.get("vector", []) or [])))
             writer.writerow(row)
@@ -128,9 +278,10 @@ def _build_design_report(result: dict[str, Any]) -> str:
         "",
         f"- 场景 ID: `{result.get('scenario_id', '')}`",
         f"- 当前状态: `{result.get('status', '')}`",
+        f"- 搜索策略: `{result.get('search_strategy', '')}`",
         f"- 容量变量数量: {result.get('capacity_variable_count', 0)}",
         f"- 候选方案数量: {len(result.get('solutions', []) or [])}",
-        "- 内层调度求解: 当前仅支持可选的真实电力切片求解，完整冷热电/氢/蒸汽调度尚未接入。",
+        "- 内层调度求解: 当前支持可选真实调度切片求解，完整冷热储能/氢/蒸汽调度尚未接入。",
         f"- 容量变量已应用到组件规格: {_all_solutions_capacity_applied(result)}",
         "",
         "## 容量变量",
@@ -143,14 +294,15 @@ def _build_design_report(result: dict[str, Any]) -> str:
         "",
         "## 候选方案",
         "",
-        "| ID | Level | Status | Dispatch Solved | Investment Cost |",
-        "|---:|---:|---|---|---:|",
+        "| ID | Level | Strategy | Status | Dispatch Solved | Investment Cost | Dispatch Objective | Total Objective |",
+        "|---:|---:|---|---|---|---:|---:|---:|",
     ])
     for solution in result.get("solutions", []) or []:
         lines.append(
             f"| {solution.get('solution_id', '')} | {solution.get('level', '')} | "
-            f"{solution.get('status', '')} | {solution.get('dispatch_solved', '')} | "
-            f"{solution.get('investment_cost', '')} |"
+            f"{solution.get('search_strategy', '')} | {solution.get('status', '')} | "
+            f"{solution.get('dispatch_solved', '')} | {solution.get('investment_cost', '')} | "
+            f"{solution.get('dispatch_objective', '')} | {solution.get('total_objective', '')} |"
         )
 
     lines.extend(["", "## 真实调度切片", ""])
