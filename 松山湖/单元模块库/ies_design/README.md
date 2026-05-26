@@ -35,7 +35,7 @@ python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/song
 python design.py --generate-typical-days monthly_template --output tmp_typical_days
 uv run python design.py --excel "松山湖/单元模块库/课题组场景整理模板.xlsx" --export-scenario --output tmp_excel_export
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake_carnot/scenario.yaml" --run-generic-design --generic-search-levels 0 0.5 1 --output tmp_generic_design
-uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 0 --solve-electric-dispatch --dispatch-periods 24 --output tmp_generic_design_electric
+uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 0.1 --solve-electric-dispatch --electric-dispatch-scope grid_pv --dispatch-periods 24 --output tmp_generic_design_electric
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test
 ```
 
@@ -60,6 +60,6 @@ uv run python run_design_checks.py
 
 ## 下一步
 
-- 将当前真实电力切片扩展到 PV 出力、热/冷负荷、效率/COP、多输出组件和储能时序。
+- 将当前 `grid + pv + electric_load` 真实电力切片继续扩展到热/冷负荷、效率/COP、多输出组件和储能时序。
 - 将 `GenericDesignOptimizer` 的 demo levels 替换为 NSGA-II/DE 等外层容量优化器。
 - 根据师弟整理的真实第三场景 Excel，新增更独立的非松山湖场景并验证通用后端。
