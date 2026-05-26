@@ -231,6 +231,72 @@ class GenericDispatchInputs:
         _resize_grid_for_ehc(spec, heat_profile, cool_profile, heat_cop, cool_cop)
         return spec
 
+    @classmethod
+    def build_grid_pv_storage_cchp_spec(
+        cls,
+        resolved: dict[str, Any],
+        project_root: str | Path,
+        periods: int = 24,
+        pv_capacity_kw: float = 0.0,
+        storage_power_kw: float = 0.0,
+        storage_capacity_kwh: float = 0.0,
+        heat_pump_capacity_kw: float = 0.0,
+        electric_chiller_capacity_kw: float = 0.0,
+        chp_capacity_kw: float = 0.0,
+        absorption_chiller_capacity_kw: float = 0.0,
+    ) -> dict[str, Any]:
+        spec = cls.build_grid_pv_storage_heat_cool_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity_kw,
+            storage_power_kw=storage_power_kw,
+            storage_capacity_kwh=storage_capacity_kwh,
+            heat_pump_capacity_kw=heat_pump_capacity_kw,
+            electric_chiller_capacity_kw=electric_chiller_capacity_kw,
+        )
+        eta_e = _device_parameter(resolved, "chp", "eta_e", default=0.35)
+        eta_h = _device_parameter(resolved, "chp", "eta_h", default=0.45)
+        ac_cop = _device_parameter(resolved, "absorption_chiller", "cop", default=0.8)
+        gas_price = _price(resolved, "gas")
+
+        spec["buses"].append({"id": "natural_gas"})
+        spec["components"].extend([
+            {
+                "id": "natural_gas_source",
+                "component_type": "Source",
+                "output_carriers": ["natural_gas"],
+                "capacity_variables": [
+                    {"variable_name": "capacity_kw", "role": "primary_capacity"}
+                ],
+                "applied_capacities": {"capacity_kw": chp_capacity_kw / max(eta_e, 1e-9)},
+                "variable_costs": gas_price,
+            },
+            {
+                "id": "chp",
+                "component_type": "Transformer",
+                "input_carriers": ["natural_gas"],
+                "output_carriers": ["electricity", "heat"],
+                "capacity_variables": [
+                    {"variable_name": "electric_capacity_kw", "role": "primary_capacity"}
+                ],
+                "applied_capacities": {"electric_capacity_kw": chp_capacity_kw},
+                "conversion_factors": {"electricity": eta_e, "heat": eta_h},
+            },
+            {
+                "id": "absorption_chiller",
+                "component_type": "Transformer",
+                "input_carriers": ["heat"],
+                "output_carriers": ["cooling"],
+                "capacity_variables": [
+                    {"variable_name": "cooling_capacity_kw", "role": "primary_capacity"}
+                ],
+                "applied_capacities": {"cooling_capacity_kw": absorption_chiller_capacity_kw},
+                "conversion_factor": ac_cop,
+            },
+        ])
+        return spec
+
 
 def _read_profile(
     project_root: Path,
@@ -289,6 +355,14 @@ def _device_parameter(resolved: dict[str, Any], device_id: str, name: str, defau
     device = (resolved.get("devices", {}) or {}).get(device_id, {}) or {}
     parameters = device.get("parameters", {}) or {}
     return _float(parameters.get(name, default))
+
+
+def _price(resolved: dict[str, Any], name: str) -> float:
+    return _float(
+        resolved.get("prices", {})
+        .get(name, {})
+        .get("value")
+    )
 
 
 def _spill_capacity(spec: dict[str, Any]) -> float:

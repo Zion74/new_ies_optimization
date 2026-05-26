@@ -119,7 +119,44 @@ def _solve_real_electric_dispatch(
         return {"scope": "", "dispatch_solved": False, "skipped": True, "reason": "not requested"}
     if not project_root:
         return {"scope": "grid_electric", "dispatch_solved": False, "skipped": True, "reason": "project_root is required"}
-    if scope == "grid_pv_storage_heat_cool":
+    if scope == "grid_pv_storage_cchp":
+        pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
+        storage_power = _float(assignment.get("electric_storage", {}).get("power_kw"))
+        storage_capacity = _float(assignment.get("electric_storage", {}).get("capacity_kwh")) or storage_power * 2
+        heat_pump_capacity = _assignment_capacity(
+            assignment,
+            "electric_heat_pump",
+            ["heat_capacity_kw", "capacity_kw", "power_kw"],
+        )
+        electric_chiller_capacity = _assignment_capacity(
+            assignment,
+            "electric_chiller",
+            ["cooling_capacity_kw", "capacity_kw", "power_kw"],
+        )
+        chp_capacity = _assignment_capacity(
+            assignment,
+            "chp",
+            ["electric_capacity_kw", "capacity_kw", "power_kw"],
+        )
+        absorption_chiller_capacity = _assignment_capacity(
+            assignment,
+            "absorption_chiller",
+            ["cooling_capacity_kw", "capacity_kw", "power_kw"],
+        )
+        spec = GenericDispatchInputs.build_grid_pv_storage_cchp_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity,
+            storage_power_kw=storage_power,
+            storage_capacity_kwh=storage_capacity,
+            heat_pump_capacity_kw=heat_pump_capacity,
+            electric_chiller_capacity_kw=electric_chiller_capacity,
+            chp_capacity_kw=chp_capacity,
+            absorption_chiller_capacity_kw=absorption_chiller_capacity,
+        )
+        dispatch_scope = "grid_pv_storage_cchp"
+    elif scope == "grid_pv_storage_heat_cool":
         pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
         storage_power = _float(assignment.get("electric_storage", {}).get("power_kw"))
         storage_capacity = _float(assignment.get("electric_storage", {}).get("capacity_kwh")) or storage_power * 2
@@ -144,12 +181,16 @@ def _solve_real_electric_dispatch(
             electric_chiller_capacity_kw=electric_chiller_capacity,
         )
         dispatch_scope = "grid_pv_storage_heat_cool"
+        chp_capacity = 0.0
+        absorption_chiller_capacity = 0.0
     elif scope == "grid_pv_storage":
         pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
         storage_power = _float(assignment.get("electric_storage", {}).get("power_kw"))
         storage_capacity = _float(assignment.get("electric_storage", {}).get("capacity_kwh")) or storage_power * 2
         heat_pump_capacity = 0.0
         electric_chiller_capacity = 0.0
+        chp_capacity = 0.0
+        absorption_chiller_capacity = 0.0
         spec = GenericDispatchInputs.build_grid_pv_storage_electric_spec(
             resolved,
             project_root=project_root,
@@ -165,6 +206,8 @@ def _solve_real_electric_dispatch(
         storage_capacity = 0.0
         heat_pump_capacity = 0.0
         electric_chiller_capacity = 0.0
+        chp_capacity = 0.0
+        absorption_chiller_capacity = 0.0
         spec = GenericDispatchInputs.build_grid_pv_electric_spec(
             resolved,
             project_root=project_root,
@@ -178,6 +221,8 @@ def _solve_real_electric_dispatch(
         storage_capacity = 0.0
         heat_pump_capacity = 0.0
         electric_chiller_capacity = 0.0
+        chp_capacity = 0.0
+        absorption_chiller_capacity = 0.0
         spec = GenericDispatchInputs.build_grid_electric_spec(
             resolved,
             project_root=project_root,
@@ -196,7 +241,10 @@ def _solve_real_electric_dispatch(
         "storage_capacity_kwh": storage_capacity,
         "heat_pump_capacity_kw": heat_pump_capacity,
         "electric_chiller_capacity_kw": electric_chiller_capacity,
+        "chp_capacity_kw": chp_capacity,
+        "absorption_chiller_capacity_kw": absorption_chiller_capacity,
         "dispatch_summary": result.get("dispatch_summary", {"flow_totals": [], "storage_content": []}),
+        "node_specs": result.get("node_specs", []),
         "error": result.get("error", ""),
         "node_count": result.get("node_count", 0),
     }

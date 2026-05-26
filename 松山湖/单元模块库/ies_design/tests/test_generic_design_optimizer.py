@@ -113,6 +113,24 @@ def test_generic_design_optimizer_can_include_heat_cool_dispatch_status():
     assert dispatch["electric_chiller_capacity_kw"] == 5000
 
 
+def test_generic_design_optimizer_can_include_cchp_dispatch_status():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    result = optimizer.run_demo_search(
+        levels=[1.0],
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv_storage_cchp",
+        dispatch_periods=24,
+    )
+
+    dispatch = result["solutions"][0]["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_pv_storage_cchp"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["chp_capacity_kw"] == 800
+    assert dispatch["absorption_chiller_capacity_kw"] == 1500
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

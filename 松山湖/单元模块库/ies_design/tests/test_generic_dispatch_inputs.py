@@ -174,6 +174,51 @@ def test_songshan_grid_pv_storage_heat_cool_dispatch_solves():
     assert ("electric_chiller", "cooling") in flow_totals
 
 
+def test_builds_grid_pv_storage_cchp_dispatch_spec_from_songshan_real_data():
+    spec = GenericDispatchInputs.build_grid_pv_storage_cchp_spec(
+        resolve("songshan_lake"),
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=100,
+        storage_power_kw=10,
+        storage_capacity_kwh=20,
+        heat_pump_capacity_kw=300,
+        electric_chiller_capacity_kw=5000,
+        chp_capacity_kw=800,
+        absorption_chiller_capacity_kw=1500,
+    )
+
+    buses = [item["id"] for item in spec["buses"]]
+    components = {item["id"]: item for item in spec["components"]}
+
+    assert "natural_gas" in buses
+    assert components["natural_gas_source"]["variable_costs"] == 0.45
+    assert components["chp"]["conversion_factors"] == {"electricity": 0.423, "heat": 0.42}
+    assert components["absorption_chiller"]["conversion_factor"] == 0.70
+
+
+def test_songshan_grid_pv_storage_cchp_dispatch_solves():
+    spec = GenericDispatchInputs.build_grid_pv_storage_cchp_spec(
+        resolve("songshan_lake"),
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=1000,
+        storage_power_kw=100,
+        storage_capacity_kwh=200,
+        heat_pump_capacity_kw=300,
+        electric_chiller_capacity_kw=5000,
+        chp_capacity_kw=800,
+        absorption_chiller_capacity_kw=1500,
+    )
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=24, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    node_specs = {item["id"]: item for item in result["node_specs"]}
+    assert node_specs["chp"]["conversion_factors"]["electricity"] == 0.423
+    assert node_specs["absorption_chiller"]["conversion_factor"] == 0.70
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

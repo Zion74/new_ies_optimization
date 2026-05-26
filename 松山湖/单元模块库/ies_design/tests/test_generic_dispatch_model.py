@@ -165,6 +165,38 @@ def test_dispatch_model_can_solve_real_grid_pv_storage_heat_cool_dispatch_slice(
     assert ("electric_chiller", "cooling") in flow_totals
 
 
+def test_dispatch_model_can_solve_real_grid_pv_storage_cchp_dispatch_slice():
+    model = GenericDispatchModel(resolve("songshan_lake"))
+    vector = [0.0 for _ in model.capacity_space.upper_bounds]
+    vector[model.capacity_space.names.index("pv.capacity_kw")] = 1000.0
+    vector[model.capacity_space.names.index("electric_storage.power_kw")] = 100.0
+    vector[model.capacity_space.names.index("electric_storage.capacity_kwh")] = 350.0
+    vector[model.capacity_space.names.index("electric_heat_pump.heat_capacity_kw")] = 300.0
+    vector[model.capacity_space.names.index("electric_chiller.cooling_capacity_kw")] = 5000.0
+    vector[model.capacity_space.names.index("chp.electric_capacity_kw")] = 800.0
+    vector[model.capacity_space.names.index("absorption_chiller.cooling_capacity_kw")] = 1500.0
+
+    result = model.evaluate(
+        vector,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv_storage_cchp",
+        dispatch_periods=24,
+    )
+
+    dispatch = result["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_pv_storage_cchp"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["chp_capacity_kw"] == 800
+    assert dispatch["absorption_chiller_capacity_kw"] == 1500
+    node_specs = {
+        item["id"]: item
+        for item in dispatch["node_specs"]
+    }
+    assert node_specs["chp"]["conversion_factors"] == {"electricity": 0.423, "heat": 0.42}
+    assert node_specs["absorption_chiller"]["conversion_factor"] == 0.70
+
+
 def test_dispatch_model_rejects_wrong_vector_length():
     model = GenericDispatchModel(resolve("songshan_lake_carnot"))
 

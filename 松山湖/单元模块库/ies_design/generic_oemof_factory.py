@@ -182,7 +182,7 @@ def _build_node(
         }
 
     if component_type == "Transformer" and inputs and outputs:
-        conversion_factor = _float(component.get("conversion_factor", 1.0)) or 1.0
+        conversion_factors = _conversion_factors(component, outputs)
         spec = _node_spec(
             component_id,
             component_type,
@@ -190,13 +190,16 @@ def _build_node(
             {carrier: primary_capacity for carrier in outputs},
             component,
         )
-        spec["conversion_factor"] = conversion_factor
+        if len(conversion_factors) == 1:
+            spec["conversion_factor"] = next(iter(conversion_factors.values()))
+        else:
+            spec["conversion_factors"] = conversion_factors
         return {
             "node": Transformer(
                 label=component_id,
                 inputs={buses[inputs[0]]: solph.Flow()},
                 outputs={buses[carrier]: solph.Flow(nominal_value=primary_capacity) for carrier in outputs},
-                conversion_factors={buses[carrier]: conversion_factor for carrier in outputs},
+                conversion_factors={buses[carrier]: conversion_factors[carrier] for carrier in outputs},
             ),
             "spec": spec,
             "reason": "",
@@ -237,6 +240,14 @@ def _capacity_by_role(component: dict[str, Any], role: str) -> float:
     if role == "primary_capacity" and capacities:
         return _float(next(iter(capacities.values())))
     return 0.0
+
+
+def _conversion_factors(component: dict[str, Any], outputs: list[str]) -> dict[str, float]:
+    factors = component.get("conversion_factors", {}) or {}
+    if factors:
+        return {carrier: _float(factors.get(carrier, 1.0)) or 1.0 for carrier in outputs}
+    factor = _float(component.get("conversion_factor", 1.0)) or 1.0
+    return {carrier: factor for carrier in outputs}
 
 
 def _node_spec(

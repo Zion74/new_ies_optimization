@@ -160,6 +160,47 @@ def test_oemof_factory_applies_transformer_conversion_factor():
     assert node_specs["electric_heat_pump"]["conversion_factor"] == 2
 
 
+def test_oemof_factory_applies_multi_output_transformer_conversion_factors():
+    spec = {
+        "buses": [{"id": "natural_gas"}, {"id": "electricity"}, {"id": "heat"}],
+        "demand_sinks": [
+            {"id": "electricity_demand", "input_carrier": "electricity", "profile": [4, 4, 4]},
+            {"id": "heat_demand", "input_carrier": "heat", "profile": [5, 5, 5]},
+        ],
+        "components": [
+            {
+                "id": "gas_source",
+                "component_type": "Source",
+                "output_carriers": ["natural_gas"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 100},
+                "variable_costs": 1,
+            },
+            {
+                "id": "chp",
+                "component_type": "Transformer",
+                "input_carriers": ["natural_gas"],
+                "output_carriers": ["electricity", "heat"],
+                "capacity_variables": [{"variable_name": "electric_capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"electric_capacity_kw": 10},
+                "conversion_factors": {"electricity": 0.4, "heat": 0.5},
+            },
+        ],
+    }
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=3, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    node_specs = {item["id"]: item for item in result["node_specs"]}
+    assert node_specs["chp"]["conversion_factors"] == {"electricity": 0.4, "heat": 0.5}
+    flow_totals = {
+        (item["from"], item["to"]): item
+        for item in result["dispatch_summary"]["flow_totals"]
+    }
+    assert flow_totals[("chp", "electricity")]["sum"] == 12
+    assert flow_totals[("chp", "heat")]["sum"] == 15
+
+
 def test_oemof_factory_uses_fixed_source_profile_before_costly_grid():
     spec = {
         "buses": [{"id": "electricity"}],

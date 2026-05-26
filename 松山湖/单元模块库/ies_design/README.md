@@ -38,6 +38,7 @@ uv run python design.py --excel "松山湖/单元模块库/课题组场景整理
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake_carnot/scenario.yaml" --run-generic-design --generic-search-levels 0 0.5 1 --output tmp_generic_design
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 0.5 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage --dispatch-periods 24 --output tmp_generic_design_electric
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_heat_cool --dispatch-periods 24 --output tmp_generic_design_ehc
+uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_cchp
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test
 ```
 
@@ -62,6 +63,6 @@ uv run python run_design_checks.py
 
 ## 下一步
 
-- 将当前 `grid + pv + electric_storage + electric_heat_pump + electric_chiller + electric/heat/cooling_load` 真实调度切片继续扩展到 CHP、吸收式制冷和冷热储能。
+- 将当前 `grid + pv + electric_storage + chp + electric_heat_pump + electric_chiller + absorption_chiller + electric/heat/cooling_load` 真实调度切片继续扩展到冷热储能、卡诺电池和更多 15 场景设备。
 - 将 `GenericDesignOptimizer` 的 demo levels 替换为 NSGA-II/DE 等外层容量优化器。
 - 根据师弟整理的真实第三场景 Excel，新增更独立的非松山湖场景并验证通用后端。
