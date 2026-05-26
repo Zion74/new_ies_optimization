@@ -62,6 +62,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--build-generic-model", action="store_true", help="Build and export generic model component artifacts and exit")
     parser.add_argument("--run-generic-design", action="store_true", help="Run build-only generic capacity design search and export artifacts")
     parser.add_argument("--generic-search-levels", nargs="+", type=float, help="Unit interval levels for generic build-only design search")
+    parser.add_argument("--solve-electric-dispatch", action="store_true", help="Also solve a minimal real-data grid-electric dispatch slice in generic design search")
+    parser.add_argument("--dispatch-periods", type=int, default=24, help="Number of hours for optional generic dispatch slice")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
@@ -194,6 +196,9 @@ def main(argv: list[str] | None = None) -> int:
                 resolved,
                 output_dir,
                 levels=args.generic_search_levels,
+                project_root=root,
+                solve_electric_dispatch=args.solve_electric_dispatch,
+                dispatch_periods=args.dispatch_periods,
             )
         except ValueError as exc:
             print(f"Generic design search failed: {exc}")

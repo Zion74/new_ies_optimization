@@ -139,6 +139,23 @@ def test_run_generic_design_exports_build_only_search_results():
         assert "songshan_lake_carnot" in report
 
 
+def test_run_generic_design_can_export_real_electric_dispatch_status():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(SONGSHAN),
+            "--run-generic-design",
+            "--generic-search-levels", "0",
+            "--solve-electric-dispatch",
+            "--dispatch-periods", "24",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        report = (Path(tmp) / "generic_design_report.md").read_text(encoding="utf-8")
+        data = (Path(tmp) / "generic_design_solutions.json").read_text(encoding="utf-8")
+        assert "grid_electric" in report
+        assert '"dispatch_solved": true' in data
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")

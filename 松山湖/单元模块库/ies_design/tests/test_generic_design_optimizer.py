@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = ROOT.parents[2]
 sys.path.insert(0, str(ROOT))
 
 from defaults_resolver import DefaultsResolver
@@ -39,6 +40,22 @@ def test_generic_design_optimizer_rejects_levels_outside_unit_interval():
         assert "between 0 and 1" in str(exc)
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_generic_design_optimizer_can_include_real_electric_dispatch_status():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    result = optimizer.run_demo_search(
+        levels=[0.0],
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        dispatch_periods=24,
+    )
+
+    dispatch = result["solutions"][0]["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_electric"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["objective_value"] > 0
 
 
 if __name__ == "__main__":
