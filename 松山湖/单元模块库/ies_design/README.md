@@ -17,6 +17,7 @@
 - `current_cchp_adapter.py`: 将 resolved scenario 转换成现有 `case_config.py` 风格配置。
 - `design_optimizer.py`: 封装现有 `run_comparative_study()` 调用参数，形成新接口到当前 CCHP 优化后端的执行适配层。
 - `generic_model_builder.py`: 将通用组件计划转成可审计的母线、负荷、组件和动态容量变量规格。
+- 储能类设备已支持“功率容量 + 能量容量”双变量抽象；若场景未显式给出能量容量上界，则按设备库 `default_energy_duration_h` 从功率上界推导。
 - `generic_dispatch_inputs.py`: 从 resolved scenario 和真实 CSV 负荷文件构造最小真实电力调度输入。
 - `generic_oemof_factory.py`: 将已应用容量的通用组件规格转成 OEMOF 节点，并已通过最小电力调度求解 smoke test。
 - `generic_capacity_space.py`: 将 `capacity_variables` 转成可变维度的容量优化变量空间。

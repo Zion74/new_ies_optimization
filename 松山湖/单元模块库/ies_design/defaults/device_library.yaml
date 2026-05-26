@@ -228,6 +228,7 @@ devices:
       primary_var: power_kw
       energy_var: capacity_kwh
       default_unit: kW
+      default_energy_duration_h: 2
       scenario_field: ES
     parameters:
       charge_efficiency: 0.95
@@ -247,7 +248,9 @@ devices:
     output_carriers: [heat]
     capacity:
       primary_var: power_kw
+      energy_var: capacity_kwh
       default_unit: kW
+      default_energy_duration_h: 2
       scenario_field: HS
     parameters:
       charge_efficiency: 0.90
@@ -266,7 +269,9 @@ devices:
     output_carriers: [cooling]
     capacity:
       primary_var: power_kw
+      energy_var: capacity_kwh
       default_unit: kW
+      default_energy_duration_h: 2
       scenario_field: CS
     parameters:
       charge_efficiency: 0.90

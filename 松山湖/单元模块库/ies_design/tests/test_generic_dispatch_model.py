@@ -111,6 +111,7 @@ def test_dispatch_model_can_solve_real_grid_pv_storage_dispatch_slice():
     vector = [0.0 for _ in model.capacity_space.upper_bounds]
     vector[model.capacity_space.names.index("pv.capacity_kw")] = 1000.0
     vector[model.capacity_space.names.index("electric_storage.power_kw")] = 100.0
+    vector[model.capacity_space.names.index("electric_storage.capacity_kwh")] = 350.0
 
     result = model.evaluate(
         vector,
@@ -125,7 +126,7 @@ def test_dispatch_model_can_solve_real_grid_pv_storage_dispatch_slice():
     assert dispatch["dispatch_solved"] is True
     assert dispatch["pv_capacity_kw"] == 1000
     assert dispatch["storage_power_kw"] == 100
-    assert dispatch["storage_capacity_kwh"] == 200
+    assert dispatch["storage_capacity_kwh"] == 350
 
 
 def test_dispatch_model_rejects_wrong_vector_length():

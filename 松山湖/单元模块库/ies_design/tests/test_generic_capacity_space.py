@@ -20,9 +20,22 @@ def test_capacity_space_uses_dynamic_variable_count_for_carnot_scene():
 
     space = GenericCapacitySpace.from_model_spec(spec)
 
-    assert len(space.variables) == 10
+    assert len(space.variables) == 13
+    assert "electric_storage.capacity_kwh" in space.names
+    assert "heat_storage.capacity_kwh" in space.names
+    assert "cold_storage.capacity_kwh" in space.names
     assert space.names[-2:] == ["carnot_battery.power_kw", "carnot_battery.capacity_kwh"]
     assert space.upper_bounds[-2:] == [500.0, 3000.0]
+
+
+def test_capacity_space_derives_storage_energy_bounds_from_default_duration():
+    spec = GenericModelBuilder.build(resolve("songshan_lake"), build_oemof=False)
+
+    space = GenericCapacitySpace.from_model_spec(spec)
+
+    assert space.upper_bounds[space.names.index("electric_storage.capacity_kwh")] == 4000.0
+    assert space.upper_bounds[space.names.index("heat_storage.capacity_kwh")] == 1000.0
+    assert space.upper_bounds[space.names.index("cold_storage.capacity_kwh")] == 6000.0
 
 
 def test_capacity_space_maps_vector_to_device_capacities():

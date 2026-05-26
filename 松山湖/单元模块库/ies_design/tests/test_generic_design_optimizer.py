@@ -22,7 +22,7 @@ def test_generic_design_optimizer_runs_variable_dimension_demo_search():
 
     assert result["status"] == "build_only"
     assert result["scenario_id"] == "songshan_lake_carnot"
-    assert result["capacity_variable_count"] == 10
+    assert result["capacity_variable_count"] == 13
     assert len(result["solutions"]) == 3
     assert result["solutions"][0]["solution_id"] == 0
     assert result["solutions"][0]["dispatch_solved"] is False
@@ -91,6 +91,8 @@ def test_generic_design_optimizer_can_use_storage_in_real_electric_dispatch():
     assert dispatch["dispatch_solved"] is True
     assert dispatch["storage_power_kw"] == 1000
     assert dispatch["storage_capacity_kwh"] == 2000
+    assignment = result["solutions"][0]["capacity_assignment"]
+    assert assignment["electric_storage"]["capacity_kwh"] == 2000
 
 
 if __name__ == "__main__":

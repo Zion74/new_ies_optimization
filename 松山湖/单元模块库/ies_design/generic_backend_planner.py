@@ -210,7 +210,7 @@ def _device_parameter_gaps(instance_id: str, device: dict[str, Any], mapping: di
         if not any(device.get(key) not in (None, "") for key in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"]):
             gaps.append({"device_id": instance_id, "field": "capacity upper bound", "reason": "优化容量需要容量或功率上界"})
     capacity = device.get("capacity", {}) or {}
-    if capacity.get("energy_var") and not any(device.get(key) not in (None, "") for key in ["capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"]):
+    if capacity.get("energy_var") and _energy_capacity_upper_bound(device) in (None, ""):
         gaps.append({"device_id": instance_id, "field": f"capacity.{capacity.get('energy_var')}", "reason": "储能类设备建议提供能量容量边界"})
     return gaps
 
@@ -250,15 +250,38 @@ def _device_capacity_variables(instance_id: str, device: dict[str, Any]) -> list
         })
     energy = capacity.get("energy_var")
     if energy:
+        energy_bound = _energy_capacity_upper_bound(device)
         variables.append({
             "device_id": instance_id,
             "variable_name": energy,
             "role": "energy_capacity",
             "unit": _energy_unit_for(unit),
-            "upper_bound": device.get("capacity_ub_kwh") or device.get("energy_ub_kwh") or device.get("fixed_capacity_kwh") or "",
+            "upper_bound": energy_bound or "",
             "source_field": capacity.get("scenario_fields", {}).get("capacity", ""),
         })
     return variables
+
+
+def _energy_capacity_upper_bound(device: dict[str, Any]) -> float | str | None:
+    for key in ["capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"]:
+        value = device.get(key)
+        if value not in (None, ""):
+            return value
+    capacity = device.get("capacity", {}) or {}
+    duration = _as_float(capacity.get("default_energy_duration_h"))
+    power_bound = _as_float(device.get("capacity_ub_kw") or device.get("power_ub_kw") or device.get("fixed_capacity_kw"))
+    if duration > 0 and power_bound > 0:
+        return duration * power_bound
+    return None
+
+
+def _as_float(value: Any) -> float:
+    if value in (None, ""):
+        return 0.0
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def _energy_unit_for(unit: str) -> str:
