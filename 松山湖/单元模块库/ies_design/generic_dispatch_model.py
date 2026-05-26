@@ -26,6 +26,7 @@ class GenericDispatchModel:
         vector: list[float],
         project_root: str | None = None,
         solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
     ) -> dict[str, Any]:
         assignment = self.capacity_space.vector_to_assignment(vector)
@@ -40,6 +41,8 @@ class GenericDispatchModel:
             self.resolved,
             project_root=project_root,
             enabled=solve_electric_dispatch,
+            scope=electric_dispatch_scope,
+            assignment=assignment,
             periods=dispatch_periods,
         )
         return {
@@ -108,24 +111,39 @@ def _solve_real_electric_dispatch(
     resolved: dict[str, Any],
     project_root: str | None,
     enabled: bool,
+    scope: str,
+    assignment: dict[str, dict[str, float]],
     periods: int,
 ) -> dict[str, Any]:
     if not enabled:
         return {"scope": "", "dispatch_solved": False, "skipped": True, "reason": "not requested"}
     if not project_root:
         return {"scope": "grid_electric", "dispatch_solved": False, "skipped": True, "reason": "project_root is required"}
-    spec = GenericDispatchInputs.build_grid_electric_spec(
-        resolved,
-        project_root=project_root,
-        periods=periods,
-    )
+    if scope == "grid_pv":
+        pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
+        spec = GenericDispatchInputs.build_grid_pv_electric_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity,
+        )
+        dispatch_scope = "grid_pv_electric"
+    else:
+        pv_capacity = 0.0
+        spec = GenericDispatchInputs.build_grid_electric_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+        )
+        dispatch_scope = "grid_electric"
     result = GenericOemofFactory.solve_dispatch(spec, periods=periods, solver_names=["glpk"])
     return {
-        "scope": "grid_electric",
+        "scope": dispatch_scope,
         "dispatch_solved": result.get("dispatch_solved", False),
         "solver": result.get("solver", ""),
         "termination_condition": result.get("termination_condition", ""),
         "objective_value": result.get("objective_value"),
+        "pv_capacity_kw": pv_capacity,
         "error": result.get("error", ""),
         "node_count": result.get("node_count", 0),
     }

@@ -77,6 +77,35 @@ def test_dispatch_model_can_solve_real_grid_electric_dispatch_slice():
     assert dispatch["objective_value"] > 0
 
 
+def test_dispatch_model_can_solve_real_grid_pv_dispatch_slice_using_capacity_vector():
+    model = GenericDispatchModel(resolve("songshan_lake"))
+    zero_vector = [0.0 for _ in model.capacity_space.upper_bounds]
+    pv_vector = [0.0 for _ in model.capacity_space.upper_bounds]
+    pv_vector[model.capacity_space.names.index("pv.capacity_kw")] = 100.0
+
+    grid_only = model.evaluate(
+        zero_vector,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv",
+        dispatch_periods=24,
+    )
+    with_pv = model.evaluate(
+        pv_vector,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv",
+        dispatch_periods=24,
+    )
+
+    grid_dispatch = grid_only["generic_model"]["real_dispatch"]
+    pv_dispatch = with_pv["generic_model"]["real_dispatch"]
+    assert pv_dispatch["scope"] == "grid_pv_electric"
+    assert pv_dispatch["dispatch_solved"] is True
+    assert pv_dispatch["pv_capacity_kw"] == 100
+    assert pv_dispatch["objective_value"] < grid_dispatch["objective_value"]
+
+
 def test_dispatch_model_rejects_wrong_vector_length():
     model = GenericDispatchModel(resolve("songshan_lake_carnot"))
 

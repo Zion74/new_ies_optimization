@@ -58,6 +58,23 @@ def test_generic_design_optimizer_can_include_real_electric_dispatch_status():
     assert dispatch["objective_value"] > 0
 
 
+def test_generic_design_optimizer_can_use_pv_capacity_in_real_electric_dispatch():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    result = optimizer.run_demo_search(
+        levels=[0.1],
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv",
+        dispatch_periods=24,
+    )
+
+    dispatch = result["solutions"][0]["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_pv_electric"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["pv_capacity_kw"] == 100
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

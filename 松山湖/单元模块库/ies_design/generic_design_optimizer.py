@@ -21,6 +21,7 @@ class GenericDesignOptimizer:
         levels: Iterable[float] | None = None,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
     ) -> dict[str, Any]:
         levels = list(levels if levels is not None else [0.0, 0.5, 1.0])
@@ -36,6 +37,7 @@ class GenericDesignOptimizer:
                 vector,
                 project_root=str(project_root) if project_root else None,
                 solve_electric_dispatch=solve_electric_dispatch,
+                electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
             )
             solutions.append({
@@ -67,6 +69,7 @@ class GenericDesignOptimizer:
         levels: Iterable[float] | None = None,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
     ) -> dict[str, Path]:
         output_dir = Path(output_dir)
@@ -75,6 +78,7 @@ class GenericDesignOptimizer:
             levels=levels,
             project_root=project_root,
             solve_electric_dispatch=solve_electric_dispatch,
+            electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
         )
 
