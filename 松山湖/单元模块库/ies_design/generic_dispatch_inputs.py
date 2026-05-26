@@ -173,6 +173,64 @@ class GenericDispatchInputs:
         })
         return spec
 
+    @classmethod
+    def build_grid_pv_storage_heat_cool_spec(
+        cls,
+        resolved: dict[str, Any],
+        project_root: str | Path,
+        periods: int = 24,
+        pv_capacity_kw: float = 0.0,
+        storage_power_kw: float = 0.0,
+        storage_capacity_kwh: float = 0.0,
+        heat_pump_capacity_kw: float = 0.0,
+        electric_chiller_capacity_kw: float = 0.0,
+    ) -> dict[str, Any]:
+        spec = cls.build_grid_pv_storage_electric_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity_kw,
+            storage_power_kw=storage_power_kw,
+            storage_capacity_kwh=storage_capacity_kwh,
+        )
+        project_root = Path(project_root)
+        heat_profile = _read_profile(project_root, resolved, "heat_load_kw", periods)
+        cool_profile = _read_profile(project_root, resolved, "cool_load_kw", periods)
+        heat_cop = _device_parameter(resolved, "electric_heat_pump", "cop", default=4.0)
+        cool_cop = _device_parameter(resolved, "electric_chiller", "cop", default=5.0)
+
+        spec["buses"].extend([{"id": "heat"}, {"id": "cooling"}])
+        spec["demand_sinks"].extend([
+            {"id": "heat_demand", "input_carrier": "heat", "profile": heat_profile},
+            {"id": "cooling_demand", "input_carrier": "cooling", "profile": cool_profile},
+        ])
+        spec["components"].extend([
+            {
+                "id": "electric_heat_pump",
+                "component_type": "Transformer",
+                "input_carriers": ["electricity"],
+                "output_carriers": ["heat"],
+                "capacity_variables": [
+                    {"variable_name": "capacity_kw", "role": "primary_capacity"}
+                ],
+                "applied_capacities": {"capacity_kw": heat_pump_capacity_kw},
+                "conversion_factor": heat_cop,
+            },
+            {
+                "id": "electric_chiller",
+                "component_type": "Transformer",
+                "input_carriers": ["electricity"],
+                "output_carriers": ["cooling"],
+                "capacity_variables": [
+                    {"variable_name": "capacity_kw", "role": "primary_capacity"}
+                ],
+                "applied_capacities": {"capacity_kw": electric_chiller_capacity_kw},
+                "conversion_factor": cool_cop,
+            },
+        ])
+        _resize_grid_for_ehc(spec, heat_profile, cool_profile, heat_cop, cool_cop)
+        return spec
+
 
 def _read_profile(
     project_root: Path,
@@ -224,7 +282,11 @@ def _pv_output_profile(
 
 
 def _storage_parameter(resolved: dict[str, Any], name: str, default: float) -> float:
-    device = (resolved.get("devices", {}) or {}).get("electric_storage", {}) or {}
+    return _device_parameter(resolved, "electric_storage", name, default)
+
+
+def _device_parameter(resolved: dict[str, Any], device_id: str, name: str, default: float) -> float:
+    device = (resolved.get("devices", {}) or {}).get(device_id, {}) or {}
     parameters = device.get("parameters", {}) or {}
     return _float(parameters.get(name, default))
 
@@ -236,3 +298,26 @@ def _spill_capacity(spec: dict[str, Any]) -> float:
     for component in spec.get("components", []) or []:
         peak = max(peak, max(component.get("fixed_profile", []) or [0.0]))
     return peak
+
+
+def _resize_grid_for_ehc(
+    spec: dict[str, Any],
+    heat_profile: list[float],
+    cool_profile: list[float],
+    heat_cop: float,
+    cool_cop: float,
+) -> None:
+    electric_profile = []
+    for demand in spec.get("demand_sinks", []) or []:
+        if demand.get("id") == "electricity_demand":
+            electric_profile = demand.get("profile", []) or []
+            break
+    combined_peak = 0.0
+    for ele, heat, cool in zip(electric_profile, heat_profile, cool_profile):
+        combined_peak = max(
+            combined_peak,
+            ele + heat / max(heat_cop, 1e-9) + cool / max(cool_cop, 1e-9),
+        )
+    for component in spec.get("components", []) or []:
+        if component.get("id") == "grid_electricity":
+            component.setdefault("applied_capacities", {})["capacity_kw"] = combined_peak

@@ -95,6 +95,24 @@ def test_generic_design_optimizer_can_use_storage_in_real_electric_dispatch():
     assert assignment["electric_storage"]["capacity_kwh"] == 2000
 
 
+def test_generic_design_optimizer_can_include_heat_cool_dispatch_status():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    result = optimizer.run_demo_search(
+        levels=[1.0],
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv_storage_heat_cool",
+        dispatch_periods=24,
+    )
+
+    dispatch = result["solutions"][0]["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_pv_storage_heat_cool"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["heat_pump_capacity_kw"] == 300
+    assert dispatch["electric_chiller_capacity_kw"] == 5000
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

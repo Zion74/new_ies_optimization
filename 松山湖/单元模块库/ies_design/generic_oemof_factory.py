@@ -182,19 +182,23 @@ def _build_node(
         }
 
     if component_type == "Transformer" and inputs and outputs:
+        conversion_factor = _float(component.get("conversion_factor", 1.0)) or 1.0
+        spec = _node_spec(
+            component_id,
+            component_type,
+            {inputs[0]: None},
+            {carrier: primary_capacity for carrier in outputs},
+            component,
+        )
+        spec["conversion_factor"] = conversion_factor
         return {
             "node": Transformer(
                 label=component_id,
                 inputs={buses[inputs[0]]: solph.Flow()},
                 outputs={buses[carrier]: solph.Flow(nominal_value=primary_capacity) for carrier in outputs},
+                conversion_factors={buses[carrier]: conversion_factor for carrier in outputs},
             ),
-            "spec": _node_spec(
-                component_id,
-                component_type,
-                {inputs[0]: None},
-                {carrier: primary_capacity for carrier in outputs},
-                component,
-            ),
+            "spec": spec,
             "reason": "",
         }
 

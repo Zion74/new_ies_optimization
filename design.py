@@ -63,7 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--run-generic-design", action="store_true", help="Run build-only generic capacity design search and export artifacts")
     parser.add_argument("--generic-search-levels", nargs="+", type=float, help="Unit interval levels for generic build-only design search")
     parser.add_argument("--solve-electric-dispatch", action="store_true", help="Also solve a minimal real-data grid-electric dispatch slice in generic design search")
-    parser.add_argument("--electric-dispatch-scope", choices=["grid", "grid_pv", "grid_pv_storage"], default="grid", help="Optional real electric dispatch slice scope")
+    parser.add_argument("--electric-dispatch-scope", choices=["grid", "grid_pv", "grid_pv_storage", "grid_pv_storage_heat_cool"], default="grid", help="Optional real dispatch slice scope")
     parser.add_argument("--dispatch-periods", type=int, default=24, help="Number of hours for optional generic dispatch slice")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")

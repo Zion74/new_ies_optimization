@@ -125,6 +125,41 @@ def test_oemof_factory_exports_storage_content_summary():
     assert storage["battery"]["max"] == 0
 
 
+def test_oemof_factory_applies_transformer_conversion_factor():
+    spec = {
+        "buses": [{"id": "electricity"}, {"id": "heat"}],
+        "demand_sinks": [
+            {"id": "heat_demand", "input_carrier": "heat", "profile": [10, 10, 10]}
+        ],
+        "components": [
+            {
+                "id": "grid",
+                "component_type": "Source",
+                "output_carriers": ["electricity"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 100},
+                "variable_costs": 1,
+            },
+            {
+                "id": "electric_heat_pump",
+                "component_type": "Transformer",
+                "input_carriers": ["electricity"],
+                "output_carriers": ["heat"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 10},
+                "conversion_factor": 2,
+            },
+        ],
+    }
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=3, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    assert result["objective_value"] == 15
+    node_specs = {item["id"]: item for item in result["node_specs"]}
+    assert node_specs["electric_heat_pump"]["conversion_factor"] == 2
+
+
 def test_oemof_factory_uses_fixed_source_profile_before_costly_grid():
     spec = {
         "buses": [{"id": "electricity"}],
