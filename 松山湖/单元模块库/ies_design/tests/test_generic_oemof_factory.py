@@ -80,6 +80,41 @@ def test_oemof_factory_solves_minimal_electric_dispatch_with_glpk():
     assert result["objective_value"] == 30
 
 
+def test_oemof_factory_uses_fixed_source_profile_before_costly_grid():
+    spec = {
+        "buses": [{"id": "electricity"}],
+        "demand_sinks": [
+            {"id": "electricity_demand", "input_carrier": "electricity", "profile": [10, 10, 10]}
+        ],
+        "components": [
+            {
+                "id": "pv",
+                "component_type": "Source",
+                "output_carriers": ["electricity"],
+                "fixed_profile": [5, 5, 5],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 1},
+                "variable_costs": 0,
+            },
+            {
+                "id": "grid",
+                "component_type": "Source",
+                "output_carriers": ["electricity"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 100},
+                "variable_costs": 1,
+            },
+        ],
+    }
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=3, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    assert result["objective_value"] == 15
+    node_specs = {item["id"]: item for item in result["node_specs"]}
+    assert node_specs["pv"]["outputs"]["electricity"]["fixed_profile"] == [5, 5, 5]
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

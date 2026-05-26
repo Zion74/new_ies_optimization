@@ -48,6 +48,46 @@ def test_songshan_grid_electric_dispatch_solves_with_real_profile():
     assert result["objective_value"] > 0
 
 
+def test_builds_grid_pv_electric_dispatch_spec_from_songshan_real_data():
+    spec = GenericDispatchInputs.build_grid_pv_electric_spec(
+        resolve("songshan_lake"),
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=100,
+    )
+
+    components = {item["id"]: item for item in spec["components"]}
+    pv_profile = components["pv"]["fixed_profile"]
+
+    assert "electricity_spill" in [item["id"] for item in spec["demand_sinks"]]
+    assert len(pv_profile) == 24
+    assert max(pv_profile) > 0
+    assert components["pv"]["applied_capacities"]["capacity_kw"] == 100
+    assert components["grid_electricity"]["variable_costs"] == 0.6746
+
+
+def test_songshan_grid_pv_dispatch_reduces_grid_purchase_cost():
+    resolved = resolve("songshan_lake")
+    grid_only = GenericDispatchInputs.build_grid_electric_spec(
+        resolved,
+        project_root=PROJECT_ROOT,
+        periods=24,
+    )
+    with_pv = GenericDispatchInputs.build_grid_pv_electric_spec(
+        resolved,
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=100,
+    )
+
+    grid_result = GenericOemofFactory.solve_dispatch(grid_only, periods=24, solver_names=["glpk"])
+    pv_result = GenericOemofFactory.solve_dispatch(with_pv, periods=24, solver_names=["glpk"])
+
+    assert grid_result["dispatch_solved"] is True
+    assert pv_result["dispatch_solved"] is True
+    assert pv_result["objective_value"] < grid_result["objective_value"]
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

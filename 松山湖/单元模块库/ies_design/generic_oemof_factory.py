@@ -57,7 +57,7 @@ class GenericOemofFactory:
                 })
 
             for component in spec.get("components", []) or []:
-                node = _build_node(component, buses, solph, Source, Sink, Transformer, GenericStorage)
+                node = _build_node(component, buses, solph, Source, Sink, Transformer, GenericStorage, periods)
                 if node["node"] is None:
                     skipped_components.append({"id": component.get("id", ""), "reason": node["reason"]})
                     continue
@@ -150,6 +150,7 @@ def _build_node(
     Sink: Any,
     Transformer: Any,
     GenericStorage: Any,
+    periods: int,
 ) -> dict[str, Any]:
     component_id = component.get("id", "")
     component_type = component.get("component_type", "")
@@ -160,9 +161,10 @@ def _build_node(
 
     if component_type == "Source" and outputs:
         output = outputs[0]
+        fixed_profile = _profile({"profile": component.get("fixed_profile")}, periods) if "fixed_profile" in component else None
         return {
-            "node": Source(label=component_id, outputs={buses[output]: solph.Flow(**_flow_kwargs(primary_capacity, component))}),
-            "spec": _node_spec(component_id, component_type, {}, {output: primary_capacity}, component),
+            "node": Source(label=component_id, outputs={buses[output]: solph.Flow(**_flow_kwargs(primary_capacity, component, periods))}),
+            "spec": _node_spec(component_id, component_type, {}, {output: primary_capacity}, component, fixed_profile=fixed_profile),
             "reason": "",
         }
 
@@ -226,9 +228,17 @@ def _node_spec(
     inputs: dict[str, float | None],
     outputs: dict[str, float | None],
     component: dict[str, Any] | None = None,
+    fixed_profile: list[float] | None = None,
 ) -> dict[str, Any]:
     component = component or {}
     variable_costs = _float(component.get("variable_costs"))
+    output_specs = {
+        carrier: {"nominal_value": value, "variable_costs": variable_costs}
+        for carrier, value in outputs.items()
+    }
+    if fixed_profile is not None:
+        for output in output_specs.values():
+            output["fixed_profile"] = fixed_profile
     return {
         "id": component_id,
         "component_type": component_type,
@@ -236,10 +246,7 @@ def _node_spec(
             carrier: {"nominal_value": value}
             for carrier, value in inputs.items()
         },
-        "outputs": {
-            carrier: {"nominal_value": value, "variable_costs": variable_costs}
-            for carrier, value in outputs.items()
-        },
+        "outputs": output_specs,
     }
 
 
@@ -253,7 +260,12 @@ def _profile(item: dict[str, Any], periods: int) -> list[float]:
     return values + [0.0] * (periods - len(values))
 
 
-def _flow_kwargs(nominal_value: float, component: dict[str, Any]) -> dict[str, float]:
+def _flow_kwargs(nominal_value: float, component: dict[str, Any], periods: int) -> dict[str, Any]:
+    if "fixed_profile" in component:
+        kwargs = {"fix": _profile({"profile": component.get("fixed_profile")}, periods), "nominal_value": 1}
+        if "variable_costs" in component:
+            kwargs["variable_costs"] = _float(component.get("variable_costs"))
+        return kwargs
     kwargs = {"nominal_value": nominal_value}
     if "variable_costs" in component:
         kwargs["variable_costs"] = _float(component.get("variable_costs"))
