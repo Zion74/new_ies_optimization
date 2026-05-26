@@ -201,10 +201,18 @@ def _build_node(
                 inputs={buses[carrier]: solph.Flow(nominal_value=primary_capacity)},
                 outputs={buses[carrier]: solph.Flow(nominal_value=primary_capacity)},
                 nominal_storage_capacity=energy_capacity,
+                inflow_conversion_factor=_float(component.get("charge_efficiency", 1.0)),
+                outflow_conversion_factor=_float(component.get("discharge_efficiency", 1.0)),
+                loss_rate=_float(component.get("loss_rate", 0.0)),
+                initial_storage_level=0,
+                balanced=False,
             ),
             "spec": {
                 **_node_spec(component_id, component_type, {carrier: primary_capacity}, {carrier: primary_capacity}, component),
                 "nominal_storage_capacity": energy_capacity,
+                "charge_efficiency": _float(component.get("charge_efficiency", 1.0)),
+                "discharge_efficiency": _float(component.get("discharge_efficiency", 1.0)),
+                "loss_rate": _float(component.get("loss_rate", 0.0)),
             },
             "reason": "",
         }

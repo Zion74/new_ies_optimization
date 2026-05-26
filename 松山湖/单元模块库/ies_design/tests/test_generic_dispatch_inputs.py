@@ -88,6 +88,45 @@ def test_songshan_grid_pv_dispatch_reduces_grid_purchase_cost():
     assert pv_result["objective_value"] < grid_result["objective_value"]
 
 
+def test_builds_grid_pv_storage_dispatch_spec_from_songshan_real_data():
+    spec = GenericDispatchInputs.build_grid_pv_storage_electric_spec(
+        resolve("songshan_lake"),
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=100,
+        storage_power_kw=10,
+        storage_capacity_kwh=20,
+    )
+
+    components = {item["id"]: item for item in spec["components"]}
+    storage = components["electric_storage"]
+
+    assert components["electricity_spill"]["component_type"] == "Sink"
+    assert storage["component_type"] == "GenericStorage"
+    assert storage["applied_capacities"]["power_kw"] == 10
+    assert storage["applied_capacities"]["capacity_kwh"] == 20
+    assert storage["charge_efficiency"] == 0.95
+    assert storage["discharge_efficiency"] == 0.95
+
+
+def test_songshan_grid_pv_storage_dispatch_solves_with_storage_capacity():
+    resolved = resolve("songshan_lake")
+    with_storage = GenericDispatchInputs.build_grid_pv_storage_electric_spec(
+        resolved,
+        project_root=PROJECT_ROOT,
+        periods=24,
+        pv_capacity_kw=1000,
+        storage_power_kw=100,
+        storage_capacity_kwh=200,
+    )
+
+    result = GenericOemofFactory.solve_dispatch(with_storage, periods=24, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    node_specs = {item["id"]: item for item in result["node_specs"]}
+    assert node_specs["electric_storage"]["nominal_storage_capacity"] == 200
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

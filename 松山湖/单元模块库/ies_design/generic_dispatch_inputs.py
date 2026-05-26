@@ -123,6 +123,56 @@ class GenericDispatchInputs:
             ],
         }
 
+    @classmethod
+    def build_grid_pv_storage_electric_spec(
+        cls,
+        resolved: dict[str, Any],
+        project_root: str | Path,
+        periods: int = 24,
+        pv_capacity_kw: float = 0.0,
+        storage_power_kw: float = 0.0,
+        storage_capacity_kwh: float = 0.0,
+    ) -> dict[str, Any]:
+        spec = cls.build_grid_pv_electric_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity_kw,
+        )
+        # Use a variable spill sink in storage cases so PV surplus can be curtailed.
+        spec["demand_sinks"] = [
+            item for item in spec["demand_sinks"]
+            if item.get("id") != "electricity_spill"
+        ]
+        spec["components"].append({
+            "id": "electric_storage",
+            "component_type": "GenericStorage",
+            "input_carriers": ["electricity"],
+            "output_carriers": ["electricity"],
+            "capacity_variables": [
+                {"variable_name": "power_kw", "role": "primary_capacity"},
+                {"variable_name": "capacity_kwh", "role": "energy_capacity"},
+            ],
+            "applied_capacities": {
+                "power_kw": storage_power_kw,
+                "capacity_kwh": storage_capacity_kwh,
+            },
+            "charge_efficiency": _storage_parameter(resolved, "charge_efficiency", default=0.95),
+            "discharge_efficiency": _storage_parameter(resolved, "discharge_efficiency", default=0.95),
+            "loss_rate": _storage_parameter(resolved, "loss_rate", default=0.0),
+        })
+        spec["components"].append({
+            "id": "electricity_spill",
+            "component_type": "Sink",
+            "input_carriers": ["electricity"],
+            "capacity_variables": [
+                {"variable_name": "capacity_kw", "role": "primary_capacity"}
+            ],
+            "applied_capacities": {"capacity_kw": _spill_capacity(spec)},
+            "variable_costs": 0,
+        })
+        return spec
+
 
 def _read_profile(
     project_root: Path,
@@ -171,3 +221,18 @@ def _pv_output_profile(
         max(0.0, capacity_kw * 0.9 * radiation / 1000 * (1 - 0.0035 * (temperature - 25)))
         for radiation, temperature in zip(solar_radiation_w_m2, temperature_c)
     ]
+
+
+def _storage_parameter(resolved: dict[str, Any], name: str, default: float) -> float:
+    device = (resolved.get("devices", {}) or {}).get("electric_storage", {}) or {}
+    parameters = device.get("parameters", {}) or {}
+    return _float(parameters.get(name, default))
+
+
+def _spill_capacity(spec: dict[str, Any]) -> float:
+    peak = 0.0
+    for demand in spec.get("demand_sinks", []) or []:
+        peak = max(peak, max(demand.get("profile", []) or [0.0]))
+    for component in spec.get("components", []) or []:
+        peak = max(peak, max(component.get("fixed_profile", []) or [0.0]))
+    return peak
