@@ -119,8 +119,23 @@ def _solve_real_electric_dispatch(
         return {"scope": "", "dispatch_solved": False, "skipped": True, "reason": "not requested"}
     if not project_root:
         return {"scope": "grid_electric", "dispatch_solved": False, "skipped": True, "reason": "project_root is required"}
-    if scope == "grid_pv":
+    if scope == "grid_pv_storage":
         pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
+        storage_power = _float(assignment.get("electric_storage", {}).get("power_kw"))
+        storage_capacity = _float(assignment.get("electric_storage", {}).get("capacity_kwh")) or storage_power * 2
+        spec = GenericDispatchInputs.build_grid_pv_storage_electric_spec(
+            resolved,
+            project_root=project_root,
+            periods=periods,
+            pv_capacity_kw=pv_capacity,
+            storage_power_kw=storage_power,
+            storage_capacity_kwh=storage_capacity,
+        )
+        dispatch_scope = "grid_pv_storage_electric"
+    elif scope == "grid_pv":
+        pv_capacity = _float(assignment.get("pv", {}).get("capacity_kw"))
+        storage_power = 0.0
+        storage_capacity = 0.0
         spec = GenericDispatchInputs.build_grid_pv_electric_spec(
             resolved,
             project_root=project_root,
@@ -130,6 +145,8 @@ def _solve_real_electric_dispatch(
         dispatch_scope = "grid_pv_electric"
     else:
         pv_capacity = 0.0
+        storage_power = 0.0
+        storage_capacity = 0.0
         spec = GenericDispatchInputs.build_grid_electric_spec(
             resolved,
             project_root=project_root,
@@ -144,6 +161,8 @@ def _solve_real_electric_dispatch(
         "termination_condition": result.get("termination_condition", ""),
         "objective_value": result.get("objective_value"),
         "pv_capacity_kw": pv_capacity,
+        "storage_power_kw": storage_power,
+        "storage_capacity_kwh": storage_capacity,
         "error": result.get("error", ""),
         "node_count": result.get("node_count", 0),
     }

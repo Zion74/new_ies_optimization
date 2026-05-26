@@ -106,6 +106,28 @@ def test_dispatch_model_can_solve_real_grid_pv_dispatch_slice_using_capacity_vec
     assert pv_dispatch["objective_value"] < grid_dispatch["objective_value"]
 
 
+def test_dispatch_model_can_solve_real_grid_pv_storage_dispatch_slice():
+    model = GenericDispatchModel(resolve("songshan_lake"))
+    vector = [0.0 for _ in model.capacity_space.upper_bounds]
+    vector[model.capacity_space.names.index("pv.capacity_kw")] = 1000.0
+    vector[model.capacity_space.names.index("electric_storage.power_kw")] = 100.0
+
+    result = model.evaluate(
+        vector,
+        project_root=PROJECT_ROOT,
+        solve_electric_dispatch=True,
+        electric_dispatch_scope="grid_pv_storage",
+        dispatch_periods=24,
+    )
+
+    dispatch = result["generic_model"]["real_dispatch"]
+    assert dispatch["scope"] == "grid_pv_storage_electric"
+    assert dispatch["dispatch_solved"] is True
+    assert dispatch["pv_capacity_kw"] == 1000
+    assert dispatch["storage_power_kw"] == 100
+    assert dispatch["storage_capacity_kwh"] == 200
+
+
 def test_dispatch_model_rejects_wrong_vector_length():
     model = GenericDispatchModel(resolve("songshan_lake_carnot"))
 

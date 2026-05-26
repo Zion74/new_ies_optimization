@@ -173,6 +173,24 @@ def test_run_generic_design_can_export_grid_pv_dispatch_status():
         assert '"pv_capacity_kw": 100.0' in data
 
 
+def test_run_generic_design_can_export_grid_pv_storage_dispatch_status():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(SONGSHAN),
+            "--run-generic-design",
+            "--generic-search-levels", "0.5",
+            "--solve-electric-dispatch",
+            "--electric-dispatch-scope", "grid_pv_storage",
+            "--dispatch-periods", "24",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        data = (Path(tmp) / "generic_design_solutions.json").read_text(encoding="utf-8")
+        assert "grid_pv_storage_electric" in data
+        assert '"storage_power_kw": 1000.0' in data
+        assert '"storage_capacity_kwh": 2000.0' in data
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")
