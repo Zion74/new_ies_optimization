@@ -165,6 +165,34 @@ def test_generic_design_optimizer_capacity_search_can_solve_cchp_dispatch():
     )
 
 
+def test_generic_design_optimizer_runs_reproducible_de_search():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    first = optimizer.run_de_search(population_size=4, generations=2, random_seed=9)
+    second = optimizer.run_de_search(population_size=4, generations=2, random_seed=9)
+
+    assert first["status"] == "capacity_search"
+    assert first["search_strategy"] == "differential_evolution"
+    assert first["population_size"] == 4
+    assert first["generation_count"] == 2
+    assert len(first["solutions"]) == 4
+    assert first["best_solution"]["total_objective"] == min(
+        item["total_objective"] for item in first["solutions"]
+    )
+    assert first["solutions"] == second["solutions"]
+
+
+def test_generic_design_optimizer_de_search_validates_population_size():
+    optimizer = GenericDesignOptimizer(resolve("songshan_lake"))
+
+    try:
+        optimizer.run_de_search(population_size=3, generations=1)
+    except ValueError as exc:
+        assert "population_size" in str(exc)
+    else:
+        raise AssertionError("expected ValueError")
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

@@ -62,8 +62,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--build-generic-model", action="store_true", help="Build and export generic model component artifacts and exit")
     parser.add_argument("--run-generic-design", action="store_true", help="Run build-only generic capacity design search and export artifacts")
     parser.add_argument("--generic-search-levels", nargs="+", type=float, help="Unit interval levels for generic build-only design search")
-    parser.add_argument("--generic-search-strategy", choices=["demo", "random"], default="demo", help="Generic capacity search strategy")
+    parser.add_argument("--generic-search-strategy", choices=["demo", "random", "de"], default="demo", help="Generic capacity search strategy")
     parser.add_argument("--generic-candidates", type=int, default=8, help="Candidate count for random generic capacity search")
+    parser.add_argument("--generic-population", type=int, default=12, help="Population size for DE generic capacity search")
+    parser.add_argument("--generic-generations", type=int, default=5, help="Generation count for DE generic capacity search")
     parser.add_argument("--generic-random-seed", type=int, default=1, help="Random seed for generic capacity search")
     parser.add_argument("--solve-electric-dispatch", action="store_true", help="Also solve a minimal real-data grid-electric dispatch slice in generic design search")
     parser.add_argument("--electric-dispatch-scope", choices=["grid", "grid_pv", "grid_pv_storage", "grid_pv_storage_heat_cool", "grid_pv_storage_cchp"], default="grid", help="Optional real dispatch slice scope")
@@ -196,7 +198,19 @@ def main(argv: list[str] | None = None) -> int:
             return 3
         output_dir = Path(args.output) if args.output else root / "DesignResults" / "generic_designs" / scenario_id
         try:
-            if args.generic_search_strategy == "random":
+            if args.generic_search_strategy == "de":
+                outputs = GenericDesignOptimizer.export_de_search(
+                    resolved,
+                    output_dir,
+                    population_size=args.generic_population,
+                    generations=args.generic_generations,
+                    random_seed=args.generic_random_seed,
+                    project_root=root,
+                    solve_electric_dispatch=args.solve_electric_dispatch,
+                    electric_dispatch_scope=args.electric_dispatch_scope,
+                    dispatch_periods=args.dispatch_periods,
+                )
+            elif args.generic_search_strategy == "random":
                 outputs = GenericDesignOptimizer.export_capacity_search(
                     resolved,
                     output_dir,

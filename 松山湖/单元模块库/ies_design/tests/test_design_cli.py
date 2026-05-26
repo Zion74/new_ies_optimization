@@ -245,6 +245,26 @@ def test_run_generic_design_can_export_random_capacity_search_results():
         assert "random" in report
 
 
+def test_run_generic_design_can_export_de_capacity_search_results():
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(SONGSHAN),
+            "--run-generic-design",
+            "--generic-search-strategy", "de",
+            "--generic-population", "4",
+            "--generic-generations", "1",
+            "--generic-random-seed", "13",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        data = (Path(tmp) / "generic_design_solutions.json").read_text(encoding="utf-8")
+        report = (Path(tmp) / "generic_design_report.md").read_text(encoding="utf-8")
+        assert '"search_strategy": "differential_evolution"' in data
+        assert '"population_size": 4' in data
+        assert "best_solution" in data
+        assert "differential_evolution" in report
+
+
 def test_future_supported_validate_only_requires_accept_future():
     third = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "third_placeholder" / "scenario.yaml"
     result = run_cli("--scenario", str(third), "--validate-only")

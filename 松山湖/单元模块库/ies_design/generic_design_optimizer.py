@@ -99,6 +99,110 @@ class GenericDesignOptimizer:
             "next_step": "replace random candidate generation with NSGA-II/DE while reusing GenericDispatchModel.evaluate",
         }
 
+    def run_de_search(
+        self,
+        population_size: int = 12,
+        generations: int = 5,
+        random_seed: int = 1,
+        mutation_factor: float = 0.6,
+        crossover_rate: float = 0.7,
+        project_root: str | Path | None = None,
+        solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
+        dispatch_periods: int = 24,
+    ) -> dict[str, Any]:
+        if population_size < 4:
+            raise ValueError("population_size must be at least 4 for differential evolution")
+        if generations < 0:
+            raise ValueError("generations must be non-negative")
+
+        rng = random.Random(random_seed)
+        lower_bounds = self.capacity_space.lower_bounds
+        upper_bounds = self.capacity_space.upper_bounds
+        population = _initial_de_population(lower_bounds, upper_bounds, population_size, rng)
+        scores = [
+            self._evaluate_vector_score(
+                vector,
+                project_root=project_root,
+                solve_electric_dispatch=solve_electric_dispatch,
+                electric_dispatch_scope=electric_dispatch_scope,
+                dispatch_periods=dispatch_periods,
+            )
+            for vector in population
+        ]
+
+        for _generation in range(generations):
+            for idx, current in enumerate(population):
+                a, b, c = _sample_other_vectors(population, idx, rng)
+                mutant = _clip_vector(
+                    [
+                        av + mutation_factor * (bv - cv)
+                        for av, bv, cv in zip(a, b, c)
+                    ],
+                    lower_bounds,
+                    upper_bounds,
+                )
+                trial = _crossover(current, mutant, crossover_rate, rng)
+                trial_score = self._evaluate_vector_score(
+                    trial,
+                    project_root=project_root,
+                    solve_electric_dispatch=solve_electric_dispatch,
+                    electric_dispatch_scope=electric_dispatch_scope,
+                    dispatch_periods=dispatch_periods,
+                )
+                if trial_score <= scores[idx]:
+                    population[idx] = trial
+                    scores[idx] = trial_score
+
+        solutions = [
+            self._evaluate_solution(
+                solution_id=solution_id,
+                vector=vector,
+                level="",
+                project_root=project_root,
+                solve_electric_dispatch=solve_electric_dispatch,
+                electric_dispatch_scope=electric_dispatch_scope,
+                dispatch_periods=dispatch_periods,
+                search_strategy="differential_evolution",
+            )
+            for solution_id, vector in enumerate(population)
+        ]
+        best_solution = min(solutions, key=lambda item: item.get("total_objective", float("inf"))) if solutions else {}
+        return {
+            "status": "capacity_search",
+            "search_strategy": "differential_evolution",
+            "candidate_count": len(solutions),
+            "population_size": population_size,
+            "generation_count": generations,
+            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
+            "capacity_variable_count": len(self.capacity_space.variables),
+            "capacity_variable_names": self.capacity_space.names,
+            "solutions": solutions,
+            "best_solution": best_solution,
+            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
+            "next_step": "connect differential_evolution outputs to multi-objective NSGA-II/DE selection and full-year dispatch metrics",
+        }
+
+    def _evaluate_vector_score(
+        self,
+        vector: list[float],
+        project_root: str | Path | None,
+        solve_electric_dispatch: bool,
+        electric_dispatch_scope: str,
+        dispatch_periods: int,
+    ) -> float:
+        solution = self._evaluate_solution(
+            solution_id=-1,
+            vector=vector,
+            level="",
+            project_root=project_root,
+            solve_electric_dispatch=solve_electric_dispatch,
+            electric_dispatch_scope=electric_dispatch_scope,
+            dispatch_periods=dispatch_periods,
+            search_strategy="differential_evolution",
+        )
+        return _solution_score(solution, solve_electric_dispatch)
+
     def _evaluate_solution(
         self,
         solution_id: int,
@@ -204,6 +308,44 @@ class GenericDesignOptimizer:
             "generic_design_report": report_path,
         }
 
+    @classmethod
+    def export_de_search(
+        cls,
+        resolved: dict[str, Any],
+        output_dir: str | Path,
+        population_size: int = 12,
+        generations: int = 5,
+        random_seed: int = 1,
+        project_root: str | Path | None = None,
+        solve_electric_dispatch: bool = False,
+        electric_dispatch_scope: str = "grid",
+        dispatch_periods: int = 24,
+    ) -> dict[str, Path]:
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        result = cls(resolved).run_de_search(
+            population_size=population_size,
+            generations=generations,
+            random_seed=random_seed,
+            project_root=project_root,
+            solve_electric_dispatch=solve_electric_dispatch,
+            electric_dispatch_scope=electric_dispatch_scope,
+            dispatch_periods=dispatch_periods,
+        )
+
+        json_path = output_dir / "generic_design_solutions.json"
+        csv_path = output_dir / "generic_design_solutions.csv"
+        report_path = output_dir / "generic_design_report.md"
+
+        json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+        _write_solutions_csv(csv_path, result)
+        report_path.write_text(_build_design_report(result), encoding="utf-8")
+        return {
+            "generic_design_solutions": json_path,
+            "generic_design_solutions_csv": csv_path,
+            "generic_design_report": report_path,
+        }
+
 
 def _validate_levels(levels: list[float]) -> None:
     if not levels:
@@ -229,6 +371,63 @@ def _capacity_search_vectors(
             for lower, upper in zip(lower_bounds, upper_bounds)
         ])
     return vectors
+
+
+def _initial_de_population(
+    lower_bounds: list[float],
+    upper_bounds: list[float],
+    population_size: int,
+    rng: random.Random,
+) -> list[list[float]]:
+    population = [list(upper_bounds), list(lower_bounds)]
+    while len(population) < population_size:
+        population.append([
+            lower + (upper - lower) * rng.random()
+            for lower, upper in zip(lower_bounds, upper_bounds)
+        ])
+    return population[:population_size]
+
+
+def _sample_other_vectors(
+    population: list[list[float]],
+    current_index: int,
+    rng: random.Random,
+) -> tuple[list[float], list[float], list[float]]:
+    candidates = [idx for idx in range(len(population)) if idx != current_index]
+    selected = rng.sample(candidates, 3)
+    return population[selected[0]], population[selected[1]], population[selected[2]]
+
+
+def _clip_vector(
+    vector: list[float],
+    lower_bounds: list[float],
+    upper_bounds: list[float],
+) -> list[float]:
+    return [
+        min(max(value, lower), upper)
+        for value, lower, upper in zip(vector, lower_bounds, upper_bounds)
+    ]
+
+
+def _crossover(
+    current: list[float],
+    mutant: list[float],
+    crossover_rate: float,
+    rng: random.Random,
+) -> list[float]:
+    if not current:
+        return []
+    forced_index = rng.randrange(len(current))
+    return [
+        mutant[idx] if idx == forced_index or rng.random() < crossover_rate else current[idx]
+        for idx in range(len(current))
+    ]
+
+
+def _solution_score(solution: dict[str, Any], solve_dispatch_requested: bool) -> float:
+    if solve_dispatch_requested and not solution.get("dispatch_solved"):
+        return 1e18 + float(solution.get("investment_cost", 0.0) or 0.0)
+    return float(solution.get("total_objective", 0.0) or 0.0)
 
 
 def _objective_value(dispatch: dict[str, Any]) -> float:
