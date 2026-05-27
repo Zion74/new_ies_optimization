@@ -1,0 +1,1441 @@
+﻿profile_id,month,hour,input_id,input_type,carrier_id,value,unit,price_id,remark
+M01,1,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,1,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,1,waste_heat,recoverable_energy,heat,250,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,1,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,2,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,2,waste_heat,recoverable_energy,heat,268.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,2,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,3,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,3,waste_heat,recoverable_energy,heat,286.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,3,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,4,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,4,waste_heat,recoverable_energy,heat,304.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,4,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,5,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,5,waste_heat,recoverable_energy,heat,322.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,5,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,6,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,6,waste_heat,recoverable_energy,heat,340.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,6,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,7,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,7,waste_heat,recoverable_energy,heat,359.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,7,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,8,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,8,waste_heat,recoverable_energy,heat,377.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,8,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,9,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,9,waste_heat,recoverable_energy,heat,395.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,9,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,10,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,10,waste_heat,recoverable_energy,heat,413.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,10,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,11,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,11,waste_heat,recoverable_energy,heat,431.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,11,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,12,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,12,waste_heat,recoverable_energy,heat,450,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,12,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,13,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,13,waste_heat,recoverable_energy,heat,434.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,13,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,14,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,14,waste_heat,recoverable_energy,heat,419.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,14,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,15,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,15,waste_heat,recoverable_energy,heat,403.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,15,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,16,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,16,waste_heat,recoverable_energy,heat,388.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,16,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,17,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,17,waste_heat,recoverable_energy,heat,373.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,17,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,18,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,18,waste_heat,recoverable_energy,heat,357.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,18,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,19,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,19,waste_heat,recoverable_energy,heat,342.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,19,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,20,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,20,waste_heat,recoverable_energy,heat,326.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,20,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,21,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,21,waste_heat,recoverable_energy,heat,311.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,21,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,22,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,22,waste_heat,recoverable_energy,heat,296.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,22,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,23,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,23,waste_heat,recoverable_energy,heat,280.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,23,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M01,1,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M01,1,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M01,1,24,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M01,1,24,waste_heat,recoverable_energy,heat,265.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M01,1,24,temperature,environment,temperature,,C,,generated from raw weather_data monthly-hourly average
+M02,2,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,1,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,1,waste_heat,recoverable_energy,heat,260,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,1,temperature,environment,temperature,5.3,C,,generated from raw weather_data monthly-hourly average
+M02,2,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,2,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,2,waste_heat,recoverable_energy,heat,278.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,2,temperature,environment,temperature,5.07,C,,generated from raw weather_data monthly-hourly average
+M02,2,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,3,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,3,waste_heat,recoverable_energy,heat,296.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,3,temperature,environment,temperature,4.885,C,,generated from raw weather_data monthly-hourly average
+M02,2,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,4,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,4,waste_heat,recoverable_energy,heat,314.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,4,temperature,environment,temperature,4.717,C,,generated from raw weather_data monthly-hourly average
+M02,2,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,5,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,5,waste_heat,recoverable_energy,heat,332.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,5,temperature,environment,temperature,4.428,C,,generated from raw weather_data monthly-hourly average
+M02,2,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,6,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,6,waste_heat,recoverable_energy,heat,350.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,6,temperature,environment,temperature,4.293,C,,generated from raw weather_data monthly-hourly average
+M02,2,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,7,solar_resource,renewable_resource,solar_resource,0,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,7,waste_heat,recoverable_energy,heat,369.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,7,temperature,environment,temperature,4.147,C,,generated from raw weather_data monthly-hourly average
+M02,2,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,8,solar_resource,renewable_resource,solar_resource,15.9,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,8,waste_heat,recoverable_energy,heat,387.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,8,temperature,environment,temperature,4.58,C,,generated from raw weather_data monthly-hourly average
+M02,2,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,9,solar_resource,renewable_resource,solar_resource,109.65,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,9,waste_heat,recoverable_energy,heat,405.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,9,temperature,environment,temperature,5.916,C,,generated from raw weather_data monthly-hourly average
+M02,2,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,10,solar_resource,renewable_resource,solar_resource,197.4,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,10,waste_heat,recoverable_energy,heat,423.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,10,temperature,environment,temperature,7.458,C,,generated from raw weather_data monthly-hourly average
+M02,2,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,11,solar_resource,renewable_resource,solar_resource,302.45,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,11,waste_heat,recoverable_energy,heat,441.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,11,temperature,environment,temperature,8.96,C,,generated from raw weather_data monthly-hourly average
+M02,2,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,12,solar_resource,renewable_resource,solar_resource,320.1,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,12,waste_heat,recoverable_energy,heat,460,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,12,temperature,environment,temperature,9.711,C,,generated from raw weather_data monthly-hourly average
+M02,2,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,13,solar_resource,renewable_resource,solar_resource,293.7,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,13,waste_heat,recoverable_energy,heat,444.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,13,temperature,environment,temperature,10.207,C,,generated from raw weather_data monthly-hourly average
+M02,2,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,14,solar_resource,renewable_resource,solar_resource,289.6,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,14,waste_heat,recoverable_energy,heat,429.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,14,temperature,environment,temperature,10.551,C,,generated from raw weather_data monthly-hourly average
+M02,2,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,15,solar_resource,renewable_resource,solar_resource,237.4,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,15,waste_heat,recoverable_energy,heat,413.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,15,temperature,environment,temperature,10.637,C,,generated from raw weather_data monthly-hourly average
+M02,2,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,16,solar_resource,renewable_resource,solar_resource,197.8,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,16,waste_heat,recoverable_energy,heat,398.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,16,temperature,environment,temperature,10.578,C,,generated from raw weather_data monthly-hourly average
+M02,2,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,17,solar_resource,renewable_resource,solar_resource,132.55,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,17,waste_heat,recoverable_energy,heat,383.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,17,temperature,environment,temperature,10.25,C,,generated from raw weather_data monthly-hourly average
+M02,2,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,18,solar_resource,renewable_resource,solar_resource,42.05,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,18,waste_heat,recoverable_energy,heat,367.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,18,temperature,environment,temperature,9.756,C,,generated from raw weather_data monthly-hourly average
+M02,2,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,19,solar_resource,renewable_resource,solar_resource,9.2,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,19,waste_heat,recoverable_energy,heat,352.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,19,temperature,environment,temperature,8.86,C,,generated from raw weather_data monthly-hourly average
+M02,2,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,20,solar_resource,renewable_resource,solar_resource,6.55,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,20,waste_heat,recoverable_energy,heat,336.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,20,temperature,environment,temperature,8.269,C,,generated from raw weather_data monthly-hourly average
+M02,2,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,21,solar_resource,renewable_resource,solar_resource,5.4,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,21,waste_heat,recoverable_energy,heat,321.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,21,temperature,environment,temperature,7.681,C,,generated from raw weather_data monthly-hourly average
+M02,2,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,22,solar_resource,renewable_resource,solar_resource,3.55,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,22,waste_heat,recoverable_energy,heat,306.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,22,temperature,environment,temperature,7.258,C,,generated from raw weather_data monthly-hourly average
+M02,2,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,23,solar_resource,renewable_resource,solar_resource,2.25,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,23,waste_heat,recoverable_energy,heat,290.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,23,temperature,environment,temperature,6.695,C,,generated from raw weather_data monthly-hourly average
+M02,2,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M02,2,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M02,2,24,solar_resource,renewable_resource,solar_resource,1.1,W/m2,,generated from raw weather_data monthly-hourly average
+M02,2,24,waste_heat,recoverable_energy,heat,275.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M02,2,24,temperature,environment,temperature,6.405,C,,generated from raw weather_data monthly-hourly average
+M03,3,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,1,solar_resource,renewable_resource,solar_resource,8.419,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,1,waste_heat,recoverable_energy,heat,270,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,1,temperature,environment,temperature,10.35,C,,generated from raw weather_data monthly-hourly average
+M03,3,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,2,solar_resource,renewable_resource,solar_resource,7.71,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,2,waste_heat,recoverable_energy,heat,288.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,2,temperature,environment,temperature,9.931,C,,generated from raw weather_data monthly-hourly average
+M03,3,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,3,solar_resource,renewable_resource,solar_resource,5.855,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,3,waste_heat,recoverable_energy,heat,306.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,3,temperature,environment,temperature,9.428,C,,generated from raw weather_data monthly-hourly average
+M03,3,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,4,solar_resource,renewable_resource,solar_resource,5.065,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,4,waste_heat,recoverable_energy,heat,324.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,4,temperature,environment,temperature,9.074,C,,generated from raw weather_data monthly-hourly average
+M03,3,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,5,solar_resource,renewable_resource,solar_resource,3.968,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,5,waste_heat,recoverable_energy,heat,342.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,5,temperature,environment,temperature,8.745,C,,generated from raw weather_data monthly-hourly average
+M03,3,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,6,solar_resource,renewable_resource,solar_resource,3.161,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,6,waste_heat,recoverable_energy,heat,360.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,6,temperature,environment,temperature,8.454,C,,generated from raw weather_data monthly-hourly average
+M03,3,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,7,solar_resource,renewable_resource,solar_resource,6.323,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,7,waste_heat,recoverable_energy,heat,379.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,7,temperature,environment,temperature,8.348,C,,generated from raw weather_data monthly-hourly average
+M03,3,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,8,solar_resource,renewable_resource,solar_resource,79.597,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,8,waste_heat,recoverable_energy,heat,397.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,8,temperature,environment,temperature,9.476,C,,generated from raw weather_data monthly-hourly average
+M03,3,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,9,solar_resource,renewable_resource,solar_resource,212.968,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,9,waste_heat,recoverable_energy,heat,415.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,9,temperature,environment,temperature,11.598,C,,generated from raw weather_data monthly-hourly average
+M03,3,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,10,solar_resource,renewable_resource,solar_resource,317.903,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,10,waste_heat,recoverable_energy,heat,433.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,10,temperature,environment,temperature,13.221,C,,generated from raw weather_data monthly-hourly average
+M03,3,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,11,solar_resource,renewable_resource,solar_resource,373.968,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,11,waste_heat,recoverable_energy,heat,451.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,11,temperature,environment,temperature,14.626,C,,generated from raw weather_data monthly-hourly average
+M03,3,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,12,solar_resource,renewable_resource,solar_resource,387.5,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,12,waste_heat,recoverable_energy,heat,470,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,12,temperature,environment,temperature,15.624,C,,generated from raw weather_data monthly-hourly average
+M03,3,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,13,solar_resource,renewable_resource,solar_resource,380.645,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,13,waste_heat,recoverable_energy,heat,454.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,13,temperature,environment,temperature,16.129,C,,generated from raw weather_data monthly-hourly average
+M03,3,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,14,solar_resource,renewable_resource,solar_resource,360.871,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,14,waste_heat,recoverable_energy,heat,439.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,14,temperature,environment,temperature,16.602,C,,generated from raw weather_data monthly-hourly average
+M03,3,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,15,solar_resource,renewable_resource,solar_resource,367.903,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,15,waste_heat,recoverable_energy,heat,423.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,15,temperature,environment,temperature,16.851,C,,generated from raw weather_data monthly-hourly average
+M03,3,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,16,solar_resource,renewable_resource,solar_resource,308.694,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,16,waste_heat,recoverable_energy,heat,408.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,16,temperature,environment,temperature,16.749,C,,generated from raw weather_data monthly-hourly average
+M03,3,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,17,solar_resource,renewable_resource,solar_resource,199.032,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,17,waste_heat,recoverable_energy,heat,393.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,17,temperature,environment,temperature,16.428,C,,generated from raw weather_data monthly-hourly average
+M03,3,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,18,solar_resource,renewable_resource,solar_resource,92.258,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,18,waste_heat,recoverable_energy,heat,377.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,18,temperature,environment,temperature,15.597,C,,generated from raw weather_data monthly-hourly average
+M03,3,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,19,solar_resource,renewable_resource,solar_resource,29.387,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,19,waste_heat,recoverable_energy,heat,362.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,19,temperature,environment,temperature,14.356,C,,generated from raw weather_data monthly-hourly average
+M03,3,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,20,solar_resource,renewable_resource,solar_resource,21.758,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,20,waste_heat,recoverable_energy,heat,346.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,20,temperature,environment,temperature,13.274,C,,generated from raw weather_data monthly-hourly average
+M03,3,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,21,solar_resource,renewable_resource,solar_resource,17.629,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,21,waste_heat,recoverable_energy,heat,331.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,21,temperature,environment,temperature,12.386,C,,generated from raw weather_data monthly-hourly average
+M03,3,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,22,solar_resource,renewable_resource,solar_resource,14.016,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,22,waste_heat,recoverable_energy,heat,316.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,22,temperature,environment,temperature,11.481,C,,generated from raw weather_data monthly-hourly average
+M03,3,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,23,solar_resource,renewable_resource,solar_resource,11.565,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,23,waste_heat,recoverable_energy,heat,300.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,23,temperature,environment,temperature,10.946,C,,generated from raw weather_data monthly-hourly average
+M03,3,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M03,3,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M03,3,24,solar_resource,renewable_resource,solar_resource,9.79,W/m2,,generated from raw weather_data monthly-hourly average
+M03,3,24,waste_heat,recoverable_energy,heat,285.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M03,3,24,temperature,environment,temperature,10.561,C,,generated from raw weather_data monthly-hourly average
+M04,4,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,1,solar_resource,renewable_resource,solar_resource,31.117,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,1,waste_heat,recoverable_energy,heat,280,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,1,temperature,environment,temperature,16.961,C,,generated from raw weather_data monthly-hourly average
+M04,4,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,2,solar_resource,renewable_resource,solar_resource,27.617,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,2,waste_heat,recoverable_energy,heat,298.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,2,temperature,environment,temperature,16.314,C,,generated from raw weather_data monthly-hourly average
+M04,4,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,3,solar_resource,renewable_resource,solar_resource,26.267,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,3,waste_heat,recoverable_energy,heat,316.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,3,temperature,environment,temperature,15.961,C,,generated from raw weather_data monthly-hourly average
+M04,4,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,4,solar_resource,renewable_resource,solar_resource,24.6,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,4,waste_heat,recoverable_energy,heat,334.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,4,temperature,environment,temperature,15.562,C,,generated from raw weather_data monthly-hourly average
+M04,4,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,5,solar_resource,renewable_resource,solar_resource,22.883,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,5,waste_heat,recoverable_energy,heat,352.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,5,temperature,environment,temperature,15.167,C,,generated from raw weather_data monthly-hourly average
+M04,4,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,6,solar_resource,renewable_resource,solar_resource,22.233,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,6,waste_heat,recoverable_energy,heat,370.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,6,temperature,environment,temperature,14.798,C,,generated from raw weather_data monthly-hourly average
+M04,4,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,7,solar_resource,renewable_resource,solar_resource,65.733,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,7,waste_heat,recoverable_energy,heat,389.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,7,temperature,environment,temperature,15.232,C,,generated from raw weather_data monthly-hourly average
+M04,4,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,8,solar_resource,renewable_resource,solar_resource,196.95,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,8,waste_heat,recoverable_energy,heat,407.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,8,temperature,environment,temperature,17.107,C,,generated from raw weather_data monthly-hourly average
+M04,4,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,9,solar_resource,renewable_resource,solar_resource,346.783,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,9,waste_heat,recoverable_energy,heat,425.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,9,temperature,environment,temperature,19.466,C,,generated from raw weather_data monthly-hourly average
+M04,4,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,10,solar_resource,renewable_resource,solar_resource,458.6,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,10,waste_heat,recoverable_energy,heat,443.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,10,temperature,environment,temperature,21.514,C,,generated from raw weather_data monthly-hourly average
+M04,4,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,11,solar_resource,renewable_resource,solar_resource,514.233,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,11,waste_heat,recoverable_energy,heat,461.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,11,temperature,environment,temperature,23.196,C,,generated from raw weather_data monthly-hourly average
+M04,4,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,12,solar_resource,renewable_resource,solar_resource,526.733,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,12,waste_heat,recoverable_energy,heat,480,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,12,temperature,environment,temperature,24.469,C,,generated from raw weather_data monthly-hourly average
+M04,4,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,13,solar_resource,renewable_resource,solar_resource,509.333,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,13,waste_heat,recoverable_energy,heat,464.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,13,temperature,environment,temperature,25.103,C,,generated from raw weather_data monthly-hourly average
+M04,4,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,14,solar_resource,renewable_resource,solar_resource,481.933,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,14,waste_heat,recoverable_energy,heat,449.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,14,temperature,environment,temperature,25.48,C,,generated from raw weather_data monthly-hourly average
+M04,4,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,15,solar_resource,renewable_resource,solar_resource,466.517,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,15,waste_heat,recoverable_energy,heat,433.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,15,temperature,environment,temperature,25.396,C,,generated from raw weather_data monthly-hourly average
+M04,4,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,16,solar_resource,renewable_resource,solar_resource,396.517,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,16,waste_heat,recoverable_energy,heat,418.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,16,temperature,environment,temperature,25.24,C,,generated from raw weather_data monthly-hourly average
+M04,4,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,17,solar_resource,renewable_resource,solar_resource,281.5,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,17,waste_heat,recoverable_energy,heat,403.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,17,temperature,environment,temperature,24.641,C,,generated from raw weather_data monthly-hourly average
+M04,4,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,18,solar_resource,renewable_resource,solar_resource,160,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,18,waste_heat,recoverable_energy,heat,387.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,18,temperature,environment,temperature,23.72,C,,generated from raw weather_data monthly-hourly average
+M04,4,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,19,solar_resource,renewable_resource,solar_resource,79.217,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,19,waste_heat,recoverable_energy,heat,372.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,19,temperature,environment,temperature,22.396,C,,generated from raw weather_data monthly-hourly average
+M04,4,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,20,solar_resource,renewable_resource,solar_resource,57.2,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,20,waste_heat,recoverable_energy,heat,356.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,20,temperature,environment,temperature,21.168,C,,generated from raw weather_data monthly-hourly average
+M04,4,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,21,solar_resource,renewable_resource,solar_resource,50.783,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,21,waste_heat,recoverable_energy,heat,341.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,21,temperature,environment,temperature,20.25,C,,generated from raw weather_data monthly-hourly average
+M04,4,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,22,solar_resource,renewable_resource,solar_resource,46,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,22,waste_heat,recoverable_energy,heat,326.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,22,temperature,environment,temperature,19.407,C,,generated from raw weather_data monthly-hourly average
+M04,4,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,23,solar_resource,renewable_resource,solar_resource,41,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,23,waste_heat,recoverable_energy,heat,310.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,23,temperature,environment,temperature,18.702,C,,generated from raw weather_data monthly-hourly average
+M04,4,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M04,4,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M04,4,24,solar_resource,renewable_resource,solar_resource,37.583,W/m2,,generated from raw weather_data monthly-hourly average
+M04,4,24,waste_heat,recoverable_energy,heat,295.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M04,4,24,temperature,environment,temperature,18.115,C,,generated from raw weather_data monthly-hourly average
+M05,5,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,1,solar_resource,renewable_resource,solar_resource,65.935,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,1,waste_heat,recoverable_energy,heat,286.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,1,temperature,environment,temperature,20.531,C,,generated from raw weather_data monthly-hourly average
+M05,5,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,2,solar_resource,renewable_resource,solar_resource,63.774,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,2,waste_heat,recoverable_energy,heat,304.848,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,2,temperature,environment,temperature,20.161,C,,generated from raw weather_data monthly-hourly average
+M05,5,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,3,solar_resource,renewable_resource,solar_resource,61.452,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,3,waste_heat,recoverable_energy,heat,323.03,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,3,temperature,environment,temperature,19.81,C,,generated from raw weather_data monthly-hourly average
+M05,5,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,4,solar_resource,renewable_resource,solar_resource,59.21,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,4,waste_heat,recoverable_energy,heat,341.212,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,4,temperature,environment,temperature,19.41,C,,generated from raw weather_data monthly-hourly average
+M05,5,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,5,solar_resource,renewable_resource,solar_resource,57.371,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,5,waste_heat,recoverable_energy,heat,359.394,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,5,temperature,environment,temperature,19.144,C,,generated from raw weather_data monthly-hourly average
+M05,5,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,6,solar_resource,renewable_resource,solar_resource,65.597,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,6,waste_heat,recoverable_energy,heat,377.576,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,6,temperature,environment,temperature,19.147,C,,generated from raw weather_data monthly-hourly average
+M05,5,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,7,solar_resource,renewable_resource,solar_resource,127.774,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,7,waste_heat,recoverable_energy,heat,395.758,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,7,temperature,environment,temperature,20.177,C,,generated from raw weather_data monthly-hourly average
+M05,5,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,8,solar_resource,renewable_resource,solar_resource,248.21,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,8,waste_heat,recoverable_energy,heat,413.939,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,8,temperature,environment,temperature,22.245,C,,generated from raw weather_data monthly-hourly average
+M05,5,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,9,solar_resource,renewable_resource,solar_resource,377.403,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,9,waste_heat,recoverable_energy,heat,432.121,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,9,temperature,environment,temperature,23.66,C,,generated from raw weather_data monthly-hourly average
+M05,5,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,10,solar_resource,renewable_resource,solar_resource,461.935,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,10,waste_heat,recoverable_energy,heat,450.303,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,10,temperature,environment,temperature,25.061,C,,generated from raw weather_data monthly-hourly average
+M05,5,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,11,solar_resource,renewable_resource,solar_resource,484.435,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,11,waste_heat,recoverable_energy,heat,468.485,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,11,temperature,environment,temperature,26.052,C,,generated from raw weather_data monthly-hourly average
+M05,5,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,12,solar_resource,renewable_resource,solar_resource,504.306,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,12,waste_heat,recoverable_energy,heat,486.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,12,temperature,environment,temperature,27.059,C,,generated from raw weather_data monthly-hourly average
+M05,5,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,13,solar_resource,renewable_resource,solar_resource,505.29,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,13,waste_heat,recoverable_energy,heat,471.282,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,13,temperature,environment,temperature,27.646,C,,generated from raw weather_data monthly-hourly average
+M05,5,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,14,solar_resource,renewable_resource,solar_resource,493.048,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,14,waste_heat,recoverable_energy,heat,455.897,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,14,temperature,environment,temperature,28.125,C,,generated from raw weather_data monthly-hourly average
+M05,5,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,15,solar_resource,renewable_resource,solar_resource,457.71,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,15,waste_heat,recoverable_energy,heat,440.513,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,15,temperature,environment,temperature,27.902,C,,generated from raw weather_data monthly-hourly average
+M05,5,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,16,solar_resource,renewable_resource,solar_resource,440.129,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,16,waste_heat,recoverable_energy,heat,425.128,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,16,temperature,environment,temperature,28.169,C,,generated from raw weather_data monthly-hourly average
+M05,5,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,17,solar_resource,renewable_resource,solar_resource,347.339,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,17,waste_heat,recoverable_energy,heat,409.744,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,17,temperature,environment,temperature,27.418,C,,generated from raw weather_data monthly-hourly average
+M05,5,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,18,solar_resource,renewable_resource,solar_resource,205.952,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,18,waste_heat,recoverable_energy,heat,394.359,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,18,temperature,environment,temperature,26.261,C,,generated from raw weather_data monthly-hourly average
+M05,5,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,19,solar_resource,renewable_resource,solar_resource,127.871,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,19,waste_heat,recoverable_energy,heat,378.974,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,19,temperature,environment,temperature,25.1,C,,generated from raw weather_data monthly-hourly average
+M05,5,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,20,solar_resource,renewable_resource,solar_resource,90.065,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,20,waste_heat,recoverable_energy,heat,363.59,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,20,temperature,environment,temperature,23.773,C,,generated from raw weather_data monthly-hourly average
+M05,5,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,21,solar_resource,renewable_resource,solar_resource,82.581,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,21,waste_heat,recoverable_energy,heat,348.205,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,21,temperature,environment,temperature,22.903,C,,generated from raw weather_data monthly-hourly average
+M05,5,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,22,solar_resource,renewable_resource,solar_resource,77.403,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,22,waste_heat,recoverable_energy,heat,332.821,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,22,temperature,environment,temperature,22.167,C,,generated from raw weather_data monthly-hourly average
+M05,5,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,23,solar_resource,renewable_resource,solar_resource,73.081,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,23,waste_heat,recoverable_energy,heat,317.436,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,23,temperature,environment,temperature,21.54,C,,generated from raw weather_data monthly-hourly average
+M05,5,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M05,5,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M05,5,24,solar_resource,renewable_resource,solar_resource,69.242,W/m2,,generated from raw weather_data monthly-hourly average
+M05,5,24,waste_heat,recoverable_energy,heat,302.051,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M05,5,24,temperature,environment,temperature,20.95,C,,generated from raw weather_data monthly-hourly average
+M06,6,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,1,solar_resource,renewable_resource,solar_resource,87.8,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,1,waste_heat,recoverable_energy,heat,293.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,1,temperature,environment,temperature,23.846,C,,generated from raw weather_data monthly-hourly average
+M06,6,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,2,solar_resource,renewable_resource,solar_resource,86.2,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,2,waste_heat,recoverable_energy,heat,311.515,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,2,temperature,environment,temperature,23.637,C,,generated from raw weather_data monthly-hourly average
+M06,6,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,3,solar_resource,renewable_resource,solar_resource,84.467,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,3,waste_heat,recoverable_energy,heat,329.697,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,3,temperature,environment,temperature,23.39,C,,generated from raw weather_data monthly-hourly average
+M06,6,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,4,solar_resource,renewable_resource,solar_resource,83.133,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,4,waste_heat,recoverable_energy,heat,347.879,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,4,temperature,environment,temperature,23.183,C,,generated from raw weather_data monthly-hourly average
+M06,6,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,5,solar_resource,renewable_resource,solar_resource,82.3,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,5,waste_heat,recoverable_energy,heat,366.061,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,5,temperature,environment,temperature,23.072,C,,generated from raw weather_data monthly-hourly average
+M06,6,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,6,solar_resource,renewable_resource,solar_resource,91.433,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,6,waste_heat,recoverable_energy,heat,384.242,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,6,temperature,environment,temperature,23.069,C,,generated from raw weather_data monthly-hourly average
+M06,6,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,7,solar_resource,renewable_resource,solar_resource,139.15,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,7,waste_heat,recoverable_energy,heat,402.424,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,7,temperature,environment,temperature,23.862,C,,generated from raw weather_data monthly-hourly average
+M06,6,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,8,solar_resource,renewable_resource,solar_resource,233.567,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,8,waste_heat,recoverable_energy,heat,420.606,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,8,temperature,environment,temperature,24.976,C,,generated from raw weather_data monthly-hourly average
+M06,6,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,9,solar_resource,renewable_resource,solar_resource,313.067,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,9,waste_heat,recoverable_energy,heat,438.788,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,9,temperature,environment,temperature,26.294,C,,generated from raw weather_data monthly-hourly average
+M06,6,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,10,solar_resource,renewable_resource,solar_resource,383.567,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,10,waste_heat,recoverable_energy,heat,456.97,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,10,temperature,environment,temperature,27.38,C,,generated from raw weather_data monthly-hourly average
+M06,6,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,11,solar_resource,renewable_resource,solar_resource,431.133,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,11,waste_heat,recoverable_energy,heat,475.152,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,11,temperature,environment,temperature,28.533,C,,generated from raw weather_data monthly-hourly average
+M06,6,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,12,solar_resource,renewable_resource,solar_resource,427.617,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,12,waste_heat,recoverable_energy,heat,493.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,12,temperature,environment,temperature,29.175,C,,generated from raw weather_data monthly-hourly average
+M06,6,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,13,solar_resource,renewable_resource,solar_resource,411.5,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,13,waste_heat,recoverable_energy,heat,477.949,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,13,temperature,environment,temperature,29.373,C,,generated from raw weather_data monthly-hourly average
+M06,6,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,14,solar_resource,renewable_resource,solar_resource,389.617,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,14,waste_heat,recoverable_energy,heat,462.564,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,14,temperature,environment,temperature,29.536,C,,generated from raw weather_data monthly-hourly average
+M06,6,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,15,solar_resource,renewable_resource,solar_resource,409.217,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,15,waste_heat,recoverable_energy,heat,447.179,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,15,temperature,environment,temperature,29.997,C,,generated from raw weather_data monthly-hourly average
+M06,6,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,16,solar_resource,renewable_resource,solar_resource,345.217,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,16,waste_heat,recoverable_energy,heat,431.795,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,16,temperature,environment,temperature,29.73,C,,generated from raw weather_data monthly-hourly average
+M06,6,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,17,solar_resource,renewable_resource,solar_resource,286.767,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,17,waste_heat,recoverable_energy,heat,416.41,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,17,temperature,environment,temperature,29.153,C,,generated from raw weather_data monthly-hourly average
+M06,6,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,18,solar_resource,renewable_resource,solar_resource,201.767,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,18,waste_heat,recoverable_energy,heat,401.026,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,18,temperature,environment,temperature,27.964,C,,generated from raw weather_data monthly-hourly average
+M06,6,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,19,solar_resource,renewable_resource,solar_resource,141.767,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,19,waste_heat,recoverable_energy,heat,385.641,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,19,temperature,environment,temperature,27.068,C,,generated from raw weather_data monthly-hourly average
+M06,6,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,20,solar_resource,renewable_resource,solar_resource,106.983,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,20,waste_heat,recoverable_energy,heat,370.256,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,20,temperature,environment,temperature,26.247,C,,generated from raw weather_data monthly-hourly average
+M06,6,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,21,solar_resource,renewable_resource,solar_resource,100.667,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,21,waste_heat,recoverable_energy,heat,354.872,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,21,temperature,environment,temperature,25.64,C,,generated from raw weather_data monthly-hourly average
+M06,6,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,22,solar_resource,renewable_resource,solar_resource,97.267,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,22,waste_heat,recoverable_energy,heat,339.487,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,22,temperature,environment,temperature,25.167,C,,generated from raw weather_data monthly-hourly average
+M06,6,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,23,solar_resource,renewable_resource,solar_resource,94.85,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,23,waste_heat,recoverable_energy,heat,324.103,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,23,temperature,environment,temperature,24.833,C,,generated from raw weather_data monthly-hourly average
+M06,6,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M06,6,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M06,6,24,solar_resource,renewable_resource,solar_resource,92.15,W/m2,,generated from raw weather_data monthly-hourly average
+M06,6,24,waste_heat,recoverable_energy,heat,308.718,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M06,6,24,temperature,environment,temperature,24.488,C,,generated from raw weather_data monthly-hourly average
+M07,7,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,1,solar_resource,renewable_resource,solar_resource,104.758,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,1,waste_heat,recoverable_energy,heat,300,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,1,temperature,environment,temperature,27.849,C,,generated from raw weather_data monthly-hourly average
+M07,7,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,2,solar_resource,renewable_resource,solar_resource,102.613,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,2,waste_heat,recoverable_energy,heat,318.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,2,temperature,environment,temperature,27.548,C,,generated from raw weather_data monthly-hourly average
+M07,7,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,3,solar_resource,renewable_resource,solar_resource,100.581,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,3,waste_heat,recoverable_energy,heat,336.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,3,temperature,environment,temperature,27.222,C,,generated from raw weather_data monthly-hourly average
+M07,7,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,4,solar_resource,renewable_resource,solar_resource,97.919,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,4,waste_heat,recoverable_energy,heat,354.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,4,temperature,environment,temperature,26.904,C,,generated from raw weather_data monthly-hourly average
+M07,7,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,5,solar_resource,renewable_resource,solar_resource,96.403,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,5,waste_heat,recoverable_energy,heat,372.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,5,temperature,environment,temperature,26.735,C,,generated from raw weather_data monthly-hourly average
+M07,7,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,6,solar_resource,renewable_resource,solar_resource,104.419,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,6,waste_heat,recoverable_energy,heat,390.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,6,temperature,environment,temperature,26.713,C,,generated from raw weather_data monthly-hourly average
+M07,7,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,7,solar_resource,renewable_resource,solar_resource,151.855,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,7,waste_heat,recoverable_energy,heat,409.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,7,temperature,environment,temperature,27.875,C,,generated from raw weather_data monthly-hourly average
+M07,7,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,8,solar_resource,renewable_resource,solar_resource,277.371,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,8,waste_heat,recoverable_energy,heat,427.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,8,temperature,environment,temperature,29.045,C,,generated from raw weather_data monthly-hourly average
+M07,7,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,9,solar_resource,renewable_resource,solar_resource,349.081,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,9,waste_heat,recoverable_energy,heat,445.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,9,temperature,environment,temperature,30.08,C,,generated from raw weather_data monthly-hourly average
+M07,7,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,10,solar_resource,renewable_resource,solar_resource,435.903,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,10,waste_heat,recoverable_energy,heat,463.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,10,temperature,environment,temperature,31.378,C,,generated from raw weather_data monthly-hourly average
+M07,7,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,11,solar_resource,renewable_resource,solar_resource,462.855,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,11,waste_heat,recoverable_energy,heat,481.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,11,temperature,environment,temperature,32.227,C,,generated from raw weather_data monthly-hourly average
+M07,7,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,12,solar_resource,renewable_resource,solar_resource,474.694,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,12,waste_heat,recoverable_energy,heat,500,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,12,temperature,environment,temperature,32.801,C,,generated from raw weather_data monthly-hourly average
+M07,7,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,13,solar_resource,renewable_resource,solar_resource,491.613,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,13,waste_heat,recoverable_energy,heat,484.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,13,temperature,environment,temperature,33.214,C,,generated from raw weather_data monthly-hourly average
+M07,7,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,14,solar_resource,renewable_resource,solar_resource,499.29,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,14,waste_heat,recoverable_energy,heat,469.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,14,temperature,environment,temperature,33.616,C,,generated from raw weather_data monthly-hourly average
+M07,7,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,15,solar_resource,renewable_resource,solar_resource,492.242,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,15,waste_heat,recoverable_energy,heat,453.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,15,temperature,environment,temperature,33.956,C,,generated from raw weather_data monthly-hourly average
+M07,7,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,16,solar_resource,renewable_resource,solar_resource,430.419,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,16,waste_heat,recoverable_energy,heat,438.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,16,temperature,environment,temperature,33.081,C,,generated from raw weather_data monthly-hourly average
+M07,7,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,17,solar_resource,renewable_resource,solar_resource,369.306,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,17,waste_heat,recoverable_energy,heat,423.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,17,temperature,environment,temperature,32.587,C,,generated from raw weather_data monthly-hourly average
+M07,7,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,18,solar_resource,renewable_resource,solar_resource,259.597,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,18,waste_heat,recoverable_energy,heat,407.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,18,temperature,environment,temperature,31.815,C,,generated from raw weather_data monthly-hourly average
+M07,7,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,19,solar_resource,renewable_resource,solar_resource,174.71,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,19,waste_heat,recoverable_energy,heat,392.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,19,temperature,environment,temperature,30.923,C,,generated from raw weather_data monthly-hourly average
+M07,7,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,20,solar_resource,renewable_resource,solar_resource,124.081,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,20,waste_heat,recoverable_energy,heat,376.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,20,temperature,environment,temperature,30.078,C,,generated from raw weather_data monthly-hourly average
+M07,7,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,21,solar_resource,renewable_resource,solar_resource,117.5,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,21,waste_heat,recoverable_energy,heat,361.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,21,temperature,environment,temperature,29.52,C,,generated from raw weather_data monthly-hourly average
+M07,7,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,22,solar_resource,renewable_resource,solar_resource,114.161,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,22,waste_heat,recoverable_energy,heat,346.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,22,temperature,environment,temperature,29.035,C,,generated from raw weather_data monthly-hourly average
+M07,7,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,23,solar_resource,renewable_resource,solar_resource,111.016,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,23,waste_heat,recoverable_energy,heat,330.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,23,temperature,environment,temperature,28.618,C,,generated from raw weather_data monthly-hourly average
+M07,7,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M07,7,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M07,7,24,solar_resource,renewable_resource,solar_resource,108.016,W/m2,,generated from raw weather_data monthly-hourly average
+M07,7,24,waste_heat,recoverable_energy,heat,315.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M07,7,24,temperature,environment,temperature,28.196,C,,generated from raw weather_data monthly-hourly average
+M08,8,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,1,solar_resource,renewable_resource,solar_resource,116.048,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,1,waste_heat,recoverable_energy,heat,286.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,1,temperature,environment,temperature,29.341,C,,generated from raw weather_data monthly-hourly average
+M08,8,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,2,solar_resource,renewable_resource,solar_resource,111.694,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,2,waste_heat,recoverable_energy,heat,304.848,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,2,temperature,environment,temperature,28.814,C,,generated from raw weather_data monthly-hourly average
+M08,8,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,3,solar_resource,renewable_resource,solar_resource,108.613,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,3,waste_heat,recoverable_energy,heat,323.03,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,3,temperature,environment,temperature,28.451,C,,generated from raw weather_data monthly-hourly average
+M08,8,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,4,solar_resource,renewable_resource,solar_resource,105.484,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,4,waste_heat,recoverable_energy,heat,341.212,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,4,temperature,environment,temperature,28.039,C,,generated from raw weather_data monthly-hourly average
+M08,8,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,5,solar_resource,renewable_resource,solar_resource,102.107,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,5,waste_heat,recoverable_energy,heat,359.394,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,5,temperature,environment,temperature,27.652,C,,generated from raw weather_data monthly-hourly average
+M08,8,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,6,solar_resource,renewable_resource,solar_resource,103.038,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,6,waste_heat,recoverable_energy,heat,377.576,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,6,temperature,environment,temperature,27.262,C,,generated from raw weather_data monthly-hourly average
+M08,8,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,7,solar_resource,renewable_resource,solar_resource,151.29,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,7,waste_heat,recoverable_energy,heat,395.758,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,7,temperature,environment,temperature,28.949,C,,generated from raw weather_data monthly-hourly average
+M08,8,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,8,solar_resource,renewable_resource,solar_resource,344.806,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,8,waste_heat,recoverable_energy,heat,413.939,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,8,temperature,environment,temperature,31.22,C,,generated from raw weather_data monthly-hourly average
+M08,8,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,9,solar_resource,renewable_resource,solar_resource,495.5,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,9,waste_heat,recoverable_energy,heat,432.121,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,9,temperature,environment,temperature,33.111,C,,generated from raw weather_data monthly-hourly average
+M08,8,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,10,solar_resource,renewable_resource,solar_resource,567.726,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,10,waste_heat,recoverable_energy,heat,450.303,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,10,temperature,environment,temperature,34.394,C,,generated from raw weather_data monthly-hourly average
+M08,8,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,11,solar_resource,renewable_resource,solar_resource,587.097,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,11,waste_heat,recoverable_energy,heat,468.485,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,11,temperature,environment,temperature,35.945,C,,generated from raw weather_data monthly-hourly average
+M08,8,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,12,solar_resource,renewable_resource,solar_resource,594.274,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,12,waste_heat,recoverable_energy,heat,486.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,12,temperature,environment,temperature,36.849,C,,generated from raw weather_data monthly-hourly average
+M08,8,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,13,solar_resource,renewable_resource,solar_resource,597.226,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,13,waste_heat,recoverable_energy,heat,471.282,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,13,temperature,environment,temperature,37.419,C,,generated from raw weather_data monthly-hourly average
+M08,8,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,14,solar_resource,renewable_resource,solar_resource,560.613,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,14,waste_heat,recoverable_energy,heat,455.897,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,14,temperature,environment,temperature,37.283,C,,generated from raw weather_data monthly-hourly average
+M08,8,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,15,solar_resource,renewable_resource,solar_resource,520.613,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,15,waste_heat,recoverable_energy,heat,440.513,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,15,temperature,environment,temperature,36.946,C,,generated from raw weather_data monthly-hourly average
+M08,8,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,16,solar_resource,renewable_resource,solar_resource,477.226,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,16,waste_heat,recoverable_energy,heat,425.128,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,16,temperature,environment,temperature,36.997,C,,generated from raw weather_data monthly-hourly average
+M08,8,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,17,solar_resource,renewable_resource,solar_resource,379.484,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,17,waste_heat,recoverable_energy,heat,409.744,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,17,temperature,environment,temperature,35.88,C,,generated from raw weather_data monthly-hourly average
+M08,8,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,18,solar_resource,renewable_resource,solar_resource,243.919,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,18,waste_heat,recoverable_energy,heat,394.359,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,18,temperature,environment,temperature,34.658,C,,generated from raw weather_data monthly-hourly average
+M08,8,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,19,solar_resource,renewable_resource,solar_resource,173.081,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,19,waste_heat,recoverable_energy,heat,378.974,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,19,temperature,environment,temperature,33.285,C,,generated from raw weather_data monthly-hourly average
+M08,8,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,20,solar_resource,renewable_resource,solar_resource,137.629,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,20,waste_heat,recoverable_energy,heat,363.59,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,20,temperature,environment,temperature,32.162,C,,generated from raw weather_data monthly-hourly average
+M08,8,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,21,solar_resource,renewable_resource,solar_resource,131.871,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,21,waste_heat,recoverable_energy,heat,348.205,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,21,temperature,environment,temperature,31.427,C,,generated from raw weather_data monthly-hourly average
+M08,8,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,22,solar_resource,renewable_resource,solar_resource,126.903,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,22,waste_heat,recoverable_energy,heat,332.821,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,22,temperature,environment,temperature,30.826,C,,generated from raw weather_data monthly-hourly average
+M08,8,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,23,solar_resource,renewable_resource,solar_resource,123.258,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,23,waste_heat,recoverable_energy,heat,317.436,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,23,temperature,environment,temperature,30.315,C,,generated from raw weather_data monthly-hourly average
+M08,8,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M08,8,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M08,8,24,solar_resource,renewable_resource,solar_resource,119.823,W/m2,,generated from raw weather_data monthly-hourly average
+M08,8,24,waste_heat,recoverable_energy,heat,302.051,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M08,8,24,temperature,environment,temperature,29.826,C,,generated from raw weather_data monthly-hourly average
+M09,9,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,1,solar_resource,renewable_resource,solar_resource,92.167,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,1,waste_heat,recoverable_energy,heat,273.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,1,temperature,environment,temperature,26.22,C,,generated from raw weather_data monthly-hourly average
+M09,9,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,2,solar_resource,renewable_resource,solar_resource,90.9,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,2,waste_heat,recoverable_energy,heat,291.515,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,2,temperature,environment,temperature,25.991,C,,generated from raw weather_data monthly-hourly average
+M09,9,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,3,solar_resource,renewable_resource,solar_resource,89.767,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,3,waste_heat,recoverable_energy,heat,309.697,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,3,temperature,environment,temperature,25.812,C,,generated from raw weather_data monthly-hourly average
+M09,9,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,4,solar_resource,renewable_resource,solar_resource,88.133,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,4,waste_heat,recoverable_energy,heat,327.879,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,4,temperature,environment,temperature,25.614,C,,generated from raw weather_data monthly-hourly average
+M09,9,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,5,solar_resource,renewable_resource,solar_resource,86.9,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,5,waste_heat,recoverable_energy,heat,346.061,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,5,temperature,environment,temperature,25.416,C,,generated from raw weather_data monthly-hourly average
+M09,9,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,6,solar_resource,renewable_resource,solar_resource,85.333,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,6,waste_heat,recoverable_energy,heat,364.242,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,6,temperature,environment,temperature,25.221,C,,generated from raw weather_data monthly-hourly average
+M09,9,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,7,solar_resource,renewable_resource,solar_resource,119.583,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,7,waste_heat,recoverable_energy,heat,382.424,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,7,temperature,environment,temperature,25.631,C,,generated from raw weather_data monthly-hourly average
+M09,9,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,8,solar_resource,renewable_resource,solar_resource,237.217,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,8,waste_heat,recoverable_energy,heat,400.606,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,8,temperature,environment,temperature,27.483,C,,generated from raw weather_data monthly-hourly average
+M09,9,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,9,solar_resource,renewable_resource,solar_resource,371.05,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,9,waste_heat,recoverable_energy,heat,418.788,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,9,temperature,environment,temperature,29.508,C,,generated from raw weather_data monthly-hourly average
+M09,9,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,10,solar_resource,renewable_resource,solar_resource,463.883,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,10,waste_heat,recoverable_energy,heat,436.97,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,10,temperature,environment,temperature,31.01,C,,generated from raw weather_data monthly-hourly average
+M09,9,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,11,solar_resource,renewable_resource,solar_resource,493.45,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,11,waste_heat,recoverable_energy,heat,455.152,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,11,temperature,environment,temperature,32.218,C,,generated from raw weather_data monthly-hourly average
+M09,9,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,12,solar_resource,renewable_resource,solar_resource,501.617,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,12,waste_heat,recoverable_energy,heat,473.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,12,temperature,environment,temperature,33.063,C,,generated from raw weather_data monthly-hourly average
+M09,9,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,13,solar_resource,renewable_resource,solar_resource,503.05,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,13,waste_heat,recoverable_energy,heat,457.949,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,13,temperature,environment,temperature,34.047,C,,generated from raw weather_data monthly-hourly average
+M09,9,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,14,solar_resource,renewable_resource,solar_resource,478.833,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,14,waste_heat,recoverable_energy,heat,442.564,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,14,temperature,environment,temperature,34.172,C,,generated from raw weather_data monthly-hourly average
+M09,9,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,15,solar_resource,renewable_resource,solar_resource,409.1,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,15,waste_heat,recoverable_energy,heat,427.179,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,15,temperature,environment,temperature,33.355,C,,generated from raw weather_data monthly-hourly average
+M09,9,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,16,solar_resource,renewable_resource,solar_resource,337.25,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,16,waste_heat,recoverable_energy,heat,411.795,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,16,temperature,environment,temperature,31.96,C,,generated from raw weather_data monthly-hourly average
+M09,9,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,17,solar_resource,renewable_resource,solar_resource,258.967,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,17,waste_heat,recoverable_energy,heat,396.41,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,17,temperature,environment,temperature,31.383,C,,generated from raw weather_data monthly-hourly average
+M09,9,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,18,solar_resource,renewable_resource,solar_resource,167.567,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,18,waste_heat,recoverable_energy,heat,381.026,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,18,temperature,environment,temperature,29.968,C,,generated from raw weather_data monthly-hourly average
+M09,9,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,19,solar_resource,renewable_resource,solar_resource,115.7,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,19,waste_heat,recoverable_energy,heat,365.641,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,19,temperature,environment,temperature,28.79,C,,generated from raw weather_data monthly-hourly average
+M09,9,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,20,solar_resource,renewable_resource,solar_resource,106.767,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,20,waste_heat,recoverable_energy,heat,350.256,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,20,temperature,environment,temperature,27.995,C,,generated from raw weather_data monthly-hourly average
+M09,9,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,21,solar_resource,renewable_resource,solar_resource,101.883,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,21,waste_heat,recoverable_energy,heat,334.872,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,21,temperature,environment,temperature,27.453,C,,generated from raw weather_data monthly-hourly average
+M09,9,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,22,solar_resource,renewable_resource,solar_resource,99.217,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,22,waste_heat,recoverable_energy,heat,319.487,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,22,temperature,environment,temperature,27.112,C,,generated from raw weather_data monthly-hourly average
+M09,9,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,23,solar_resource,renewable_resource,solar_resource,96.35,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,23,waste_heat,recoverable_energy,heat,304.103,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,23,temperature,environment,temperature,26.774,C,,generated from raw weather_data monthly-hourly average
+M09,9,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M09,9,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M09,9,24,solar_resource,renewable_resource,solar_resource,93.483,W/m2,,generated from raw weather_data monthly-hourly average
+M09,9,24,waste_heat,recoverable_energy,heat,288.718,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M09,9,24,temperature,environment,temperature,26.39,C,,generated from raw weather_data monthly-hourly average
+M10,10,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,1,solar_resource,renewable_resource,solar_resource,57.355,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,1,waste_heat,recoverable_energy,heat,260,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,1,temperature,environment,temperature,21.092,C,,generated from raw weather_data monthly-hourly average
+M10,10,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,2,solar_resource,renewable_resource,solar_resource,55.839,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,2,waste_heat,recoverable_energy,heat,278.182,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,2,temperature,environment,temperature,20.845,C,,generated from raw weather_data monthly-hourly average
+M10,10,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,3,solar_resource,renewable_resource,solar_resource,54.645,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,3,waste_heat,recoverable_energy,heat,296.364,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,3,temperature,environment,temperature,20.651,C,,generated from raw weather_data monthly-hourly average
+M10,10,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,4,solar_resource,renewable_resource,solar_resource,53.645,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,4,waste_heat,recoverable_energy,heat,314.545,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,4,temperature,environment,temperature,20.459,C,,generated from raw weather_data monthly-hourly average
+M10,10,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,5,solar_resource,renewable_resource,solar_resource,53.032,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,5,waste_heat,recoverable_energy,heat,332.727,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,5,temperature,environment,temperature,20.352,C,,generated from raw weather_data monthly-hourly average
+M10,10,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,6,solar_resource,renewable_resource,solar_resource,52.339,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,6,waste_heat,recoverable_energy,heat,350.909,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,6,temperature,environment,temperature,20.196,C,,generated from raw weather_data monthly-hourly average
+M10,10,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,7,solar_resource,renewable_resource,solar_resource,64.516,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,7,waste_heat,recoverable_energy,heat,369.091,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,7,temperature,environment,temperature,20.212,C,,generated from raw weather_data monthly-hourly average
+M10,10,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,8,solar_resource,renewable_resource,solar_resource,139.452,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,8,waste_heat,recoverable_energy,heat,387.273,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,8,temperature,environment,temperature,21.212,C,,generated from raw weather_data monthly-hourly average
+M10,10,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,9,solar_resource,renewable_resource,solar_resource,229.629,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,9,waste_heat,recoverable_energy,heat,405.455,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,9,temperature,environment,temperature,22.612,C,,generated from raw weather_data monthly-hourly average
+M10,10,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,10,solar_resource,renewable_resource,solar_resource,333.532,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,10,waste_heat,recoverable_energy,heat,423.636,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,10,temperature,environment,temperature,24.174,C,,generated from raw weather_data monthly-hourly average
+M10,10,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,11,solar_resource,renewable_resource,solar_resource,412.177,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,11,waste_heat,recoverable_energy,heat,441.818,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,11,temperature,environment,temperature,25.303,C,,generated from raw weather_data monthly-hourly average
+M10,10,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,12,solar_resource,renewable_resource,solar_resource,414.23,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,12,waste_heat,recoverable_energy,heat,460,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,12,temperature,environment,temperature,25.75,C,,generated from raw weather_data monthly-hourly average
+M10,10,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,13,solar_resource,renewable_resource,solar_resource,424.871,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,13,waste_heat,recoverable_energy,heat,444.615,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,13,temperature,environment,temperature,26.506,C,,generated from raw weather_data monthly-hourly average
+M10,10,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,14,solar_resource,renewable_resource,solar_resource,378.79,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,14,waste_heat,recoverable_energy,heat,429.231,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,14,temperature,environment,temperature,26.474,C,,generated from raw weather_data monthly-hourly average
+M10,10,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,15,solar_resource,renewable_resource,solar_resource,374.097,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,15,waste_heat,recoverable_energy,heat,413.846,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,15,temperature,environment,temperature,26.589,C,,generated from raw weather_data monthly-hourly average
+M10,10,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,16,solar_resource,renewable_resource,solar_resource,277.919,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,16,waste_heat,recoverable_energy,heat,398.462,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,16,temperature,environment,temperature,26.06,C,,generated from raw weather_data monthly-hourly average
+M10,10,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,17,solar_resource,renewable_resource,solar_resource,180.226,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,17,waste_heat,recoverable_energy,heat,383.077,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,17,temperature,environment,temperature,25.327,C,,generated from raw weather_data monthly-hourly average
+M10,10,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,18,solar_resource,renewable_resource,solar_resource,96.855,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,18,waste_heat,recoverable_energy,heat,367.692,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,18,temperature,environment,temperature,24.225,C,,generated from raw weather_data monthly-hourly average
+M10,10,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,19,solar_resource,renewable_resource,solar_resource,74.258,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,19,waste_heat,recoverable_energy,heat,352.308,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,19,temperature,environment,temperature,23.419,C,,generated from raw weather_data monthly-hourly average
+M10,10,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,20,solar_resource,renewable_resource,solar_resource,69.516,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,20,waste_heat,recoverable_energy,heat,336.923,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,20,temperature,environment,temperature,22.839,C,,generated from raw weather_data monthly-hourly average
+M10,10,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,21,solar_resource,renewable_resource,solar_resource,65.823,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,21,waste_heat,recoverable_energy,heat,321.538,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,21,temperature,environment,temperature,22.327,C,,generated from raw weather_data monthly-hourly average
+M10,10,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,22,solar_resource,renewable_resource,solar_resource,63.113,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,22,waste_heat,recoverable_energy,heat,306.154,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,22,temperature,environment,temperature,21.956,C,,generated from raw weather_data monthly-hourly average
+M10,10,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,23,solar_resource,renewable_resource,solar_resource,60.468,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,23,waste_heat,recoverable_energy,heat,290.769,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,23,temperature,environment,temperature,21.547,C,,generated from raw weather_data monthly-hourly average
+M10,10,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M10,10,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M10,10,24,solar_resource,renewable_resource,solar_resource,57.984,W/m2,,generated from raw weather_data monthly-hourly average
+M10,10,24,waste_heat,recoverable_energy,heat,275.385,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M10,10,24,temperature,environment,temperature,21.227,C,,generated from raw weather_data monthly-hourly average
+M11,11,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,1,solar_resource,renewable_resource,solar_resource,9.267,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,1,waste_heat,recoverable_energy,heat,256.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,1,temperature,environment,temperature,11.382,C,,generated from raw weather_data monthly-hourly average
+M11,11,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,2,solar_resource,renewable_resource,solar_resource,8.383,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,2,waste_heat,recoverable_energy,heat,274.848,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,2,temperature,environment,temperature,11.076,C,,generated from raw weather_data monthly-hourly average
+M11,11,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,3,solar_resource,renewable_resource,solar_resource,7.817,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,3,waste_heat,recoverable_energy,heat,293.03,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,3,temperature,environment,temperature,10.843,C,,generated from raw weather_data monthly-hourly average
+M11,11,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,4,solar_resource,renewable_resource,solar_resource,7.033,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,4,waste_heat,recoverable_energy,heat,311.212,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,4,temperature,environment,temperature,10.594,C,,generated from raw weather_data monthly-hourly average
+M11,11,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,5,solar_resource,renewable_resource,solar_resource,7.356,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,5,waste_heat,recoverable_energy,heat,329.394,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,5,temperature,environment,temperature,10.486,C,,generated from raw weather_data monthly-hourly average
+M11,11,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,6,solar_resource,renewable_resource,solar_resource,7.397,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,6,waste_heat,recoverable_energy,heat,347.576,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,6,temperature,environment,temperature,10.391,C,,generated from raw weather_data monthly-hourly average
+M11,11,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,7,solar_resource,renewable_resource,solar_resource,8.707,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,7,waste_heat,recoverable_energy,heat,365.758,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,7,temperature,environment,temperature,10.234,C,,generated from raw weather_data monthly-hourly average
+M11,11,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,8,solar_resource,renewable_resource,solar_resource,63.85,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,8,waste_heat,recoverable_energy,heat,383.939,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,8,temperature,environment,temperature,11.087,C,,generated from raw weather_data monthly-hourly average
+M11,11,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,9,solar_resource,renewable_resource,solar_resource,184.833,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,9,waste_heat,recoverable_energy,heat,402.121,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,9,temperature,environment,temperature,13.4,C,,generated from raw weather_data monthly-hourly average
+M11,11,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,10,solar_resource,renewable_resource,solar_resource,301.15,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,10,waste_heat,recoverable_energy,heat,420.303,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,10,temperature,environment,temperature,15.361,C,,generated from raw weather_data monthly-hourly average
+M11,11,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,11,solar_resource,renewable_resource,solar_resource,399.433,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,11,waste_heat,recoverable_energy,heat,438.485,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,11,temperature,environment,temperature,16.989,C,,generated from raw weather_data monthly-hourly average
+M11,11,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,12,solar_resource,renewable_resource,solar_resource,431.3,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,12,waste_heat,recoverable_energy,heat,456.667,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,12,temperature,environment,temperature,18.017,C,,generated from raw weather_data monthly-hourly average
+M11,11,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,13,solar_resource,renewable_resource,solar_resource,427,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,13,waste_heat,recoverable_energy,heat,441.282,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,13,temperature,environment,temperature,18.562,C,,generated from raw weather_data monthly-hourly average
+M11,11,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,14,solar_resource,renewable_resource,solar_resource,388.167,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,14,waste_heat,recoverable_energy,heat,425.897,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,14,temperature,environment,temperature,18.832,C,,generated from raw weather_data monthly-hourly average
+M11,11,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,15,solar_resource,renewable_resource,solar_resource,311.083,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,15,waste_heat,recoverable_energy,heat,410.513,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,15,temperature,environment,temperature,18.727,C,,generated from raw weather_data monthly-hourly average
+M11,11,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,16,solar_resource,renewable_resource,solar_resource,207.983,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,16,waste_heat,recoverable_energy,heat,395.128,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,16,temperature,environment,temperature,18.082,C,,generated from raw weather_data monthly-hourly average
+M11,11,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,17,solar_resource,renewable_resource,solar_resource,89.8,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,17,waste_heat,recoverable_energy,heat,379.744,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,17,temperature,environment,temperature,16.997,C,,generated from raw weather_data monthly-hourly average
+M11,11,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,18,solar_resource,renewable_resource,solar_resource,21.5,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,18,waste_heat,recoverable_energy,heat,364.359,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,18,temperature,environment,temperature,15.471,C,,generated from raw weather_data monthly-hourly average
+M11,11,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,19,solar_resource,renewable_resource,solar_resource,15.383,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,19,waste_heat,recoverable_energy,heat,348.974,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,19,temperature,environment,temperature,14.138,C,,generated from raw weather_data monthly-hourly average
+M11,11,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,20,solar_resource,renewable_resource,solar_resource,12.967,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,20,waste_heat,recoverable_energy,heat,333.59,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,20,temperature,environment,temperature,13.304,C,,generated from raw weather_data monthly-hourly average
+M11,11,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,21,solar_resource,renewable_resource,solar_resource,11.467,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,21,waste_heat,recoverable_energy,heat,318.205,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,21,temperature,environment,temperature,12.695,C,,generated from raw weather_data monthly-hourly average
+M11,11,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,22,solar_resource,renewable_resource,solar_resource,10.6,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,22,waste_heat,recoverable_energy,heat,302.821,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,22,temperature,environment,temperature,12.271,C,,generated from raw weather_data monthly-hourly average
+M11,11,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,23,solar_resource,renewable_resource,solar_resource,10.05,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,23,waste_heat,recoverable_energy,heat,287.436,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,23,temperature,environment,temperature,12.024,C,,generated from raw weather_data monthly-hourly average
+M11,11,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M11,11,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M11,11,24,solar_resource,renewable_resource,solar_resource,9.35,W/m2,,generated from raw weather_data monthly-hourly average
+M11,11,24,waste_heat,recoverable_energy,heat,272.051,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M11,11,24,temperature,environment,temperature,11.606,C,,generated from raw weather_data monthly-hourly average
+M12,12,1,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,1,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,1,solar_resource,renewable_resource,solar_resource,0.673,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,1,waste_heat,recoverable_energy,heat,253.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,1,temperature,environment,temperature,8.205,C,,generated from raw weather_data monthly-hourly average
+M12,12,2,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,2,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,2,solar_resource,renewable_resource,solar_resource,0.327,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,2,waste_heat,recoverable_energy,heat,271.515,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,2,temperature,environment,temperature,7.73,C,,generated from raw weather_data monthly-hourly average
+M12,12,3,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,3,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,3,solar_resource,renewable_resource,solar_resource,0.308,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,3,waste_heat,recoverable_energy,heat,289.697,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,3,temperature,environment,temperature,7.395,C,,generated from raw weather_data monthly-hourly average
+M12,12,4,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,4,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,4,solar_resource,renewable_resource,solar_resource,0.288,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,4,waste_heat,recoverable_energy,heat,307.879,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,4,temperature,environment,temperature,7.161,C,,generated from raw weather_data monthly-hourly average
+M12,12,5,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,5,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,5,solar_resource,renewable_resource,solar_resource,0.231,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,5,waste_heat,recoverable_energy,heat,326.061,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,5,temperature,environment,temperature,6.848,C,,generated from raw weather_data monthly-hourly average
+M12,12,6,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,6,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,6,solar_resource,renewable_resource,solar_resource,0.25,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,6,waste_heat,recoverable_energy,heat,344.242,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,6,temperature,environment,temperature,6.621,C,,generated from raw weather_data monthly-hourly average
+M12,12,7,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,7,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,7,solar_resource,renewable_resource,solar_resource,0.212,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,7,waste_heat,recoverable_energy,heat,362.424,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,7,temperature,environment,temperature,6.475,C,,generated from raw weather_data monthly-hourly average
+M12,12,8,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,8,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,8,solar_resource,renewable_resource,solar_resource,17.885,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,8,waste_heat,recoverable_energy,heat,380.606,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,8,temperature,environment,temperature,7.113,C,,generated from raw weather_data monthly-hourly average
+M12,12,9,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,9,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,9,solar_resource,renewable_resource,solar_resource,110.327,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,9,waste_heat,recoverable_energy,heat,398.788,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,9,temperature,environment,temperature,9.326,C,,generated from raw weather_data monthly-hourly average
+M12,12,10,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,10,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,10,solar_resource,renewable_resource,solar_resource,219.846,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,10,waste_heat,recoverable_energy,heat,416.97,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,10,temperature,environment,temperature,11.653,C,,generated from raw weather_data monthly-hourly average
+M12,12,11,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,11,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,11,solar_resource,renewable_resource,solar_resource,277.365,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,11,waste_heat,recoverable_energy,heat,435.152,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,11,temperature,environment,temperature,12.619,C,,generated from raw weather_data monthly-hourly average
+M12,12,12,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,12,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,12,solar_resource,renewable_resource,solar_resource,341,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,12,waste_heat,recoverable_energy,heat,453.333,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,12,temperature,environment,temperature,14.039,C,,generated from raw weather_data monthly-hourly average
+M12,12,13,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,13,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,13,solar_resource,renewable_resource,solar_resource,351.5,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,13,waste_heat,recoverable_energy,heat,437.949,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,13,temperature,environment,temperature,14.526,C,,generated from raw weather_data monthly-hourly average
+M12,12,14,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,14,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,14,solar_resource,renewable_resource,solar_resource,347,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,14,waste_heat,recoverable_energy,heat,422.564,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,14,temperature,environment,temperature,15.13,C,,generated from raw weather_data monthly-hourly average
+M12,12,15,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,15,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,15,solar_resource,renewable_resource,solar_resource,258.135,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,15,waste_heat,recoverable_energy,heat,407.179,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,15,temperature,environment,temperature,15.053,C,,generated from raw weather_data monthly-hourly average
+M12,12,16,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,16,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,16,solar_resource,renewable_resource,solar_resource,158.75,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,16,waste_heat,recoverable_energy,heat,391.795,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,16,temperature,environment,temperature,14.363,C,,generated from raw weather_data monthly-hourly average
+M12,12,17,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,17,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,17,solar_resource,renewable_resource,solar_resource,58.615,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,17,waste_heat,recoverable_energy,heat,376.41,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,17,temperature,environment,temperature,13.338,C,,generated from raw weather_data monthly-hourly average
+M12,12,18,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,18,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,18,solar_resource,renewable_resource,solar_resource,7.115,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,18,waste_heat,recoverable_energy,heat,361.026,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,18,temperature,environment,temperature,11.945,C,,generated from raw weather_data monthly-hourly average
+M12,12,19,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,19,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,19,solar_resource,renewable_resource,solar_resource,3.519,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,19,waste_heat,recoverable_energy,heat,345.641,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,19,temperature,environment,temperature,10.923,C,,generated from raw weather_data monthly-hourly average
+M12,12,20,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,20,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,20,solar_resource,renewable_resource,solar_resource,2.019,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,20,waste_heat,recoverable_energy,heat,330.256,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,20,temperature,environment,temperature,10.352,C,,generated from raw weather_data monthly-hourly average
+M12,12,21,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,21,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,21,solar_resource,renewable_resource,solar_resource,1.25,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,21,waste_heat,recoverable_energy,heat,314.872,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,21,temperature,environment,temperature,9.734,C,,generated from raw weather_data monthly-hourly average
+M12,12,22,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,22,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,22,solar_resource,renewable_resource,solar_resource,1.519,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,22,waste_heat,recoverable_energy,heat,299.487,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,22,temperature,environment,temperature,9.229,C,,generated from raw weather_data monthly-hourly average
+M12,12,23,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,23,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,23,solar_resource,renewable_resource,solar_resource,1.173,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,23,waste_heat,recoverable_energy,heat,284.103,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,23,temperature,environment,temperature,8.75,C,,generated from raw weather_data monthly-hourly average
+M12,12,24,grid_electricity,purchased_energy,electricity,,kW,electricity,grid purchase upper bound; blank means unlimited
+M12,12,24,natural_gas,purchased_energy,natural_gas,,kWh,gas,natural gas purchase upper bound; blank means unlimited
+M12,12,24,solar_resource,renewable_resource,solar_resource,0.808,W/m2,,generated from raw weather_data monthly-hourly average
+M12,12,24,waste_heat,recoverable_energy,heat,268.718,kW,,synthesized by seasonal/hourly interpolation from template anchors
+M12,12,24,temperature,environment,temperature,8.324,C,,generated from raw weather_data monthly-hourly average

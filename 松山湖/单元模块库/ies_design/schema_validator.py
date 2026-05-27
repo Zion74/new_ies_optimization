@@ -54,9 +54,7 @@ class SchemaValidator:
         if not load_file:
             result.errors.append("data.load_file is required")
         else:
-            path = Path(load_file)
-            if not path.is_absolute():
-                path = project_root / path
+            path = _resolve_input_path(load_file, resolved, project_root)
             if not path.exists():
                 result.warnings.append(f"data.load_file does not exist yet: {path}")
 
@@ -64,9 +62,7 @@ class SchemaValidator:
         if not typical:
             result.errors.append("typical day file is required for current CCHP adapter")
         else:
-            path = Path(typical)
-            if not path.is_absolute():
-                path = project_root / path
+            path = _resolve_input_path(typical, resolved, project_root)
             if not path.exists():
                 result.warnings.append(f"typical_day_file does not exist yet: {path}")
 
@@ -113,3 +109,15 @@ class SchemaValidator:
             result.status = "runnable"
 
         return result
+
+
+def _resolve_input_path(value: str | Path, resolved: dict[str, Any], project_root: Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    source_path = resolved.get("_meta", {}).get("source_path")
+    if source_path:
+        candidate = Path(source_path).parent / path
+        if candidate.exists():
+            return candidate
+    return project_root / path

@@ -1,0 +1,6 @@
+﻿data_item,status,source_file,source_page_or_sheet,quality_level,missing_or_issue,remark
+月电量,已获得,load_data.csv,整个文件,较高,,
+典型日负荷曲线,已获得,load_data.csv,整个文件,较高,,
+太阳辐射/风速/温度,已获得,load_data.csv,整个文件,较高,,
+设备容量上限,部分获得,重点研发结题材料0524(2).docx,2.1.2节; 第四章建设内容,高,已补热泵总制热量13.937MW和储热水箱1467m3; PV/CHP/boiler等还需默认库或进一步资料,
+设备投资成本,部分获得,重点研发结题材料0524(2).docx,第四章项目批复总投资,中,批复总投资4077万元，缺单设备投资拆分; 建议先用默认参数库,

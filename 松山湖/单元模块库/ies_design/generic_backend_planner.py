@@ -263,7 +263,7 @@ def _device_capacity_variables(instance_id: str, device: dict[str, Any]) -> list
 
 
 def _energy_capacity_upper_bound(device: dict[str, Any]) -> float | str | None:
-    for key in ["capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"]:
+    for key in ["capacity_ub_kwh", "energy_capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"]:
         value = device.get(key)
         if value not in (None, ""):
             return value

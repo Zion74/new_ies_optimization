@@ -9,6 +9,9 @@ sys.path.insert(0, str(ROOT))
 
 from excel_parser import ExcelScenarioParser
 from scenario_loader import ScenarioLoader
+from defaults_resolver import DefaultsResolver
+from schema_validator import SchemaValidator
+from generic_backend_planner import GenericBackendPlanner
 
 
 TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理模板.xlsx"
@@ -118,6 +121,37 @@ def test_exported_excel_scenario_references_intermediate_data_files():
     assert scenario["data"]["load_file"] == "typical_profiles.csv"
     assert scenario["data"]["resource_file"] == "input_resource_profiles.csv"
     assert scenario["typical_day"]["file"] == "typical_profiles.csv"
+
+
+def test_exported_excel_scenario_validates_relative_files_from_scenario_dir():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp)
+        parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+        outputs = parsed.export(out_dir)
+        scenario = ScenarioLoader.load(outputs["scenario_yaml"])
+        resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+        result = SchemaValidator.validate(resolved, project_root=PROJECT_ROOT)
+
+    assert not any("does not exist yet" in warning for warning in result.warnings)
+
+
+def test_tobacco_component_plan_uses_storage_energy_capacity_bound():
+    parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(parsed.scenario)
+
+    plan = GenericBackendPlanner.plan(resolved)
+    heat_storage_energy = next(
+        item
+        for item in plan["capacity_variables"]
+        if item["device_id"] == "heat_storage" and item["variable_name"] == "capacity_kwh"
+    )
+    heat_storage_gaps = [
+        gap for gap in plan["parameter_gaps"] if gap["device_id"] == "heat_storage"
+    ]
+
+    assert heat_storage_energy["upper_bound"] == 25586.9
+    assert not any(gap["field"] == "capacity.capacity_kwh" for gap in heat_storage_gaps)
 
 
 if __name__ == "__main__":
