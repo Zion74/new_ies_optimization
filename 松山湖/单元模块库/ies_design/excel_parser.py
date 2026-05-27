@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -22,7 +23,12 @@ class ExcelParseResult:
         data_gaps = output_dir / "data_gaps.csv"
         warnings_file = output_dir / "excel_parse_warnings.txt"
 
-        scenario_yaml.write_text(_dump_yaml(self.scenario), encoding="utf-8")
+        scenario = deepcopy(self.scenario)
+        scenario.setdefault("data", {})["load_file"] = typical_profiles.name
+        scenario.setdefault("data", {})["resource_file"] = input_resource_profiles.name
+        scenario.setdefault("typical_day", {})["file"] = typical_profiles.name
+
+        scenario_yaml.write_text(_dump_yaml(scenario), encoding="utf-8")
         _write_csv(typical_profiles, self.tables.get("load_profiles", []))
         _write_csv(input_resource_profiles, self.tables.get("input_resource_profiles", []))
         _write_csv(data_gaps, self.tables.get("data_gaps", []))
@@ -207,6 +213,8 @@ def _devices(rows: list[dict[str, Any]], warnings: list[str]) -> dict[str, dict[
             config["capacity_ub_kw"] = row.get("capacity_ub")
         if row.get("power_ub") not in (None, ""):
             config["power_ub_kw"] = row.get("power_ub")
+        if row.get("energy_capacity_ub") not in (None, ""):
+            config["energy_capacity_ub_kwh"] = row.get("energy_capacity_ub")
         devices[str(device_id)] = config
     return devices
 
@@ -217,16 +225,38 @@ def _prices(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         "gas": {"type": "flat", "unit": "CNY_per_kWh", "value": None},
         "capacity_charge": {"unit": "CNY_per_kW_year", "value": 0},
     }
+    electricity_hourly: dict[int, Any] = {}
+    electricity_unit = "CNY_per_kWh"
     for row in rows:
         param_type = row.get("param_type")
         param_id = row.get("param_id")
         if param_type == "price" and row.get("carrier_id") == "electricity":
-            prices["electricity"] = {"type": "flat", "unit": row.get("unit") or "CNY_per_kWh", "value": row.get("value")}
+            electricity_unit = row.get("unit") or electricity_unit
+            hour = _to_int(row.get("hour"))
+            if hour is not None and 1 <= hour <= 24:
+                electricity_hourly[hour] = row.get("value")
+            else:
+                prices["electricity"] = {"type": "flat", "unit": electricity_unit, "value": row.get("value")}
         elif param_type == "price" and row.get("carrier_id") == "natural_gas":
             prices["gas"] = {"type": "flat", "unit": row.get("unit") or "CNY_per_kWh", "value": row.get("value")}
         elif param_type == "capacity_charge" or param_id == "capacity_charge":
             prices["capacity_charge"] = {"unit": row.get("unit") or "CNY_per_kW_year", "value": row.get("value") or 0}
+    if len(electricity_hourly) == 24:
+        prices["electricity"] = {
+            "type": "tou_24h",
+            "unit": electricity_unit,
+            "values": [electricity_hourly[hour] for hour in range(1, 25)],
+        }
     return prices
+
+
+def _to_int(value: Any) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        return int(float(str(value).strip()))
+    except (TypeError, ValueError):
+        return None
 
 
 FIELD_ALIASES = {

@@ -91,6 +91,35 @@ def test_tobacco_excel_uses_future_generic_template():
     assert parsed.scenario["system"]["template"] == "tobacco_factory_multi_energy"
 
 
+def test_tobacco_excel_preserves_storage_energy_capacity_upper_bound():
+    parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+
+    assert parsed.scenario["devices"]["heat_storage"]["energy_capacity_ub_kwh"] == 25586.9
+
+
+def test_tobacco_excel_preserves_hourly_electricity_price():
+    parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+
+    price = parsed.scenario["prices"]["electricity"]
+    assert price["type"] == "tou_24h"
+    assert len(price["values"]) == 24
+    assert price["values"][0] == 0.35
+    assert price["values"][17] == 1.3
+
+
+def test_exported_excel_scenario_references_intermediate_data_files():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_dir = Path(tmp)
+        parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+
+        outputs = parsed.export(out_dir)
+        scenario = ScenarioLoader.load(outputs["scenario_yaml"])
+
+    assert scenario["data"]["load_file"] == "typical_profiles.csv"
+    assert scenario["data"]["resource_file"] == "input_resource_profiles.csv"
+    assert scenario["typical_day"]["file"] == "typical_profiles.csv"
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
