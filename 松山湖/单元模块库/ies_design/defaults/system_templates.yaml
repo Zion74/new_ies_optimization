@@ -128,3 +128,31 @@ templates:
       - hydrogen_storage
       - electric_storage
       - heat_storage
+
+  tobacco_factory_multi_energy:
+    name: 卷烟厂低碳多能互补综合能源系统
+    description: 面向烟厂动力中心、制丝侧、卷包侧的电-冷-热/蒸汽-余热-天然气多能互补场景。
+    supported_backend: future_generic
+    carriers:
+      demands: [electricity, cooling, steam, heat]
+      inputs: [grid_electricity, natural_gas]
+      resources: [solar_resource, waste_heat, temperature]
+    buses:
+      electricity: ele_bus
+      cooling: cool_bus
+      steam: steam_bus
+      heat: heat_bus
+      natural_gas: gas_bus
+    default_devices:
+      - grid_electricity
+      - natural_gas_source
+      - pv_standard
+      - chp_gas_turbine
+      - electric_chiller
+      - absorption_chiller
+      - electric_heat_pump
+      - electric_storage
+      - cold_storage
+      - heat_storage
+      - steam_boiler
+      - waste_heat_recovery

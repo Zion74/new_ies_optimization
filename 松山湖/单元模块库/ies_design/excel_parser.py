@@ -141,7 +141,7 @@ def _build_scenario(
             "location": info.get("location") or "",
             "currency": info.get("currency") or "CNY",
         },
-        "system": {"template": "cchp_ehc_base"},
+        "system": {"template": _template_for_scenario_type(scenario_type)},
         "energy_carriers": carriers,
         "data": {
             "input_type": "excel_template",
@@ -166,6 +166,12 @@ def _build_scenario(
             "methods": ["euclidean"],
         },
     }
+
+
+def _template_for_scenario_type(scenario_type: str) -> str:
+    if scenario_type == "tobacco_factory_multi_energy":
+        return "tobacco_factory_multi_energy"
+    return "cchp_ehc_base"
 
 
 def _energy_carriers(rows: list[dict[str, Any]]) -> dict[str, list[str]]:

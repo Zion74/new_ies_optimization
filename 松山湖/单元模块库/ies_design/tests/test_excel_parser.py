@@ -12,6 +12,12 @@ from scenario_loader import ScenarioLoader
 
 
 TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理模板.xlsx"
+TOBACCO_TEMPLATE = (
+    PROJECT_ROOT
+    / "\u677e\u5c71\u6e56"
+    / "\u5355\u5143\u6a21\u5757\u5e93"
+    / "\u8bfe\u9898\u7ec4\u573a\u666f\u6574\u7406\u6a21\u677f_\u70df\u5382_\u6e05\u6d17\u7248.xlsx"
+)
 
 
 def test_empty_template_parses_with_user_friendly_warnings():
@@ -77,6 +83,12 @@ def test_parser_accepts_common_chinese_field_aliases():
     assert parsed.scenario["scenario"]["name"] == "别名场景"
     assert parsed.scenario["devices"]["pv"]["library_id"] == "pv_standard"
     assert parsed.scenario["prices"]["electricity"]["value"] == 0.7
+
+def test_tobacco_excel_uses_future_generic_template():
+    parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+
+    assert parsed.scenario["scenario"]["scenario_type"] == "tobacco_factory_multi_energy"
+    assert parsed.scenario["system"]["template"] == "tobacco_factory_multi_energy"
 
 
 if __name__ == "__main__":

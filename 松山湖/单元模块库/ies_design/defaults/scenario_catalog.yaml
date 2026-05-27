@@ -1,6 +1,14 @@
 ﻿schema_version: "1.0"
 
 scenario_types:
+  tobacco_factory_multi_energy:
+    name: 卷烟厂低碳多能互补综合能源系统场景
+    source_inputs: [solar_resource, waste_heat, temperature]
+    demands: [electricity, cooling, steam, heat]
+    recommended_templates: [tobacco_factory_multi_energy]
+    candidate_devices: [pv_standard, chp_gas_turbine, electric_chiller, absorption_chiller, electric_heat_pump, electric_storage, cold_storage, heat_storage, steam_boiler, waste_heat_recovery]
+    notes: 面向烟厂动力中心、制丝侧和卷包侧，强调余热回收、热泵提升、储热调节和蒸汽/热水替代。
+
   industrial_park_pv_geothermal_waste_heat:
     name: 工业园区分布式光伏地热余热综合能源利用场景
     source_inputs: [solar_resource, geothermal, waste_heat]
