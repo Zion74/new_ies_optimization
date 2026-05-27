@@ -90,8 +90,14 @@ class SchemaValidator:
                         )
                     else:
                         result.future_supported_devices.append(instance_id)
-                if not any(device.get(k) for k in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"]):
+                has_power_bound = _has_power_capacity_bound(device)
+                has_energy_bound = _has_energy_capacity_bound(device)
+                if not has_power_bound and not has_energy_bound:
                     result.warnings.append(f"enabled device {instance_id} has no capacity/power upper bound")
+                elif not has_power_bound and has_energy_bound:
+                    result.warnings.append(
+                        f"enabled storage device {instance_id} has energy capacity upper bound but no power upper bound"
+                    )
 
         prices = resolved.get("prices", {})
         if not prices.get("electricity"):
@@ -121,3 +127,11 @@ def _resolve_input_path(value: str | Path, resolved: dict[str, Any], project_roo
         if candidate.exists():
             return candidate
     return project_root / path
+
+
+def _has_power_capacity_bound(device: dict[str, Any]) -> bool:
+    return any(device.get(key) not in (None, "", 0) for key in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"])
+
+
+def _has_energy_capacity_bound(device: dict[str, Any]) -> bool:
+    return any(device.get(key) not in (None, "", 0) for key in ["capacity_ub_kwh", "energy_capacity_ub_kwh", "energy_ub_kwh", "fixed_capacity_kwh"])

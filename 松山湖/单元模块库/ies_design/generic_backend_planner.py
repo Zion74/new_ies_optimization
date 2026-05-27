@@ -232,8 +232,16 @@ def _device_parameter_gaps(instance_id: str, device: dict[str, Any], mapping: di
     if device.get("optimize_capacity", False) and device.get("unit_group") not in {"external"}:
         if not any(economics.get(key) not in (None, "") for key in ["invest_coeff", "invest_power_coeff", "invest_capacity_coeff"]):
             gaps.append({"device_id": instance_id, "field": "economics.invest_coeff", "reason": "优化容量需要投资成本参数"})
-        if not any(device.get(key) not in (None, "") for key in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"]):
+        has_power_bound = _has_power_capacity_upper_bound(device)
+        has_energy_bound = _energy_capacity_upper_bound(device) not in (None, "")
+        if not has_power_bound and not has_energy_bound:
             gaps.append({"device_id": instance_id, "field": "capacity upper bound", "reason": "优化容量需要容量或功率上界"})
+        elif not has_power_bound and has_energy_bound and (device.get("capacity", {}) or {}).get("primary_var"):
+            gaps.append({
+                "device_id": instance_id,
+                "field": f"capacity.{(device.get('capacity', {}) or {}).get('primary_var')}",
+                "reason": "已提供储能能量容量上界，但仍缺少功率容量上界；若只优化能量容量可忽略",
+            })
     capacity = device.get("capacity", {}) or {}
     if capacity.get("energy_var") and _energy_capacity_upper_bound(device) in (None, ""):
         gaps.append({"device_id": instance_id, "field": f"capacity.{capacity.get('energy_var')}", "reason": "储能类设备建议提供能量容量边界"})
@@ -340,6 +348,10 @@ def _energy_capacity_upper_bound(device: dict[str, Any]) -> float | str | None:
     if duration > 0 and power_bound > 0:
         return duration * power_bound
     return None
+
+
+def _has_power_capacity_upper_bound(device: dict[str, Any]) -> bool:
+    return any(device.get(key) not in (None, "", 0) for key in ["capacity_ub_kw", "power_ub_kw", "fixed_capacity_kw"])
 
 
 def _as_float(value: Any) -> float:

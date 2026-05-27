@@ -85,6 +85,19 @@ def test_generic_backend_planner_summarizes_tobacco_conversion_types():
     assert "waste_heat" in types["recoverable_energy_to_heat"]["input_carriers"]
 
 
+def test_generic_backend_planner_reports_storage_power_gap_precisely():
+    scenario = ScenarioLoader.load(ROOT / "scenarios" / "tobacco_factory" / "scenario.yaml")
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+    plan = GenericBackendPlanner.plan(resolved)
+    heat_storage_gaps = [
+        gap for gap in plan["parameter_gaps"] if gap["device_id"] == "heat_storage"
+    ]
+
+    assert not any(gap["field"] == "capacity upper bound" for gap in heat_storage_gaps)
+    assert any(gap["field"] == "capacity.power_kw" for gap in heat_storage_gaps)
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

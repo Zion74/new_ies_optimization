@@ -154,6 +154,22 @@ def test_tobacco_component_plan_uses_storage_energy_capacity_bound():
     assert not any(gap["field"] == "capacity.capacity_kwh" for gap in heat_storage_gaps)
 
 
+def test_tobacco_validation_distinguishes_storage_energy_and_power_bounds():
+    parsed = ExcelScenarioParser.parse(TOBACCO_TEMPLATE)
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(parsed.scenario)
+
+    result = SchemaValidator.validate(resolved, project_root=PROJECT_ROOT)
+
+    assert not any(
+        warning == "enabled device heat_storage has no capacity/power upper bound"
+        for warning in result.warnings
+    )
+    assert any(
+        "heat_storage" in warning and "power upper bound" in warning and "energy capacity" in warning
+        for warning in result.warnings
+    )
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
