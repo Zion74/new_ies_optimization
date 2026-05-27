@@ -17,6 +17,17 @@ class GenericDesignOptimizer:
         self.dispatch_model = GenericDispatchModel(resolved)
         self.capacity_space = self.dispatch_model.capacity_space
 
+    def _common_result_fields(self) -> dict[str, Any]:
+        summary = self.dispatch_model.model_spec.get("conversion_type_summary", {}) or {}
+        return {
+            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
+            "conversion_type_count": summary.get("type_count", 0),
+            "conversion_type_summary": summary,
+            "capacity_variable_count": len(self.capacity_space.variables),
+            "capacity_variable_names": self.capacity_space.names,
+            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
+        }
+
     def run_demo_search(
         self,
         levels: Iterable[float] | None = None,
@@ -45,14 +56,11 @@ class GenericDesignOptimizer:
             ))
 
         return {
+            **self._common_result_fields(),
             "status": "build_only",
             "search_strategy": "demo_levels",
             "candidate_count": len(solutions),
-            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
-            "capacity_variable_count": len(self.capacity_space.variables),
-            "capacity_variable_names": self.capacity_space.names,
             "solutions": solutions,
-            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
             "next_step": "replace demo levels with NSGA-II/DE candidates and solve full dispatch in GenericDispatchModel",
         }
 
@@ -88,14 +96,11 @@ class GenericDesignOptimizer:
             for solution_id, vector in enumerate(vectors)
         ]
         return {
+            **self._common_result_fields(),
             "status": "capacity_search",
             "search_strategy": "random",
             "candidate_count": len(solutions),
-            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
-            "capacity_variable_count": len(self.capacity_space.variables),
-            "capacity_variable_names": self.capacity_space.names,
             "solutions": solutions,
-            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
             "next_step": "replace random candidate generation with NSGA-II/DE while reusing GenericDispatchModel.evaluate",
         }
 
@@ -169,17 +174,14 @@ class GenericDesignOptimizer:
         ]
         best_solution = min(solutions, key=lambda item: item.get("total_objective", float("inf"))) if solutions else {}
         return {
+            **self._common_result_fields(),
             "status": "capacity_search",
             "search_strategy": "differential_evolution",
             "candidate_count": len(solutions),
             "population_size": population_size,
             "generation_count": generations,
-            "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
-            "capacity_variable_count": len(self.capacity_space.variables),
-            "capacity_variable_names": self.capacity_space.names,
             "solutions": solutions,
             "best_solution": best_solution,
-            "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
             "next_step": "connect differential_evolution outputs to multi-objective NSGA-II/DE selection and full-year dispatch metrics",
         }
 
@@ -488,6 +490,29 @@ def _build_design_report(result: dict[str, Any]) -> str:
     ]
     for name in result.get("capacity_variable_names", []) or []:
         lines.append(f"- `{name}`")
+
+    summary = result.get("conversion_type_summary", {}) or {}
+    lines.extend([
+        "",
+        "## 多能转换类型统计",
+        "",
+        f"- 转换/模块类型数量: {summary.get('type_count', 0)}",
+        f"- 启用设备数量: {summary.get('device_count', 0)}",
+        "",
+        "| 抽象类型 | 通用组件 | 设备数量 | 设备实例 | 输入载体 | 输出载体 |",
+        "|---|---|---:|---|---|---|",
+    ])
+    for item in summary.get("types", []) or []:
+        lines.append(
+            "| {abstract} | {ctypes} | {count} | {devices} | {inputs} | {outputs} |".format(
+                abstract=item.get("abstract_type", ""),
+                ctypes=", ".join(item.get("component_types", []) or []),
+                count=item.get("device_count", 0),
+                devices=", ".join(item.get("device_ids", []) or []),
+                inputs=", ".join(item.get("input_carriers", []) or []),
+                outputs=", ".join(item.get("output_carriers", []) or []),
+            )
+        )
 
     lines.extend([
         "",

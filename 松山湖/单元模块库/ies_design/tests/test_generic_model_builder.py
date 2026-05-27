@@ -45,6 +45,16 @@ def test_generic_model_builder_includes_carnot_capacity_variables():
     assert any(item["device_id"] == "carnot_battery" and item["role"] == "energy_capacity" for item in spec["capacity_variables"])
 
 
+def test_generic_model_builder_carries_tobacco_conversion_summary():
+    spec = GenericModelBuilder.build(resolve("tobacco_factory"), build_oemof=False)
+    summary = spec["conversion_type_summary"]
+    abstract_types = {item["abstract_type"] for item in summary["types"]}
+
+    assert summary["type_count"] >= 8
+    assert "fuel_to_steam" in abstract_types
+    assert "recoverable_energy_to_heat" in abstract_types
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

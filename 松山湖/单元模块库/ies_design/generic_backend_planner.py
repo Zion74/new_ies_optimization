@@ -59,6 +59,7 @@ class GenericBackendPlanner:
         backend = resolved.get("system_template", {}).get("supported_backend", "")
         input_data_gaps = _input_data_gaps(resolved)
         current_unsolved_reasons = _unsolved_reasons(backend, missing_mappings, input_data_gaps, parameter_gaps)
+        conversion_type_summary = _conversion_type_summary(components)
         return {
             "scenario": {
                 "id": scenario.get("id", ""),
@@ -82,6 +83,8 @@ class GenericBackendPlanner:
                 for bus in sorted(bus for bus in buses if bus)
             },
             "components": components,
+            "conversion_type_count": conversion_type_summary["type_count"],
+            "conversion_type_summary": conversion_type_summary,
             "capacity_variables": capacity_variables,
             "parameter_gaps": parameter_gaps,
             "input_data_gaps": input_data_gaps,
@@ -147,6 +150,28 @@ def _plan_markdown(plan: dict[str, Any]) -> str:
                 inputs=", ".join(component.get("input_carriers", []) or []),
                 outputs=", ".join(component.get("output_carriers", []) or []),
                 status="已映射" if component.get("mapping_found") else "缺少映射",
+            )
+        )
+    summary = plan.get("conversion_type_summary", {}) or {}
+    lines.extend([
+        "",
+        "## 多能转换类型统计",
+        "",
+        f"- 转换/模块类型数量: {summary.get('type_count', 0)}",
+        f"- 启用设备数量: {summary.get('device_count', 0)}",
+        "",
+        "| 抽象类型 | 通用组件 | 设备数量 | 设备实例 | 输入载体 | 输出载体 |",
+        "|---|---|---:|---|---|---|",
+    ])
+    for item in summary.get("types", []) or []:
+        lines.append(
+            "| {abstract} | {ctypes} | {count} | {devices} | {inputs} | {outputs} |".format(
+                abstract=item.get("abstract_type", ""),
+                ctypes=", ".join(item.get("component_types", []) or []),
+                count=item.get("device_count", 0),
+                devices=", ".join(item.get("device_ids", []) or []),
+                inputs=", ".join(item.get("input_carriers", []) or []),
+                outputs=", ".join(item.get("output_carriers", []) or []),
             )
         )
     missing = plan.get("missing_mappings", [])
@@ -232,6 +257,48 @@ def _enabled_devices(resolved: dict[str, Any]) -> dict[str, dict[str, Any]]:
         merged["economics"]["invest_capacity_coeff"] = carnot.get("invest_capacity_coeff")
         devices["carnot_battery"] = merged
     return devices
+
+
+def _conversion_type_summary(components: list[dict[str, Any]]) -> dict[str, Any]:
+    grouped: dict[str, dict[str, Any]] = {}
+    for component in components:
+        abstract_type = component.get("abstract_type") or "unknown"
+        group = grouped.setdefault(
+            abstract_type,
+            {
+                "abstract_type": abstract_type,
+                "component_types": set(),
+                "device_ids": [],
+                "device_names": [],
+                "input_carriers": set(),
+                "output_carriers": set(),
+            },
+        )
+        component_type = component.get("component_type")
+        if component_type:
+            group["component_types"].add(component_type)
+        group["device_ids"].append(component.get("instance_id", ""))
+        group["device_names"].append(component.get("name", component.get("instance_id", "")))
+        group["input_carriers"].update(component.get("input_carriers", []) or [])
+        group["output_carriers"].update(component.get("output_carriers", []) or [])
+
+    types = []
+    for item in grouped.values():
+        types.append({
+            "abstract_type": item["abstract_type"],
+            "component_types": sorted(item["component_types"]),
+            "device_count": len([device_id for device_id in item["device_ids"] if device_id]),
+            "device_ids": sorted(device_id for device_id in item["device_ids"] if device_id),
+            "device_names": sorted(name for name in item["device_names"] if name),
+            "input_carriers": sorted(item["input_carriers"]),
+            "output_carriers": sorted(item["output_carriers"]),
+        })
+    types.sort(key=lambda item: item["abstract_type"])
+    return {
+        "type_count": len(types),
+        "device_count": sum(item["device_count"] for item in types),
+        "types": types,
+    }
 
 
 def _device_capacity_variables(instance_id: str, device: dict[str, Any]) -> list[dict[str, Any]]:

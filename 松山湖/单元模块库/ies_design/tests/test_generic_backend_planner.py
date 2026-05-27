@@ -70,6 +70,21 @@ def test_generic_backend_planner_includes_top_level_carnot_device():
     assert any(item["device_id"] == "carnot_battery" and item["variable_name"] == "capacity_kwh" for item in plan["capacity_variables"])
 
 
+def test_generic_backend_planner_summarizes_tobacco_conversion_types():
+    scenario = ScenarioLoader.load(ROOT / "scenarios" / "tobacco_factory" / "scenario.yaml")
+    resolved = DefaultsResolver(ROOT / "defaults").resolve(scenario)
+
+    plan = GenericBackendPlanner.plan(resolved)
+    summary = plan["conversion_type_summary"]
+    types = {item["abstract_type"]: item for item in summary["types"]}
+
+    assert summary["type_count"] >= 8
+    assert types["fuel_to_steam"]["device_ids"] == ["steam_boiler"]
+    assert types["recoverable_energy_to_heat"]["device_ids"] == ["waste_heat_recovery"]
+    assert "steam" in types["fuel_to_steam"]["output_carriers"]
+    assert "waste_heat" in types["recoverable_energy_to_heat"]["input_carriers"]
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

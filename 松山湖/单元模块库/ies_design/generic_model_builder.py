@@ -22,6 +22,8 @@ class GenericModelBuilder:
             "buses": [{"id": bus, **plan.get("carrier_units", {}).get(bus, {})} for bus in plan["buses"]],
             "demand_sinks": _demand_sink_specs(resolved),
             "components": _component_specs(plan),
+            "conversion_type_count": plan.get("conversion_type_count", 0),
+            "conversion_type_summary": plan.get("conversion_type_summary", {}),
             "capacity_variables": plan.get("capacity_variables", []),
             "build_gaps": _build_gaps(plan),
             "next_step": "connect capacity_variables to a dynamic outer optimizer, then solve dispatch for each candidate capacity set",
@@ -180,6 +182,28 @@ def _build_report(spec: dict[str, Any]) -> str:
     ]
     for item in spec.get("capacity_variables", []):
         lines.append(f"| {item.get('device_id', '')} | {item.get('variable_name', '')} | {item.get('role', '')} | {item.get('unit', '')} | {item.get('upper_bound', '')} |")
+    summary = spec.get("conversion_type_summary", {}) or {}
+    lines.extend([
+        "",
+        "## 多能转换类型统计",
+        "",
+        f"- 转换/模块类型数量: {summary.get('type_count', 0)}",
+        f"- 启用设备数量: {summary.get('device_count', 0)}",
+        "",
+        "| 抽象类型 | 通用组件 | 设备数量 | 设备实例 | 输入载体 | 输出载体 |",
+        "|---|---|---:|---|---|---|",
+    ])
+    for item in summary.get("types", []) or []:
+        lines.append(
+            "| {abstract} | {ctypes} | {count} | {devices} | {inputs} | {outputs} |".format(
+                abstract=item.get("abstract_type", ""),
+                ctypes=", ".join(item.get("component_types", []) or []),
+                count=item.get("device_count", 0),
+                devices=", ".join(item.get("device_ids", []) or []),
+                inputs=", ".join(item.get("input_carriers", []) or []),
+                outputs=", ".join(item.get("output_carriers", []) or []),
+            )
+        )
     lines.extend(["", "## 构建缺口", ""])
     gaps = spec.get("build_gaps", [])
     if gaps:
@@ -188,4 +212,3 @@ def _build_report(spec: dict[str, Any]) -> str:
         lines.append("- 暂未发现阻断组件构建的缺口。")
     lines.extend(["", "## 后续接入双层优化", "", f"- {spec.get('next_step', '')}"])
     return "\n".join(lines) + "\n"
-

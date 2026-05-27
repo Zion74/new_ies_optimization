@@ -193,6 +193,17 @@ def test_generic_design_optimizer_de_search_validates_population_size():
         raise AssertionError("expected ValueError")
 
 
+def test_generic_design_optimizer_exports_tobacco_conversion_summary():
+    optimizer = GenericDesignOptimizer(resolve("tobacco_factory"))
+
+    result = optimizer.run_demo_search(levels=[0.0])
+    summary = result["conversion_type_summary"]
+
+    assert result["conversion_type_count"] >= 8
+    assert any(item["abstract_type"] == "fuel_to_steam" for item in summary["types"])
+    assert any(item["abstract_type"] == "recoverable_energy_to_heat" for item in summary["types"])
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
