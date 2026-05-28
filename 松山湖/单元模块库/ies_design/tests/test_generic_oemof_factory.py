@@ -236,6 +236,49 @@ def test_oemof_factory_uses_fixed_source_profile_before_costly_grid():
     assert node_specs["pv"]["outputs"]["electricity"]["fixed_profile"] == [5, 5, 5]
 
 
+def test_oemof_factory_solves_multi_carrier_energy_hub():
+    spec = {
+        "buses": [{"id": "electricity"}, {"id": "natural_gas"}, {"id": "steam"}],
+        "demand_sinks": [
+            {"id": "electricity_demand", "input_carrier": "electricity", "profile": [10.0] * 24},
+            {"id": "steam_demand", "input_carrier": "steam", "profile": [20.0] * 24},
+        ],
+        "components": [
+            {
+                "id": "grid_electricity",
+                "component_type": "Source",
+                "output_carriers": ["electricity"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 100.0},
+                "variable_costs": 1.0,
+            },
+            {
+                "id": "natural_gas_source",
+                "component_type": "Source",
+                "output_carriers": ["natural_gas"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 100.0},
+                "variable_costs": 0.2,
+            },
+            {
+                "id": "steam_boiler",
+                "component_type": "Transformer",
+                "input_carriers": ["natural_gas"],
+                "output_carriers": ["steam"],
+                "capacity_variables": [{"variable_name": "steam_capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"steam_capacity_kw": 50.0},
+                "conversion_factor": 0.9,
+            },
+        ],
+    }
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=24, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is True
+    assert result["objective_value"] > 0
+    assert any(row["to"] == "steam" for row in result["dispatch_summary"]["flow_totals"])
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):
