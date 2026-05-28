@@ -1,30 +1,44 @@
-﻿# 单元模块库文档索引
+# 单元模块库文档索引
 
-本目录沉淀松山湖场景、单元模块库、EMS 对接、中期系统设计接口和课题组场景整理相关文档。
+本目录现在按“代码 / 系统设计 / 场景整理 / 统一建模 / 原始资料”分区，根目录只保留总入口和少量历史代码文件，避免验收材料、Excel 模板和建模资料混在一起。
 
-| 文档 | 简介 | tags |
-|---|---|---|
-| `三场景全流程验收报告.md` | 记录松山湖、德国、烟厂三个场景从标准输入、模块库调用、模型装配、求解到结果导出的全流程验收证据。 | 三场景验收、全流程报告、Level3 |
-| `多能转换单元模块库使用说明书.md` | 面向导师、合作者和师弟的使用说明，解释最小输入、标准 YAML/Excel、运行命令、结果文件和新增场景流程。 | 使用说明、模块库、场景接入 |
-| `项目责任边界与对接架构讨论记录.md` | 明确导师项目与个人论文实验的边界，沉淀模块库、拓扑装配器、标准系统对象、优化器对接和中期验收口径。 | 责任边界、对接架构、优化器接口 |
-| `烟厂场景接入评估与数据清洗记录.md` | 评估卷烟厂作为第三真实结构场景的接入可行性，记录 Excel 清洗、原始数据核查、结题材料容量约束、future_generic 接入路径和 Level 3 真实求解验收命令。 | 烟厂场景、第三场景、数据清洗、future_generic、Level3 |
-| `课题组场景整理模板_烟厂_清洗版.xlsx` | 烟厂场景 Excel 清洗副本，修复 04 表负荷重复/错位问题，扩展 05 表资源曲线，并补充热泵与储热容量约束。 | Excel模板、烟厂场景、清洗版 |
-| `ies_design/scenarios/tobacco_factory/` | 烟厂第三真实场景包，包含 `scenario.yaml`、典型日负荷、资源曲线和数据缺口表，可通过通用线性 Energy Hub 后端完成 24h 真实调度求解并导出容量结果。 | 第三场景、future_generic、Level3、场景包 |
-| `场景化系统设计接口与典型日输入规范.md` | 沉淀中期接口设计：以场景配置驱动单元模块库调用，支持默认系统模板、默认设备参数、Excel/YAML 输入和多种典型日生成方式。 | 中期接口、场景配置、典型日、容量优化 |
-| `场景化系统设计接口第一版开发任务清单.md` | 把中期接口设计拆解为可执行开发任务，覆盖默认配置、场景加载、Excel解析、典型日生成、CCHP适配、结果输出和验证用例。 | 开发计划、中期接口、CCHP适配 |
-| `第一版开发执行计划.md` | 按用户目标拆解第一版剩余开发任务，明确每个模块的文件、测试和闭环验证方式。 | 执行计划、TDD、闭环测试 |
-| `场景化系统设计接口使用说明书.md` | 面向合作者和导师的使用说明，解释需要提供哪些数据、如何调整参数、如何运行和查看结果。 | 使用说明、协作交付、导师汇报 |
-| `第一版场景化系统设计接口闭环验证报告.md` | 记录松山湖和德国 quick 模式跑通证据、结果目录、输出文件和中期要求对应关系。 | 闭环验证、中期验收、quick模式 |
-| `第一版场景化系统设计接口设计开发复盘与优化建议.md` | 对第一版接口设计、代码结构、验证结果和后续优化路线进行 review 与复盘。 | 设计复盘、代码审查、优化建议 |
-| `../../docs/superpowers/specs/2026-05-24-ies-design-v2-design.md` | 第二版设计规格，明确 demo 模式、结果目录、校验状态、Excel增强、典型日可视化、JSON Schema 和通用后端骨架。 | 第二版设计、通用后端、15场景 |
-| `../../docs/superpowers/plans/2026-05-24-ies-design-v2-implementation-plan.md` | 第二版逐项实现任务清单，按完成一个任务提交一次的节奏组织。 | 第二版任务清单、开发计划 |
-| `ies_design/defaults/` | 场景化系统设计接口第一版默认配置草案，包含设备库、系统模板、15种场景目录、组件映射和优化默认值。 | 默认配置、开发实现 |
-| `课题组场景整理任务说明.md` | 给师弟使用的场景数据整理要求，明确每个场景需要梳理的用户需求、能源输入/资源、候选设备、价格参数、数据来源和缺口。 | 场景整理、Excel模板、课题组协作 |
-| `课题组场景整理模板.xlsx` | 课题组场景整理空白 Excel 模板，含场景信息、能源配置、负荷需求、资源输入、候选设备、价格排放、资料缺口等 sheet。 | Excel模板、场景整理 |
-| `源荷储转设备库统一建模接口规范.md` | 定义源、荷、储、转四类设备的统一输入输出接口、EMS 调用方式、容量优化接口和项目书考核指标映射。 | 设备库、源荷储转、EMS、接口规范 |
-| `对接反馈解读_设备库按类型抽象建模.md` | 沉淀对接人反馈：设备库应按类型抽象，不按场景重复建模，并预留通用接口。 | 设备库、接口设计、场景建模 |
-| `EMS与设备库接口审查_松山湖场景.md` | 审查松山湖场景中 EMS 与设备库接口的对接关系和缺口。 | EMS、设备库、松山湖 |
-| `东莞松山湖场景梳理.md` | 梳理东莞松山湖场景的负荷、设备、数据来源和系统边界。 | 松山湖、场景梳理 |
-| `场景梳理.md` | 汇总多场景和设备模块相关背景资料。 | 场景梳理、项目资料 |
-| `多能转化单元模块库_输入输出列表.md` | 整理多能转化单元模块库的输入输出字段。 | 多能转化、输入输出 |
-| `测试报告.MD` | 单元模块库相关测试记录。 | 测试报告 |
+## 推荐阅读顺序
+
+1. `系统设计/三场景全流程验收报告.md`：验收时先看，包含松山湖、德国、烟厂三场景跑通证据，以及烟厂轻量双层优化 test 验证。
+2. `系统设计/多能转换单元模块库使用说明书.md`：给导师、合作组和师弟看的使用说明，解释输入、命令、输出和新增场景流程。
+3. `课题组场景整理/烟厂场景接入评估与数据清洗记录.md`：第三场景数据来源、清洗、容量边界和 Level 3 求解记录。
+4. `ies_design/README.md`：开发者入口，查看代码结构、CLI 命令和测试脚本。
+5. `统一建模/源荷储转设备库统一建模接口规范.md`：理解设备库抽象、EMS 对接和源荷储转统一建模边界。
+
+## 目录分区
+
+| 路径 | 作用 |
+|---|---|
+| `ies_design/` | 场景化系统设计接口代码：默认库、场景 YAML、Excel 解析、校验、通用组件计划、通用模型构建、容量搜索、调度求解和测试。 |
+| `系统设计/` | 当前项目接口设计、验收报告、使用说明、责任边界、第一版任务清单和开发复盘。 |
+| `课题组场景整理/` | 发给师弟或合作方填写的 Excel 模板、15 场景参考表、烟厂清洗版 Excel 和数据清洗记录。 |
+| `统一建模/` | 源荷储转设备库统一建模、EMS 对接、设备按类型抽象建模、松山湖场景梳理等背景资料。 |
+| `单元模块库代码/` | 多能转换设备模块库代码及归档版本。 |
+| `烟厂场景/` | 烟厂项目原始资料和外部模型数据，作为第三场景溯源资料。 |
+| `assets/` | 文档图片资源。 |
+
+## 关键验收材料
+
+| 文档 | 简介 |
+|---|---|
+| `系统设计/三场景全流程验收报告.md` | 记录松山湖、德国、烟厂三个场景从标准输入、模块库调用、模型装配、求解到结果导出的全流程验收证据。 |
+| `系统设计/多能转换单元模块库使用说明书.md` | 面向导师、合作者和师弟的使用说明，解释最小输入、标准 YAML/Excel、运行命令、结果文件和新增场景流程。 |
+| `系统设计/项目责任边界与对接架构讨论记录.md` | 明确导师项目与个人论文实验边界，沉淀模块库、拓扑装配器、标准系统对象、优化器对接和中期验收口径。 |
+| `课题组场景整理/烟厂场景接入评估与数据清洗记录.md` | 评估卷烟厂第三真实结构场景，记录 Excel 清洗、原始数据核查、结题材料容量约束、future_generic 接入和 Level 3 求解。 |
+| `课题组场景整理/课题组场景整理模板.xlsx` | 发给师弟整理新场景的空白 Excel 模板。 |
+| `课题组场景整理/课题组场景整理模板_烟厂_清洗版.xlsx` | 烟厂场景清洗副本，修复负荷重复/错位问题，扩展资源曲线并补充容量约束。 |
+
+## 常用命令
+
+```bash
+rtk uv run python design.py --scenario "松山湖\单元模块库\ies_design\scenarios\songshan_lake\scenario.yaml" --mode demo --output "DesignResults\three_scenario_acceptance\songshan_lake_demo"
+rtk uv run python design.py --scenario "松山湖\单元模块库\ies_design\scenarios\german\scenario.yaml" --mode demo --output "DesignResults\three_scenario_acceptance\german_demo"
+rtk uv run python design.py --scenario "松山湖\单元模块库\ies_design\scenarios\tobacco_factory\scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-generic-dispatch --dispatch-month 1 --dispatch-periods 24 --accept-future --accept-default-bounds --output "DesignResults\three_scenario_acceptance\tobacco_factory_level3"
+rtk uv run python design.py --scenario "松山湖\单元模块库\ies_design\scenarios\tobacco_factory\scenario.yaml" --run-generic-design --generic-search-strategy de --generic-population 4 --generic-generations 1 --generic-random-seed 1 --solve-generic-dispatch --dispatch-month 1 --dispatch-periods 24 --accept-future --accept-default-bounds --output "DesignResults\tobacco_factory_bilevel_test"
+rtk uv run python run_design_checks.py --include-tobacco-level3
+```

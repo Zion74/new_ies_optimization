@@ -14,7 +14,7 @@ energy_carriers:
   resources: ["solar_resource", "waste_heat", "temperature"]
 data:
   input_type: "excel_template"
-  source_workbook: "D:\OneDrive\研究生\我的成果\小论文\源荷匹配的分布式电热综合能源系统优化规划\代码探索\ies_optimization\松山湖\单元模块库\课题组场景整理模板_烟厂_清洗版.xlsx"
+  source_workbook: "D:\OneDrive\研究生\我的成果\小论文\源荷匹配的分布式电热综合能源系统优化规划\代码探索\ies_optimization\松山湖\单元模块库\课题组场景整理\课题组场景整理模板_烟厂_清洗版.xlsx"
   load_file: "typical_profiles.csv"
   typical_day_file: ""
   resource_file: "input_resource_profiles.csv"

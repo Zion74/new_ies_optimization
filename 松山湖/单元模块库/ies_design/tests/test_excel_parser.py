@@ -14,11 +14,12 @@ from schema_validator import SchemaValidator
 from generic_backend_planner import GenericBackendPlanner
 
 
-TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理模板.xlsx"
+TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理" / "课题组场景整理模板.xlsx"
 TOBACCO_TEMPLATE = (
     PROJECT_ROOT
     / "\u677e\u5c71\u6e56"
     / "\u5355\u5143\u6a21\u5757\u5e93"
+    / "\u8bfe\u9898\u7ec4\u573a\u666f\u6574\u7406"
     / "\u8bfe\u9898\u7ec4\u573a\u666f\u6574\u7406\u6a21\u677f_\u70df\u5382_\u6e05\u6d17\u7248.xlsx"
 )
 

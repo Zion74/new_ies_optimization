@@ -8,7 +8,7 @@ DESIGN = PROJECT_ROOT / "design.py"
 SONGSHAN = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "songshan_lake" / "scenario.yaml"
 GERMAN = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "german" / "scenario.yaml"
 CARNOT = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "songshan_lake_carnot" / "scenario.yaml"
-EXCEL_TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理模板.xlsx"
+EXCEL_TEMPLATE = PROJECT_ROOT / "松山湖" / "单元模块库" / "课题组场景整理" / "课题组场景整理模板.xlsx"
 
 
 def run_cli(*args):
