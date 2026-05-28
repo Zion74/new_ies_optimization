@@ -86,6 +86,8 @@ def test_tobacco_export_writes_level3_acceptance_artifacts():
         report_text = outputs["generic_design_report"].read_text(encoding="utf-8")
 
         assert "steam_boiler" in capacity_text
+        assert "steam_capacity_t_h" in capacity_text
+        assert "t/h" in capacity_text
         assert "steam" in flow_text
         assert "fuel_to_steam" in conversion_text
         assert "Level 3" in report_text

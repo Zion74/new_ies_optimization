@@ -706,6 +706,10 @@ def _write_conversion_type_summary_csv(path: Path, result: dict[str, Any]) -> No
 def _unit_from_variable_name(variable_name: str) -> str:
     if variable_name.endswith("_kwh"):
         return "kWh"
+    if variable_name.endswith("_t_h"):
+        return "t/h"
+    if variable_name.endswith("_kg_h"):
+        return "kg/h"
     if variable_name.endswith("_kg"):
         return "kg"
     if variable_name.endswith("_kw"):
