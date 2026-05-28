@@ -93,6 +93,23 @@ def test_tobacco_export_writes_level3_acceptance_artifacts():
         assert "Level 3" in report_text
 
 
+def test_tobacco_de_bilevel_search_prefers_feasible_dispatch_solution():
+    result = GenericDesignOptimizer(resolve_tobacco()).run_de_search(
+        population_size=4,
+        generations=1,
+        random_seed=1,
+        project_root=PROJECT_ROOT,
+        solve_generic_dispatch=True,
+        dispatch_periods=24,
+        dispatch_month=1,
+        accept_default_bounds=True,
+    )
+
+    assert any(solution["dispatch_solved"] is True for solution in result["solutions"])
+    assert result["best_solution"]["dispatch_solved"] is True
+    assert result["best_solution"]["generic_model"]["real_dispatch"]["termination_condition"] == "optimal"
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

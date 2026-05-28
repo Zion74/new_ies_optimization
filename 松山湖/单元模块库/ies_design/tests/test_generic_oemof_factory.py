@@ -86,6 +86,32 @@ def test_oemof_factory_solves_minimal_electric_dispatch_with_glpk():
     assert flow_totals[("electricity", "electricity_demand")]["max"] == 10
 
 
+def test_oemof_factory_reports_infeasible_dispatch_without_objective_error():
+    spec = {
+        "buses": [{"id": "electricity"}],
+        "demand_sinks": [
+            {"id": "electricity_demand", "input_carrier": "electricity", "profile": [10, 10, 10]}
+        ],
+        "components": [
+            {
+                "id": "grid",
+                "component_type": "Source",
+                "output_carriers": ["electricity"],
+                "capacity_variables": [{"variable_name": "capacity_kw", "role": "primary_capacity"}],
+                "applied_capacities": {"capacity_kw": 0},
+                "variable_costs": 1,
+            }
+        ],
+    }
+
+    result = GenericOemofFactory.solve_dispatch(spec, periods=3, solver_names=["glpk"])
+
+    assert result["dispatch_solved"] is False
+    assert result["termination_condition"] == "infeasible"
+    assert result["objective_value"] is None
+    assert result["error"] == "termination_condition=infeasible"
+
+
 def test_oemof_factory_exports_storage_content_summary():
     spec = {
         "buses": [{"id": "electricity"}],

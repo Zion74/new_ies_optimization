@@ -245,7 +245,10 @@ class GenericDesignOptimizer:
             )
             for solution_id, vector in enumerate(population)
         ]
-        best_solution = min(solutions, key=lambda item: item.get("total_objective", float("inf"))) if solutions else {}
+        best_solution = _select_best_solution(
+            solutions,
+            solve_dispatch_requested=solve_electric_dispatch or solve_generic_dispatch,
+        )
         return {
             **self._common_result_fields(capacity_space),
             "status": "capacity_search",
@@ -603,12 +606,30 @@ def _write_level3_acceptance_artifacts(output_dir: Path, result: dict[str, Any])
 
 def _best_solution(result: dict[str, Any]) -> dict[str, Any]:
     explicit = result.get("best_solution")
-    if isinstance(explicit, dict):
+    if isinstance(explicit, dict) and explicit.get("dispatch_solved"):
         return explicit
     solutions = result.get("solutions", []) or []
+    return _select_best_solution(solutions, solve_dispatch_requested=_any_dispatch_requested(solutions))
+
+
+def _select_best_solution(
+    solutions: list[dict[str, Any]],
+    solve_dispatch_requested: bool,
+) -> dict[str, Any]:
     if not solutions:
         return {}
-    return min(solutions, key=lambda item: _float(item.get("total_objective")))
+    if solve_dispatch_requested:
+        solved = [item for item in solutions if item.get("dispatch_solved")]
+        if solved:
+            return min(solved, key=lambda item: _float(item.get("total_objective")))
+    return min(solutions, key=lambda item: _solution_score(item, solve_dispatch_requested))
+
+
+def _any_dispatch_requested(solutions: list[dict[str, Any]]) -> bool:
+    return any(
+        bool(solution.get("generic_model", {}).get("real_dispatch", {}).get("scope"))
+        for solution in solutions
+    )
 
 
 def _write_capacity_solution_csv(path: Path, result: dict[str, Any], solution: dict[str, Any]) -> None:

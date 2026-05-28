@@ -124,14 +124,24 @@ class GenericOemofFactory:
                 result = model.solve(solver=solver)
                 termination = str(result.solver.termination_condition)
                 solved = termination.lower() == "optimal"
+                if not solved:
+                    return {
+                        **_build_summary(build),
+                        "dispatch_solved": False,
+                        "solver": solver,
+                        "termination_condition": termination,
+                        "objective_value": None,
+                        "dispatch_summary": _empty_dispatch_summary(),
+                        "error": f"termination_condition={termination}",
+                    }
                 return {
                     **_build_summary(build),
-                    "dispatch_solved": solved,
+                    "dispatch_solved": True,
                     "solver": solver,
                     "termination_condition": termination,
                     "objective_value": float(model.objective()),
                     "dispatch_summary": _dispatch_summary(processing.results(model)),
-                    "error": "" if solved else f"termination_condition={termination}",
+                    "error": "",
                 }
             except Exception as exc:
                 errors.append(f"{solver}: {exc}")
