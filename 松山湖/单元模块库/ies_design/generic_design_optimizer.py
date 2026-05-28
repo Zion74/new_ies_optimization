@@ -6,7 +6,9 @@ import random
 from pathlib import Path
 from typing import Any, Iterable
 
+from generic_capacity_space import GenericCapacitySpace
 from generic_dispatch_model import GenericDispatchModel
+from generic_energy_hub_inputs import GenericEnergyHubInputs
 
 
 class GenericDesignOptimizer:
@@ -17,16 +19,37 @@ class GenericDesignOptimizer:
         self.dispatch_model = GenericDispatchModel(resolved)
         self.capacity_space = self.dispatch_model.capacity_space
 
-    def _common_result_fields(self) -> dict[str, Any]:
+    def _common_result_fields(self, capacity_space: GenericCapacitySpace | None = None) -> dict[str, Any]:
+        capacity_space = capacity_space or self.capacity_space
         summary = self.dispatch_model.model_spec.get("conversion_type_summary", {}) or {}
         return {
             "scenario_id": self.resolved.get("scenario", {}).get("id", ""),
             "conversion_type_count": summary.get("type_count", 0),
             "conversion_type_summary": summary,
-            "capacity_variable_count": len(self.capacity_space.variables),
-            "capacity_variable_names": self.capacity_space.names,
+            "capacity_variable_count": len(capacity_space.variables),
+            "capacity_variable_names": capacity_space.names,
             "build_gaps": self.dispatch_model.model_spec.get("build_gaps", []),
         }
+
+    def _capacity_space_for_run(
+        self,
+        project_root: str | Path | None,
+        solve_generic_dispatch: bool,
+        dispatch_periods: int,
+        dispatch_month: int,
+        accept_default_bounds: bool,
+    ) -> GenericCapacitySpace:
+        if not solve_generic_dispatch or not accept_default_bounds or not project_root:
+            return self.capacity_space
+        dispatch_spec = GenericEnergyHubInputs.build_dispatch_spec(
+            self.resolved,
+            project_root=project_root,
+            month=dispatch_month,
+            periods=dispatch_periods,
+            capacity_assignment={},
+            accept_default_bounds=True,
+        )
+        return GenericCapacitySpace.from_dispatch_spec(dispatch_spec)
 
     def run_demo_search(
         self,
@@ -41,12 +64,19 @@ class GenericDesignOptimizer:
     ) -> dict[str, Any]:
         levels = list(levels if levels is not None else [0.0, 0.5, 1.0])
         _validate_levels(levels)
+        capacity_space = self._capacity_space_for_run(
+            project_root,
+            solve_generic_dispatch,
+            dispatch_periods,
+            dispatch_month,
+            accept_default_bounds,
+        )
 
         solutions = []
         for solution_id, level in enumerate(levels):
             vector = [
                 lower + (upper - lower) * level
-                for lower, upper in zip(self.capacity_space.lower_bounds, self.capacity_space.upper_bounds)
+                for lower, upper in zip(capacity_space.lower_bounds, capacity_space.upper_bounds)
             ]
             solutions.append(self._evaluate_solution(
                 solution_id=solution_id,
@@ -59,10 +89,11 @@ class GenericDesignOptimizer:
                 dispatch_periods=dispatch_periods,
                 dispatch_month=dispatch_month,
                 accept_default_bounds=accept_default_bounds,
+                capacity_space=capacity_space,
             ))
 
         return {
-            **self._common_result_fields(),
+            **self._common_result_fields(capacity_space),
             "status": "build_only",
             "search_strategy": "demo_levels",
             "candidate_count": len(solutions),
@@ -84,10 +115,17 @@ class GenericDesignOptimizer:
     ) -> dict[str, Any]:
         if candidate_count < 1:
             raise ValueError("candidate_count must be at least 1")
+        capacity_space = self._capacity_space_for_run(
+            project_root,
+            solve_generic_dispatch,
+            dispatch_periods,
+            dispatch_month,
+            accept_default_bounds,
+        )
 
         vectors = _capacity_search_vectors(
-            lower_bounds=self.capacity_space.lower_bounds,
-            upper_bounds=self.capacity_space.upper_bounds,
+            lower_bounds=capacity_space.lower_bounds,
+            upper_bounds=capacity_space.upper_bounds,
             candidate_count=candidate_count,
             random_seed=random_seed,
         )
@@ -103,12 +141,13 @@ class GenericDesignOptimizer:
                 dispatch_periods=dispatch_periods,
                 dispatch_month=dispatch_month,
                 accept_default_bounds=accept_default_bounds,
+                capacity_space=capacity_space,
                 search_strategy="random",
             )
             for solution_id, vector in enumerate(vectors)
         ]
         return {
-            **self._common_result_fields(),
+            **self._common_result_fields(capacity_space),
             "status": "capacity_search",
             "search_strategy": "random",
             "candidate_count": len(solutions),
@@ -136,9 +175,16 @@ class GenericDesignOptimizer:
         if generations < 0:
             raise ValueError("generations must be non-negative")
 
+        capacity_space = self._capacity_space_for_run(
+            project_root,
+            solve_generic_dispatch,
+            dispatch_periods,
+            dispatch_month,
+            accept_default_bounds,
+        )
         rng = random.Random(random_seed)
-        lower_bounds = self.capacity_space.lower_bounds
-        upper_bounds = self.capacity_space.upper_bounds
+        lower_bounds = capacity_space.lower_bounds
+        upper_bounds = capacity_space.upper_bounds
         population = _initial_de_population(lower_bounds, upper_bounds, population_size, rng)
         scores = [
             self._evaluate_vector_score(
@@ -150,6 +196,7 @@ class GenericDesignOptimizer:
                 dispatch_periods=dispatch_periods,
                 dispatch_month=dispatch_month,
                 accept_default_bounds=accept_default_bounds,
+                capacity_space=capacity_space,
             )
             for vector in population
         ]
@@ -175,6 +222,7 @@ class GenericDesignOptimizer:
                     dispatch_periods=dispatch_periods,
                     dispatch_month=dispatch_month,
                     accept_default_bounds=accept_default_bounds,
+                    capacity_space=capacity_space,
                 )
                 if trial_score <= scores[idx]:
                     population[idx] = trial
@@ -192,13 +240,14 @@ class GenericDesignOptimizer:
                 dispatch_periods=dispatch_periods,
                 dispatch_month=dispatch_month,
                 accept_default_bounds=accept_default_bounds,
+                capacity_space=capacity_space,
                 search_strategy="differential_evolution",
             )
             for solution_id, vector in enumerate(population)
         ]
         best_solution = min(solutions, key=lambda item: item.get("total_objective", float("inf"))) if solutions else {}
         return {
-            **self._common_result_fields(),
+            **self._common_result_fields(capacity_space),
             "status": "capacity_search",
             "search_strategy": "differential_evolution",
             "candidate_count": len(solutions),
@@ -219,6 +268,7 @@ class GenericDesignOptimizer:
         dispatch_periods: int,
         dispatch_month: int,
         accept_default_bounds: bool,
+        capacity_space: GenericCapacitySpace | None = None,
     ) -> float:
         solution = self._evaluate_solution(
             solution_id=-1,
@@ -231,6 +281,7 @@ class GenericDesignOptimizer:
             dispatch_periods=dispatch_periods,
             dispatch_month=dispatch_month,
             accept_default_bounds=accept_default_bounds,
+            capacity_space=capacity_space,
             search_strategy="differential_evolution",
         )
         return _solution_score(solution, solve_electric_dispatch or solve_generic_dispatch)
@@ -247,6 +298,7 @@ class GenericDesignOptimizer:
         dispatch_periods: int,
         dispatch_month: int,
         accept_default_bounds: bool,
+        capacity_space: GenericCapacitySpace | None = None,
         search_strategy: str = "demo_levels",
     ) -> dict[str, Any]:
         evaluation = self.dispatch_model.evaluate(
@@ -258,6 +310,7 @@ class GenericDesignOptimizer:
             dispatch_periods=dispatch_periods,
             dispatch_month=dispatch_month,
             accept_default_bounds=accept_default_bounds,
+            capacity_space=capacity_space,
         )
         real_dispatch = evaluation.get("generic_model", {}).get("real_dispatch", {}) or {}
         dispatch_objective = _objective_value(real_dispatch)
@@ -310,10 +363,12 @@ class GenericDesignOptimizer:
         json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
         _write_solutions_csv(csv_path, result)
         report_path.write_text(_build_design_report(result), encoding="utf-8")
+        acceptance_outputs = _write_level3_acceptance_artifacts(output_dir, result)
         return {
             "generic_design_solutions": json_path,
             "generic_design_solutions_csv": csv_path,
             "generic_design_report": report_path,
+            **acceptance_outputs,
         }
 
     @classmethod
@@ -352,10 +407,12 @@ class GenericDesignOptimizer:
         json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
         _write_solutions_csv(csv_path, result)
         report_path.write_text(_build_design_report(result), encoding="utf-8")
+        acceptance_outputs = _write_level3_acceptance_artifacts(output_dir, result)
         return {
             "generic_design_solutions": json_path,
             "generic_design_solutions_csv": csv_path,
             "generic_design_report": report_path,
+            **acceptance_outputs,
         }
 
     @classmethod
@@ -396,10 +453,12 @@ class GenericDesignOptimizer:
         json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
         _write_solutions_csv(csv_path, result)
         report_path.write_text(_build_design_report(result), encoding="utf-8")
+        acceptance_outputs = _write_level3_acceptance_artifacts(output_dir, result)
         return {
             "generic_design_solutions": json_path,
             "generic_design_solutions_csv": csv_path,
             "generic_design_report": report_path,
+            **acceptance_outputs,
         }
 
 
@@ -527,10 +586,147 @@ def _write_solutions_csv(path: Path, result: dict[str, Any]) -> None:
             writer.writerow(row)
 
 
+def _write_level3_acceptance_artifacts(output_dir: Path, result: dict[str, Any]) -> dict[str, Path]:
+    outputs = {
+        "capacity_solution": output_dir / "capacity_solution.csv",
+        "dispatch_summary": output_dir / "dispatch_summary.csv",
+        "energy_flow_summary": output_dir / "energy_flow_summary.csv",
+        "conversion_type_summary": output_dir / "conversion_type_summary.csv",
+    }
+    best = _best_solution(result)
+    _write_capacity_solution_csv(outputs["capacity_solution"], result, best)
+    _write_dispatch_summary_csv(outputs["dispatch_summary"], result)
+    _write_energy_flow_summary_csv(outputs["energy_flow_summary"], best)
+    _write_conversion_type_summary_csv(outputs["conversion_type_summary"], result)
+    return outputs
+
+
+def _best_solution(result: dict[str, Any]) -> dict[str, Any]:
+    explicit = result.get("best_solution")
+    if isinstance(explicit, dict):
+        return explicit
+    solutions = result.get("solutions", []) or []
+    if not solutions:
+        return {}
+    return min(solutions, key=lambda item: _float(item.get("total_objective")))
+
+
+def _write_capacity_solution_csv(path: Path, result: dict[str, Any], solution: dict[str, Any]) -> None:
+    columns = ["scenario_id", "solution_id", "device_id", "variable_name", "value", "unit"]
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        assignment = solution.get("capacity_assignment", {}) or {}
+        for device_id, values in assignment.items():
+            for variable_name, value in (values or {}).items():
+                writer.writerow({
+                    "scenario_id": result.get("scenario_id", ""),
+                    "solution_id": solution.get("solution_id", ""),
+                    "device_id": device_id,
+                    "variable_name": variable_name,
+                    "value": value,
+                    "unit": _unit_from_variable_name(variable_name),
+                })
+
+
+def _write_dispatch_summary_csv(path: Path, result: dict[str, Any]) -> None:
+    columns = [
+        "solution_id",
+        "scope",
+        "dispatch_solved",
+        "solver",
+        "termination_condition",
+        "objective_value",
+        "month",
+        "node_count",
+        "error",
+    ]
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        for row in _dispatch_rows(result):
+            writer.writerow({column: row.get(column, "") for column in columns})
+
+
+def _write_energy_flow_summary_csv(path: Path, solution: dict[str, Any]) -> None:
+    columns = ["solution_id", "record_type", "from", "to", "storage", "sum", "max", "final"]
+    dispatch = solution.get("generic_model", {}).get("real_dispatch", {}) or {}
+    summary = dispatch.get("dispatch_summary", {}) or {}
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        for row in summary.get("flow_totals", []) or []:
+            writer.writerow({
+                "solution_id": solution.get("solution_id", ""),
+                "record_type": "flow_total",
+                "from": row.get("from", ""),
+                "to": row.get("to", ""),
+                "storage": "",
+                "sum": row.get("sum", ""),
+                "max": row.get("max", ""),
+                "final": "",
+            })
+        for row in summary.get("storage_content", []) or []:
+            writer.writerow({
+                "solution_id": solution.get("solution_id", ""),
+                "record_type": "storage_content",
+                "from": "",
+                "to": "",
+                "storage": row.get("storage", ""),
+                "sum": "",
+                "max": row.get("max", ""),
+                "final": row.get("final", ""),
+            })
+
+
+def _write_conversion_type_summary_csv(path: Path, result: dict[str, Any]) -> None:
+    columns = [
+        "abstract_type",
+        "component_types",
+        "device_count",
+        "device_ids",
+        "input_carriers",
+        "output_carriers",
+    ]
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        summary = result.get("conversion_type_summary", {}) or {}
+        for item in summary.get("types", []) or []:
+            writer.writerow({
+                "abstract_type": item.get("abstract_type", ""),
+                "component_types": ";".join(item.get("component_types", []) or []),
+                "device_count": item.get("device_count", 0),
+                "device_ids": ";".join(item.get("device_ids", []) or []),
+                "input_carriers": ";".join(item.get("input_carriers", []) or []),
+                "output_carriers": ";".join(item.get("output_carriers", []) or []),
+            })
+
+
+def _unit_from_variable_name(variable_name: str) -> str:
+    if variable_name.endswith("_kwh"):
+        return "kWh"
+    if variable_name.endswith("_kg"):
+        return "kg"
+    if variable_name.endswith("_kw"):
+        return "kW"
+    return ""
+
+
+def _float(value: Any) -> float:
+    if value in (None, ""):
+        return 0.0
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def _build_design_report(result: dict[str, Any]) -> str:
     lines = [
         "# GenericDesignOptimizer 设计搜索报告",
         "",
+        "- 验收等级: `Level 3`（真实场景 + 通用线性 Energy Hub 调度求解 + 容量结果导出）",
         f"- 场景 ID: `{result.get('scenario_id', '')}`",
         f"- 当前状态: `{result.get('status', '')}`",
         f"- 搜索策略: `{result.get('search_strategy', '')}`",

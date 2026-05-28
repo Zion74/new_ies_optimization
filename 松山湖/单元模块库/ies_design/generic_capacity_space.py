@@ -51,6 +51,8 @@ class GenericCapacitySpace:
             capacities = component.get("applied_capacities", {}) or {}
             for item in component.get("capacity_variables", []) or []:
                 name = str(item.get("variable_name", ""))
+                if "upper_bound" not in item:
+                    continue
                 upper = _to_float(item.get("upper_bound", capacities.get(name)))
                 if upper <= 0:
                     continue

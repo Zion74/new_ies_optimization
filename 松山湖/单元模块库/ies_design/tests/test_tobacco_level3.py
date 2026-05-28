@@ -1,4 +1,5 @@
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +55,40 @@ def test_tobacco_generic_design_search_uses_real_dispatch_objective():
     assert solution["dispatch_solved"] is True
     assert solution["dispatch_objective"] > 0
     assert solution["total_objective"] >= solution["dispatch_objective"]
+
+
+def test_tobacco_export_writes_level3_acceptance_artifacts():
+    with tempfile.TemporaryDirectory() as tmp:
+        outputs = GenericDesignOptimizer.export_demo_search(
+            resolve_tobacco(),
+            tmp,
+            levels=[1.0],
+            project_root=PROJECT_ROOT,
+            solve_generic_dispatch=True,
+            dispatch_periods=24,
+            dispatch_month=1,
+            accept_default_bounds=True,
+        )
+
+        expected = [
+            "capacity_solution",
+            "dispatch_summary",
+            "energy_flow_summary",
+            "conversion_type_summary",
+        ]
+        for key in expected:
+            assert key in outputs
+            assert outputs[key].exists()
+
+        capacity_text = outputs["capacity_solution"].read_text(encoding="utf-8-sig")
+        flow_text = outputs["energy_flow_summary"].read_text(encoding="utf-8-sig")
+        conversion_text = outputs["conversion_type_summary"].read_text(encoding="utf-8-sig")
+        report_text = outputs["generic_design_report"].read_text(encoding="utf-8")
+
+        assert "steam_boiler" in capacity_text
+        assert "steam" in flow_text
+        assert "fuel_to_steam" in conversion_text
+        assert "Level 3" in report_text
 
 
 if __name__ == "__main__":

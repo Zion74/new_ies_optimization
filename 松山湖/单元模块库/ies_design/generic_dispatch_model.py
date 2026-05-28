@@ -32,8 +32,10 @@ class GenericDispatchModel:
         dispatch_periods: int = 24,
         dispatch_month: int = 1,
         accept_default_bounds: bool = False,
+        capacity_space: GenericCapacitySpace | None = None,
     ) -> dict[str, Any]:
-        assignment = self.capacity_space.vector_to_assignment(vector)
+        active_capacity_space = capacity_space or self.capacity_space
+        assignment = active_capacity_space.vector_to_assignment(vector)
         applied_components = _apply_capacity_assignment(
             self.model_spec.get("components", []),
             assignment,
