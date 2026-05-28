@@ -15,11 +15,13 @@ SONGSHAN = IES_DIR / "scenarios" / "songshan_lake" / "scenario.yaml"
 GERMAN = IES_DIR / "scenarios" / "german" / "scenario.yaml"
 THIRD = IES_DIR / "scenarios" / "third_placeholder" / "scenario.yaml"
 SONGSHAN_CARNOT = IES_DIR / "scenarios" / "songshan_lake_carnot" / "scenario.yaml"
+TOBACCO = IES_DIR / "scenarios" / "tobacco_factory" / "scenario.yaml"
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run scenario design interface checks")
     parser.add_argument("--run-demo", action="store_true", help="Run a real demo optimization after fast checks")
+    parser.add_argument("--include-tobacco-level3", action="store_true", help="Run the tobacco linear Energy Hub real-solve acceptance check")
     args = parser.parse_args(argv)
 
     checks = [
@@ -37,6 +39,21 @@ def main(argv: list[str] | None = None) -> int:
         ("songshan carnot generic model build", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--build-generic-model", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_carnot_generic_model"))),
         ("songshan carnot generic design search", lambda: _run_cli("--scenario", str(SONGSHAN_CARNOT), "--run-generic-design", "--generic-search-levels", "0", "0.5", "1", "--output", str(PROJECT_ROOT / "DesignResults" / "_check_carnot_generic_design"))),
     ]
+    if args.include_tobacco_level3:
+        checks.append((
+            "tobacco level3 linear energy hub solve",
+            lambda: _run_cli(
+                "--scenario", str(TOBACCO),
+                "--run-generic-design",
+                "--generic-search-levels", "1.0",
+                "--solve-generic-dispatch",
+                "--dispatch-month", "1",
+                "--dispatch-periods", "24",
+                "--accept-future",
+                "--accept-default-bounds",
+                "--output", str(PROJECT_ROOT / "DesignResults" / "_check_tobacco_level3"),
+            ),
+        ))
     if args.run_demo:
         checks.append(("songshan demo solve", lambda: _run_cli("--scenario", str(SONGSHAN), "--mode", "demo")))
 
