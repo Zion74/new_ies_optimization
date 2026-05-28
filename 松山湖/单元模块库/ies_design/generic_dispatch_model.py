@@ -5,6 +5,7 @@ from typing import Any
 
 from generic_capacity_space import GenericCapacitySpace
 from generic_dispatch_inputs import GenericDispatchInputs
+from generic_energy_hub_inputs import GenericEnergyHubInputs
 from generic_model_builder import GenericModelBuilder
 from generic_oemof_factory import GenericOemofFactory
 
@@ -26,8 +27,11 @@ class GenericDispatchModel:
         vector: list[float],
         project_root: str | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Any]:
         assignment = self.capacity_space.vector_to_assignment(vector)
         applied_components = _apply_capacity_assignment(
@@ -45,9 +49,19 @@ class GenericDispatchModel:
             assignment=assignment,
             periods=dispatch_periods,
         )
+        if solve_generic_dispatch:
+            real_dispatch = _solve_generic_dispatch(
+                self.resolved,
+                project_root=project_root,
+                assignment=assignment,
+                periods=dispatch_periods,
+                month=dispatch_month,
+                accept_default_bounds=accept_default_bounds,
+            )
+        dispatch_solved = bool(real_dispatch.get("dispatch_solved", False))
         return {
-            "status": "build_only",
-            "dispatch_solved": False,
+            "status": "dispatch_solved" if dispatch_solved else "build_only",
+            "dispatch_solved": dispatch_solved,
             "capacity_assignment": assignment,
             "investment_cost": _investment_cost(self.resolved, assignment),
             "build_gaps": self.model_spec.get("build_gaps", []),
@@ -105,6 +119,55 @@ def _oemof_summary(result: dict[str, Any]) -> dict[str, Any]:
         "node_specs": result.get("node_specs", []),
         "skipped_components": result.get("skipped_components", []),
     }
+
+
+def _solve_generic_dispatch(
+    resolved: dict[str, Any],
+    project_root: str | None,
+    assignment: dict[str, dict[str, float]],
+    periods: int,
+    month: int,
+    accept_default_bounds: bool,
+) -> dict[str, Any]:
+    if not project_root:
+        return {"scope": "linear_energy_hub", "dispatch_solved": False, "skipped": True, "reason": "project_root is required"}
+    try:
+        spec = GenericEnergyHubInputs.build_dispatch_spec(
+            resolved,
+            project_root=project_root,
+            month=month,
+            periods=periods,
+            capacity_assignment=assignment,
+            accept_default_bounds=accept_default_bounds,
+        )
+        result = GenericOemofFactory.solve_dispatch(spec, periods=periods, solver_names=["glpk"])
+        return {
+            "scope": "linear_energy_hub",
+            "dispatch_solved": result.get("dispatch_solved", False),
+            "solver": result.get("solver", ""),
+            "termination_condition": result.get("termination_condition", ""),
+            "objective_value": result.get("objective_value"),
+            "dispatch_summary": result.get("dispatch_summary", {"flow_totals": [], "storage_content": []}),
+            "node_specs": result.get("node_specs", []),
+            "skipped_components": result.get("skipped_components", []),
+            "error": result.get("error", ""),
+            "node_count": result.get("node_count", 0),
+            "month": month,
+        }
+    except Exception as exc:
+        return {
+            "scope": "linear_energy_hub",
+            "dispatch_solved": False,
+            "solver": "",
+            "termination_condition": "",
+            "objective_value": None,
+            "dispatch_summary": {"flow_totals": [], "storage_content": []},
+            "node_specs": [],
+            "skipped_components": [],
+            "error": str(exc),
+            "node_count": 0,
+            "month": month,
+        }
 
 
 def _solve_real_electric_dispatch(

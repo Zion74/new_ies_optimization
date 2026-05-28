@@ -33,8 +33,11 @@ class GenericDesignOptimizer:
         levels: Iterable[float] | None = None,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Any]:
         levels = list(levels if levels is not None else [0.0, 0.5, 1.0])
         _validate_levels(levels)
@@ -51,8 +54,11 @@ class GenericDesignOptimizer:
                 level=level,
                 project_root=project_root,
                 solve_electric_dispatch=solve_electric_dispatch,
+                solve_generic_dispatch=solve_generic_dispatch,
                 electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
+                dispatch_month=dispatch_month,
+                accept_default_bounds=accept_default_bounds,
             ))
 
         return {
@@ -70,8 +76,11 @@ class GenericDesignOptimizer:
         random_seed: int = 1,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Any]:
         if candidate_count < 1:
             raise ValueError("candidate_count must be at least 1")
@@ -89,8 +98,11 @@ class GenericDesignOptimizer:
                 level="",
                 project_root=project_root,
                 solve_electric_dispatch=solve_electric_dispatch,
+                solve_generic_dispatch=solve_generic_dispatch,
                 electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
+                dispatch_month=dispatch_month,
+                accept_default_bounds=accept_default_bounds,
                 search_strategy="random",
             )
             for solution_id, vector in enumerate(vectors)
@@ -113,8 +125,11 @@ class GenericDesignOptimizer:
         crossover_rate: float = 0.7,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Any]:
         if population_size < 4:
             raise ValueError("population_size must be at least 4 for differential evolution")
@@ -130,8 +145,11 @@ class GenericDesignOptimizer:
                 vector,
                 project_root=project_root,
                 solve_electric_dispatch=solve_electric_dispatch,
+                solve_generic_dispatch=solve_generic_dispatch,
                 electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
+                dispatch_month=dispatch_month,
+                accept_default_bounds=accept_default_bounds,
             )
             for vector in population
         ]
@@ -152,8 +170,11 @@ class GenericDesignOptimizer:
                     trial,
                     project_root=project_root,
                     solve_electric_dispatch=solve_electric_dispatch,
+                    solve_generic_dispatch=solve_generic_dispatch,
                     electric_dispatch_scope=electric_dispatch_scope,
                     dispatch_periods=dispatch_periods,
+                    dispatch_month=dispatch_month,
+                    accept_default_bounds=accept_default_bounds,
                 )
                 if trial_score <= scores[idx]:
                     population[idx] = trial
@@ -166,8 +187,11 @@ class GenericDesignOptimizer:
                 level="",
                 project_root=project_root,
                 solve_electric_dispatch=solve_electric_dispatch,
+                solve_generic_dispatch=solve_generic_dispatch,
                 electric_dispatch_scope=electric_dispatch_scope,
                 dispatch_periods=dispatch_periods,
+                dispatch_month=dispatch_month,
+                accept_default_bounds=accept_default_bounds,
                 search_strategy="differential_evolution",
             )
             for solution_id, vector in enumerate(population)
@@ -190,8 +214,11 @@ class GenericDesignOptimizer:
         vector: list[float],
         project_root: str | Path | None,
         solve_electric_dispatch: bool,
+        solve_generic_dispatch: bool,
         electric_dispatch_scope: str,
         dispatch_periods: int,
+        dispatch_month: int,
+        accept_default_bounds: bool,
     ) -> float:
         solution = self._evaluate_solution(
             solution_id=-1,
@@ -199,11 +226,14 @@ class GenericDesignOptimizer:
             level="",
             project_root=project_root,
             solve_electric_dispatch=solve_electric_dispatch,
+            solve_generic_dispatch=solve_generic_dispatch,
             electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
+            dispatch_month=dispatch_month,
+            accept_default_bounds=accept_default_bounds,
             search_strategy="differential_evolution",
         )
-        return _solution_score(solution, solve_electric_dispatch)
+        return _solution_score(solution, solve_electric_dispatch or solve_generic_dispatch)
 
     def _evaluate_solution(
         self,
@@ -212,16 +242,22 @@ class GenericDesignOptimizer:
         level: float | str,
         project_root: str | Path | None,
         solve_electric_dispatch: bool,
+        solve_generic_dispatch: bool,
         electric_dispatch_scope: str,
         dispatch_periods: int,
+        dispatch_month: int,
+        accept_default_bounds: bool,
         search_strategy: str = "demo_levels",
     ) -> dict[str, Any]:
         evaluation = self.dispatch_model.evaluate(
             vector,
             project_root=str(project_root) if project_root else None,
             solve_electric_dispatch=solve_electric_dispatch,
+            solve_generic_dispatch=solve_generic_dispatch,
             electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
+            dispatch_month=dispatch_month,
+            accept_default_bounds=accept_default_bounds,
         )
         real_dispatch = evaluation.get("generic_model", {}).get("real_dispatch", {}) or {}
         dispatch_objective = _objective_value(real_dispatch)
