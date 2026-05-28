@@ -43,15 +43,24 @@ class GenericModelBuilder:
 
         components_path = output_dir / "generic_model_components.json"
         system_object_path = output_dir / "system_object.json"
+        capacity_variables_json_path = output_dir / "capacity_variables.json"
+        capacity_variables_csv_path = output_dir / "capacity_variables.csv"
         gaps_path = output_dir / "generic_model_build_gaps.csv"
         report_path = output_dir / "generic_model_build_report.md"
         components_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
         system_object_path.write_text(json.dumps(spec["system_object"], ensure_ascii=False, indent=2), encoding="utf-8")
+        capacity_variables_json_path.write_text(
+            json.dumps(spec.get("capacity_variables", []), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        _write_capacity_variables_csv(capacity_variables_csv_path, spec.get("capacity_variables", []))
         _write_gaps(gaps_path, spec.get("build_gaps", []))
         report_path.write_text(_build_report(spec), encoding="utf-8")
         return {
             "generic_model_components": components_path,
             "system_object": system_object_path,
+            "capacity_variables_json": capacity_variables_json_path,
+            "capacity_variables_csv": capacity_variables_csv_path,
             "generic_model_build_gaps": gaps_path,
             "generic_model_build_report": report_path,
         }
@@ -298,6 +307,30 @@ def _write_gaps(path: Path, gaps: list[dict[str, Any]]) -> None:
         writer.writeheader()
         for gap in gaps:
             writer.writerow({column: gap.get(column, "") for column in columns})
+
+
+def _write_capacity_variables_csv(path: Path, variables: list[dict[str, Any]]) -> None:
+    columns = [
+        "name",
+        "device_id",
+        "parameter",
+        "unit",
+        "lb",
+        "ub",
+        "default_value",
+        "is_fixed",
+        "source",
+        "role",
+        "variable_name",
+        "lower_bound",
+        "upper_bound",
+        "bound_source",
+    ]
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        for variable in variables:
+            writer.writerow({column: variable.get(column, "") for column in columns})
 
 
 def _build_report(spec: dict[str, Any]) -> str:

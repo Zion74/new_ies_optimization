@@ -1,5 +1,7 @@
 import sys
 import tempfile
+import csv
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -98,6 +100,30 @@ def test_generic_model_builder_exports_standard_system_object():
 
     assert "generic_system_object.v1" in system_object
     assert "tobacco_factory_001" in system_object
+
+
+def test_generic_model_builder_exports_capacity_variable_artifacts():
+    with tempfile.TemporaryDirectory() as tmp:
+        outputs = GenericModelBuilder.export(resolve("songshan_lake"), tmp)
+
+        variables = json.loads(outputs["capacity_variables_json"].read_text(encoding="utf-8"))
+        with outputs["capacity_variables_csv"].open("r", encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.DictReader(f))
+
+    assert variables
+    assert rows
+    assert rows[0].keys() >= {
+        "name",
+        "device_id",
+        "parameter",
+        "unit",
+        "lb",
+        "ub",
+        "default_value",
+        "is_fixed",
+        "source",
+    }
+    assert any(row["name"] == "pv.capacity_kw" for row in rows)
 
 
 if __name__ == "__main__":
