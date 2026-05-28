@@ -250,6 +250,7 @@ def _device_component(
     capacity = device.get("capacity", {}) or {}
     primary_var = capacity.get("primary_var") or "capacity_kw"
     primary = _assigned_or_default(device_id, primary_var, assignment, device, peak, resource_peak, accept_default_bounds)
+    primary_source = _bound_source(primary_var, assignment, device, accept_default_bounds)
 
     if abstract_type == "renewable_power":
         solar = resources.get("solar_resource", [0.0] * periods)
@@ -265,13 +266,14 @@ def _device_component(
                 max(0.0, primary * derating * radiation / 1000 * (1 - temp_coeff * (temp - reference)))
                 for radiation, temp in zip(solar, temperature)
             ],
-            "capacity_variables": [{"variable_name": primary_var, "role": "primary_capacity"}],
+            "capacity_variables": [_capacity_variable(primary_var, "primary_capacity", primary, primary_source, capacity.get("default_unit", "kW"))],
             "applied_capacities": {primary_var: primary},
             "variable_costs": 0,
         }
     if abstract_type == "storage":
         energy_var = capacity.get("energy_var") or "capacity_kwh"
         energy = _assigned_or_default(device_id, energy_var, assignment, device, peak, resource_peak, accept_default_bounds)
+        energy_source = _bound_source(energy_var, assignment, device, accept_default_bounds)
         carrier = output_carriers[0] if output_carriers else input_carriers[0]
         return {
             "id": device_id,
@@ -279,8 +281,8 @@ def _device_component(
             "input_carriers": [carrier],
             "output_carriers": [carrier],
             "capacity_variables": [
-                {"variable_name": primary_var, "role": "primary_capacity"},
-                {"variable_name": energy_var, "role": "energy_capacity"},
+                _capacity_variable(primary_var, "primary_capacity", primary, primary_source, capacity.get("default_unit", "kW")),
+                _capacity_variable(energy_var, "energy_capacity", energy or primary * 2, energy_source, "kWh"),
             ],
             "applied_capacities": {primary_var: primary, energy_var: energy or primary * 2},
             "charge_efficiency": _float(parameters.get("charge_efficiency", 0.9)) or 0.9,
@@ -288,7 +290,7 @@ def _device_component(
             "loss_rate": _float(parameters.get("loss_rate", 0.0)),
         }
     if abstract_type in {"power_to_heat", "power_to_cooling", "heat_to_cooling", "fuel_to_steam", "fuel_to_heat"}:
-        return _transformer(device_id, input_carriers, output_carriers[:1], primary_var, primary, _single_factor(device, abstract_type))
+        return _transformer(device_id, input_carriers, output_carriers[:1], primary_var, primary, _single_factor(device, abstract_type), primary_source, capacity.get("default_unit", "kW"))
     if abstract_type == "cogeneration":
         return _transformer(
             device_id,
@@ -300,9 +302,11 @@ def _device_component(
                 "electricity": _float(parameters.get("eta_e", 0.35)) or 0.35,
                 "heat": _float(parameters.get("eta_h", 0.45)) or 0.45,
             },
+            primary_source,
+            capacity.get("default_unit", "kW"),
         )
     if abstract_type == "recoverable_energy_to_heat":
-        return _transformer(device_id, ["waste_heat"], ["steam"], primary_var, primary, 1.0)
+        return _transformer(device_id, ["waste_heat"], ["steam"], primary_var, primary, 1.0, primary_source, capacity.get("default_unit", "kW"))
     return None
 
 
@@ -313,13 +317,15 @@ def _transformer(
     primary_var: str,
     primary: float,
     factor: float | dict[str, float],
+    bound_source: str,
+    unit: str,
 ) -> dict[str, Any]:
     component: dict[str, Any] = {
         "id": device_id,
         "component_type": "Transformer",
         "input_carriers": inputs,
         "output_carriers": outputs,
-        "capacity_variables": [{"variable_name": primary_var, "role": "primary_capacity"}],
+        "capacity_variables": [_capacity_variable(primary_var, "primary_capacity", primary, bound_source, unit)],
         "applied_capacities": {primary_var: primary},
     }
     if isinstance(factor, dict):
@@ -327,6 +333,22 @@ def _transformer(
     else:
         component["conversion_factor"] = factor
     return component
+
+
+def _capacity_variable(
+    variable_name: str,
+    role: str,
+    upper_bound: float,
+    bound_source: str,
+    unit: str,
+) -> dict[str, Any]:
+    return {
+        "variable_name": variable_name,
+        "role": role,
+        "unit": unit,
+        "upper_bound": upper_bound,
+        "bound_source": bound_source,
+    }
 
 
 def _single_factor(device: dict[str, Any], abstract_type: str) -> float:
@@ -384,6 +406,20 @@ def _assigned_or_default(
     if device_id in {"heat_storage", "electric_heat_pump"}:
         return max(peak.get("steam", 0.0), peak.get("heat", 0.0))
     return max(peak.values() or [0.0])
+
+
+def _bound_source(
+    variable_name: str,
+    assignment: dict[str, float],
+    device: dict[str, Any],
+    accept_default_bounds: bool,
+) -> str:
+    if variable_name in assignment:
+        return "candidate"
+    for key in ["capacity_ub_kw", "power_ub_kw", "energy_capacity_ub_kwh", "capacity_ub_kwh"]:
+        if device.get(key) not in (None, ""):
+            return "user_or_library"
+    return "acceptance_default" if accept_default_bounds else "missing"
 
 
 def _price(resolved: dict[str, Any], key: str) -> float:

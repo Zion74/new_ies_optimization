@@ -6,6 +6,7 @@ sys.path.insert(0, str(ROOT))
 
 from defaults_resolver import DefaultsResolver
 from generic_capacity_space import GenericCapacitySpace
+from generic_energy_hub_inputs import GenericEnergyHubInputs
 from generic_model_builder import GenericModelBuilder
 from scenario_loader import ScenarioLoader
 
@@ -65,6 +66,25 @@ def test_capacity_space_rejects_wrong_vector_length():
         assert "expected 1 capacity values" in str(exc)
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_capacity_space_tracks_acceptance_default_bounds_for_tobacco():
+    resolved = resolve("tobacco_factory")
+    spec = GenericEnergyHubInputs.build_dispatch_spec(
+        resolved,
+        project_root=ROOT.parents[2],
+        month=1,
+        periods=24,
+        capacity_assignment={},
+        accept_default_bounds=True,
+    )
+
+    space = GenericCapacitySpace.from_dispatch_spec(spec)
+
+    assert "steam_boiler.steam_capacity_t_h" in space.names
+    assert "waste_heat_recovery.recovered_heat_kw" in space.names
+    assert space.defaulted_bounds
+    assert any(item["device_id"] == "steam_boiler" for item in space.defaulted_bounds)
 
 
 if __name__ == "__main__":
