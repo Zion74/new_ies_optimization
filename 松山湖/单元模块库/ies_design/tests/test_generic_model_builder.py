@@ -73,6 +73,23 @@ def test_generic_model_builder_creates_standard_system_object_for_tobacco():
     assert system["conversion_type_summary"]["type_count"] >= 8
 
 
+def test_generic_model_builder_capacity_variables_use_standard_schema():
+    spec = GenericModelBuilder.build(resolve("songshan_lake"), build_oemof=False)
+
+    pv = next(item for item in spec["capacity_variables"] if item["name"] == "pv.capacity_kw")
+
+    assert pv["device_id"] == "pv"
+    assert pv["parameter"] == "capacity_kw"
+    assert pv["lb"] == 0.0
+    assert pv["ub"] > 0
+    assert pv["default_value"] == 0.0
+    assert pv["is_fixed"] is False
+    assert pv["source"] in {"scenario", "library_default", "acceptance_default", "user_input"}
+    assert pv["variable_name"] == "capacity_kw"
+    assert pv["lower_bound"] == pv["lb"]
+    assert pv["upper_bound"] == pv["ub"]
+
+
 def test_generic_model_builder_exports_standard_system_object():
     with tempfile.TemporaryDirectory() as tmp:
         outputs = GenericModelBuilder.export(resolve("tobacco_factory"), tmp)

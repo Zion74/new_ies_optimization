@@ -29,17 +29,18 @@ class GenericCapacitySpace:
     def from_model_spec(cls, spec: dict[str, Any]) -> "GenericCapacitySpace":
         variables = []
         for item in spec.get("capacity_variables", []) or []:
-            upper = _to_float(item.get("upper_bound"))
+            upper = _to_float(item.get("ub", item.get("upper_bound")))
             if upper <= 0:
                 continue
+            variable_name = str(item.get("parameter") or item.get("variable_name", ""))
             variables.append(CapacityVariable(
                 device_id=str(item.get("device_id", "")),
-                variable_name=str(item.get("variable_name", "")),
+                variable_name=variable_name,
                 role=str(item.get("role", "")),
                 unit=str(item.get("unit", "")),
-                lower_bound=0.0,
+                lower_bound=_to_float(item.get("lb", item.get("lower_bound", 0.0))),
                 upper_bound=upper,
-                bound_source=str(item.get("bound_source", "")),
+                bound_source=str(item.get("source") or item.get("bound_source", "")),
             ))
         return cls(variables)
 
@@ -50,10 +51,10 @@ class GenericCapacitySpace:
             device_id = str(component.get("id", ""))
             capacities = component.get("applied_capacities", {}) or {}
             for item in component.get("capacity_variables", []) or []:
-                name = str(item.get("variable_name", ""))
-                if "upper_bound" not in item:
+                name = str(item.get("parameter") or item.get("variable_name", ""))
+                if "ub" not in item and "upper_bound" not in item:
                     continue
-                upper = _to_float(item.get("upper_bound", capacities.get(name)))
+                upper = _to_float(item.get("ub", item.get("upper_bound", capacities.get(name))))
                 if upper <= 0:
                     continue
                 variables.append(CapacityVariable(
@@ -61,9 +62,9 @@ class GenericCapacitySpace:
                     variable_name=name,
                     role=str(item.get("role", "")),
                     unit=str(item.get("unit", "")),
-                    lower_bound=0.0,
+                    lower_bound=_to_float(item.get("lb", item.get("lower_bound", 0.0))),
                     upper_bound=upper,
-                    bound_source=str(item.get("bound_source", "")),
+                    bound_source=str(item.get("source") or item.get("bound_source", "")),
                 ))
         return cls(variables)
 

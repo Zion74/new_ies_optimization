@@ -56,6 +56,30 @@ def test_capacity_space_maps_vector_to_device_capacities():
     assert assignment["battery"]["capacity_kwh"] == 30
 
 
+def test_capacity_space_reads_standard_capacity_variable_schema():
+    spec = {
+        "capacity_variables": [
+            {
+                "name": "pv.capacity_kw",
+                "device_id": "pv",
+                "parameter": "capacity_kw",
+                "role": "primary_capacity",
+                "unit": "kW",
+                "lb": 5,
+                "ub": 100,
+                "source": "user_input",
+            },
+        ]
+    }
+
+    space = GenericCapacitySpace.from_model_spec(spec)
+
+    assert space.names == ["pv.capacity_kw"]
+    assert space.lower_bounds == [5.0]
+    assert space.upper_bounds == [100.0]
+    assert space.variables[0].bound_source == "user_input"
+
+
 def test_capacity_space_rejects_wrong_vector_length():
     spec = {"capacity_variables": [{"device_id": "pv", "variable_name": "capacity_kw", "upper_bound": 100}]}
     space = GenericCapacitySpace.from_model_spec(spec)

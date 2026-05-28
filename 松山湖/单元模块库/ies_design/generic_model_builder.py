@@ -24,7 +24,7 @@ class GenericModelBuilder:
             "components": _component_specs(plan),
             "conversion_type_count": plan.get("conversion_type_count", 0),
             "conversion_type_summary": plan.get("conversion_type_summary", {}),
-            "capacity_variables": plan.get("capacity_variables", []),
+            "capacity_variables": _standard_capacity_variables(plan.get("capacity_variables", [])),
             "build_gaps": _build_gaps(plan),
             "next_step": "connect capacity_variables to a dynamic outer optimizer, then solve dispatch for each candidate capacity set",
         }
@@ -79,10 +79,39 @@ def _component_specs(plan: dict[str, Any]) -> list[dict[str, Any]]:
             "component_type": _normalize_component_type(item.get("component_type")),
             "input_carriers": item.get("input_carriers", []) or [],
             "output_carriers": item.get("output_carriers", []) or [],
-            "capacity_variables": item.get("capacity_variables", []) or [],
+            "capacity_variables": _standard_capacity_variables(item.get("capacity_variables", []) or []),
             "mapping_found": item.get("mapping_found", False),
         })
     return specs
+
+
+def _standard_capacity_variables(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [_standard_capacity_variable(item) for item in items]
+
+
+def _standard_capacity_variable(item: dict[str, Any]) -> dict[str, Any]:
+    device_id = str(item.get("device_id", ""))
+    parameter = str(item.get("parameter") or item.get("variable_name", ""))
+    lower_bound = _to_float(item.get("lb", item.get("lower_bound", 0.0)))
+    upper_bound = _to_float(item.get("ub", item.get("upper_bound", 0.0)))
+    source = str(item.get("source") or item.get("bound_source") or "scenario")
+    return {
+        "name": str(item.get("name") or f"{device_id}.{parameter}"),
+        "device_id": device_id,
+        "parameter": parameter,
+        "unit": str(item.get("unit", "")),
+        "lb": lower_bound,
+        "ub": upper_bound,
+        "default_value": _to_float(item.get("default_value", lower_bound)),
+        "is_fixed": bool(item.get("is_fixed", False)),
+        "source": source,
+        # Compatibility fields used by the first generic optimizer prototype.
+        "variable_name": parameter,
+        "role": str(item.get("role", "")),
+        "lower_bound": lower_bound,
+        "upper_bound": upper_bound,
+        "bound_source": source,
+    }
 
 
 def _system_object(resolved: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
@@ -184,6 +213,15 @@ def _normalize_component_type(component_type: str | None) -> str:
     if component_type in {"Source_plus_Transformer", "GenericStorage_plus_Transformer"}:
         return "Composite"
     return component_type
+
+
+def _to_float(value: Any) -> float:
+    if value in (None, ""):
+        return 0.0
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def _build_gaps(plan: dict[str, Any]) -> list[dict[str, Any]]:
