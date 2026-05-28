@@ -23,6 +23,7 @@
 - `generic_capacity_space.py`: 将 `capacity_variables` 转成可变维度的容量优化变量空间。
 - `generic_dispatch_model.py`: 当前 `build_only` 的通用调度评价接口，输出容量映射、写回 `applied_capacities` 的组件规格、投资成本近似和构建缺口。
 - `generic_design_optimizer.py`: 通用容量设计搜索接口，支持 demo levels、可复现 random 候选搜索和轻量 DE 搜索，后续可扩展为多目标 NSGA-II/DE。
+- `scenarios/tobacco_factory/`: 第三个真实场景（卷烟厂），已支持通用线性 Energy Hub 真实调度求解、动态容量变量、蒸汽单位换算和 Level 3 验收结果导出。
 - `result_exporter.py`: 将现有 Pareto 输出汇总为标准设计结果文件：`pareto_solutions.csv`、`design_summary.csv`、`design_summary_wide.csv`、`design_summary.xlsx`、`design_report.md`、`resolved_scenario.json`、`validation_report.md`。
 - `design.py`: 仓库根目录的第一版 CLI 原型，支持场景校验、Excel 导出、典型日生成、打印适配后的 CCHP 配置摘要、查看优化执行参数、触发 `mode=test` 优化并导出设计结果包。
 - `tests/`: 轻量配置校验与适配器回归脚本。
@@ -41,6 +42,7 @@ uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenari
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_cchp
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-strategy random --generic-candidates 8 --generic-random-seed 1 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_random
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --run-generic-design --generic-search-strategy de --generic-population 12 --generic-generations 5 --generic-random-seed 1 --solve-electric-dispatch --electric-dispatch-scope grid_pv_storage_cchp --dispatch-periods 24 --output tmp_generic_design_de
+uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/tobacco_factory/scenario.yaml" --run-generic-design --generic-search-levels 1.0 --solve-generic-dispatch --dispatch-month 1 --dispatch-periods 24 --accept-future --accept-default-bounds --output "DesignResults/tobacco_factory_level3_acceptance"
 uv run python design.py --scenario "松山湖/单元模块库/ies_design/scenarios/songshan_lake/scenario.yaml" --mode test
 ```
 
@@ -61,7 +63,19 @@ python "松山湖/单元模块库/ies_design/tests/test_third_placeholder.py"
 python "松山湖/单元模块库/ies_design/tests/test_design_cli.py"
 python "松山湖/单元模块库/ies_design/tests/test_generic_design_optimizer.py"
 uv run python run_design_checks.py
+uv run python run_design_checks.py --include-tobacco-level3
 ```
+
+## Level 3 烟厂验收输出
+
+烟厂场景不走旧版 `current_cchp`，而是通过 `future_generic` 的通用线性 Energy Hub 后端求解。验收命令会在 `DesignResults/tobacco_factory_level3_acceptance/` 下生成：
+
+- `generic_design_solutions.json` / `generic_design_solutions.csv`：候选容量方案、调度求解状态、投资成本、调度目标和总目标。
+- `generic_design_report.md`：标记 `Level 3`、`scope=linear_energy_hub` 和通用后端来源。
+- `capacity_solution.csv`：设备容量结果，包含验收默认补齐的 `steam_boiler`、`pv`、`chp`、储能等动态容量变量。
+- `dispatch_summary.csv`：调度求解摘要，包含求解器、终止状态、目标函数值和月份。
+- `energy_flow_summary.csv`：电、热、冷、蒸汽、天然气、余热等能流汇总。
+- `conversion_type_summary.csv`：多能转换类型数量、设备实例、输入/输出能源载体统计。
 
 ## 下一步
 
