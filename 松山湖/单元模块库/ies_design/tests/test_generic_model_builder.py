@@ -55,6 +55,34 @@ def test_generic_model_builder_carries_tobacco_conversion_summary():
     assert "recoverable_energy_to_heat" in abstract_types
 
 
+def test_generic_model_builder_creates_standard_system_object_for_tobacco():
+    spec = GenericModelBuilder.build(resolve("tobacco_factory"), build_oemof=False)
+
+    system = spec["system_object"]
+
+    assert system["schema_version"] == "generic_system_object.v1"
+    assert system["scenario"]["id"] == "tobacco_factory_001"
+    assert system["backend"]["name"] == "future_generic"
+    assert any(bus["id"] == "steam" for bus in system["buses"])
+    assert any(
+        conn["component_id"] == "steam_boiler" and conn["carrier"] == "steam"
+        for conn in system["connections"]
+    )
+    assert "typical_profiles.csv" in system["time_series_refs"]["load_file"]
+    assert "steam_boiler" in system["parameters"]["devices"]
+    assert system["conversion_type_summary"]["type_count"] >= 8
+
+
+def test_generic_model_builder_exports_standard_system_object():
+    with tempfile.TemporaryDirectory() as tmp:
+        outputs = GenericModelBuilder.export(resolve("tobacco_factory"), tmp)
+
+        system_object = outputs["system_object"].read_text(encoding="utf-8")
+
+    assert "generic_system_object.v1" in system_object
+    assert "tobacco_factory_001" in system_object
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_"):

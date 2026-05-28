@@ -28,9 +28,11 @@ class GenericModelBuilder:
             "build_gaps": _build_gaps(plan),
             "next_step": "connect capacity_variables to a dynamic outer optimizer, then solve dispatch for each candidate capacity set",
         }
+        spec["system_object"] = _system_object(resolved, spec)
 
         oemof_status = _try_build_oemof(spec) if build_oemof else {"attempted": False, "created": False, "error": ""}
         spec["oemof"] = oemof_status
+        spec["system_object"]["backend"]["oemof"] = oemof_status
         return spec
 
     @classmethod
@@ -40,13 +42,16 @@ class GenericModelBuilder:
         spec = cls.build(resolved)
 
         components_path = output_dir / "generic_model_components.json"
+        system_object_path = output_dir / "system_object.json"
         gaps_path = output_dir / "generic_model_build_gaps.csv"
         report_path = output_dir / "generic_model_build_report.md"
         components_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
+        system_object_path.write_text(json.dumps(spec["system_object"], ensure_ascii=False, indent=2), encoding="utf-8")
         _write_gaps(gaps_path, spec.get("build_gaps", []))
         report_path.write_text(_build_report(spec), encoding="utf-8")
         return {
             "generic_model_components": components_path,
+            "system_object": system_object_path,
             "generic_model_build_gaps": gaps_path,
             "generic_model_build_report": report_path,
         }
@@ -78,6 +83,99 @@ def _component_specs(plan: dict[str, Any]) -> list[dict[str, Any]]:
             "mapping_found": item.get("mapping_found", False),
         })
     return specs
+
+
+def _system_object(resolved: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": "generic_system_object.v1",
+        "scenario": spec.get("scenario", {}),
+        "system": spec.get("system", {}),
+        "backend": {
+            "name": spec.get("backend", ""),
+            "solve_status": spec.get("solve_status", ""),
+        },
+        "buses": spec.get("buses", []),
+        "components": spec.get("components", []),
+        "connections": _connections(spec.get("components", [])),
+        "time_series_refs": _time_series_refs(resolved),
+        "parameters": {
+            "devices": _device_parameters(resolved),
+            "prices": resolved.get("prices", {}) or {},
+            "simulation": resolved.get("simulation", {}) or {},
+        },
+        "capacity_variables": spec.get("capacity_variables", []),
+        "build_gaps": spec.get("build_gaps", []),
+        "conversion_type_summary": spec.get("conversion_type_summary", {}),
+    }
+
+
+def _connections(components: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    connections: list[dict[str, Any]] = []
+    for component in components:
+        component_id = component.get("id", "")
+        for carrier in component.get("input_carriers", []) or []:
+            connections.append({
+                "component_id": component_id,
+                "direction": "input",
+                "carrier": carrier,
+                "bus_id": carrier,
+            })
+        for carrier in component.get("output_carriers", []) or []:
+            connections.append({
+                "component_id": component_id,
+                "direction": "output",
+                "carrier": carrier,
+                "bus_id": carrier,
+            })
+    return connections
+
+
+def _time_series_refs(resolved: dict[str, Any]) -> dict[str, Any]:
+    data = resolved.get("data", {}) or {}
+    typical_day = resolved.get("typical_day", {}) or {}
+    return {
+        "input_type": data.get("input_type", ""),
+        "source_workbook": data.get("source_workbook", ""),
+        "load_file": data.get("load_file", ""),
+        "typical_day_file": data.get("typical_day_file", "") or typical_day.get("file", ""),
+        "resource_file": data.get("resource_file", ""),
+        "typical_day_source": typical_day.get("source", ""),
+    }
+
+
+def _device_parameters(resolved: dict[str, Any]) -> dict[str, Any]:
+    devices = resolved.get("devices", {}) or {}
+    result: dict[str, Any] = {}
+    for device_id, device in devices.items():
+        result[device_id] = {
+            "library_id": device.get("library_id", ""),
+            "enabled": device.get("enabled", False),
+            "optimize_capacity": device.get("optimize_capacity", False),
+            "capacity": device.get("capacity", {}) or {},
+            "parameters": device.get("parameters", {}) or {},
+            "economics": device.get("economics", {}) or {},
+            "input_carriers": device.get("input_carriers", []) or [],
+            "output_carriers": device.get("output_carriers", []) or [],
+        }
+    carnot = resolved.get("carnot_battery", {}) or {}
+    if carnot.get("enabled"):
+        result["carnot_battery"] = {
+            "library_id": "carnot_battery",
+            "enabled": True,
+            "optimize_capacity": True,
+            "capacity": {
+                "power_ub_kw": carnot.get("power_ub_kw"),
+                "capacity_ub_kwh": carnot.get("capacity_ub_kwh"),
+            },
+            "parameters": carnot,
+            "economics": {
+                "invest_power_coeff": carnot.get("invest_power_coeff"),
+                "invest_capacity_coeff": carnot.get("invest_capacity_coeff"),
+            },
+            "input_carriers": ["electricity"],
+            "output_carriers": ["electricity", "heat"],
+        }
+    return result
 
 
 def _normalize_component_type(component_type: str | None) -> str:
