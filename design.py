@@ -68,8 +68,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--generic-generations", type=int, default=5, help="Generation count for DE generic capacity search")
     parser.add_argument("--generic-random-seed", type=int, default=1, help="Random seed for generic capacity search")
     parser.add_argument("--solve-electric-dispatch", action="store_true", help="Also solve a minimal real-data grid-electric dispatch slice in generic design search")
+    parser.add_argument("--solve-generic-dispatch", action="store_true", help="Solve the generic linear Energy Hub dispatch model during generic design search")
     parser.add_argument("--electric-dispatch-scope", choices=["grid", "grid_pv", "grid_pv_storage", "grid_pv_storage_heat_cool", "grid_pv_storage_cchp"], default="grid", help="Optional real dispatch slice scope")
     parser.add_argument("--dispatch-periods", type=int, default=24, help="Number of hours for optional generic dispatch slice")
+    parser.add_argument("--dispatch-month", type=int, default=1, help="Monthly typical day index for generic linear Energy Hub dispatch")
+    parser.add_argument("--accept-default-bounds", action="store_true", help="Allow documented acceptance defaults for missing generic capacity bounds")
     parser.add_argument("--print-case-config", action="store_true", help="Print current CCHP case_config summary and exit")
     parser.add_argument("--mode", choices=["test", "demo", "quick", "full", "custom"], help="Override optimization mode")
     parser.add_argument("--nind", type=int, help="Override optimization population size")
@@ -207,8 +210,11 @@ def main(argv: list[str] | None = None) -> int:
                     random_seed=args.generic_random_seed,
                     project_root=root,
                     solve_electric_dispatch=args.solve_electric_dispatch,
+                    solve_generic_dispatch=args.solve_generic_dispatch,
                     electric_dispatch_scope=args.electric_dispatch_scope,
                     dispatch_periods=args.dispatch_periods,
+                    dispatch_month=args.dispatch_month,
+                    accept_default_bounds=args.accept_default_bounds,
                 )
             elif args.generic_search_strategy == "random":
                 outputs = GenericDesignOptimizer.export_capacity_search(
@@ -218,8 +224,11 @@ def main(argv: list[str] | None = None) -> int:
                     random_seed=args.generic_random_seed,
                     project_root=root,
                     solve_electric_dispatch=args.solve_electric_dispatch,
+                    solve_generic_dispatch=args.solve_generic_dispatch,
                     electric_dispatch_scope=args.electric_dispatch_scope,
                     dispatch_periods=args.dispatch_periods,
+                    dispatch_month=args.dispatch_month,
+                    accept_default_bounds=args.accept_default_bounds,
                 )
             else:
                 outputs = GenericDesignOptimizer.export_demo_search(
@@ -228,8 +237,11 @@ def main(argv: list[str] | None = None) -> int:
                     levels=args.generic_search_levels,
                     project_root=root,
                     solve_electric_dispatch=args.solve_electric_dispatch,
+                    solve_generic_dispatch=args.solve_generic_dispatch,
                     electric_dispatch_scope=args.electric_dispatch_scope,
                     dispatch_periods=args.dispatch_periods,
+                    dispatch_month=args.dispatch_month,
+                    accept_default_bounds=args.accept_default_bounds,
                 )
         except ValueError as exc:
             print(f"Generic design search failed: {exc}")

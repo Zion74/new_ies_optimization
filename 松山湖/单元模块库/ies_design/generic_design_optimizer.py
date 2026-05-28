@@ -284,8 +284,11 @@ class GenericDesignOptimizer:
         levels: Iterable[float] | None = None,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Path]:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -293,8 +296,11 @@ class GenericDesignOptimizer:
             levels=levels,
             project_root=project_root,
             solve_electric_dispatch=solve_electric_dispatch,
+            solve_generic_dispatch=solve_generic_dispatch,
             electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
+            dispatch_month=dispatch_month,
+            accept_default_bounds=accept_default_bounds,
         )
 
         json_path = output_dir / "generic_design_solutions.json"
@@ -319,8 +325,11 @@ class GenericDesignOptimizer:
         random_seed: int = 1,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Path]:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -329,8 +338,11 @@ class GenericDesignOptimizer:
             random_seed=random_seed,
             project_root=project_root,
             solve_electric_dispatch=solve_electric_dispatch,
+            solve_generic_dispatch=solve_generic_dispatch,
             electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
+            dispatch_month=dispatch_month,
+            accept_default_bounds=accept_default_bounds,
         )
 
         json_path = output_dir / "generic_design_solutions.json"
@@ -356,8 +368,11 @@ class GenericDesignOptimizer:
         random_seed: int = 1,
         project_root: str | Path | None = None,
         solve_electric_dispatch: bool = False,
+        solve_generic_dispatch: bool = False,
         electric_dispatch_scope: str = "grid",
         dispatch_periods: int = 24,
+        dispatch_month: int = 1,
+        accept_default_bounds: bool = False,
     ) -> dict[str, Path]:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -367,8 +382,11 @@ class GenericDesignOptimizer:
             random_seed=random_seed,
             project_root=project_root,
             solve_electric_dispatch=solve_electric_dispatch,
+            solve_generic_dispatch=solve_generic_dispatch,
             electric_dispatch_scope=electric_dispatch_scope,
             dispatch_periods=dispatch_periods,
+            dispatch_month=dispatch_month,
+            accept_default_bounds=accept_default_bounds,
         )
 
         json_path = output_dir / "generic_design_solutions.json"

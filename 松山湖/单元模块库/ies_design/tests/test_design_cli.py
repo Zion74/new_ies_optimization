@@ -245,6 +245,26 @@ def test_run_generic_design_can_export_random_capacity_search_results():
         assert "random" in report
 
 
+def test_tobacco_run_generic_design_can_solve_linear_energy_hub():
+    tobacco = PROJECT_ROOT / "松山湖" / "单元模块库" / "ies_design" / "scenarios" / "tobacco_factory" / "scenario.yaml"
+    with tempfile.TemporaryDirectory() as tmp:
+        result = run_cli(
+            "--scenario", str(tobacco),
+            "--run-generic-design",
+            "--generic-search-levels", "1.0",
+            "--solve-generic-dispatch",
+            "--dispatch-month", "1",
+            "--dispatch-periods", "24",
+            "--accept-future",
+            "--accept-default-bounds",
+            "--output", tmp,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+        data = (Path(tmp) / "generic_design_solutions.json").read_text(encoding="utf-8")
+        assert '"scope": "linear_energy_hub"' in data
+        assert '"dispatch_solved": true' in data
+
+
 def test_run_generic_design_can_export_de_capacity_search_results():
     with tempfile.TemporaryDirectory() as tmp:
         result = run_cli(
