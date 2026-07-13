@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、全系统 EAC 上限、实际年度结果适配、HiGHS 状态与求解误差 | E0-D-18 已闭合 24 h 精确点与 336 h 有界性能门；TES 12 账户、同范围系统成本和正式 TAC 仍未闭合；本地/远端均 288 项通过 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、HiGHS 状态与求解误差 | E0-D-19 已闭合 24 h/336 h 同年度 PCC 服务诊断；固定平价结算抵消，阈值较不同服务收缩约 73%–77%。TES 12 账户、CHP/TES VOM、碳履约、分时结算和正式 TAC 仍未闭合 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -78,6 +78,8 @@
 | `数据采集/e0d17_tes_break_even/` | 24 h 冬季典型日年化阈值 CSV、manifest 与运行时 sidecar | E0 | 仅燃料范围探索证据，不是全年结果或 E1 技术赢家 |
 | `src/tes_bess_boundary/e0d18_performance.py` | 24 h 精确验收、336 h 有界验收、固定整数弃电次目标与 EAC 区间传播 | E0 | 24 h gap 0；336 h 主目标 gap 0.004800、次目标 gap 0；不把界区间压成点估计 |
 | `数据采集/e0d18_tes_break_even_interval/` | 两窗口规范 CSV、自哈希 manifest 与非规范运行时 sidecar | E0 | 本地/OpenBayes canonical 哈希一致；336 h 为燃料范围探索性区间，不是 TES 价格、全年 TAC 或 E1 赢家 |
+| `src/tes_bess_boundary/e0d19_same_pcc_service.py` | 无储能自然外送目标、严格同年度 PCC 服务、固定平价抵消、336 h 零偏差 warm start 与 EAC 区间 | E0 | 24 h 为 12.893 百万元/a 精确点；336 h 为 15.031–16.330 百万元/a、主 gap 0.2545%；仍非正式 TAC |
+| `数据采集/e0d19_same_pcc_service/` | E0-D-19 双窗口 canonical、服务身份、primal/dual 与求解 sidecar | E0 | PCC 差为 0；Windows/OpenBayes CSV 与 manifest 逐字节一致 |
 | `src/tes_bess_boundary/tes_topology_evidence.py` | 五条 TES 路径的 Energy+ 证据等级、模块化合成与本文扩展披露 | E0/E2-E6 | E0-D-6 已实现；`MT→LT` 供热级联必须显式声明为 proposed extension |
 | `src/tes_bess_boundary/tes_heat_delivery.py` | 温度来源身份、MT→LT 两端夹点、HITEC 温区、可交付热量与盐/水流量 | E0/E2-E6 | E0-D-7 已实现；120/70 °C 只作核心参考情景，MT 不由夹点唯一确定 |
 | `src/tes_bess_boundary/tes_temperature_scenarios.py` | MT 归一化低品位焓占比、三点作者敏感性、来源身份与逐点认证 | E0/E6 | E0-D-8 已实现；232.5/285/337.5 °C 不得写成现场或论文直接值 |
@@ -96,8 +98,8 @@
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | E0-D-18 新增精确对数段编码与可选连续启停包络；默认旧 formulation 保持兼容，二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | E0-D-18 新增路径特定流量上界、紧 Big-M 与零容量模式固定；正式成本和现场数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17 适配、E0-D-18 formulation 及年度经济回归 | E0 | 本地 `288 passed in 56.38s`；OpenBayes `288 passed in 21.23s`；关闭 pytest cache |
-| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、可选年度经济审计与 TES 五路径/损失/辅机运行审计 | E0-E6 | E0-D-18 公开主目标 primal/dual bounds 并接入紧化 formulation；系统级正式 TAC 与容量规划待补 |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17/18/19 回归 | E0 | 本地 `291 passed in 75.21s`；OpenBayes `291 passed in 26.34s`；关闭 pytest cache |
+| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计与 TES 五路径运行审计 | E0-E6 | E0-D-19 增加严格年度 PCC 等式、零偏差可行性 warm start 和分阶段审计；完整 TAC 与容量规划待补 |
 | `representative_weeks.py` | 4 个聚类周 + 2 个强制极端周 | E3-E5 | 待实现 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |

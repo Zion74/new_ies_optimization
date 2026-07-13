@@ -1,0 +1,29 @@
+{
+  "canonical_sha256": {
+    "e0d19_same_pcc_service.csv": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "manifest.json": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63"
+  },
+  "environment": {
+    "highspy": "1.15.1",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pyomo": "6.10.1",
+    "python": "3.11.15"
+  },
+  "schema": "tes_bess_boundary.e0d19_same_pcc_service.v2.execution",
+  "solves": [
+    {
+      "candidate_runtime_seconds": 6.987935600016,
+      "candidate_service_feasibility_runtime_seconds": null,
+      "comparator_runtime_seconds": 1.059304700029,
+      "natural_runtime_seconds": 0.754980099999,
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "candidate_runtime_seconds": 625.993208900007,
+      "candidate_service_feasibility_runtime_seconds": 42.555064099986,
+      "comparator_runtime_seconds": 95.989340600005,
+      "natural_runtime_seconds": 63.213510000001,
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

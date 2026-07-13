@@ -443,7 +443,8 @@ E0 分阶段执行：
 - **E0-D-16 TES 盈亏平衡内核已建立**：比较架构与 TES/HYBRID 候选必须使用同一情景、服务、8,784 h 时域、可用新能源和 2024 CNY 成本范围；人工弃电罚值、缺热、非最优结果和零容量 TES 均被拒绝。输出只是一项全系统 TES EAC 上限及燃煤/弃电/PCC/辅机差值，容量归一化不能反解部件单价；当前正式 TES portfolio 与非 TES 系统成本范围未闭合，故只允许探索性阈值；
 - **E0-D-17 实际结果接缝已建立**：年度模型公开加权可用新能源、PCC 外送与服务上限；适配器剔除所有 TES 资产类，强制披露非 TES 成本缺口。24 h 级联 TES 零 gap 结果在 Windows/Linux 哈希一致；它按单日 366 倍年化，只能作探索筛查。336 h 两周主 MILP 未在本地 10 min/远端 15 min 预算内闭合，不生成结果行；
 - **E0-D-18 两窗口性能与区间合同已建立**：8 段 CHP 燃料选择由 8 个 one-hot 二元变量改为 3 个精确对数位，显式启用连续启停包络，并按 TES 端口推导路径流量上界。未固定二元变量由 7,728 降至 3,024（减少 60.87%）。24 h 主/次目标 gap 均为 0；336 h 主目标 gap 为 0.004800、固定整数次目标 gap 为 0。由 primal/dual bounds 推得全系统 TES EAC 区间 `57.572–59.818 million CNY/a`，不得压缩成点值；
-- **后续经济/规划切片待完成**：E0-D-19 先补齐 CHP VOM、碳、电力结算、TES VOM 等同范围年度成本，再闭合真实 BESS/TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
+- **E0-D-19 同 PCC 服务边界已建立**：E0-D-18 的 TES 候选年度外送比比较架构少约 0.87–0.88 TWh，不能视为同电服务。新合同固定同供热、同弃电上限和同年度 PCC 外送，固定平价结算项严格抵消。24 h 燃料 EAC 上限为 `12.893 million CNY/a`；336 h 在 0.2545% 主 gap 下为 `15.031–16.330 million CNY/a`。相较 E0-D-18 收缩约 73%–77%，所以 SCI 后续所有架构比较必须显式对齐电服务；
+- **后续经济/规划切片待完成**：E0-D-20 优先取得杨凌 2024 发电侧合同/结算、机组配额清缴、CHP VOM 与双服务 TES VOM；若无法取得，只能预注册公开敏感性，不得把作者 TOU、总排放×碳价或聚合 CSP O&M 升级为现场 TAC。之后再闭合真实 BESS/TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
 
 详细证据和禁止启动条件见 `docs/03_sci_paper/e0_validation_status.md`。
 
@@ -553,7 +554,7 @@ E_T^{h,rate}=D\frac{Q^{MT\rightarrow LT,h}}{\eta_{Mh}}
 
 ## 8. 算力预算与 HiGHS 执行策略
 
-当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-18 已同步；远端完整回归为 `288 passed in 21.23s`，本地为 `288 passed in 56.38s`。24 h/336 h E0-D-18 canonical hashes 跨平台一致，既有 E0-B/E0-C/E0-D-17 hashes 保持锁定。
+当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-19 已同步并独立再生成；本地全量回归为 `291 passed in 75.21s`，远端为 `291 passed in 26.34s`，CSV/manifest 规范哈希逐字节一致。
 
 主模型采用 `Pyomo + highspy`，不依赖 Gurobi。推荐：
 
@@ -633,6 +634,7 @@ src/tes_bess_boundary/
 ├── tes_break_even.py         # 已实现：全系统 EAC 上限与价格无关物理价值差值
 ├── tes_break_even_adapter.py # 已实现：E0-C 年度解保守适配与 TES 所有权成本剔除
 ├── e0d17_exploration.py      # 已实现：E0-D-17 历史探索入口与 24 h 基线
+├── e0d19_same_pcc_service.py # 已实现：E0-D-19 同年度 PCC 服务与有界 EAC 诊断
 ├── e0d18_performance.py      # 已实现：24 h 精确点、336 h 有界区间与确定性证据导出
 ├── tes_topology_evidence.py  # 已实现：五路径证据与创新披露合同
 ├── tes_heat_delivery.py      # 已实现：MT→LT 夹点、材料温区、热量与流量审计

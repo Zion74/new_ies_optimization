@@ -29,15 +29,16 @@
 11. 在 TES 正式价格缺失时计算允许的全系统年化成本上限、物理价值差值或判断阈值能否进入主结果时读 `docs/03_sci_paper/e0_tes_break_even_contract.md`
 12. 将 E0-C 年度解接入盈亏平衡内核、复现 E0-D-17 的 24 h 探索阈值时读 `docs/03_sci_paper/e0_tes_break_even_adapter_and_exploration_contract.md`
 13. 复现 E0-D-18 的 336 h 性能紧化、0.5% gap 合同或 primal/dual 阈值区间时读 `docs/03_sci_paper/e0_tes_two_window_performance_and_interval_contract.md`
-14. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
-15. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
-16. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
-17. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
-18. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
-19. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
-20. 对应层级的实验 / 图表 / 代码映射文档
-21. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-22. 需要做清理或迁移时，再读 `docs/90_governance/`
+14. 复现 E0-D-19 的同年度 PCC 外送、固定平价抵消、336 h 零偏差 warm start 或审计电力结算/碳/VOM 证据时读 `docs/03_sci_paper/e0_same_pcc_service_and_operating_cost_boundary_contract.md`
+15. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
+16. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
+17. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
+18. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
+19. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
+20. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
+21. 对应层级的实验 / 图表 / 代码映射文档
+22. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+23. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

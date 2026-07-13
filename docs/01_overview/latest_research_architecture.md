@@ -93,8 +93,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **文献与科学问题**：已完成高质量文献门槛筛选，当前主空白可辩护；
 - **杨凌数据**：E0-B 正式构建已完成；保留 52,707 行源证据、52,704 点 canonical 网格和 8,784 h net/forward/zero-sensitivity 三口径。单位、老城单点哨兵、29 个东方双负、49 个仅流量为负、2,050 个居民负值与 5/85/226 三段全零均进入结构化质量合同；
 - **机制原型**：已有 `_ch4_*` MILP、储能对照、敏感性和典型期脚本；
-- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12–D-16 已闭合 BESS fixed-capacity 生命周期账本、TES 12 账户门禁和无人工罚值的 TES 全系统 EAC 上限内核；E0-D-17 已闭合 24 h 实际结果接缝。E0-D-18 进一步用对数 PWL、连续启停包络和端口 Big-M 将 336 h 双周筛查闭合到 0.5% gap，并用 primal/dual bound 报告 57.572–59.818 百万元/a 的燃料范围 EAC 区间。该结果仍使用正式热量 + 旧 2019 风光形状，不是全年 TAC 或技术赢家；TES 正式成本、系统级结算、内生容量和结构化代表周仍阻断 E1–E6；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，E0-D-18 源码、测试与已授权数据已经同步；Python 3.10.18、`Pyomo 6.10.1 + HiGHS 1.15.1` 下完整回归为 `288 passed in 21.23s`，本地 Python 3.11 为 `288 passed in 56.38s`。24 h/336 h E0-D-18 CSV/manifest 与本地逐字节一致；
+- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12–D-16 已闭合 BESS fixed-capacity 生命周期账本、TES 12 账户门禁和无人工罚值的 TES 全系统 EAC 上限内核；E0-D-17/18 已闭合实际结果接缝与 336 h 有界求解。E0-D-19 进一步固定相同年度 PCC 外送，使固定平价结算结构性抵消：24 h 同服务燃料 EAC 上限为 12.893 百万元/a，336 h 为 15.031–16.330 百万元/a，相比不同电服务的 E0-D-18 收缩约 73%–77%。这证明公平电服务边界是主 SCI 的必要条件。结果仍使用正式热量 + 旧 2019 风光形状，不是全年 TAC 或技术赢家；CHP/TES VOM、碳履约、分时结算、TES 正式成本、内生容量和结构化代表周仍阻断 E1–E6；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-19 源码、测试与授权输入已同步。Windows Python 3.11 全量回归为 `291 passed in 75.21s`，OpenBayes Python 3.10 为 `291 passed in 26.34s`；双窗口 CSV/manifest 跨平台逐字节一致；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -107,7 +107,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - TES 价格无关价值与盈亏平衡合同：`docs/03_sci_paper/e0_tes_break_even_contract.md`
 - 年度结果适配与 24 h/两周探索状态：`docs/03_sci_paper/e0_tes_break_even_adapter_and_exploration_contract.md`
 - E0 Rahman BESS 关联证据合同：`docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
+- E0 同 PCC 服务与运行成本证据边界：`docs/03_sci_paper/e0_same_pcc_service_and_operating_cost_boundary_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
-- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`；TES 正式成本复核：`风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`
+- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`；TES 正式成本复核：`风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`；同 PCC 服务与运行成本证据边界：`风光火+熔盐储热/research-sessions/2026-07-13-e0d19-operating-cost-boundary/`

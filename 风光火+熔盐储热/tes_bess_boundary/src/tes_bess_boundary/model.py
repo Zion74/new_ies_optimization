@@ -182,6 +182,25 @@ class AnnualCurtailmentServiceSpec:
 
 
 @dataclass(frozen=True)
+class AnnualPCCExportServiceSpec:
+    """Common annual PCC delivery fixed across architecture comparisons."""
+
+    service_id: str
+    target_export_mwh: float
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.service_id, str) or not self.service_id.strip():
+            raise ValueError("annual PCC export service_id must be non-empty")
+        if (
+            isinstance(self.target_export_mwh, bool)
+            or not isinstance(self.target_export_mwh, (int, float))
+            or not math.isfinite(float(self.target_export_mwh))
+            or self.target_export_mwh < 0.0
+        ):
+            raise ValueError("annual target export must be finite and non-negative")
+
+
+@dataclass(frozen=True)
 class E0CCase:
     """Complete fixed-capacity deterministic case for exactly one architecture."""
 
@@ -196,6 +215,7 @@ class E0CCase:
     objective: ValidationObjectiveSpec = field(default_factory=ValidationObjectiveSpec)
     economics: AnnualEconomicsSpec | None = None
     curtailment_service: AnnualCurtailmentServiceSpec | None = None
+    pcc_export_service: AnnualPCCExportServiceSpec | None = None
     chp_fuel_segment_formulation: FuelSegmentFormulation = (
         FuelSegmentFormulation.ONE_HOT
     )
@@ -270,6 +290,18 @@ class E0CCase:
             if self.economics is None:
                 raise ValueError(
                     "annual curtailment service requires annual economics"
+                )
+        if self.pcc_export_service is not None:
+            if not isinstance(
+                self.pcc_export_service,
+                AnnualPCCExportServiceSpec,
+            ):
+                raise ValueError(
+                    "pcc_export_service must be an AnnualPCCExportServiceSpec"
+                )
+            if self.economics is None:
+                raise ValueError(
+                    "annual PCC export service requires annual economics"
                 )
 
         includes_bess = self.architecture in (Architecture.BESS, Architecture.HYBRID)
@@ -381,6 +413,8 @@ class AnnualEconomicsAudit:
     weighted_curtailment_mwh: float
     weighted_renewable_available_mwh: float
     weighted_pcc_export_mwh: float
+    pcc_export_service_id: str | None
+    pcc_export_target_mwh: float | None
     curtailment_service_id: str | None
     curtailment_ceiling_mwh: float | None
     bess_ac_discharge_throughput_mwh: float | None
@@ -492,6 +526,9 @@ class E0CResult:
     primary_objective_upper_bound: float | None = None
     secondary_curtailment_mip_gap: float | None = None
     lexicographic_fixed_primary_integer_count: int | None = None
+    pcc_service_feasibility_warm_start: bool = False
+    pcc_service_feasibility_runtime_seconds: float | None = None
+    pcc_service_feasibility_deviation_mw: float | None = None
 
     @property
     def objective_basis(self) -> str:
@@ -806,6 +843,20 @@ def build_e0c_model(case: E0CCase) -> object:
                 for period in model.periods
             )
         )
+        if case.pcc_export_service is not None:
+            # Enforce the annual-energy identity on an average-power basis.
+            # The unscaled annual equation is O(1e6) MWh for the E0 windows,
+            # whereas the dispatch rows are O(1e2--1e3) MW.  Dividing both
+            # sides by the constant weighted hours preserves the exact
+            # service contract and materially improves HiGHS feasibility
+            # scaling on the 336 h mixed-integer model.
+            model.annual_pcc_export_service = Constraint(
+                expr=(
+                    model.annual_pcc_export_mwh / model.annual_weighted_hours
+                    == case.pcc_export_service.target_export_mwh
+                    / model.annual_weighted_hours
+                )
+            )
         if case.curtailment_service is not None:
             model.annual_curtailment_service = Constraint(
                 expr=model.annual_curtailment_mwh
@@ -881,6 +932,7 @@ def solve_e0c(
     *,
     solver: object | None = None,
     lexicographic_minimize_curtailment: bool = False,
+    pcc_service_feasibility_warm_start: bool = False,
 ) -> E0CResult:
     """Solve one E0-C case with HiGHS and return boundary-level audit metrics.
 
@@ -889,9 +941,22 @@ def solve_e0c(
     constraining annual cost to that incumbent.  This removes continuous
     renewable-dispatch degeneracy without assigning an artificial monetary
     curtailment penalty or reopening the full mixed-integer search.
+
+    A difficult annual PCC equality can optionally use a disclosed feasibility
+    phase.  That phase minimizes average-power delivery deviation, then passes
+    the zero-deviation incumbent to the unchanged primary-cost problem as a
+    HiGHS warm start.  It changes the search path, not the service equality or
+    primary objective.
     """
 
-    from pyomo.environ import Constraint, Objective, Var, minimize, value
+    from pyomo.environ import (
+        Constraint,
+        NonNegativeReals,
+        Objective,
+        Var,
+        minimize,
+        value,
+    )
     from pyomo.contrib.appsi.base import LegacySolverInterface
     from pyomo.contrib.appsi.solvers import Highs
 
@@ -899,8 +964,14 @@ def solve_e0c(
 
     if not isinstance(lexicographic_minimize_curtailment, bool):
         raise ValueError("lexicographic_minimize_curtailment must be boolean")
+    if not isinstance(pcc_service_feasibility_warm_start, bool):
+        raise ValueError("pcc_service_feasibility_warm_start must be boolean")
     if lexicographic_minimize_curtailment and case.economics is None:
         raise ValueError("lexicographic curtailment tie-break requires annual economics")
+    if pcc_service_feasibility_warm_start and case.pcc_export_service is None:
+        raise ValueError(
+            "PCC service feasibility warm start requires an annual PCC service"
+        )
     if solver is None:
         solver = create_highs_solver()
     elif not isinstance(solver, Highs):
@@ -908,17 +979,89 @@ def solve_e0c(
 
     model = build_e0c_model(case)
     is_legacy_interface = isinstance(solver, LegacySolverInterface)
+    if pcc_service_feasibility_warm_start and not is_legacy_interface:
+        raise ValueError(
+            "PCC service feasibility warm start requires the legacy appsi_highs interface"
+        )
+
+    def termination_name(solve_results: object) -> str:
+        raw = (
+            solve_results.solver.termination_condition
+            if is_legacy_interface
+            else solve_results.termination_condition
+        )
+        return getattr(raw, "name", str(raw)).lower()
+
+    measured_runtime_seconds = 0.0
+    service_feasibility_runtime_seconds = None
+    service_feasibility_deviation_mw = None
+    if pcc_service_feasibility_warm_start:
+        service = case.pcc_export_service
+        assert service is not None
+        model.validation_cost.deactivate()
+        model.annual_pcc_export_service.deactivate()
+        model.pcc_service_abs_deviation_mw = Var(domain=NonNegativeReals)
+        average_export_mw = (
+            model.annual_pcc_export_mwh / model.annual_weighted_hours
+        )
+        target_average_export_mw = (
+            service.target_export_mwh / model.annual_weighted_hours
+        )
+        model.pcc_service_deviation_upper = Constraint(
+            expr=(
+                average_export_mw - target_average_export_mw
+                <= model.pcc_service_abs_deviation_mw
+            )
+        )
+        model.pcc_service_deviation_lower = Constraint(
+            expr=(
+                target_average_export_mw - average_export_mw
+                <= model.pcc_service_abs_deviation_mw
+            )
+        )
+        model.pcc_service_feasibility_objective = Objective(
+            expr=model.pcc_service_abs_deviation_mw,
+            sense=minimize,
+        )
+        feasibility_started = perf_counter()
+        feasibility_results = solver.solve(model, tee=False)
+        service_feasibility_runtime_seconds = (
+            perf_counter() - feasibility_started
+        )
+        measured_runtime_seconds += service_feasibility_runtime_seconds
+        feasibility_termination = termination_name(feasibility_results)
+        if feasibility_termination != "optimal":
+            raise RuntimeError(
+                "E0-C PCC service feasibility phase did not solve optimally: "
+                f"{feasibility_termination}"
+            )
+        service_feasibility_deviation_mw = float(
+            value(model.pcc_service_abs_deviation_mw)
+        )
+        if service_feasibility_deviation_mw > 1e-9:
+            raise RuntimeError(
+                "E0-C annual PCC target is outside the solved service domain: "
+                f"minimum average-power deviation is "
+                f"{service_feasibility_deviation_mw:.12g} MW"
+            )
+        model.pcc_service_feasibility_objective.deactivate()
+        model.pcc_service_deviation_upper.deactivate()
+        model.pcc_service_deviation_lower.deactivate()
+        model.annual_pcc_export_service.activate()
+        model.validation_cost.activate()
+
     solve_started = perf_counter()
     results = (
-        solver.solve(model, tee=False) if is_legacy_interface else solver.solve(model)
-    )
-    measured_runtime_seconds = perf_counter() - solve_started
-    raw_termination = (
-        results.solver.termination_condition
+        solver.solve(
+            model,
+            tee=False,
+            warmstart=pcc_service_feasibility_warm_start,
+        )
         if is_legacy_interface
-        else results.termination_condition
+        else solver.solve(model)
     )
-    termination = getattr(raw_termination, "name", str(raw_termination)).lower()
+    measured_runtime_seconds += perf_counter() - solve_started
+    termination = termination_name(results)
     if termination != "optimal":
         raise RuntimeError(f"E0-C model did not solve optimally: {termination}")
 
@@ -952,7 +1095,20 @@ def solve_e0c(
     fixed_primary_integer_count = None
     if lexicographic_minimize_curtailment:
         primary_cost = float(value(model.annual_total_cost_cny))
-        primary_cost_tolerance_cny = max(1e-6, 10.0 * math.ulp(primary_cost))
+        # A one-ULP cap is numerically unsafe after the warm-started 336 h
+        # annual-cost MILP is converted to a fixed-integer LP.  Only that
+        # disclosed path receives a one-part-per-billion (sub-CNY at E0 scale)
+        # allowance; exact small cases retain the historical ULP-level cap.
+        warm_started_relative_tolerance = (
+            1e-9 * abs(primary_cost)
+            if pcc_service_feasibility_warm_start
+            else 0.0
+        )
+        primary_cost_tolerance_cny = max(
+            1e-6,
+            10.0 * math.ulp(primary_cost),
+            warm_started_relative_tolerance,
+        )
         model.lexicographic_primary_cost_cap = Constraint(
             expr=model.annual_total_cost_cny
             <= primary_cost + primary_cost_tolerance_cny
@@ -974,7 +1130,7 @@ def solve_e0c(
                 fixed_primary_integer_count += 1
         second_solve_started = perf_counter()
         results = (
-            solver.solve(model, tee=False)
+            solver.solve(model, tee=False, warmstart=True)
             if is_legacy_interface
             else solver.solve(model)
         )
@@ -1053,6 +1209,16 @@ def solve_e0c(
                 value(model.annual_renewable_available_mwh)
             ),
             weighted_pcc_export_mwh=float(value(model.annual_pcc_export_mwh)),
+            pcc_export_service_id=(
+                case.pcc_export_service.service_id
+                if case.pcc_export_service is not None
+                else None
+            ),
+            pcc_export_target_mwh=(
+                float(case.pcc_export_service.target_export_mwh)
+                if case.pcc_export_service is not None
+                else None
+            ),
             curtailment_service_id=(
                 case.curtailment_service.service_id
                 if case.curtailment_service is not None
@@ -1232,4 +1398,13 @@ def solve_e0c(
         primary_objective_upper_bound=primary_objective_upper_bound,
         secondary_curtailment_mip_gap=secondary_curtailment_mip_gap,
         lexicographic_fixed_primary_integer_count=fixed_primary_integer_count,
+        pcc_service_feasibility_warm_start=(
+            pcc_service_feasibility_warm_start
+        ),
+        pcc_service_feasibility_runtime_seconds=(
+            service_feasibility_runtime_seconds
+        ),
+        pcc_service_feasibility_deviation_mw=(
+            service_feasibility_deviation_mw
+        ),
     )

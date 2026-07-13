@@ -185,6 +185,101 @@ def test_nonuniform_period_weights_apply_to_each_curtailment_period_once() -> No
     assert result.curtailment_mwh == pytest.approx(5.0)
 
 
+def test_annual_pcc_export_service_fixes_the_common_delivered_energy() -> None:
+    from tes_bess_boundary.economics import AnnualEconomicsSpec, AnnualHorizonSpec
+    from tes_bess_boundary.model import (
+        AnnualPCCExportServiceSpec,
+        Architecture,
+        E0CCase,
+        E0CTimeSeries,
+        ValidationObjectiveSpec,
+        solve_e0c,
+    )
+
+    target_export_mwh = 21_960.0
+    case = E0CCase(
+        architecture=Architecture.NO_STORAGE,
+        timeseries=E0CTimeSeries(
+            heat_demand_mw=(0.0, 0.0),
+            wind_available_mw=(5.0, 5.0),
+            pv_available_mw=(0.0, 0.0),
+        ),
+        chp_units=(_synthetic_chp_spec("annual_pcc_service_fixture"),),
+        chp_initial_online=(0,),
+        chp_terminal_online=(0,),
+        pcc_export_capacity_mw=10.0,
+        objective=ValidationObjectiveSpec(
+            coal_price_cny_per_tce=0.0,
+            curtailment_penalty_cny_per_mwh=1.0,
+        ),
+        economics=AnnualEconomicsSpec(
+            horizon=AnnualHorizonSpec(period_weights=(4_392.0, 4_392.0))
+        ),
+        pcc_export_service=AnnualPCCExportServiceSpec(
+            service_id="same_flat_price_pcc_delivery",
+            target_export_mwh=target_export_mwh,
+        ),
+    )
+
+    result = solve_e0c(case)
+    warmed_result = solve_e0c(
+        case,
+        pcc_service_feasibility_warm_start=True,
+    )
+
+    assert result.annual_economics is not None
+    annual = result.annual_economics
+    assert annual.weighted_pcc_export_mwh == pytest.approx(target_export_mwh)
+    assert annual.weighted_curtailment_mwh == pytest.approx(21_960.0)
+    assert annual.pcc_export_service_id == "same_flat_price_pcc_delivery"
+    assert annual.pcc_export_target_mwh == pytest.approx(target_export_mwh)
+    assert warmed_result.annual_economics is not None
+    assert warmed_result.annual_economics.weighted_pcc_export_mwh == pytest.approx(
+        target_export_mwh
+    )
+    assert warmed_result.pcc_service_feasibility_warm_start is True
+    assert warmed_result.pcc_service_feasibility_deviation_mw == pytest.approx(
+        0.0,
+        abs=1e-12,
+    )
+    assert warmed_result.pcc_service_feasibility_runtime_seconds is not None
+    assert warmed_result.pcc_service_feasibility_runtime_seconds >= 0.0
+
+
+def test_annual_pcc_export_service_requires_an_annual_case() -> None:
+    from tes_bess_boundary.model import (
+        AnnualPCCExportServiceSpec,
+        Architecture,
+        E0CCase,
+        E0CTimeSeries,
+    )
+
+    service = AnnualPCCExportServiceSpec(
+        service_id="annual_only",
+        target_export_mwh=1.0,
+    )
+    with pytest.raises(ValueError, match="annual PCC export service requires annual economics"):
+        E0CCase(
+            architecture=Architecture.NO_STORAGE,
+            timeseries=E0CTimeSeries(
+                heat_demand_mw=(0.0,),
+                wind_available_mw=(0.0,),
+                pv_available_mw=(0.0,),
+            ),
+            chp_units=(_synthetic_chp_spec("annual_pcc_service_guard"),),
+            chp_initial_online=(0,),
+            chp_terminal_online=(0,),
+            pcc_export_capacity_mw=1.0,
+            pcc_export_service=service,
+        )
+
+    with pytest.raises(ValueError, match="target export"):
+        AnnualPCCExportServiceSpec(
+            service_id="invalid_target",
+            target_export_mwh=-1.0,
+        )
+
+
 def _bess_annual_case(wind_available_mw: tuple[float, ...]) -> object:
     from tes_bess_boundary.components.bess import BESSPhysics
     from tes_bess_boundary.economics import (
