@@ -1,6 +1,6 @@
 # SCI 论文：最新逻辑结构
 
-更新时间：2026-07-13
+更新时间：2026-07-14
 
 ## 1. 定位
 
@@ -96,7 +96,8 @@
 - 现有 `_ch4_*.py` 为探索原型，可复用数据与局部约束，但不足以支撑公平边界结论；
 - 当前 `论文撰写/paper/` 仍是旧 EQD/Carnot 稿件源码，不视为新 SCI 正式稿；
 - `风光火+熔盐储热/tes_bess_boundary/` 已建立独立 `Pyomo + highspy` 包；E0-D-5–D-18 已锁定 TES 物理/作者筛查、BESS 正式账本、TES 成本门、无罚值 EAC 内核与 336 h 有界求解。E0-D-19 增加严格年度 PCC 外送服务：24 h 同服务燃料 EAC 上限为 12.893 百万元/a，336 h 为 15.031–16.330 百万元/a，主 gap 0.2545%；固定平价结算严格抵消。与 E0-D-18 相比阈值收缩约 73%–77%，证明不同电交付量不能用于公平经济比较；
-- 原始证据审计确认杨凌表内没有供回水温度、抽汽温压或可直接识别三罐逐时损失/泵耗的设备参数。MT 继续使用 0.25/0.50/0.75 作者显热分割；E0-D-9B-1/2 数值均登记为作者敏感性。Guccione `140 EUR/kWe` 仍缺报价价格年，且罐、循环、三条换热/蒸汽发生路径、power-block retrofit、项目附加费和寿命项也未闭合；DLR `20–22 EUR_2020/kWh_th-net` 仅为两罐 Solar Salt 工程聚合锚点。本地 `price_sell/price_buy` 是脚本生成情景，不是杨凌结算；总排放乘碳价也不是配额履约成本。TES 正式来源、CHP/TES VOM、碳履约、分时结算、系统级完整 TAC、endogenous capacity 和结构化代表周仍未闭合；E0-D-19 仍不能形成技术赢家，因此不得进入 E1 或批量边界实验。合同见 `e0_tes_break_even_contract.md`、`e0_tes_break_even_adapter_and_exploration_contract.md`、`e0_tes_two_window_performance_and_interval_contract.md` 与 `e0_same_pcc_service_and_operating_cost_boundary_contract.md`。
+- E0-D-20 已完成四类非燃料运行成本的项目台账、官方来源和 Energy+ 文献复核，并建立可执行证书门：分时电力结算、碳配额履约、CHP VOM 和 TES VOM 均未获正式证书。尤其是原始台账 H18:H19 虽标为“运维成本”，但两机金额与发电量严格成比例，共同对应 `308.417119 CNY/MWh` 和 `385.107408 gce/kWh`；这只证明燃料重叠风险，不能把 H 列重新认定为燃料，也不能把它叠加为独立 CHP VOM；
+- 原始证据审计确认杨凌表内没有供回水温度、抽汽温压或可直接识别三罐逐时损失/泵耗的设备参数。MT 继续使用 0.25/0.50/0.75 作者显热分割；E0-D-9B-1/2 数值均登记为作者敏感性。Guccione `140 EUR/kWe` 仍缺报价价格年，且罐、循环、三条换热/蒸汽发生路径、power-block retrofit、项目附加费和寿命项也未闭合；DLR `20–22 EUR_2020/kWh_th-net` 仅为两罐 Solar Salt 工程聚合锚点。本地 `price_sell/price_buy` 是脚本生成情景，不是杨凌结算；总排放乘碳价也不是配额履约成本。TES 正式来源、完整 TAC、endogenous capacity 和结构化代表周仍未闭合；E0-D-19/20 仍不能形成技术赢家，因此不得进入 E1 或批量边界实验。合同见 `e0_tes_break_even_contract.md`、`e0_tes_break_even_adapter_and_exploration_contract.md`、`e0_tes_two_window_performance_and_interval_contract.md`、`e0_same_pcc_service_and_operating_cost_boundary_contract.md` 与 `e0_operating_cost_evidence_readiness_contract.md`。
 
 ## 9. 与旧 SCI 文档的关系
 

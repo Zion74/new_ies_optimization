@@ -1,0 +1,40 @@
+{
+  "annual_om_reconciliation": {
+    "common_coal_equivalent_g_per_kwh": 385.1074080107929,
+    "common_cost_cny_per_mwh": 308.4171187795236,
+    "formal_vom_blockers": [
+      "cost_boundary",
+      "fuel_overlap_risk",
+      "variable_driver"
+    ],
+    "has_common_coal_equivalent_rate": true,
+    "is_generation_proportional": true
+  },
+  "canonical_files": {
+    "e0d20_operating_cost_evidence.csv": {
+      "rows": 6,
+      "sha256": "0b67c3535dfc1321ff6a6eae9772677e5fa4b187ba0d803ad766ff11abb24f5b"
+    }
+  },
+  "claim_boundary": "Evidence audit only: no project TAC, ETS compliance cost, hourly settlement revenue, CHP VOM, or TES VOM is certified.",
+  "readiness": {
+    "blocked_accounts": [
+      "time_varying_electricity_settlement",
+      "carbon_compliance_allowance",
+      "chp_variable_om",
+      "tes_variable_om"
+    ],
+    "flat_settlement_rule": "common flat price times equal annual PCC export cancels exactly",
+    "formal_portfolio_ready": false
+  },
+  "schema": "tes_bess_boundary.e0d20_operating_cost_evidence.v1",
+  "source_files": {
+    "yangling_economic_workbook": {
+      "cells": [
+        "煤电机组经济性指标!H18/J18/M18",
+        "煤电机组经济性指标!H19/J19/M19"
+      ],
+      "sha256": "72d71cfeed7d8c3f3d564e00ca8bfdd47ee48228bf58ab3de5c9605added8fcf"
+    }
+  }
+}

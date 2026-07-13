@@ -1,8 +1,8 @@
 # SCI 公平储能比较模型与实验设计
 
-更新时间：2026-07-13
+更新时间：2026-07-14
 
-状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-16 已完成 TES 物理/作者筛查、成本认证门、BESS fixed-capacity 生命周期账本、TES 12 账户门禁和无罚值全系统 EAC 上限内核。E0-D-17 已把实际年度解接入该内核；E0-D-18 进一步以精确对数段编码、连续启停包络和 TES 路径紧 Big-M 闭合 24 h 精确点与 336 h 有界性能门。两窗口仍使用旧 2019 风光形状和燃料单项范围，12 个 TES 账户、同范围系统成本、endogenous capacity 及正式 TAC 尚未闭合，因此 E0 总门槛及批量算例仍未通过。本地/远端均 288 项通过。
+状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-16 已完成 TES 物理/作者筛查、成本认证门、BESS fixed-capacity 生命周期账本、TES 12 账户门禁和无罚值全系统 EAC 上限内核。E0-D-17/18 已闭合实际年度解接缝、24 h 精确点与 336 h 有界性能门，E0-D-19 已固定同年度 PCC 服务。E0-D-20 又完成分时结算、碳履约、CHP VOM 和 TES VOM 的证据门控，但四账户均未获正式证书。两窗口仍使用旧 2019 风光形状和燃料单项范围，12 个 TES 账户、同范围系统成本、endogenous capacity 及正式 TAC 尚未闭合，因此 E0 总门槛及批量算例仍未通过。
 
 ## 1. 科学问题与研究边界
 
@@ -444,7 +444,8 @@ E0 分阶段执行：
 - **E0-D-17 实际结果接缝已建立**：年度模型公开加权可用新能源、PCC 外送与服务上限；适配器剔除所有 TES 资产类，强制披露非 TES 成本缺口。24 h 级联 TES 零 gap 结果在 Windows/Linux 哈希一致；它按单日 366 倍年化，只能作探索筛查。336 h 两周主 MILP 未在本地 10 min/远端 15 min 预算内闭合，不生成结果行；
 - **E0-D-18 两窗口性能与区间合同已建立**：8 段 CHP 燃料选择由 8 个 one-hot 二元变量改为 3 个精确对数位，显式启用连续启停包络，并按 TES 端口推导路径流量上界。未固定二元变量由 7,728 降至 3,024（减少 60.87%）。24 h 主/次目标 gap 均为 0；336 h 主目标 gap 为 0.004800、固定整数次目标 gap 为 0。由 primal/dual bounds 推得全系统 TES EAC 区间 `57.572–59.818 million CNY/a`，不得压缩成点值；
 - **E0-D-19 同 PCC 服务边界已建立**：E0-D-18 的 TES 候选年度外送比比较架构少约 0.87–0.88 TWh，不能视为同电服务。新合同固定同供热、同弃电上限和同年度 PCC 外送，固定平价结算项严格抵消。24 h 燃料 EAC 上限为 `12.893 million CNY/a`；336 h 在 0.2545% 主 gap 下为 `15.031–16.330 million CNY/a`。相较 E0-D-18 收缩约 73%–77%，所以 SCI 后续所有架构比较必须显式对齐电服务；
-- **后续经济/规划切片待完成**：E0-D-20 优先取得杨凌 2024 发电侧合同/结算、机组配额清缴、CHP VOM 与双服务 TES VOM；若无法取得，只能预注册公开敏感性，不得把作者 TOU、总排放×碳价或聚合 CSP O&M 升级为现场 TAC。之后再闭合真实 BESS/TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
+- **E0-D-20 非燃料运行成本证据门已建立**：四账户逐一审计项目特异性、数值可用性、成本非重叠、变动驱动和技术边界。分时结算、碳履约、CHP VOM、TES VOM 全部保持阻断；杨凌 H18:H19 与发电量严格成比例并对应共同煤当量率，存在与燃料账本重叠的风险，不能直接作为 CHP VOM；Klasing *Applied Energy* 聚合 O&M 只作 TES 敏感性；
+- **后续经济/规划切片待完成**：E0-D-21 优先取得杨凌 2024 发电侧合同/结算、机组配额清缴、CHP O&M 科目拆分与双服务 TES VOM；未取得时只建立预注册的影子成本敏感性，不得把作者 TOU、总排放×碳价、H 列模糊年度值或聚合 CSP O&M 升级为现场 TAC。之后再闭合真实 TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
 
 详细证据和禁止启动条件见 `docs/03_sci_paper/e0_validation_status.md`。
 
@@ -554,7 +555,7 @@ E_T^{h,rate}=D\frac{Q^{MT\rightarrow LT,h}}{\eta_{Mh}}
 
 ## 8. 算力预算与 HiGHS 执行策略
 
-当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-19 已同步并独立再生成；本地全量回归为 `291 passed in 75.21s`，远端为 `291 passed in 26.34s`，CSV/manifest 规范哈希逐字节一致。
+当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-20 已同步并独立再生成；本地全量回归为 `297 passed in 60.71s`，远端为 `297 passed in 26.25s`，证据 CSV/manifest 规范哈希逐字节一致。
 
 主模型采用 `Pyomo + highspy`，不依赖 Gurobi。推荐：
 
@@ -636,6 +637,7 @@ src/tes_bess_boundary/
 ├── e0d17_exploration.py      # 已实现：E0-D-17 历史探索入口与 24 h 基线
 ├── e0d19_same_pcc_service.py # 已实现：E0-D-19 同年度 PCC 服务与有界 EAC 诊断
 ├── e0d18_performance.py      # 已实现：24 h 精确点、336 h 有界区间与确定性证据导出
+├── operating_cost_evidence.py # 已实现：E0-D-20 四账户证据门、H 列重叠审计与确定性导出
 ├── tes_topology_evidence.py  # 已实现：五路径证据与创新披露合同
 ├── tes_heat_delivery.py      # 已实现：MT→LT 夹点、材料温区、热量与流量审计
 ├── tes_temperature_scenarios.py # 已实现：MT 归一化焓分配三点候选与认证
@@ -648,7 +650,7 @@ src/tes_bess_boundary/
     ├── chp.py                # 已实现：凸包、低负荷规则、UC、精确 PWL 与对数段编码
     ├── bess.py               # 已实现：SOC 与最小 Pyomo 组件
     └── molten_salt.py        # 已实现：三温区守恒、路径流量上界与紧 Big-M
-tests/                        # 已实现：288 个本地/远端 E0 回归测试
+tests/                        # E0 本地/远端回归数以 e0_validation_status.md 最新记录为准
 ```
 
 正式 E0-C 产物和 E0-D-4 价格快照路径不变。E0-D-8 MT 合同与 E0-D-9A/9B-1/9B-2 损失—泵耗合同分别见 `e0_tes_mt_scenario_contract.md` 和 `e0_tes_loss_auxiliary_contract.md`。当前 `model.py` 仍是 fixed-capacity 物理/调度模型；杨凌现场温压和泵系统参数、具有明确价格年的正式参数 portfolio、完整 TAC 与容量规划仍未实现。这些 E0 剩余项通过前不得启动批量扫描。
