@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tes-bess-boundary"
+version = "0.1.0"
+description = "E0 validation foundation for fair BESS and molten-salt TES comparison."
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    "openpyxl==3.1.5",
+    "pyomo==6.10.1",
+    "highspy==1.15.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+testpaths = ["tests"]
+markers = [
+    "solver: requires Pyomo and the HiGHS Python bindings",
+    "integration: exercises more than one model component",
+    "data_integration: reads the local Yangling source workbooks",
+]

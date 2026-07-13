@@ -1,0 +1,117 @@
+# TES–BESS Boundary Model
+
+This package is the isolated Pyomo + HiGHS implementation for the current Yangling
+TES/BESS/Hybrid boundary study. It deliberately does not import the repository's
+legacy oemof/Gurobi environment.
+
+The current E0 slice contains:
+
+- structural audits for the 2024 hourly operations and planning CSV files;
+- an auditable E0-B builder for the two raw heat workbooks, including a 52,707-row source ledger, three hourly heat interpretations, quality flags, and a reproducibility manifest;
+- a strict E0-B-to-E0-C heat-demand adapter that validates the complete 8,784-hour source and manifest v2 before selecting `net_clipped`, `forward`, or `zero_sensitivity_clipped`, with separate full-source and window modification audits;
+- a table-vertex CHP feasible-region contract with explicit gross/net and heat-basis checks, three explicit 98--105 MW fuel rules, adjacent-segment fuel PWL, and evidence-bounded unit commitment;
+- closed-form BESS energy-balance validation on the PCC AC basis;
+- three-temperature molten-salt inventory and enthalpy validation;
+- a unique salt/tank/five-port cost-capacity ledger with component temperature-range checks;
+- a pre-model cost-evidence gate that separately checks venue tier, price basis, capacity denominator, technology boundary, provenance, and allowed use before any source can certify a formal baseline;
+- a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
+- a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
+- a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
+- a provenance-locked MT scenario set that maps 25/50/75% low-grade sensible-enthalpy shares to 232.5/285/337.5 °C author sensitivities without presenting them as site or paper values;
+- inventory- and temperature-dependent TES loss, fixed heat tracing, five-path pumping, three-MT loss calibration, and low/base/high bottom-up hydraulic pump audits;
+- a fixed-capacity unified No-storage/BESS/TES/Hybrid dispatch model with one PCC and useful-heat boundary;
+- an auditable lifetime-economics kernel with project NPV/EAC, component-specific replacement and residual ledgers, BESS calendar/AC-discharge two-anchor calibration, and structural cell double-count protection;
+- an optional fixed-capacity annual-economics seam with strictly scored 8,784-hour weights, canonical non-cell EAC, BESS calendar and PCC AC-discharge costs, an annual EFC limit, closed state boundaries, and a public annual audit;
+- two orthogonal 24-hour real-Yangling no-storage bridge diagnostics (six HiGHS solves) with deterministic scientific outputs and a separate runtime sidecar;
+- deterministic tests for both the legacy `SolverFactory("appsi_highs")` interface and direct Appsi `Highs`.
+
+This is not yet the full planning/economic model. The lifetime cash-flow mechanics,
+fixed-capacity annual Pyomo seam, explicit 2024-CNY price conversion audit, and TES
+generation-cost classification are complete, but no unverified default equipment
+prices are embedded. The current HITEC 53/40/7 and 180/390 °C values are a physical
+candidate only. A 120/70 °C Energy 2026 heat-network case is registered only as a
+core reference scenario: it proves feasible heat grade under explicit approach
+assumptions but does not identify Yangling site temperatures or a unique medium
+temperature. E0-D-8 pre-registers MT through the normalized low-grade enthalpy
+share `(MT-LT)/(HT-LT) = 0.25/0.50/0.75`; the resulting three values are
+author sensitivities rather than a formal site baseline. E0-D-10 records the initial
+cost-source audit. E0-D-11 adds one reproducible NREL engineering anchor for
+sensitivity analysis only. Its 2020-USD power and usable-energy terms, 4-hour
+aggregate, and FOM are reconciled, but it is structurally ineligible for the formal
+Energy+ baseline; the workbook/webpage round-trip-efficiency discrepancy is excluded
+from the cost anchor rather than silently resolved. E0-D-13 registers the Rahman
+*Applied Energy* paper plus the same-author official University of Alberta dissertation
+chapter as the only BESS formal-source candidate and maps the principal non-cell cost
+lines. This is a source-layer certificate, not a complete formal BESS portfolio: the
+replacement/degradation, VOM-throughput-side, and PCS scale-curve joins remain open,
+and no TES formal-cost candidate has yet passed the gate.
+Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
+TES loss and auxiliary parameters, VOM/carbon/settlement terms,
+structured representative periods, and endogenous capacity are completed.
+
+`AnnualHorizonSpec` currently describes scored periods only. Every weight must be
+strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
+module must give warm-up periods an explicit structural role and state boundary;
+zero weights are not accepted as an implicit warm-up shortcut.
+
+Build the formal E0-B artifacts without overwriting legacy CSV files:
+
+```python
+from tes_bess_boundary.heat_dataset import (
+    HeatBuildSpec,
+    HeatSourceBundle,
+    build_heat_dataset,
+    write_heat_dataset,
+)
+
+dataset = build_heat_dataset(
+    HeatSourceBundle(first_half_workbook, second_half_workbook),
+    spec=HeatBuildSpec(),
+)
+write_heat_dataset(dataset, output_directory)
+```
+
+The resulting hourly columns are deliberately unambiguous: `heat_net_mw` remains
+signed, `heat_forward_mw` clips each branch before aggregation, and
+`heat_zero_sensitivity_mw` changes only the registered 226-point zero segment.
+
+Build the three formal E0-C demand products and the six locked bridge diagnostics:
+
+```bash
+python -m tes_bess_boundary.heat_bridge_cli \
+  --hourly-csv /path/to/e0b_formal_2024/e0b_heat_hourly_2024.csv \
+  --source-manifest /path/to/e0b_formal_2024/manifest.json \
+  --output-dir /path/to/e0c_heat_demand_adapter
+```
+
+The primary model input is `net_clipped = max(heat_net_mw, 0)`. `forward` and
+`zero_sensitivity_clipped` are explicitly labelled sensitivities rather than plant
+facts. Window selection is half-open and the complete source is always validated
+before slicing.
+
+Server verification:
+
+```bash
+python -m pip install -e ".[test]"
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  python -m pytest -q -p no:cacheprovider
+```
+
+Data-integration tests read Yangling files outside this package and are run only
+where those private files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the
+formal directory is not in the local repository layout. The current local result is
+`263 passed in 34.57s`. E0-D-13 has not yet been synchronized to OpenBayes. The
+latest remote result therefore remains the E0-D-11 baseline; OpenBayes has matching
+SHA-256 values for that cost-anchor source, test, and public evidence files. With
+`TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
+set explicitly, the full remote result is `258 passed in 21.36s`. An initial E0-D-2 remote
+run without that variable produced 22 `FileNotFoundError` failures because the
+server data directory differs from the repository-relative default; this was an
+environment-path mismatch, not a model or test-logic failure.
+
+```bash
+python -m pytest -q -m data_integration
+```
+
+The supported runtime is Python 3.10–3.11 with the exact Pyomo and HiGHS versions
+declared in pyproject.toml.

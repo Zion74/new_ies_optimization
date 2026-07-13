@@ -1,0 +1,6 @@
+# Minimal solver environment verified on OpenBayes on 2026-07-11.
+# Exact E0 runtime and validation environment.
+openpyxl==3.1.5
+pyomo==6.10.1
+highspy==1.15.1
+pytest==9.1.1

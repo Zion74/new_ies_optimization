@@ -1,0 +1,91 @@
+{
+  "session": "2026-07-13-e0d12-formal-cost-closure",
+  "follow_up_date": "2026-07-13",
+  "events": [
+    {
+      "channel": "InstSci exact-title search",
+      "target": "The development of techno-economic models for the assessment of utility-scale electro-chemical battery storage systems",
+      "result": "no_results_with_semantic_scholar_rate_limit_retries",
+      "interpretation": "No full text was retrieved; this is not evidence that the paper does not exist"
+    },
+    {
+      "channel": "legal open-access web search",
+      "target": "Rahman et al. Applied Energy 283 (2021) 116343",
+      "result": "metadata_and_abstract_only",
+      "checked_routes": [
+        "ScienceDirect",
+        "ResearchGate",
+        "IDEAS/RePEc",
+        "EPA HERO",
+        "University of Alberta research-group pages",
+        "University of Alberta ERA repository",
+        "Future Energy Systems Forum"
+      ],
+      "interpretation": "Complete numeric cost tables and original price-year metadata remain unavailable"
+    },
+    {
+      "channel": "Unpaywall",
+      "target": "10.1016/j.apenergy.2020.116343",
+      "result": "not_called_missing_user_email",
+      "interpretation": "The workflow requires a real user email and forbids a fabricated placeholder"
+    },
+    {
+      "channel": "InstSci publisher broker",
+      "target": "10.1016/j.apenergy.2020.116343",
+      "publisher": "Elsevier",
+      "institution": "unresolved",
+      "result": "no_final_closed_access_verdict",
+      "interpretation": "A visible browser institutional check must not assume an institution or subscription"
+    },
+    {
+      "channel": "CORDIS project reporting",
+      "target": "SOLARSCO2OL grant 952953",
+      "result": "project_timeline_and_heater_development_stage_confirmed",
+      "source": "https://cordis.europa.eu/project/id/952953/reporting",
+      "interpretation": "The project timeline narrows provenance but does not disclose quotation date, price year, currency or normalization"
+    },
+    {
+      "channel": "CORDIS public results",
+      "target": "SOLARSCO2OL grant 952953",
+      "result": "no_public_heater_cost_deliverable_found",
+      "source": "https://cordis.europa.eu/project/id/952953/results"
+    },
+    {
+      "channel": "SHARP-sCO2 public newsletter",
+      "target": "medium-voltage molten-salt electric-heater development",
+      "result": "technical_development_window_only",
+      "source": "https://www.sharpsco2.eu/files/SHARP-sCO2_2_Newsletter_2407.pdf",
+      "interpretation": "No quotation metadata or cost boundary is disclosed"
+    },
+    {
+      "channel": "official institutional directories",
+      "target": "author-query contacts",
+      "result": "public_contact_routes_identified",
+      "sources": [
+        "https://apps.ualberta.ca/directory/person/amitk",
+        "https://www.energy.kth.se/heat-and-power-technology"
+      ],
+      "interpretation": "Public institutional contacts were used for the authorized inquiries"
+    },
+    {
+      "channel": "Zhejiang University email system",
+      "target": "Rahman BESS cost provenance inquiry",
+      "sender": "haonan.zheng@zju.edu.cn",
+      "recipient": "amitk@ualberta.ca",
+      "sent_time_displayed": "2026-07-13 15:49",
+      "result": "accepted_by_recipient_server",
+      "attachments": [],
+      "interpretation": "Awaiting author response; server acceptance does not establish reading or disclosure permission"
+    },
+    {
+      "channel": "Zhejiang University email system",
+      "target": "Guccione and Guedez electric-heater quotation inquiry",
+      "sender": "haonan.zheng@zju.edu.cn",
+      "recipient": "rafael.guedez@energy.kth.se",
+      "sent_time_displayed": "2026-07-13 15:50",
+      "result": "accepted_by_recipient_server",
+      "attachments": [],
+      "interpretation": "Awaiting author response; server acceptance does not establish reading or disclosure permission"
+    }
+  ]
+}

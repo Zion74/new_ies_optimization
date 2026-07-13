@@ -1,89 +1,103 @@
-﻿# SCI 论文：最新逻辑结构
+# SCI 论文：最新逻辑结构
 
-更新时间：2026-04-10
+更新时间：2026-07-13
 
 ## 1. 定位
 
-SCI 论文要承担“**把核心创新扩成完整论文故事**”的任务，因此它不是会议稿的简单放大版，而是“规划层正式展开 + 设备层价值验证”的完整论证。
+当前主 SCI 已从“EQD + 卡诺电池”调整为：
 
-一句话主张是：
+> **热约束型燃煤 CHP 中锂离子 BESS、双用途熔盐 TES 与混合储能的公平比较、价值机理和技术选择边界。**
 
-> 㶲加权欧氏距离（EQD）能够比传统匹配度指标更合理地量化分布式电热综合能源系统的源荷匹配，并进一步更有效地识别卡诺电池这类电热耦合储能的配置价值。
+建议题目方向：
 
-## 2. SCI 稿必须回答的核心问题
+> *Technology-selection boundaries between lithium-ion batteries and dual-service molten-salt thermal storage in heat-constrained CHP systems*
 
-1. 为什么源荷匹配度需要从 IEMI 进一步升级为 **EQD**，即补上㶲加权的物理基础？
-2. 为什么 EQD 在规划结果上比 `economic_only / std / pearson / ssr` 更强？
-3. 为什么这种方法优势不仅停留在 Pareto 图上，还能体现在全年运行指标、敏感性和韧性上？
-4. 为什么 EQD 能更好地识别卡诺电池这类耦合设备的配置价值？
+杨凌 2×350 MW 系统是工程验证对象；论文结论必须由可迁移的归一化边界与全年验证共同支撑，不能只报告一个案例下的弃风率。
 
-## 3. SCI 稿的故事结构
+## 2. 核心科学问题
 
-### 3.1 第一层：规划层正式展开
+1. 如何在不同能量载体、效率、寿命和端口结构下公平比较 BESS 与熔盐 TES？
+2. 热负荷造成的 CHP 强迫电出力如何改变储能价值来源？
+3. 供热强度、风电接入和公共并网点拥塞如何共同触发 BESS—TES—Hybrid 的排序反转？
+4. 时长和相对成本怎样移动该物理边界？
+5. 代表周得到的边界能否通过杨凌 2024 年 8784 h 时序验证？
 
-- 用两案例、多方法对比把 EQD 的方法优势讲实。
-- 从会议稿中的几何概念验证，升级到“几何 + 热力学”的完整表达。
-- 这里的主角是 `EQD vs std`，其他方法更多承担基线或边界参照角色。
+## 3. 论文主张
 
-### 3.2 第二层：设备层扩展
+本文不主张“熔盐普遍优于电池”。主张限定为：
 
-- 把卡诺电池作为“能否识别电热耦合设备价值”的试金石。
-- 先做 `euclidean / EQD` 下无卡诺 vs 有卡诺。
-- 再做有卡诺条件下 `std vs EQD`，验证设备价值识别能力是否受匹配度指标影响。
+> 在相同热负荷安全和新能源消纳目标下，热致强迫发电与公共并网点拥塞改变了两类储能的边际价值；由此可形成可解释的 BESS—TES—Hybrid 技术选择区域和经济无差异带。
 
-### 3.3 第三层：强证据链，但不把硕士论文第 4 章抢走
+三条贡献线：
 
-SCI 稿需要更强证据，但仍然要守边界：
+1. **机理贡献**：将价值分为电量时移、热供给替代和 CHP 强迫出力释放。
+2. **方法贡献**：采用技术特定的功率—能量—寿命成本联合 MILP，在同服务下比较最小年化成本，而不是同 MW/MWh。
+3. **工程贡献**：以热约束 × 通道紧张度和时长 × 相对成本两张地图给出选择边界，并用杨凌真实双机全年数据回代。
 
-- 可以保留：8760h 后验运行指标、λ 敏感性、极端场景韧性。
-- 不展开：完整的负荷预测模型、日前调度架构、误差传播分析。
-- 换句话说，SCI 稿里的“运行层内容”只作为强化证据，不作为独立研究层。
+## 4. 非协商模型边界
 
-## 4. 推荐章节职责
+- 架构：无储能 / BESS / TES / BESS+TES；
+- 求解：确定性容量—运行综合 MILP；
+- 主求解器：HiGHS；
+- 主公平口径：同供热安全、同弃风上限下的最小年化总成本；
+- 对偶口径：同增量年化预算下的最低弃风率；
+- BESS：独立充电功率、放电功率和电量容量，计退化、替换、残值与寿命；
+- TES：高温/中温库存及电加热、抽汽充热、发电、级联和供热端口分别定容计费；
+- CHP：两台机组分别建模，保留启停、爬坡、热电可行域、强迫出力和变煤耗；
+- 数据：代表周用于扫描，8784 h 用于关键点验证。
 
-1. `Introduction`：研究问题、文献空白、规划层与设备层两条贡献线。
-2. `System modeling`：CCHP / IES 拓扑、设备模型、卡诺电池、典型日。
-3. `Energy-quality-weighted matching index`：EQD 定义、㶲系数来源、与 IEMI / Std 的关系。
-4. `Bi-objective optimization framework`：目标函数、决策变量、算法流程。
-5. `Case studies`：德国与松山湖案例、四组核心实验定义。
-6. `Results and discussion`：实验 1-4 + 后验指标 + 敏感性 / 韧性补充。
-7. `Conclusions`：方法、设备、证据链三层收束。
+完整模型、实验水平和验收标准见：
 
-建议把 `Results and discussion` 内部固定为以下顺序：
+- `docs/03_sci_paper/fair_storage_boundary_model_and_experiment_design.md`
+- 当前 E0 实现与阻断项见 `docs/03_sci_paper/e0_validation_status.md`
 
-- 6.1 Experiment 1: German 5-method comparison
-- 6.2 Post-optimization 8760h operational validation
-- 6.3 Experiment 2: Cross-climate validation on Songshan Lake
-- 6.4 Experiment 3: Carnot battery ablation
-- 6.5 Experiment 4: Joint validation under Carnot integration
-- 6.6 Integrated discussion and limitations
+## 5. 推荐章节结构
 
-建议每个结果子节内部统一采用：
+1. `Introduction`：问题、质量筛选后的文献空白、贡献边界。
+2. `System description and data`：杨凌双机、签约风电、本地光伏、供热义务和公共并网点。
+3. `Technology-specific models`：CHP、BESS、双品位熔盐及成本寿命模型。
+4. `Fair planning and boundary identification`：综合 MILP、ε-约束、公平口径、选择判据和机理指标。
+5. `Experimental design`：代表周、网格、边界加密、全年回代和确定性敏感性。
+6. `Results and discussion`：
+   - 6.1 模型与杨凌基准验证；
+   - 6.2 受控机理实验；
+   - 6.3 同服务成本—消纳前沿；
+   - 6.4 热约束—通道紧张度选择地图；
+   - 6.5 时长—相对成本边界；
+   - 6.6 8784 h 验证与确定性稳健性；
+   - 6.7 适用范围、工程含义与限制。
+7. `Conclusions`：只收束已验证的机制和边界，不外推到调频、黑启动或所有电力系统服务。
 
-- `trade-off`：先交代 Pareto 权衡与可接受预算区间
-- `configuration mechanism`：再解释关键设备容量如何变化
-- `operational evidence`：再用 `8760h` 或典型日调度兑现规划差异
-- `implication`：最后说明该结果支撑全文哪条主线
+## 6. 主图逻辑
 
-结果分析扩充方案单列文档：
+论文只保留两张真正承担结论的边界图：
 
-- `docs/03_sci_paper/results_analysis_expansion_plan.md`
+1. **物理适用域**：归一化热约束 × 通道紧张度，按三档风电容量分面；颜色为 No storage / BESS / TES / Hybrid / Indifferent / Infeasible。
+2. **经济适用域**：储能时长 × TES/BESS 相对年化成本，按低、中、高物理冲突分面。
 
-## 5. 术语约束
+其余图用于验证、解释和敏感性，不再堆积孤立的一维扫描。
 
-- SCI 稿主术语：**EQD**。
-- IEMI 只用于说明会议稿前导关系，不再作为正文主标签。
-- 卡诺电池是设备层第二贡献，不是会抢走全文主线的独立论文。
-- 负荷预测 / 日前调度 / 鲁棒性完整章节保留给硕士论文第 4 章。
+## 7. 明确排除
 
-## 6. 对应源码与入口
+本 SCI 不加入：
 
-- 主稿：`论文撰写/paper/main.tex`
-- 分节：`论文撰写/paper/sections/`
-- 图表统一落点：`论文撰写/paper/figures/`
-- 对应映射：`docs/03_sci_paper/experiment_figure_code_map.md`
-- 服务器执行清单：`docs/03_sci_paper/server_full_run_checklist.md`
-- 图表计划：`docs/03_sci_paper/figure_table_plan.md`
-- 初稿升级计划：`docs/03_sci_paper/manuscript_upgrade_plan.md`
-- Phase 2 高强度审稿报告：`docs/03_sci_paper/adversarial_review_phase2.md`
+- 负荷预测；
+- 随机或鲁棒优化；
+- 蒙特卡洛概率边界；
+- 滚动调度 / MPC；
+- Agentic 或 LLM 决策支持；
+- 德国与松山湖案例。
 
+源荷匹配方法和德国/松山湖结果属于独立成果与硕士论文辅助方法证据，不进入本 SCI 主线。
+
+## 8. 证据与代码状态
+
+- 高质量文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；
+- 现有 `_ch4_*.py` 为探索原型，可复用数据与局部约束，但不足以支撑公平边界结论；
+- 当前 `论文撰写/paper/` 仍是旧 EQD/Carnot 稿件源码，不视为新 SCI 正式稿；
+- `风光火+熔盐储热/tes_bess_boundary/` 已建立独立 `Pyomo + highspy` 包；E0-D-5–D-11 已锁定 TES 物理/作者筛查、成本认证门和 NREL BESS 工程敏感性台账。E0-D-12 完成正式成本闭环审计；E0-D-13 在用户批准关联证据政策后，将 Rahman *Applied Energy* + 同作者官方博士论文登记为唯一 BESS 正式来源候选，并落成 PCS、BoP、围护基础、两类 FOM 与 contingency 的可执行非电芯账本；
+- 原始证据审计确认杨凌表内没有供回水温度、抽汽温压或可直接识别三罐逐时损失/泵耗的设备参数。MT 继续使用 0.25/0.50/0.75 作者显热分割；E0-D-9B-1/2 数值均登记为作者敏感性。Guccione `140 EUR/kWe` 仍缺报价价格年，TES 正式来源仍为零；Rahman 来源虽已合格，但电芯 cycle-only replacement 与 calendar+throughput 退化接缝、VOM 吞吐侧和 5 MW PCS 规模曲线仍阻断完整 BESS portfolio。故完整 TAC、endogenous capacity 和结构化代表周仍未闭合，不得进入 E1 或批量边界实验。合同见 `e0_rahman_bess_linked_evidence_contract.md` 等 E0 文档。
+
+## 9. 与旧 SCI 文档的关系
+
+`docs/03_sci_paper/` 中 2026-04 的 EQD/Carnot 审稿、重设计、出图和服务器清单保留为独立旧稿的历史资产，但不再定义当前主 SCI。当前只以本文件、模型实验设计、实验映射和图表计划为权威。
