@@ -1,6 +1,6 @@
 # 硕士论文：最新逻辑结构
 
-更新时间：2026-07-12
+更新时间：2026-07-14
 
 ## 1. 总体定位
 
@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：第 2 章 / E0-D-1–D-17 已实现数据、物理、寿命经济、BESS fixed-capacity 账本、TES 12 账户门禁、无罚值全系统 EAC 上限内核及实际年度结果接缝。E0-D-18 通过对数燃料段编码、连续启停包络和 TES 路径紧 Big-M，闭合了 24 h 精确点与 336 h 有界性能门；完整回归两端均 `288 passed`。336 h 主目标 gap 为 0.004800，对应燃料范围全系统 TES EAC `57.572–59.818 million CNY/a`，只能作为旧 2019 风光形状下的非全年探索区间。TES 正式账户、系统级 VOM/碳/电力结算、结构化代表周与 endogenous capacity 尚未完成，E1 及后续批量实验仍未启动。详细状态见 `docs/03_sci_paper/e0_validation_status.md`、`e0_tes_break_even_contract.md` 与 `e0_tes_two_window_performance_and_interval_contract.md`。
+当前进度：第 2 章 / E0-D-1–D-21 已闭合相应数据、物理、寿命经济、BESS fixed-capacity 账本、TES 12 账户门禁、两窗口性能、同 PCC 服务、四类非燃料成本证据门和影子成本区间传播。D19 将同服务燃料空间收缩到 24 h 的 `12.893 million CNY/a` 与 336 h 的 `15.031–16.330 million CNY/a`；D21 进一步表明，合计不利遗漏成本低于 336 h 下界时燃料空间稳健为正，处于该区间时结论不确定，高于上界时才稳健为负。这些值仍使用旧 2019 风光形状，只是风险预算，不是实际成本、全年 TAC 或技术赢家。TES 正式账户、项目级 VOM/碳/逐时结算、结构化代表周与 endogenous capacity 尚未完成，E1 及后续批量实验仍未启动。完整回归和跨平台哈希见 `docs/03_sci_paper/e0_validation_status.md`，方法边界见 `e0_shadow_cost_robustness_contract.md`。

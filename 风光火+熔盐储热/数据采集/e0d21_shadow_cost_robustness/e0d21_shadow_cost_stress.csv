@@ -1,0 +1,11 @@
+window_id,hours,stress_id,adverse_nonfuel_cost_cny_per_year,fuel_headroom_lower_cny_per_year,fuel_headroom_upper_cny_per_year,adjusted_headroom_lower_cny_per_year,adjusted_headroom_upper_cny_per_year,robustness_status,account_allocation,allowed_use,formal_tac
+winter_day_20240101,24,zero_adverse,0.000000,12893119.760087,12893119.760087,12893119.760087,12893119.760087,robustly_positive,unallocated,sensitivity_only,False
+winter_day_20240101,24,half_exact_threshold,6446559.880044,12893119.760087,12893119.760087,6446559.880044,6446559.880044,robustly_positive,unallocated,sensitivity_only,False
+winter_day_20240101,24,exact_threshold,12893119.760087,12893119.760087,12893119.760087,0.000000,0.000000,exact_break_even,unallocated,sensitivity_only,False
+winter_day_20240101,24,one25_upper_threshold,16116399.700109,12893119.760087,12893119.760087,-3223279.940022,-3223279.940022,robustly_negative,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,zero_adverse,0.000000,15031096.496283,16330188.392595,15031096.496283,16330188.392595,robustly_positive,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,half_lower_threshold,7515548.248142,15031096.496283,16330188.392595,7515548.248142,8814640.144453,robustly_positive,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,lower_threshold,15031096.496283,15031096.496283,16330188.392595,0.000000,1299091.896312,indeterminate_including_break_even,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,interval_midpoint,15680642.444439,15031096.496283,16330188.392595,-649545.948156,649545.948156,indeterminate_including_break_even,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,upper_threshold,16330188.392595,15031096.496283,16330188.392595,-1299091.896312,0.000000,indeterminate_including_break_even,unallocated,sensitivity_only,False
+winter_fortnight_20240101,336,one25_upper_threshold,20412735.490744,15031096.496283,16330188.392595,-5381638.994461,-4082547.098149,robustly_negative,unallocated,sensitivity_only,False
