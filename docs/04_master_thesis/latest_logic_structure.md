@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：第 2 章 / E0-D-1–D-12 的数据、物理、寿命经济、成本资格门、NREL BESS 工程敏感性账本与正式来源审计已实现。E0-D-13/14 已闭合完整 fixed-capacity BESS 生命周期账本；E0-D-15 又建立 TES 12 账户正式成本就绪度、聚合锚点隔离和复合证据审批门，本地完整回归 `273 passed`，OpenBayes 最近 `258 passed`。TES 账户仍全部阻断，系统级 VOM/碳/电力结算、结构化代表周与 endogenous capacity 尚未完成，E1 及后续批量实验仍未启动。详细状态见 `docs/03_sci_paper/e0_validation_status.md`、`docs/03_sci_paper/e0_tes_formal_cost_readiness_contract.md` 与参数证据组合。
+当前进度：第 2 章 / E0-D-1–D-12 的数据、物理、寿命经济、成本资格门、NREL BESS 工程敏感性账本与正式来源审计已实现。E0-D-13/14 已闭合完整 fixed-capacity BESS 生命周期账本；E0-D-15 建立 TES 12 账户正式成本就绪度、聚合锚点隔离和复合证据审批门；E0-D-16 又建立同服务无罚值的全系统 TES EAC 上限及燃煤/弃电/PCC/辅机物理差值内核。本地完整回归 `279 passed`，OpenBayes 最近 `258 passed`。当前阈值只能用于探索，TES 账户仍全部阻断，系统级 VOM/碳/电力结算、结构化代表周与 endogenous capacity 尚未完成，E1 及后续批量实验仍未启动。详细状态见 `docs/03_sci_paper/e0_validation_status.md`、`docs/03_sci_paper/e0_tes_formal_cost_readiness_contract.md`、`docs/03_sci_paper/e0_tes_break_even_contract.md` 与参数证据组合。

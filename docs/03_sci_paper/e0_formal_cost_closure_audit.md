@@ -52,7 +52,7 @@ DLR 2021 官方报告已关闭一个较窄的访问问题：Klasing 的两罐中
 
 2026-07-13 的进一步复核改变了 Rahman 行的访问判定：University of Alberta Scholaris 官方仓储公开了作者博士论文，且论文明确将 Chapter 3 与 Rahman et al. (2021, *Applied Energy*) 交叉对应；该章已恢复完整数值表、2019 USD 基年、容量分母和成本边界。Guccione 行没有同样闭合：KTH 全文与 CORDIS/SHARP-sCO2 公开材料仍未公开报价日期、原币、规模和完整成本边界，也没有公开勘误能够解释温度因子 `16` 的缩放。同日，两封作者询证邮件已由用户授权并通过浙江大学邮箱发送；Rahman 邮件回复可用于再确认，Guccione/Guédez 回复仍是解除电加热器阻断的关键。Unpaywall 仍需用户提供真实邮箱。
 
-同日用户批准 Rahman 关联证据政策，E0-D-13 新增 `formal_bess_costs.py` 与测试：`USD_2019→CNY_2024_real` 因子为 `8.73826631502364`，主要非电芯规格已可审计生成。E0-D-14 保留原始来源对象 `formal_portfolio_ready=false`，同时新增 `formal_fixed_capacity_ready=true` 的 resolved contract；完整 BESS 年度经济账本已可构造。E0-D-15 新增 TES 正式就绪度门禁；本地完整回归为 `273 passed in 30.31s`（关闭 pytest cache），远端尚未同步 E0-D-14/15 代码。
+同日用户批准 Rahman 关联证据政策，E0-D-13 新增 `formal_bess_costs.py` 与测试：`USD_2019→CNY_2024_real` 因子为 `8.73826631502364`，主要非电芯规格已可审计生成。E0-D-14 保留原始来源对象 `formal_portfolio_ready=false`，同时新增 `formal_fixed_capacity_ready=true` 的 resolved contract；完整 BESS 年度经济账本已可构造。E0-D-15 新增 TES 正式就绪度门禁；E0-D-16 新增探索性全系统 EAC 上限内核，但不改变 TES 正式候选为零的判定。本地完整回归为 `279 passed in 31.57s`（关闭 pytest cache），远端尚未同步 E0-D-14–D-16 代码。
 
 机器证据与访问日志位于：
 

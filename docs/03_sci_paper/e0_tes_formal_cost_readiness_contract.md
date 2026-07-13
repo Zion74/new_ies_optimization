@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**门禁代码与证据审计已实现；严格证据路线下 12 个 TES 成本账户全部仍为 BLOCKED，正式 TES 生命周期账本和系统级 TAC 尚未闭合。** 本地 Python 3.11、`Pyomo 6.10.1 + HiGHS 1.15.1` 完整回归为 `273 passed in 30.31s`（关闭 pytest cache）。
+状态：**门禁代码与证据审计已实现；严格证据路线下 12 个 TES 成本账户全部仍为 BLOCKED，正式 TES 生命周期账本和系统级 TAC 尚未闭合。** E0-D-16 的盈亏平衡内核不改变这一判定，只允许探索性系统成本上限。当前本地 Python 3.11、`Pyomo 6.10.1 + HiGHS 1.15.1` 完整回归为 `279 passed in 31.57s`（关闭 pytest cache）。
 
 ## 1. 本轮结论
 
@@ -74,6 +74,7 @@ E0-D-15 没有找到可以直接进入主结果的同基年 TES 部件组合。�
 - 用 Trevisan/Klasing 定义账户结构与宽区间敏感性；
 - 用 DLR、Klasing、Li 聚合值检查未来 bottom-up 总量是否异常；
 - 做无价格或阈值化的技术可行性、运行价值与 break-even cost 分析。
+- 使用 `tes_break_even.py` 在同服务、无人工罚值条件下计算一个全系统 TES EAC 上限，但必须标为探索性，且不得向 12 个账户反向分摊。
 
 禁止：
 
@@ -94,3 +95,5 @@ E0-D-15 没有找到可以直接进入主结果的同基年 TES 部件组合。�
 - `风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`
 
 本合同不改变 SCI 主问题和 E1–E6 设计，只收紧 E0 的进入条件。
+
+价格无关阈值的数学定义、可比性门禁与禁止性表述见 `e0_tes_break_even_contract.md`。

@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-12 已完成 TES 物理/作者筛查、成本认证门、NREL 4 h BESS 工程敏感性账本和正式来源审计，E0-D-13/14 已建立并闭合完整 fixed-capacity BESS 生命周期账本。E0-D-15 又将 TES 正式成本拆成 12 个账户，隔离聚合工程锚点并要求复合证据另行批准；但账户仍全部阻断，endogenous capacity 及系统级 TAC 尚未闭合，因此 E0 总门槛及正式批量算例仍未通过。本地 273 项通过，OpenBayes 最近 258 项通过。
+状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-12 已完成 TES 物理/作者筛查、成本认证门、NREL 4 h BESS 工程敏感性账本和正式来源审计，E0-D-13/14 已建立并闭合完整 fixed-capacity BESS 生命周期账本。E0-D-15 又将 TES 正式成本拆成 12 个账户，隔离聚合工程锚点并要求复合证据另行批准；E0-D-16 建立同服务、无人工罚值的全系统 TES EAC 上限与物理价值差值内核。当前阈值仍为探索性，12 个 TES 账户、endogenous capacity 及系统级 TAC 尚未闭合，因此 E0 总门槛及正式批量算例仍未通过。本地 279 项通过，OpenBayes 最近 258 项通过。
 
 ## 1. 科学问题与研究边界
 
@@ -440,7 +440,8 @@ E0 分阶段执行：
 - **E0-D-6 TES 拓扑证据合同已建立**：五条活跃路径必须逐条披露为高等级直接证据、降阶映射、模块化合成、本文扩展或阻塞；当前 `MT→LT` 供热级联为 proposed extension，未显式披露或存在 blocked 路径时不得认证正式用例；HITEC 53/40/7 与 180/390 °C 仅为物理候选，MT 不得用测试示例填充；
 - **E0-D-7 TES 供热夹点合同已建立**：供回水温度来源、两端最小端差和液态裕量必须显式输入；120/70 °C 只允许标为 Energy 2026 核心参考情景。代码审计 `T_MT-T_sup`、`T_LT-T_ret`、HITEC 熔点/材料上限、库存—端口双重热输出上限及盐/水流量；MT 保持离散候选/敏感性变量；
 - **E0-D-8 MT 候选合同已建立**：三点按归一化显热分割生成，禁止标成杨凌现场或论文直接值；每点只替换 MT，并重新执行端点、夹点、材料与热量认证；
-- **后续经济/规划切片待完成**：真实 BESS/TES 分部件参数、库存相关损失和辅助用电、VOM/碳/电力结算、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
+- **E0-D-16 TES 盈亏平衡内核已建立**：比较架构与 TES/HYBRID 候选必须使用同一情景、服务、8,784 h 时域、可用新能源和 2024 CNY 成本范围；人工弃电罚值、缺热、非最优结果和零容量 TES 均被拒绝。输出只是一项全系统 TES EAC 上限及燃煤/弃电/PCC/辅机差值，容量归一化不能反解部件单价；当前正式 TES portfolio 与非 TES 系统成本范围未闭合，故只允许探索性阈值；
+- **后续经济/规划切片待完成**：真实 BESS/TES 分部件参数、VOM/碳/电力结算、E0-D-16 与实际年度模型的无罚值同服务结果接缝、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
 
 详细证据和禁止启动条件见 `docs/03_sci_paper/e0_validation_status.md`。
 
@@ -550,7 +551,7 @@ E_T^{h,rate}=D\frac{Q^{MT\rightarrow LT,h}}{\eta_{Mh}}
 
 ## 8. 算力预算与 HiGHS 执行策略
 
-当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。远端最近全量回归为 `258 passed in 21.36s`；E0-D-15 本地重跑为 `273 passed in 30.31s`（关闭 pytest cache），尚未同步服务器。既有 E0-B/E0-C canonical hashes 保持锁定。
+当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。远端最近全量回归为 `258 passed in 21.36s`；E0-D-16 本地重跑为 `279 passed in 31.57s`（关闭 pytest cache），尚未同步服务器。既有 E0-B/E0-C canonical hashes 保持锁定。
 
 主模型采用 `Pyomo + highspy`，不依赖 Gurobi。推荐：
 
@@ -626,6 +627,8 @@ src/tes_bess_boundary/
 ├── economics.py              # 已实现：E0-D-1 生命周期核 + E0-D-2 年度时域/固定容量成本合同
 ├── price_basis.py            # 已实现：官方价格快照与转换审计
 ├── tes_cost_mapping.py       # 已实现：TES 容量/温区与成本分母合同
+├── formal_tes_costs.py       # 已实现：TES 12 账户正式成本就绪度门禁
+├── tes_break_even.py         # 已实现：全系统 EAC 上限与价格无关物理价值差值
 ├── tes_topology_evidence.py  # 已实现：五路径证据与创新披露合同
 ├── tes_heat_delivery.py      # 已实现：MT→LT 夹点、材料温区、热量与流量审计
 ├── tes_temperature_scenarios.py # 已实现：MT 归一化焓分配三点候选与认证
@@ -638,7 +641,7 @@ src/tes_bess_boundary/
     ├── chp.py                # 已实现：凸包、显式低负荷规则、UC 与精确 PWL
     ├── bess.py               # 已实现：SOC 与最小 Pyomo 组件
     └── molten_salt.py        # 已实现：三温区守恒与最小 Pyomo 组件
-tests/                        # 已实现：249 个本地/OpenBayes E0 回归测试
+tests/                        # 已实现：279 个本地 E0 回归测试；OpenBayes 最近 258 项
 ```
 
 正式 E0-C 产物和 E0-D-4 价格快照路径不变。E0-D-8 MT 合同与 E0-D-9A/9B-1/9B-2 损失—泵耗合同分别见 `e0_tes_mt_scenario_contract.md` 和 `e0_tes_loss_auxiliary_contract.md`。当前 `model.py` 仍是 fixed-capacity 物理/调度模型；杨凌现场温压和泵系统参数、具有明确价格年的正式参数 portfolio、完整 TAC 与容量规划仍未实现。这些 E0 剩余项通过前不得启动批量扫描。

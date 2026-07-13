@@ -15,6 +15,7 @@ The current E0 slice contains:
 - a unique salt/tank/five-port cost-capacity ledger with component temperature-range checks;
 - a pre-model cost-evidence gate that separately checks venue tier, price basis, capacity denominator, technology boundary, provenance, and allowed use before any source can certify a formal baseline;
 - a 12-account formal-TES readiness gate that rejects aggregate anchors from component accounts and requires explicit approval before combining multiple source packages;
+- a penalty-free TES break-even accounting seam that reports one whole-system EAC ceiling plus fuel, curtailment, PCC-export, and auxiliary-energy deltas without allocating the ceiling back to components;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -51,6 +52,12 @@ from aggregate calibration anchors and requires explicit approval for a multi-so
 evidence portfolio. All 12 accounts remain blocked under the strict route. The DLR
 2020-EUR two-tank Solar Salt value is retained for calibration/sensitivity only and
 cannot certify the component ledger or the proposed three-temperature HITEC topology.
+E0-D-16 therefore leaves every TES ownership price unset and computes only the
+maximum whole-system TES EAC consistent with a matched annual service outcome. It
+rejects artificial curtailment penalties, heat shortfall, non-optimal outcomes,
+zero-capacity TES, and cross-scope comparisons; normalized views cannot be allocated
+back to components. The current claim remains exploratory because the formal TES
+portfolio and complete non-TES system-cost scope are both unfinished.
 Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
@@ -106,7 +113,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those private files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the
 formal directory is not in the local repository layout. The current local result is
-`273 passed in 30.31s` with the pytest cache disabled. E0-D-14/15 have not yet been synchronized to OpenBayes. The
+`279 passed in 31.57s` with the pytest cache disabled. E0-D-14 through E0-D-16 have not yet been synchronized to OpenBayes. The
 latest remote result therefore remains the E0-D-11 baseline; OpenBayes has matching
 SHA-256 values for that cost-anchor source, test, and public evidence files. With
 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
