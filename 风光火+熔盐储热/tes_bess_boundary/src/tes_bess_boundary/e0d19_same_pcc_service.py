@@ -118,11 +118,22 @@ class E0D19ExecutionRecord:
 
 
 @dataclass(frozen=True)
+class E0D19PCCTraceRecord:
+    window_id: str
+    timestamp: str
+    period_index: int
+    annual_weight_per_hour: float
+    comparator_pcc_export_mw: float
+    candidate_pcc_export_mw: float
+
+
+@dataclass(frozen=True)
 class E0D19Run:
     records: tuple[E0D19Record, ...]
     execution: tuple[E0D19ExecutionRecord, ...]
     heat_path: Path
     vre_path: Path
+    pcc_traces: tuple[E0D19PCCTraceRecord, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -184,6 +195,7 @@ def run_e0d19(
     readiness = build_e0d15_tes_formal_cost_readiness()
     records: list[E0D19Record] = []
     execution: list[E0D19ExecutionRecord] = []
+    pcc_traces: list[E0D19PCCTraceRecord] = []
     for window in windows:
         rows = _window_rows(inputs, window)
         natural_case = _tight_case(
@@ -238,6 +250,27 @@ def run_e0d19(
         )
         comparator_export = _same_pcc_audit(comparator_case, comparator_result)
         candidate_export = _same_pcc_audit(candidate_case, candidate_result)
+        if (
+            len(comparator_result.pcc_export_trace_mw) != window.hours
+            or len(candidate_result.pcc_export_trace_mw) != window.hours
+        ):
+            raise RuntimeError("E0-D-19 requires one PCC trace value per period")
+        annual_weight = 8_784.0 / window.hours
+        pcc_traces.extend(
+            E0D19PCCTraceRecord(
+                window_id=window.window_id,
+                timestamp=row.timestamp.isoformat(timespec="seconds"),
+                period_index=period_index,
+                annual_weight_per_hour=annual_weight,
+                comparator_pcc_export_mw=(
+                    comparator_result.pcc_export_trace_mw[period_index]
+                ),
+                candidate_pcc_export_mw=(
+                    candidate_result.pcc_export_trace_mw[period_index]
+                ),
+            )
+            for period_index, row in enumerate(rows)
+        )
         comparison = compare_e0c_annual_break_even(
             comparator_case,
             comparator_result,
@@ -372,6 +405,7 @@ def run_e0d19(
         execution=tuple(execution),
         heat_path=Path(heat_path),
         vre_path=Path(vre_path),
+        pcc_traces=tuple(pcc_traces),
     )
 
 

@@ -529,6 +529,7 @@ class E0CResult:
     pcc_service_feasibility_warm_start: bool = False
     pcc_service_feasibility_runtime_seconds: float | None = None
     pcc_service_feasibility_deviation_mw: float | None = None
+    pcc_export_trace_mw: tuple[float, ...] = ()
 
     @property
     def objective_basis(self) -> str:
@@ -1406,5 +1407,8 @@ def solve_e0c(
         ),
         pcc_service_feasibility_deviation_mw=(
             service_feasibility_deviation_mw
+        ),
+        pcc_export_trace_mw=tuple(
+            float(value(model.pcc_export[period])) for period in model.periods
         ),
     )
