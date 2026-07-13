@@ -1,0 +1,24 @@
+{
+  "environment": {
+    "highspy": "1.15.1",
+    "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+    "pyomo": "6.10.1",
+    "python": "3.10.18"
+  },
+  "noncanonical": true,
+  "records": [
+    {
+      "maximum_runtime_seconds": 13.321994138882,
+      "minimum_runtime_seconds": 10.736229858827,
+      "warm_start_runtime_seconds": 0.0,
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "maximum_runtime_seconds": 912.542744955048,
+      "minimum_runtime_seconds": 903.951407806017,
+      "warm_start_runtime_seconds": 247.874842482153,
+      "window_id": "winter_fortnight_20240101"
+    }
+  ],
+  "schema": "tes_bess_boundary.e0d23_alternative_dispatch_envelope.v1.execution"
+}

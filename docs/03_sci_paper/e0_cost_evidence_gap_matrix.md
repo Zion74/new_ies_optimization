@@ -90,4 +90,4 @@
 
 在这些条件满足前，E0 仍不通过，E1–E6 批量实验不启动。
 
-E0-D-15 已新增 `formal_tes_costs.py`、聚合锚点隔离和复合证据审批门。E0-D-16/17 新增盈亏平衡内核、实际结果适配和 24 h 探索阈值，E0-D-18 新增 336 h 有界区间，但均不提升来源等级或填充 TES 部件价格。当前完整回归为本地 `288 passed in 56.38s`、OpenBayes `288 passed in 21.23s`。E0-D-12 历史机器 CSV 仍为 13 行且 Rahman 为唯一 true；当前代码参考审计为 16 条记录，正式候选仍只有 Rahman BESS。
+E0-D-15 已新增 `formal_tes_costs.py`、聚合锚点隔离和复合证据审批门。E0-D-16–D-23 又增加盈亏平衡、两窗口区间、同 PCC 服务、运行成本证据门、影子成本和结算暴露包络，但均不提升来源等级或填充 TES 部件价格。当前完整回归为本地 `316 passed in 54.51s`、OpenBayes `316 passed in 26.54s`。E0-D-12 历史机器 CSV 仍为 13 行且 Rahman 为唯一 true；当前代码参考审计为 16 条记录，正式候选仍只有 Rahman BESS。

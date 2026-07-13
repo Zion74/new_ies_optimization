@@ -89,7 +89,7 @@ E0-D-16 只定义了“同服务、无人工罚值”的全系统 TES 年化所�
 - `manifest.json`：SHA-256 `5cec9f0c436bf3c5ea44e8d4cd170939c4fd4dc168c9f31e414feb92ca79a1e5`；
 - `execution.json`：非规范运行时 sidecar。
 
-CSV 浮点值统一保留 6 位小数；本地 Python 3.11/Windows 与远端 Python 3.10/Linux 生成的 CSV/manifest 哈希完全一致。生成 E0-D-17 产物时的完整回归为本地 `284 passed in 76.16s`、OpenBayes `284 passed in 21.37s`；E0-D-18 后当前完整回归已升级为本地 `288 passed in 56.38s`、OpenBayes `288 passed in 21.23s`。
+CSV 浮点值统一保留 6 位小数；本地 Python 3.11/Windows 与远端 Python 3.10/Linux 生成的 CSV/manifest 哈希完全一致。生成 E0-D-17 产物时的完整回归为本地 `284 passed in 76.16s`、OpenBayes `284 passed in 21.37s`；E0-D-18 里程碑为 `288 passed`，当前 E0-D-23 完整回归已升级为本地 `316 passed in 54.51s`、OpenBayes `316 passed in 26.54s`。
 
 复现命令：
 

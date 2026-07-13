@@ -1,6 +1,6 @@
 # SCI 图表与表格计划
 
-更新时间：2026-07-13
+更新时间：2026-07-14
 
 本文件只服务当前“BESS—熔盐 TES 技术选择边界”SCI。旧 EQD/Carnot 图表计划不再定义当前主稿。
 
@@ -23,13 +23,14 @@
 
 | 编号 | 建议标签 | 目的 | 数据来源 | 状态 |
 |---|---|---|---|---|
-| Tab 1 | `tab:system_parameters` | 汇总 CHP、风光、PCC、价格和碳参数及来源 | E0 | 8784 h 结构已核；原始热异常和 CHP 口径待关闭 |
+| Tab 1 | `tab:system_parameters` | 汇总 CHP、风光、PCC、价格和碳参数及来源 | E0 | 正式热量、双机 CHP 与 PCC 物理口径已闭合；项目级价格、碳履约和 VOM 仍 BLOCKED |
 | Tab 2 | `tab:storage_parameters` | 分列 BESS 功率/可用电量与 TES 端口/盐量/罐容、效率、寿命、更换和运维 | E0 | BESS 已闭合；TES 12 个正式账户仍全部 BLOCKED；E0-D-18 的系统 EAC 区间不能填充本表部件价格，DLR 两罐值仍只作聚合校准 |
 | Tab S-E0D18 | `tab:e0d18_screening` | 24 h 精确点与 336 h 有界窗口的燃煤、弃电、PCC、辅机、主目标界及全系统 EAC 区间 | E0 | 可放补充材料；必须标明旧 2019 风光、燃料单项、非全年，以及 336 h 0.48% 主 gap；不进入正式主结果表 |
+| Tab S-E0D23 | `tab:e0d23_settlement_envelope` | D19 可接受调度集内 24 h/336 h PCC 重分配最小值、最大值、primal/dual 与 D22 可行证人 | E0 | 24 h 精确闭合；336 h 只报告严格宽区间。必须标明未赋实际价格、不是结算损失、完整 TAC 或技术赢家 |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |
-| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18 已有 24 h/336 h 单线程验收；E1-E6 批量性能待生成 |
+| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18 与 D23 已有 24 h/336 h 单线程验收；D23 的 336 h 双向极值均到时，必须保留目标方向正确的 primal/dual；E1-E6 批量性能待生成 |
 
 ## 3. 图表信息纪律
 
@@ -52,7 +53,7 @@
 4. Fig 5：形成物理适用域；
 5. Fig 6：形成经济适用域；
 6. Fig 7 + Tab 5：通过全年验证；
-7. 最后补充 Fig S1-S3 与 Tab S1。
+7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23 与 Tab S1。
 
 在 E0、E1 未通过前，不允许先跑大规模边界图。
 

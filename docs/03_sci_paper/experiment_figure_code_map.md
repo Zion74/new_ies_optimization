@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC 与价差暴露、HiGHS 状态与求解误差 | E0-D-19/20 已闭合同 PCC 燃料空间和四账户证据门；E0-D-21 给出不利遗漏成本翻转阈值；E0-D-22 给出当前所选轨迹的固定平价恒等式与价差包络。真实价格、替代最优包络、TES 12 账户、完整 TAC 和容量规划仍未闭合 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、选择轨迹与替代调度价差暴露、HiGHS 状态与求解误差 | E0-D-19/20 已闭合同 PCC 燃料空间和四账户证据门；D21 给出不利遗漏成本翻转阈值；D22 给出当前轨迹包络；D23 的联合极值使 24 h 精确闭合，但 336 h 最大可能暴露仍为 31.228–983.262 GWh/a 的宽区间。真实价格、336 h 收紧、TES 12 账户、完整 TAC 和容量规划仍未闭合 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -86,6 +86,8 @@
 | `数据采集/e0d21_shadow_cost_robustness/` | 两窗口组合/单账户阈值、压力点和源锁定 manifest | E0 | thresholds/stress 各 10 行；24 h 阈值 12.893 百万元/a，336 h 翻转带 15.031–16.330 百万元/a |
 | `src/tes_bess_boundary/pcc_settlement_exposure.py` | 重求解 D19、导出逐时 PCC、审计同年度交付，并计算固定平价恒等式与任意有界价格跨度包络 | E0/E6 | E0-D-22 已实现；24 h/336 h 重新分配 26.010/31.228 GWh/a，未指定实际价格，未证明连续解唯一 |
 | `数据采集/e0d22_pcc_settlement_exposure/` | 360 行两架构逐时 PCC、2 行价差暴露汇总、D19 源锁和科学边界 manifest | E0 | schema v1 规范产物；`actual_price_path_assigned=false`、`trace_solution_uniqueness_proven=false`、`formal_tac=false` |
+| `src/tes_bess_boundary/alternative_dispatch_envelope.py` | D19/D22 双源锁、两架构联合 MILP、主成本/弃电 cap、L1 双向极值、336 h D19 状态 warm start 与方向正确的 primal/dual | E0/E6 | E0-D-23 已实现；24 h 精确闭合，336 h 保留严格宽区间，`formal_tac=false` |
+| `数据采集/e0d23_alternative_dispatch_envelope/` | 两窗口 solver 极值、服务/cap 审计、源锁 manifest 与 runtime sidecar | E0 | schema v1 规范产物；336 h 最大 solver incumbent 未支配 D22 外部可行证人，科学解释须合并两者 |
 | `src/tes_bess_boundary/tes_topology_evidence.py` | 五条 TES 路径的 Energy+ 证据等级、模块化合成与本文扩展披露 | E0/E2-E6 | E0-D-6 已实现；`MT→LT` 供热级联必须显式声明为 proposed extension |
 | `src/tes_bess_boundary/tes_heat_delivery.py` | 温度来源身份、MT→LT 两端夹点、HITEC 温区、可交付热量与盐/水流量 | E0/E2-E6 | E0-D-7 已实现；120/70 °C 只作核心参考情景，MT 不由夹点唯一确定 |
 | `src/tes_bess_boundary/tes_temperature_scenarios.py` | MT 归一化低品位焓占比、三点作者敏感性、来源身份与逐点认证 | E0/E6 | E0-D-8 已实现；232.5/285/337.5 °C 不得写成现场或论文直接值 |
@@ -101,14 +103,15 @@
 | `research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/` | Trevisan/Klasing/Li/Guccione/DLR 逐源复核、访问日志与 TES 正式账户判定 | E0/E2-E6 | 严格路线未闭合；DLR 仅为 2020 EUR 两罐工程聚合锚点 |
 | `research-sessions/2026-07-14-e0d20-operating-cost-evidence/` | 项目台账、官方公开来源、Energy+ 期刊筛选与四账户判定 | E0/E2-E6 | 分时结算、碳履约、CHP VOM、TES VOM 均未获正式证书 |
 | `research-sessions/2026-07-14-e0d21-shadow-cost-robustness/` | D19→D20→D21 区间传播方法、结果备忘和禁止性主张 | E0/E6 | 来源无关风险预算已闭合；没有新增项目成本证书 |
-| `research-sessions/2026-07-14-e0d22-pcc-settlement-exposure/` | 逐时 PCC、价差包络、D21 临界价差交叉解释和唯一性边界 | E0/E6 | 当前选择轨迹暴露已闭合；真实结算与替代最优包络未闭合 |
+| `research-sessions/2026-07-14-e0d22-pcc-settlement-exposure/` | 逐时 PCC、价差包络、D21 临界价差交叉解释和唯一性边界 | E0/E6 | 当前选择轨迹暴露已闭合；由 D23 继续检验替代调度 |
+| `research-sessions/2026-07-14-e0d23-alternative-dispatch-envelope/` | 联合极值、D19 warm start、D22 可行证人和两窗口界值解释 | E0/E6 | 24 h 精确闭合；336 h 保留宽区间并禁止把 dual 当实际暴露 |
 | `docs/03_sci_paper/e0_formal_cost_closure_audit.md` | 严格证据门、关联证据政策及当前证书边界 | E0/E2-E6 | Rahman 来源层证书已颁发；完整 TAC 与 TES 证书未颁发 |
 | `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md` | Rahman 关联证据、2019 USD→2024 CNY、三接缝决策与 fixed-capacity BESS 账本 | E0/E2-E6 | E0-D-14 权威合同 |
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | E0-D-18 新增精确对数段编码与可选连续启停包络；默认旧 formulation 保持兼容，二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | E0-D-18 新增路径特定流量上界、紧 Big-M 与零容量模式固定；正式成本和现场数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-22 回归 | E0 | 本地 `308 passed in 66.43s`；OpenBayes `308 passed in 26.43s`；关闭 pytest cache |
-| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计、逐时 PCC 只读轨迹与 TES 五路径运行审计 | E0-E6 | E0-D-22 增加逐时 PCC 返回接口；完整 TAC、替代最优结算包络与容量规划待补 |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-23 回归 | E0 | 本地 `316 passed in 54.51s`；OpenBayes `316 passed in 26.54s`；关闭 pytest cache |
+| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计、逐时 PCC 只读轨迹与 TES 五路径运行审计 | E0-E6 | D22 增加逐时 PCC 返回接口，D23 在外层复用模型构造联合极值；完整 TAC、336 h 数值收紧与容量规划待补 |
 | `representative_weeks.py` | 4 个聚类周 + 2 个强制极端周 | E3-E5 | 待实现 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
@@ -122,13 +125,13 @@ E0 当前状态详见 `docs/03_sci_paper/e0_validation_status.md`。
 - 求解器：HiGHS，通过 `highspy`；
 - 隔离环境：`/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0`；
 - 已验证：`Pyomo 6.10.1`、`highspy / HiGHS 1.15.1`，微型 MILP 状态 `optimal`；
-- 完整 E0 当前回归：本地 Python 3.11 为 `308 passed in 66.43s`；OpenBayes Python 3.10.18 为 `308 passed in 26.43s`；E0-D-22 源码/测试哈希一致，360 行轨迹、2 行汇总与 manifest 已锁定；
+- 完整 E0 当前回归：本地 Python 3.11 为 `316 passed in 54.51s`；OpenBayes Python 3.10.18 为 `316 passed in 26.54s`；E0-D-23 源码/测试哈希一致，正式两窗口 CSV、manifest 与 runtime sidecar 已锁定；
 - 复现依赖：`风光火+熔盐储热/requirements-highs.txt`；
 - 未安装且当前不需要：`oemof.solph`；
 - 输出路径：`/output`；
 - 初始并发：代表周 `20×2` 线程，8784 h 固定容量 `4×4`，全年重优化 `2×4`；再按峰值 RSS 调整，总 HiGHS 线程不超过 56；
 - 凭据与密码禁止写入仓库、配置或日志。
-- 最新版代码和最小必要杨凌原始数据位于 `/root/e0-b-20260711-019f4f64/`；正式 E0-B 三文件位于其 `formal_data/e0b_formal_2024/`，E0-C 证据位于 `formal_data/e0c_heat_demand_adapter/`，D22 独立再生成件位于 `e0d22_pcc_settlement_exposure_remote/`；D22 锁定 D19 canonical 并重求两窗口轨迹，不上传凭据和非必要保密资料。
+- 最新版代码和最小必要杨凌原始数据位于 `/root/e0-b-20260711-019f4f64/`；正式 E0-B 三文件位于其 `formal_data/e0b_formal_2024/`，E0-C 证据位于 `formal_data/e0c_heat_demand_adapter/`，D23 正式独立再生成件位于 `e0d23_alternative_dispatch_envelope_remote_v3/`；D23 哈希锁定 D19/D22 canonical，不上传凭据和非必要保密资料。
 
 ## 6. 旧稿边界
 

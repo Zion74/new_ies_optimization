@@ -18,6 +18,8 @@ The current E0 slice contains:
 - a penalty-free TES break-even accounting seam that reports one whole-system EAC ceiling plus fuel, curtailment, PCC-export, and auxiliary-energy deltas without allocating the ceiling back to components;
 - a conservative E0-C annual-result adapter with explicit curtailment service, weighted renewable/PCC audits, complete TES-ownership removal, and a primary-cost-incumbent-conditional curtailment tie-break;
 - a hash-locked E0-D-17 historical exploration CLI plus an E0-D-18 performance runner that closes the 24-hour exact point and the 336-hour bounded-gap gate with explicit primal/dual propagation;
+- an E0-D-19 same-PCC-service runner, E0-D-20 operating-cost evidence gate, and E0-D-21 source-independent shadow-cost robustness layer;
+- an E0-D-22 hourly-PCC settlement-exposure exporter plus an E0-D-23 joint alternative-dispatch envelope that reopens both architectures' integer patterns under the D19 cost and curtailment caps;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -69,8 +71,18 @@ logarithmic fuel-segment formulation, an explicitly selected continuous transiti
 envelope, and path-specific TES flow bounds. The 24-hour primary/secondary solves are
 exact; the 336-hour primary gap is 0.004800 and the fixed-integer secondary gap is zero.
 Its whole-system EAC is therefore reported as the bounded interval
-57.572--59.818 million CNY/a, not as a point estimate. Formal sweeps must not start
-until the real BESS/TES component portfolio, site-calibrated
+57.572--59.818 million CNY/a, not as a point estimate.
+E0-D-19 then enforces the same annual PCC export and reduces the fuel-only space to
+12.893 million CNY/a for 24 hours and 15.031--16.330 million CNY/a for 336 hours.
+E0-D-20 keeps settlement, carbon compliance, CHP VOM, and TES VOM blocked rather than
+inventing project values; E0-D-21 propagates those missing accounts as risk budgets.
+E0-D-22 exports the selected hourly PCC traces. E0-D-23 jointly minimizes and
+maximizes their annualized L1 redistribution over the D19-admissible dispatch set:
+the 24-hour envelope closes exactly at 26,009.982--26,010.175 MWh/a, while the
+336-hour minimum and maximum remain bounded only by 0--31,172.816 MWh/a and
+31,228.008--983,262.067 MWh/a, respectively. These are settlement-exposure bounds,
+not actual price losses or a technology winner. Formal sweeps must not start until
+the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
 
@@ -125,9 +137,9 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full results with the
-pytest cache disabled are `288 passed in 56.38s` locally and `288 passed in 21.23s`
-on OpenBayes. E0-D-18 source/tests and the authorized inputs are synchronized. The
-24-hour/336-hour canonical CSV and manifest have identical Windows/Linux SHA-256 values.
+pytest cache disabled are `316 passed in 54.51s` locally and `316 passed in 26.54s`
+on OpenBayes. E0-D-23 source/tests and the authorized D19/D22 inputs are synchronized;
+the formal D23 CSV, manifest, and runtime sidecar have been downloaded and hash-locked.
 With `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
 set explicitly, all remote data-integration tests pass; omitting it addresses a
 nonexistent repository-relative directory and is an environment-path error.
