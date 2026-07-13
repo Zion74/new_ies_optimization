@@ -1,7 +1,7 @@
 # E0-D-12 BESS—TES 成本证据缺口矩阵
 
 更新时间：2026-07-13
-状态：**E0-D-13 已按获批的关联证据政策将 Rahman BESS 升级为唯一正式来源候选，并完成主要非电芯成本映射。TES/电加热器仍无正式候选；BESS 三个模型接缝和完整 TAC 尚未闭合。**
+状态：**E0-D-14 已闭合 Rahman BESS 三个模型接缝并可构造完整 fixed-capacity 生命周期账本。TES/电加热器仍无正式候选；系统级完整 TAC 尚未闭合。**
 
 ## 1. 本轮解决的问题
 
@@ -50,7 +50,7 @@
 | 来源 | 原始信息 | 价格基年审计 | 技术/分母审计 | 当前用途 | 阻断项 |
 |---|---|---|---|---|---|
 | Schmidt et al., *Joule* (2019), DOI `10.1016/j.joule.2018.12.008`, Table S4 | Li-ion：678 USD/kW、802 USD/kWh、10 USD/kW-y、3 USD/MWh；RTE 86%、3250 cycles、shelf life 13 y | Table S4 标题和方法称“2015 input parameters”，但结果图统一写 `US$2018`，原文没有给出把表内裸 `$` 唯一解释成哪一价格币值的完整转换链 | 技术级 power/energy 拆分，不等同于本项目 cell/PCS/BoP 拆分 | 寿命/效率为 `direct_nonprice_parameter`；资本成本为 `blocked_pending_price_base` | 资本成本币值基年与成本边界未闭合 |
-| Rahman et al., *Applied Energy* (2021), DOI `10.1016/j.apenergy.2020.116343` + UAlberta dissertation DOI `10.7939/r3-jgnr-b764` | Chapter 3 明确对应该文章；2019 USD；battery 216.27 USD/kWh、PCS 206.81 USD/kW、BoP 106.75 USD/kW、两类 FOM、VOM、footprint、contingency 与 replacement 边界 | 原基年、表格和分母阻断已关闭 | 5–100 MW 电站级 BESS；主要非电芯账本直接映射 | `formal_candidate` | 来源无阻断；完整 TAC 仍需 cell lifetime、PCS scale、VOM throughput 三接缝 |
+| Rahman et al., *Applied Energy* (2021), DOI `10.1016/j.apenergy.2020.116343` + UAlberta dissertation DOI `10.7939/r3-jgnr-b764` | Chapter 3 明确对应该文章；2019 USD；battery 216.27 USD/kWh、PCS 206.81 USD/kW、BoP 106.75 USD/kW、两类 FOM、VOM、footprint、contingency 与 replacement 边界 | 原基年、表格和分母阻断已关闭 | 5–100 MW 电站级 BESS；与 Schmidt 13 年/3250 EFC、AC 放电 VOM 共同进入 resolved contract | `formal_candidate` | 来源无阻断；fixed-capacity BESS 子账本已闭合，TES/系统 TAC 仍阻断 |
 | Guccione & Guédez, *Energy* (2023), DOI `10.1016/j.energy.2023.128528`, Table 4 | 熔盐电加热器 140 EUR/kWe，脚注为真实报价 | 论文只给出 2021 年平均 USD/EUR=0.84 的换汇口径，未披露报价日期、原始币种或通胀链 | 电加热器组件和 kWe 分母可直接映射 | `blocked_pending_quote_price_year` | 2021 换汇年不能代替报价价格年 |
 | Guccione & Guédez, *Energy* (2024), DOI `10.1016/j.energy.2024.133500`, Table 6 / Appendix | 电加热器电气项 15 EUR/kW、热力项 125 EUR/kW，报价来自 SOLARSCO2OL、SHARP-sCO2、Power2Power 项目框架 | 同样只报告 2021 平均换汇率，没有报价价格年 | 组件直接；但温度因子 1 显示为 16 1/°C，与附录对数公式的缩放不清 | `blocked_pending_quote_price_year_and_formula_scaling` | 报价价格年与温度修正公式未闭合 |
 | 同一 *Energy* (2024) 论文的 molten-salt TES | 双罐 TES 18–23 EUR/kWhth；23 对应 ΔT=98°C，18 对应 ΔT=275°C | 论文换汇年明确，但底层 NREL/历史成本价格年混合 | 双罐 CSP 显热 TES 与本项目 CHP 三罐双服务拓扑不完全相同 | `official_engineering_sensitivity_anchor` | 非作者 bottom-up；底层工程来源与拓扑边界限制 |
@@ -67,7 +67,7 @@
 
 ## 4. 当前可以确定的建模选择
 
-1. **BESS 正式价格来源已唯一锁定。** Rahman 负责 2019 USD 的 battery/PCS/BoP/footprint/FOM/contingency；Schmidt/He 等高等级来源继续负责与本项目 calendar+throughput 合同相容的寿命/退化候选。
+1. **BESS 正式价格与寿命所有权已锁定。** Rahman 负责 2019 USD 的 battery/PCS/BoP/footprint/FOM/contingency/VOM；Schmidt *Joule* 负责 13 年/3250 EFC，replacement 只由 calendar+AC-throughput 核生成。
 2. **NREL 继续只作独立工程敏感性。** 60 MW / 240 MWh、2020 USD 双分母账本不与 Rahman 分项叠加，只用于量级和边界稳健性检查。
 3. **TES 主账本继续采用分项结构，但不填伪精确数值。** Trevisan 提供分母和组件结构；Klasing、Li 提供煤电改造聚合锚点；Wang 提供 HITEC 材料与温区。三者不能在价格年未闭合时拼成所谓“同一基年参数表”。
 4. **明确价格年的异拓扑来源只进入敏感性。** McTigue 和 Vecchi 的 2020 USD 可以直接换算为 `CNY_2024_real`，但只能形成 PTES/TMES 方法或范围锚点，不能升级为杨凌双用途熔盐 TES 基线。
@@ -78,7 +78,7 @@
 
 正式 TAC 参数集必须同时完成：
 
-- Rahman BESS 的 cell lifetime/degradation 接缝、PCS 规模口径与 VOM 吞吐侧决策；
+- 已关闭的 BESS 接缝不得回退：cell lifetime/degradation 使用 Schmidt + 唯一退化核，PCS 常数单价限 5–100 MW，VOM 使用 AC 放电侧；
 - TES 每个分项的底层价格年、规模、温区和包含边界；
 - bottom-up 总额与一个独立煤电改造聚合锚点的误差带校准；
 - FOM、augmentation/replacement、残值和退役成本的逐项互斥；
@@ -87,4 +87,4 @@
 
 在这些条件满足前，E0 仍不通过，E1–E6 批量实验不启动。
 
-E0-D-13 已修改证书门并新增 Rahman 边界模块。本地完整回归为 `263 passed in 34.57s`；OpenBayes 最近结果仍为 `258 passed in 21.36s`，本轮尚未同步。机器 CSV 可读取，13 行中恰有一行 `formal_candidate=true`。
+E0-D-14 已新增 resolved join contract、AC 放电 VOM 和完整 fixed-capacity BESS 构建。本地完整回归为 `268 passed in 32.53s`；OpenBayes 最近结果仍为 `258 passed in 21.36s`，本轮尚未同步。机器 CSV 可读取，13 行中恰有一行 `formal_candidate=true`。

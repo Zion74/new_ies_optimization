@@ -17,10 +17,21 @@ from tes_bess_boundary.cost_evidence import (
     build_e0d10_reference_cost_audit,
 )
 from tes_bess_boundary.economics import (
+    AnnualEconomicsSpec,
+    AnnualHorizonSpec,
+    BESSCellDegradationSpec,
+    BESSVariableOMConversion,
+    BESSVariableOMSpec,
+    FixedCapacityNonCellCost,
+    InstalledAssetQuantity,
     LifecycleAssetClass,
     LifecycleCostConversion,
     LifecycleCostSpec,
     PriceBasisConversion,
+    ProjectFinance,
+    build_lifecycle_cost_portfolio,
+    calibrate_bess_cell_cost,
+    convert_bess_variable_om_spec,
     convert_lifecycle_cost_spec,
 )
 
@@ -37,6 +48,26 @@ class BESSCostMappingStatus(str, Enum):
     DIRECT = "direct"
     DERIVED_DIRECT = "derived_direct"
     DEFERRED = "deferred"
+
+
+class BESSCellLifecycleJoin(str, Enum):
+    """Allowed ownership of cell replacement in the formal baseline."""
+
+    EXTERNAL_CALENDAR_AC_THROUGHPUT = "external_calendar_ac_throughput"
+
+
+class BESSVariableOMBasis(str, Enum):
+    """Physical throughput side used by the formal variable O&M line."""
+
+    AC_DISCHARGE = "ac_discharge"
+
+
+class PCSScalePolicy(str, Enum):
+    """Disclosed PCS treatment where the source lacks a unique module curve."""
+
+    CONSTANT_UNIT_COST_WITHIN_SOURCE_RANGE = (
+        "constant_unit_cost_within_source_range"
+    )
 
 
 @dataclass(frozen=True)
@@ -143,6 +174,10 @@ class Rahman2019BESSCostBasis:
     def deferred_ids(self) -> tuple[str, ...]:
         return tuple(line.item_id for line in self.deferred_lines)
 
+    @property
+    def deferred_by_id(self) -> dict[str, BESSCostBoundaryLine]:
+        return {line.item_id: line for line in self.deferred_lines}
+
     def source_non_cell_specs(self) -> tuple[LifecycleCostSpec, ...]:
         """Build the directly mappable non-cell 2019 USD lifecycle inputs.
 
@@ -235,6 +270,234 @@ class Rahman2019BESSCostBasis:
         return tuple(
             convert_lifecycle_cost_spec(spec, conversion)
             for spec in self.source_non_cell_specs()
+        )
+
+
+@dataclass(frozen=True)
+class RahmanBESSResolvedJoinContract:
+    """Model-ready fixed-capacity joins without inventing a PCS learning curve.
+
+    Rahman owns the 2019 USD price lines. Schmidt et al. own the direct
+    non-price cell life parameters. The existing degradation kernel owns all
+    replacement timing, so Rahman's cycle-only replacement is never charged a
+    second time. Variable O&M and degradation cost are separate coefficients
+    on the same AC-discharge throughput expression.
+    """
+
+    source_basis: Rahman2019BESSCostBasis
+    cell_lifecycle_join: BESSCellLifecycleJoin = (
+        BESSCellLifecycleJoin.EXTERNAL_CALENDAR_AC_THROUGHPUT
+    )
+    variable_om_basis: BESSVariableOMBasis = BESSVariableOMBasis.AC_DISCHARGE
+    pcs_scale_policy: PCSScalePolicy = (
+        PCSScalePolicy.CONSTANT_UNIT_COST_WITHIN_SOURCE_RANGE
+    )
+    cell_parameter_source_locator: str = "10.1016/j.joule.2018.12.008"
+    variable_om_definition_locator: str = "10.1016/j.rser.2014.10.011"
+    pcs_scale_definition_locator: str = "EPRI-DOE Handbook 1001834"
+    cell_calendar_life_years: float = 13.0
+    cell_cycle_life_efc: float = 3250.0
+    pcs_source_min_mw: float = 5.0
+    pcs_source_max_mw: float = 100.0
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.source_basis, Rahman2019BESSCostBasis):
+            raise ValueError("source_basis must be a Rahman2019BESSCostBasis")
+        if (
+            self.cell_lifecycle_join
+            is not BESSCellLifecycleJoin.EXTERNAL_CALENDAR_AC_THROUGHPUT
+            or self.variable_om_basis is not BESSVariableOMBasis.AC_DISCHARGE
+            or self.pcs_scale_policy
+            is not PCSScalePolicy.CONSTANT_UNIT_COST_WITHIN_SOURCE_RANGE
+        ):
+            raise ValueError("formal BESS joins must use the pre-registered policies")
+        for field_name in (
+            "cell_parameter_source_locator",
+            "variable_om_definition_locator",
+            "pcs_scale_definition_locator",
+        ):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a non-empty string")
+        for field_name in (
+            "cell_calendar_life_years",
+            "cell_cycle_life_efc",
+            "pcs_source_min_mw",
+            "pcs_source_max_mw",
+        ):
+            value = getattr(self, field_name)
+            if not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ValueError(f"{field_name} must be finite")
+        if (
+            self.cell_calendar_life_years <= 0.0
+            or self.cell_cycle_life_efc <= 0.0
+            or self.pcs_source_min_mw <= 0.0
+            or self.pcs_source_max_mw < self.pcs_source_min_mw
+        ):
+            raise ValueError("formal BESS life and PCS range values must be positive")
+
+    @property
+    def resolved_join_ids(self) -> tuple[str, ...]:
+        return self.source_basis.deferred_ids
+
+    @property
+    def formal_fixed_capacity_ready(self) -> bool:
+        return self.resolved_join_ids == (
+            "cell_replacement_and_calendar_life_join",
+            "variable_om_throughput_side",
+            "pcs_modular_scale_curve",
+        )
+
+    @property
+    def exact_pcs_multiplicity_curve_supported(self) -> bool:
+        """The cited sources do not identify one reproducible 95% formula."""
+
+        return False
+
+    def validate_pcs_power_mw(self, pcs_power_mw: float) -> None:
+        if (
+            isinstance(pcs_power_mw, bool)
+            or not isinstance(pcs_power_mw, (int, float))
+            or not math.isfinite(float(pcs_power_mw))
+            or not self.pcs_source_min_mw
+            <= float(pcs_power_mw)
+            <= self.pcs_source_max_mw
+        ):
+            raise ValueError(
+                "formal PCS power must remain within the 5-100 MW source range"
+            )
+
+    def source_cell_degradation_spec(
+        self,
+        *,
+        reference_annual_ac_efc: float,
+        ac_deliverable_fraction: float,
+    ) -> BESSCellDegradationSpec:
+        """Join Rahman cell price to Schmidt life in the sole replacement kernel."""
+
+        battery_capex = self.source_basis.direct_by_id["battery_capex"].source_value
+        return BESSCellDegradationSpec(
+            cell_lifecycle=LifecycleCostSpec(
+                asset_id="bess_cell",
+                capacity_unit="MWh_internal",
+                currency=self.source_basis.source_currency,
+                price_base_year=self.source_basis.source_price_base_year,
+                initial_cost_per_unit=1000.0 * battery_capex,
+                service_life_years=self.cell_calendar_life_years,
+                asset_class=LifecycleAssetClass.BESS_CELL,
+                residual_recovery_fraction=0.0,
+            ),
+            cycle_life_ac_efc=self.cell_cycle_life_efc,
+            reference_annual_ac_efc=reference_annual_ac_efc,
+            ac_deliverable_fraction=ac_deliverable_fraction,
+        )
+
+    def convert_cell_degradation_spec(
+        self,
+        *,
+        reference_annual_ac_efc: float,
+        ac_deliverable_fraction: float,
+        conversion: PriceBasisConversion,
+    ) -> BESSCellDegradationSpec:
+        source = self.source_cell_degradation_spec(
+            reference_annual_ac_efc=reference_annual_ac_efc,
+            ac_deliverable_fraction=ac_deliverable_fraction,
+        )
+        converted = convert_lifecycle_cost_spec(source.cell_lifecycle, conversion)
+        return BESSCellDegradationSpec(
+            cell_lifecycle=converted.converted_spec,
+            cycle_life_ac_efc=source.cycle_life_ac_efc,
+            reference_annual_ac_efc=source.reference_annual_ac_efc,
+            ac_deliverable_fraction=source.ac_deliverable_fraction,
+        )
+
+    def source_variable_om_spec(self) -> BESSVariableOMSpec:
+        line = self.source_basis.deferred_by_id["variable_om_throughput_side"]
+        return BESSVariableOMSpec(
+            currency=self.source_basis.source_currency,
+            price_base_year=self.source_basis.source_price_base_year,
+            cost_per_ac_discharge_mwh=line.source_value,
+        )
+
+    def convert_variable_om_spec(
+        self,
+        conversion: PriceBasisConversion,
+    ) -> BESSVariableOMConversion:
+        return convert_bess_variable_om_spec(
+            self.source_variable_om_spec(),
+            conversion,
+        )
+
+    def convert_non_cell_specs(
+        self,
+        *,
+        pcs_power_mw: float,
+        conversion: PriceBasisConversion,
+    ) -> tuple[LifecycleCostConversion, ...]:
+        self.validate_pcs_power_mw(pcs_power_mw)
+        return self.source_basis.convert_non_cell_specs(conversion)
+
+    def build_annual_economics(
+        self,
+        *,
+        horizon: AnnualHorizonSpec,
+        finance: ProjectFinance,
+        conversion: PriceBasisConversion,
+        pcs_power_mw: float,
+        nominal_energy_mwh: float,
+        reference_annual_ac_efc: float,
+        ac_deliverable_fraction: float,
+    ) -> AnnualEconomicsSpec:
+        """Build a complete fixed-capacity BESS ledger on one price bridge."""
+
+        self.validate_pcs_power_mw(pcs_power_mw)
+        if (
+            isinstance(nominal_energy_mwh, bool)
+            or not isinstance(nominal_energy_mwh, (int, float))
+            or not math.isfinite(float(nominal_energy_mwh))
+            or nominal_energy_mwh <= 0.0
+        ):
+            raise ValueError("nominal_energy_mwh must be finite and positive")
+        degradation = self.convert_cell_degradation_spec(
+            reference_annual_ac_efc=reference_annual_ac_efc,
+            ac_deliverable_fraction=ac_deliverable_fraction,
+            conversion=conversion,
+        )
+        cell_cost = calibrate_bess_cell_cost(degradation, finance)
+        non_cell_specs = tuple(
+            item.converted_spec
+            for item in self.convert_non_cell_specs(
+                pcs_power_mw=pcs_power_mw,
+                conversion=conversion,
+            )
+        )
+        portfolio = build_lifecycle_cost_portfolio(
+            non_cell_specs,
+            finance,
+            bess_cell_cost=cell_cost,
+        )
+        power_assets = {
+            "bess_pcs",
+            "bess_bop",
+            "bess_battery_fixed_om",
+            "bess_power_contingency",
+        }
+        quantities = tuple(
+            InstalledAssetQuantity(
+                asset_id,
+                pcs_power_mw if asset_id in power_assets else nominal_energy_mwh,
+            )
+            for asset_id in portfolio.asset_ids
+        )
+        variable_om = self.convert_variable_om_spec(conversion).converted_spec
+        return AnnualEconomicsSpec(
+            horizon=horizon,
+            non_cell_cost=FixedCapacityNonCellCost(
+                portfolio=portfolio,
+                quantities=quantities,
+            ),
+            bess_cell_cost=cell_cost,
+            bess_variable_om=variable_om,
         )
 
 
@@ -367,4 +630,14 @@ def build_rahman2019_bess_cost_basis(
                 ),
             ),
         ),
+    )
+
+
+def build_resolved_rahman_bess_join_contract(
+    evidence_audit: CostEvidenceAudit | None = None,
+) -> RahmanBESSResolvedJoinContract:
+    """Resolve the three model joins while preserving source/model ownership."""
+
+    return RahmanBESSResolvedJoinContract(
+        source_basis=build_rahman2019_bess_cost_basis(evidence_audit)
     )

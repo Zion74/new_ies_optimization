@@ -42,9 +42,11 @@ Energy+ baseline; the workbook/webpage round-trip-efficiency discrepancy is excl
 from the cost anchor rather than silently resolved. E0-D-13 registers the Rahman
 *Applied Energy* paper plus the same-author official University of Alberta dissertation
 chapter as the only BESS formal-source candidate and maps the principal non-cell cost
-lines. This is a source-layer certificate, not a complete formal BESS portfolio: the
-replacement/degradation, VOM-throughput-side, and PCS scale-curve joins remain open,
-and no TES formal-cost candidate has yet passed the gate.
+lines. E0-D-14 closes the fixed-capacity model joins: Rahman supplies cell price only,
+Schmidt supplies the 13-year/3250-EFC non-price life inputs, VOM is charged on AC
+discharge, and the constant PCS unit cost is rejected outside 5-100 MW. The resulting
+BESS lifecycle ledger is complete, while no TES formal-cost candidate has yet passed
+the gate.
 Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
@@ -100,7 +102,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those private files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the
 formal directory is not in the local repository layout. The current local result is
-`263 passed in 34.57s`. E0-D-13 has not yet been synchronized to OpenBayes. The
+`268 passed in 32.53s`. E0-D-14 has not yet been synchronized to OpenBayes. The
 latest remote result therefore remains the E0-D-11 baseline; OpenBayes has matching
 SHA-256 values for that cost-anchor source, test, and public evidence files. With
 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`

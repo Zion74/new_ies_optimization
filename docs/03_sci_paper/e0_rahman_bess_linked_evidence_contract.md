@@ -1,7 +1,7 @@
-# E0-D-13 Rahman BESS 关联证据与成本边界合同
+# E0-D-14 Rahman BESS 关联证据与模型接缝合同
 
 更新时间：2026-07-13
-状态：**关联证据政策已获用户批准；BESS 来源层唯一正式候选已建立，主要非电芯成本映射通过；完整 BESS 生命周期 portfolio 尚有三个模型接缝。**
+状态：**关联证据政策、三个模型接缝与 fixed-capacity BESS 生命周期账本均已闭合；TES 正式成本、系统级完整 TAC、内生容量与 E1–E6 仍未闭合。**
 
 ## 1. 证据资格
 
@@ -82,7 +82,7 @@ f_{USD2019\rightarrow CNY2024}
 
 这些数值只通过 `PriceBasisConversion` 生成，不在代码中另建第二套手算转换链。
 
-## 5. 三个剩余接缝
+## 5. 三个接缝的预注册结论
 
 ### 5.1 电芯 replacement 与退化
 
@@ -93,40 +93,42 @@ N_{cycle}=2731.7DOD^{-0.679}\exp[1.614(1-DOD)]
 =4389.6022.
 \]
 
-按 365 次/年得到约 12.03 年 replacement interval。该逻辑只有 cycle damage；当前模型已经采用 calendar + AC-throughput 双锚点。如果直接同时导入 12.03 年 replacement，会双计退化。下一步必须二选一并预注册：
+按 365 次/年得到约 12.03 年 replacement interval。该逻辑只有 cycle damage；当前模型已经采用 calendar + AC-throughput 双锚点。如果直接同时导入 12.03 年 replacement，会双计退化。
 
-1. Rahman cycle-only replacement 作为独立敏感性；或
-2. Rahman 只提供 cell CAPEX，由现有 Energy+ 日历/循环寿命证据驱动正式双锚点。
-
-推荐第 2 种，Rahman 负责价格，He/Schmidt 等高等级来源负责寿命与退化参数。
+E0-D-14 预注册并实现第二种口径：Rahman **只负责 cell CAPEX**；Schmidt et al., *Joule*（DOI `10.1016/j.joule.2018.12.008`）提供 13 年 shelf life 与 3250 full-equivalent cycles 两个非价格参数；所有 replacement timing 只由现有 `BESSCellDegradationSpec → BESSCellCostCalibration` 核生成。Rahman 的 4389.60 cycle-only 更换周期不进入正式基线，只可作为独立敏感性，因此不存在第二套 replacement 账。
 
 ### 5.2 VOM 吞吐侧
 
-`2.74 USD/MWh` 的表格单位没有明确是充电、放电还是其他吞吐口径。本模型只接受明确的 PCC AC 放电侧 VOM。作者回复或底层原始来源闭合前，正式基线先不计该项，并在敏感性中测试；不得自行选择分母。
+Rahman Table 3.5 的 `2.74 USD/MWh` 转引自 Zakeri & Syri, *Renewable and Sustainable Energy Reviews* 42 (2015) 569–596（DOI `10.1016/j.rser.2014.10.011`）。Rahman 的 LCOS 方法把 `Eout` 定义为每循环放电电量；底层工程定义也把 battery variable O&M 表述为与 discharged electrical energy 成比例。故 E0-D-14 披露并预注册 `AC_discharge` 口径。
+
+该项经同一价格桥转换为 `23.9428497032 CNY_2024/MWh_ac_discharge`。模型新增 `annual_bess_variable_om_cost_cny`，与 cell degradation cycle cost 共用唯一的 `annual_bess_ac_discharge_throughput_mwh`，但二者是不同物理含义的系数并分别列账，各计一次。
 
 ### 5.3 PCS 规模曲线
 
-Rahman 使用 5 MW PCS 模块，并对并联模块使用 95% multiplicity learning。`206.81 USD/kW` 是 S1–S3 的基准单价，不应无说明地外推到任意 endogenous capacity。下一步需在以下口径中预注册一个：
+Rahman 使用 5 MW PCS 模块，并对并联模块使用 95% multiplicity learning；EPRI-DOE Handbook 1001834 给出单模块尺度关系和 multiplicity 概念，但没有给出可唯一复现的 95% 并联公式。为避免伪造 PWL，E0-D-14 预注册 `constant_unit_cost_within_source_range`：
 
-- 主模型使用常数单价，范围限制在论文 5–100 MW 并做规模敏感性；或
-- 将模块/学习曲线线性化为 PWL 成本。
-
-推荐先用常数单价完成 E0 样本验证，再在 E6 比较 PWL 规模修正，避免过早增加整数复杂度。
+- `206.81 USD/kW` 只允许用于 Rahman 研究覆盖的 5–100 MW；
+- `<5 MW` 或 `>100 MW` 的正式构建直接拒绝；
+- 精确 multiplicity PWL 标记为“不受当前来源支持”，仅在获得唯一公式后进入 E6 尺度敏感性。
 
 ## 6. 当前门槛
 
 - `formal_source_qualified=True`：是；
-- `formal_portfolio_ready=False`：是，因为三个接缝仍存在；
+- 来源对象 `formal_portfolio_ready=False`：仍为是，因为它只表示“尚未选择模型口径”的原始证据层；
+- `RahmanBESSResolvedJoinContract.formal_fixed_capacity_ready=True`：是，表示三个接缝已按预注册口径闭合；
 - BESS 来源层正式候选数：1；
 - TES/电加热器正式候选数：0；
-- 完整 TAC：未闭合；
+- fixed-capacity BESS 生命周期子账本：可完整构造；
+- 系统级完整 TAC：未闭合，阻断项已转移为 TES 正式成本、碳/电力结算与后续容量规划接口；
 - E1–E6：仍不启动。
 
 ## 7. 代码与测试
 
 - `src/tes_bess_boundary/cost_evidence.py`：支持并验证同作者官方扩展材料，参考审计只提升 Rahman；
-- `src/tes_bess_boundary/formal_bess_costs.py`：Rahman 数值、边界、非电芯生命周期规格和统一价格转换；
+- `src/tes_bess_boundary/formal_bess_costs.py`：Rahman 数值、边界、三接缝策略、完整 fixed-capacity BESS `AnnualEconomicsSpec` 构建与 5–100 MW 拒绝门；
+- `src/tes_bess_boundary/economics.py`：AC 放电侧 `BESSVariableOMSpec`、价格转换及年度经济合同；
+- `src/tes_bess_boundary/model.py`：退化成本与 VOM 分列，并在年度总成本中各计一次；
 - `tests/test_cost_evidence.py`：关联证据资格、精确分母与降级拒绝；
-- `tests/test_formal_bess_costs.py`：原值、派生值、双计防护、2019 USD→2024 CNY 和阻断接缝；
-- 本地完整回归：`263 passed in 34.57s`，仅保留既有 `.pytest_cache` 写权限警告；
-- OpenBayes：尚未同步本轮 E0-D-13，远端最近基线仍为 `258 passed in 21.36s`。
+- `tests/test_formal_bess_costs.py` 与 `tests/test_annual_economics.py`：寿命所有权、VOM 分母、PCS 范围、完整构建和 HiGHS 年度目标回归；
+- 本地完整回归：`268 passed in 32.53s`，仅保留既有 `.pytest_cache` 写权限警告；
+- OpenBayes：尚未同步本轮 E0-D-14，远端最近基线仍为 `258 passed in 21.36s`。

@@ -238,6 +238,7 @@ class E0CCase:
             if includes_tes and self.tes is not None and not self.tes.cyclic:
                 raise ValueError("annual economics requires a cyclic TES boundary")
             cell_cost = self.economics.bess_cell_cost
+            variable_om = self.economics.bess_variable_om
             if includes_bess and cell_cost is None:
                 raise ValueError(
                     "annual BESS economics requires one canonical BESS cell cost"
@@ -245,6 +246,10 @@ class E0CCase:
             if not includes_bess and cell_cost is not None:
                 raise ValueError(
                     f"{self.architecture.value} annual economics contains a disabled BESS cell cost"
+                )
+            if not includes_bess and variable_om is not None:
+                raise ValueError(
+                    f"{self.architecture.value} annual economics contains disabled BESS variable O&M"
                 )
             calibrated_fraction = self.economics.calibrated_ac_deliverable_fraction
             if includes_bess and calibrated_fraction is not None:
@@ -323,6 +328,7 @@ class AnnualEconomicsAudit:
     non_cell_fixed_cost_cny: float
     bess_calendar_cost_cny: float
     bess_cycle_cost_cny: float
+    bess_variable_om_cost_cny: float
     total_cost_cny: float
 
 
@@ -717,10 +723,15 @@ def build_e0c_model(case: E0CCase) -> object:
             expr=case.economics.bess_cycle_cost_per_ac_discharge_mwh
             * model.annual_bess_ac_discharge_throughput_mwh
         )
+        model.annual_bess_variable_om_cost_cny = Expression(
+            expr=case.economics.bess_variable_om_per_ac_discharge_mwh
+            * model.annual_bess_ac_discharge_throughput_mwh
+        )
         model.annual_total_cost_cny = Expression(
             expr=model.annual_operating_cost_cny
             + model.annual_storage_fixed_eac_cny
             + model.annual_bess_cycle_cost_cny
+            + model.annual_bess_variable_om_cost_cny
         )
         model.validation_cost = Objective(
             expr=model.annual_total_cost_cny,
@@ -835,6 +846,9 @@ def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
             non_cell_fixed_cost_cny=float(value(model.annual_non_cell_fixed_eac_cny)),
             bess_calendar_cost_cny=float(value(model.annual_bess_calendar_cost_cny)),
             bess_cycle_cost_cny=float(value(model.annual_bess_cycle_cost_cny)),
+            bess_variable_om_cost_cny=float(
+                value(model.annual_bess_variable_om_cost_cny)
+            ),
             total_cost_cny=float(value(model.annual_total_cost_cny)),
         )
 

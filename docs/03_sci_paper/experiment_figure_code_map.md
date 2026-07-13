@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、三 MT 损失标定、三档底层泵耗与五路径运行审计、成本证据资格门、BESS 工程敏感性与正式来源账本、HiGHS 状态与求解误差 | E0-D-13 已建立唯一 Rahman BESS 正式来源候选和非电芯映射；TES 正式候选为零，BESS 三接缝、TAC 和内生容量待完成；本地 263 项通过，远端最近 258 项通过 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、三 MT 损失标定、三档底层泵耗与五路径运行审计、成本证据资格门、BESS 工程敏感性与正式来源账本、HiGHS 状态与求解误差 | E0-D-14 已闭合 BESS 寿命/VOM/PCS 三接缝并可构造完整 fixed-capacity BESS 生命周期账本；TES 正式候选仍为零，系统级 TAC 和内生容量待完成；本地 268 项通过，远端最近 258 项通过 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -33,7 +33,7 @@
 | Fig S2 | 参数变化引起的边界移动 | E6 | 边界位移和无差异带 | 待生成 |
 | Fig S3 | 4 个 medoid 周、2 个极端周与年末 48 h | E5 | 周权重、覆盖和极端事件 | 待生成 |
 | Tab 1 | 系统物理、价格与碳参数 | E0 | 来源、基准值、范围、等级证据 | 待核查 |
-| Tab 2 | BESS 与 TES 功率、质量、效率、寿命和成本参数 | E0 | 技术特定参数、成本拆分、价格基年与证据等级 | 证据资格矩阵已建；Rahman BESS 为唯一正式来源候选，非电芯账本已映射；TES 与 BESS 三接缝待闭合 |
+| Tab 2 | BESS 与 TES 功率、质量、效率、寿命和成本参数 | E0 | 技术特定参数、成本拆分、价格基年与证据等级 | Rahman 价格 + Schmidt 寿命、AC 放电 VOM 和 5–100 MW PCS 口径已闭合；TES 正式成本仍待闭合 |
 | Tab 3 | 公平比较口径与四架构定义 | E1/E2 | 服务约束、容量变量、成本项 | 待整理 |
 | Tab 4 | 杨凌基准点最优配置与运行结果 | E2 | TAC、P/E/盐量、弃风、煤耗、碳排 | 待生成 |
 | Tab 5 | 代表周—全年验收 | E5 | 误差、后悔值、MIP gap、运行时间 | 待生成 |
@@ -78,17 +78,18 @@
 | `src/tes_bess_boundary/tes_loss_calibration.py` | Trevisan/Klasing 聚合锚点、低/基准/高损失—伴热作者集、三 MT 等留存反标定与聚合反推量审计 | E0/E6 | E0-D-9B-1 已实现；三 MT 的 24 h Pyomo/HiGHS 交叉验证通过 |
 | `src/tes_bess_boundary/tes_pump_calibration.py` | Trevisan 液压锚点、Wang HITEC 物性、40/50/200 kPa 三档五路径泵耗、45 MWhth 标准循环与 3×3 确定性产物 | E0/E6 | E0-D-9B-2 已实现；结果是作者筛查，不是杨凌现场标定 |
 | `src/tes_bess_boundary/cost_evidence.py` | 期刊层级、价格基年、容量分母、技术边界、底层出处和允许用途的正式成本认证门 | E0/E2-E6 | E0-D-13 支持同作者官方扩展 crosswalk；当前只认证 Rahman BESS，其他来源继续阻断 |
-| `src/tes_bess_boundary/formal_bess_costs.py` | Rahman 2019 USD 原值、边界拆分、非电芯生命周期规格、统一价格转换和剩余接缝 | E0/E2-E6 | E0-D-13 已实现；`formal_source_qualified=True`、`formal_portfolio_ready=False` |
+| `src/tes_bess_boundary/formal_bess_costs.py` | Rahman 2019 USD 原值、边界拆分、三接缝策略、统一价格转换和完整 fixed-capacity BESS 年度经济构建 | E0/E2-E6 | E0-D-14 已实现；原始来源对象继续显式未决，resolved contract 为 `formal_fixed_capacity_ready=True` |
 | `src/tes_bess_boundary/sensitivity_cost_anchors.py` | NREL/OEDI 4 h BESS 工作簿哈希加载、功率/可用能量双分母 CAPEX、含 augmentation FOM 防双计与 2024 CNY 转换 | E0/E4/E6 | E0-D-11 已实现；仅作官方工程敏感性锚点，`formal_baseline_eligible=False` |
 | `数据采集/e0d11_sensitivity_cost_anchors/` | NREL 2022 ATB v3 原工作簿、精确单元格提取 JSON 与 manifest | E0/E4/E6 | 本地/OpenBayes 哈希一致；RTE 0.85/0.86 冲突已排除，不随成本锚点入模 |
 | `research-sessions/2026-07-13-e0d12-formal-cost-closure/` | Energy+ BESS/TES 来源日志、主张—证据图、访问日志和机器候选矩阵 | E0/E2-E6 | 13 个候选中 Rahman BESS 为唯一 `formal_candidate=true`；Guccione/TES 继续阻断 |
+| `research-sessions/2026-07-13-e0d14-bess-join-closure/` | BESS 寿命所有权、AC 放电 VOM 与 PCS 5–100 MW 口径的证据—决策记录 | E0/E2-E6 | E0-D-14 已闭合 fixed-capacity BESS 三接缝；TES/系统 TAC 继续阻断 |
 | `docs/03_sci_paper/e0_formal_cost_closure_audit.md` | 严格证据门、关联证据政策及当前证书边界 | E0/E2-E6 | Rahman 来源层证书已颁发；完整 TAC 与 TES 证书未颁发 |
-| `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md` | Rahman 关联证据、2019 USD→2024 CNY、边界映射与三接缝 | E0/E2-E6 | E0-D-13 权威合同 |
+| `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md` | Rahman 关联证据、2019 USD→2024 CNY、三接缝决策与 fixed-capacity BESS 账本 | E0/E2-E6 | E0-D-14 权威合同 |
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | fixed-capacity 调度合同已实现；二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | fixed-capacity 五端口及损失/伴热/泵耗线性表达已接入；正式成本和数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机/三档损失与泵耗标定、五路径运行审计、成本证据认证、官方工程敏感性与 Rahman 正式来源账本及年度经济回归 | E0 | 本地 E0-D-13 `263 passed in 34.57s`；OpenBayes 最近仍为 `258 passed in 21.36s`，本轮尚未同步 |
-| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、可选年度经济审计与 TES 五路径/损失/辅机运行审计 | E0-E6 | E0-C 物理/调度、E0-D-2 年度接缝、E0-D-9B-2 运行审计及 TES 电输出成本分类门槛已实现；正式 TAC 与容量规划待补 |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机/三档损失与泵耗标定、五路径运行审计、成本证据认证、官方工程敏感性、Rahman 正式 BESS 账本及年度经济回归 | E0 | 本地 E0-D-14 `268 passed in 32.53s`；OpenBayes 最近仍为 `258 passed in 21.36s`，本轮尚未同步 |
+| `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、可选年度经济审计与 TES 五路径/损失/辅机运行审计 | E0-E6 | E0-D-14 已把 BESS 退化成本与 AC 放电 VOM 分列并各计一次；系统级正式 TAC 与容量规划待补 |
 | `representative_weeks.py` | 4 个聚类周 + 2 个强制极端周 | E3-E5 | 待实现 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
@@ -102,7 +103,7 @@ E0 当前状态详见 `docs/03_sci_paper/e0_validation_status.md`。
 - 求解器：HiGHS，通过 `highspy`；
 - 隔离环境：`/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0`；
 - 已验证：`Pyomo 6.10.1`、`highspy / HiGHS 1.15.1`，微型 MILP 状态 `optimal`；
-- 完整 E0 当前回归：本地 Python 3.11 E0-D-13 为 `263 passed in 34.57s`（另有 pytest cache 写权限警告）；OpenBayes Python 3.10.18 最近为 `258 passed in 21.36s`，本轮新增 Rahman 映射代码尚未同步；
+- 完整 E0 当前回归：本地 Python 3.11 E0-D-14 为 `268 passed in 32.53s`（另有 pytest cache 写权限警告）；OpenBayes Python 3.10.18 最近为 `258 passed in 21.36s`，本轮 BESS 三接缝代码尚未同步；
 - 复现依赖：`风光火+熔盐储热/requirements-highs.txt`；
 - 未安装且当前不需要：`oemof.solph`；
 - 输出路径：`/output`；

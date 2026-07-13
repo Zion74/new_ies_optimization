@@ -95,8 +95,8 @@
 - 高质量文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；
 - 现有 `_ch4_*.py` 为探索原型，可复用数据与局部约束，但不足以支撑公平边界结论；
 - 当前 `论文撰写/paper/` 仍是旧 EQD/Carnot 稿件源码，不视为新 SCI 正式稿；
-- `风光火+熔盐储热/tes_bess_boundary/` 已建立独立 `Pyomo + highspy` 包；E0-D-5–D-11 已锁定 TES 物理/作者筛查、成本认证门和 NREL BESS 工程敏感性台账。E0-D-12 完成正式成本闭环审计；E0-D-13 在用户批准关联证据政策后，将 Rahman *Applied Energy* + 同作者官方博士论文登记为唯一 BESS 正式来源候选，并落成 PCS、BoP、围护基础、两类 FOM 与 contingency 的可执行非电芯账本；
-- 原始证据审计确认杨凌表内没有供回水温度、抽汽温压或可直接识别三罐逐时损失/泵耗的设备参数。MT 继续使用 0.25/0.50/0.75 作者显热分割；E0-D-9B-1/2 数值均登记为作者敏感性。Guccione `140 EUR/kWe` 仍缺报价价格年，TES 正式来源仍为零；Rahman 来源虽已合格，但电芯 cycle-only replacement 与 calendar+throughput 退化接缝、VOM 吞吐侧和 5 MW PCS 规模曲线仍阻断完整 BESS portfolio。故完整 TAC、endogenous capacity 和结构化代表周仍未闭合，不得进入 E1 或批量边界实验。合同见 `e0_rahman_bess_linked_evidence_contract.md` 等 E0 文档。
+- `风光火+熔盐储热/tes_bess_boundary/` 已建立独立 `Pyomo + highspy` 包；E0-D-5–D-11 已锁定 TES 物理/作者筛查、成本认证门和 NREL BESS 工程敏感性台账。E0-D-12 完成正式成本闭环审计，E0-D-13 建立 Rahman 唯一正式来源候选；E0-D-14 将 Rahman 电芯价格与 Schmidt 13 年/3250 EFC 接入唯一 calendar+AC-throughput 核，把 VOM 锁定为 AC 放电侧，并把 PCS 常数单价限制在 5–100 MW，可执行构造完整 fixed-capacity BESS 生命周期账本；
+- 原始证据审计确认杨凌表内没有供回水温度、抽汽温压或可直接识别三罐逐时损失/泵耗的设备参数。MT 继续使用 0.25/0.50/0.75 作者显热分割；E0-D-9B-1/2 数值均登记为作者敏感性。Guccione `140 EUR/kWe` 仍缺报价价格年，TES 正式来源仍为零。BESS 三接缝不再是阻断项，但系统级完整 TAC、endogenous capacity 和结构化代表周仍未闭合，因此仍不得进入 E1 或批量边界实验。合同见 `e0_rahman_bess_linked_evidence_contract.md` 等 E0 文档。
 
 ## 9. 与旧 SCI 文档的关系
 

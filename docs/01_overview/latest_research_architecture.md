@@ -93,8 +93,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **文献与科学问题**：已完成高质量文献门槛筛选，当前主空白可辩护；
 - **杨凌数据**：E0-B 正式构建已完成；保留 52,707 行源证据、52,704 点 canonical 网格和 8,784 h net/forward/zero-sensitivity 三口径。单位、老城单点哨兵、29 个东方双负、49 个仅流量为负、2,050 个居民负值与 5/85/226 三段全零均进入结构化质量合同；
 - **机制原型**：已有 `_ch4_*` MILP、储能对照、敏感性和典型期脚本；
-- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12 完成正式成本闭环审计；E0-D-13 在用户批准后将 Rahman *Applied Energy* + 同作者官方博士论文登记为唯一 BESS 正式来源候选，并完成 PCS、BoP、围护基础、FOM 和 contingency 的非电芯边界映射。电芯寿命接缝、VOM 吞吐侧、PCS 规模曲线以及全部 TES 正式成本仍阻断完整 TAC；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，E0-B/E0-C 正式产物及 E0-D-1–D-11 源码、测试和允许上传的公开审计产物均已同步；Python 3.10.18、`Pyomo 6.10.1 + HiGHS 1.15.1` 环境中远端基线为 `258 passed in 21.36s`。E0-D-13 本地完整回归为 `263 passed in 34.57s`，尚未同步服务器；
+- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12 完成正式成本闭环审计，E0-D-13 建立唯一 Rahman BESS 正式来源候选；E0-D-14 又闭合电芯寿命所有权、AC 放电侧 VOM 和 PCS 5–100 MW 尺度口径，可直接构造完整 fixed-capacity BESS 生命周期账本。全部 TES 正式成本、系统级 TAC、内生容量和结构化代表周仍阻断 E1–E6；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，E0-B/E0-C 正式产物及 E0-D-1–D-11 源码、测试和允许上传的公开审计产物均已同步；Python 3.10.18、`Pyomo 6.10.1 + HiGHS 1.15.1` 环境中远端基线为 `258 passed in 21.36s`。E0-D-14 本地完整回归为 `268 passed in 32.53s`，尚未同步服务器；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -107,4 +107,4 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
-- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`
+- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`

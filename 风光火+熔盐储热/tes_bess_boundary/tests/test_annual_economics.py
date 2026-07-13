@@ -341,6 +341,47 @@ def test_bess_annual_efc_limit_binds_on_the_same_ac_basis() -> None:
     assert value(model.annual_total_cost_cny) == pytest.approx(11_453.5445774844)
 
 
+def test_bess_variable_om_is_separate_and_charged_once_on_ac_discharge() -> None:
+    from dataclasses import replace
+
+    from pyomo.environ import value
+
+    from tes_bess_boundary.economics import BESSVariableOMSpec
+    from tes_bess_boundary.model import build_e0c_model, solve_e0c
+    from tes_bess_boundary.solver import create_highs_solver
+
+    base_case = _bess_annual_case((10.0, 10.0, 0.0, 0.0))
+    assert base_case.economics is not None
+    case = replace(
+        base_case,
+        economics=replace(
+            base_case.economics,
+            bess_variable_om=BESSVariableOMSpec(
+                currency="CNY",
+                price_base_year=2024,
+                cost_per_ac_discharge_mwh=0.25,
+            ),
+        ),
+    )
+    model = build_e0c_model(case)
+    result = create_highs_solver().solve(model)
+
+    assert str(result.solver.termination_condition).lower() == "optimal"
+    assert value(model.annual_bess_ac_discharge_throughput_mwh) == pytest.approx(
+        17_568.0
+    )
+    assert value(model.annual_bess_cycle_cost_cny) == pytest.approx(2_219.10380663265)
+    assert value(model.annual_bess_variable_om_cost_cny) == pytest.approx(4_392.0)
+    assert value(model.annual_total_cost_cny) == pytest.approx(10_391.50249404791)
+
+    public_result = solve_e0c(case)
+    assert public_result.annual_economics is not None
+    assert public_result.annual_economics.bess_variable_om_cost_cny == pytest.approx(
+        4_392.0
+    )
+    assert public_result.objective_value == pytest.approx(10_391.50249404791)
+
+
 def test_none_economics_preserves_the_exact_e0c_public_boundary() -> None:
     from dataclasses import asdict
 

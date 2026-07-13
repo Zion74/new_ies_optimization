@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**现金流与年化计算核、固定容量年度接缝、2024 CNY 转换/成本分类、官方价格快照、TES 容量/温区映射、损失/辅助用电作者筛查、成本来源认证门，以及 E0-D-13 Rahman BESS 正式来源与非电芯账本均已实现；BESS 三接缝、TES 正式参数表、正式 TAC 项和内生容量仍待完成。** 本文件只锁定核算方法，不构成技术优劣结论。
+状态：**现金流与年化计算核、固定容量年度接缝、2024 CNY 转换/成本分类、官方价格快照、TES 容量/温区映射、损失/辅助用电作者筛查、成本来源认证门，以及 E0-D-14 完整 fixed-capacity BESS 生命周期账本均已实现；TES 正式参数表、系统级 TAC 项和内生容量仍待完成。** 本文件只锁定核算方法，不构成技术优劣结论。
 
 ## 1. 目的与边界
 
@@ -227,4 +227,4 @@ C^{storage}=C^{fixed,ann}+c_E^{cyc}\Theta_B
 
 E0-D-11 后本地完整回归为 `258 passed in 38.13s`，OpenBayes 为 `258 passed in 21.36s`。MT 三点仍是作者敏感性，`MT→LT` 仍是 proposed extension；库存—环境温差损失、固定伴热、五路径泵耗、PCC 防双计、三 MT 损失标定、三档底层液压泵耗、统一运行审计和成本证据认证门已经实现。NREL 2022 ATB 的 4 h utility BESS 已形成可复现的 2020 USD 双分母敏感性账本，并禁止含 augmentation 的 FOM 与第二套 replacement ledger 重复计费；但该工程锚点 `formal_baseline_eligible=False`，不能关闭 Energy+ 正式成本缺口。杨凌正式温压/泵系统数值及正式成本仍未闭合；年度目标仍需补齐合格的明确价格年真实成本、VOM、碳价和电力结算后才能称为正式 TAC。
 
-E0-D-13 当前更新：Rahman 关联证据包已成为唯一 BESS 正式来源候选，2019 USD 的主要非电芯分项可通过同一官方价格桥换算到 2024 CNY；本地完整回归为 `263 passed in 34.57s`。但 cell lifetime/degradation、PCS scale 和 VOM throughput 三接缝未闭合，故仍不能构造完整 BESS `AnnualEconomicsSpec` 或称为正式 TAC。OpenBayes 尚未同步本轮代码。
+E0-D-14 当前更新：Rahman 负责 2019 USD 电芯与非电芯价格，Schmidt *Joule* 负责 13 年/3250 EFC 非价格寿命参数；replacement 只由 calendar+AC-throughput 核生成。`2.74 USD_2019/MWh` 按 AC 放电侧转换并与退化 cycle cost 分列，PCS 常数单价只允许 5–100 MW。代码现可构造完整 fixed-capacity BESS `AnnualEconomicsSpec`，本地完整回归为 `268 passed in 32.53s`。这只关闭 BESS 生命周期子账本，不等于 TES 与系统级正式 TAC 已闭合；OpenBayes 尚未同步本轮代码。

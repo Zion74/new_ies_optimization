@@ -25,7 +25,7 @@
 7. 涉及寿命成本、替换/残值或 BESS 退化时读 `docs/03_sci_paper/e0_lifetime_economics_contract.md`
 8. 涉及 BESS/TES 真实成本参数、价格基年或证据等级时读 `docs/03_sci_paper/e0_parameter_evidence_portfolio.md`
 9. 判断某个成本值能否进入正式 TAC 时读 `docs/03_sci_paper/e0_cost_evidence_gap_matrix.md`
-10. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、非电芯成本映射或三个剩余接缝时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
+10. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
 11. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
 12. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
 13. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`

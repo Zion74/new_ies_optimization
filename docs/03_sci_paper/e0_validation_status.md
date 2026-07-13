@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-11 通过；E0-D-12 正式成本闭环审计完成；E0-D-13 已将 Rahman 关联证据包登记为唯一 BESS 正式来源候选，并完成主要非电芯边界映射。E0 总门槛仍未通过。** BESS 的电芯寿命接缝、VOM 吞吐侧和 PCS 规模曲线仍待闭合；TES/电加热器正式来源仍为零，完整 TAC、内生容量及 E1–E6 正式实验不得启动。
+状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-11 通过；E0-D-12 正式成本闭环审计完成；E0-D-13 建立 Rahman 唯一 BESS 正式来源候选；E0-D-14 已闭合电芯寿命、AC 放电 VOM 与 PCS 尺度三个接缝，可构造完整 fixed-capacity BESS 生命周期账本。E0 总门槛仍未通过。** TES/电加热器正式来源仍为零，系统级完整 TAC、内生容量及 E1–E6 正式实验不得启动。
 
 ## 1. 已实现代码
 
@@ -20,7 +20,7 @@
 - `economics.py`：统一项目 NPV/EAC、计划更换、末年残值、FOM、BESS 日历—AC 放电吞吐两锚点、固定寿命敏感性、多部件 portfolio、币种/基年/项目期同质性和结构性电芯防双计；E0-D-3 又增加显式价格指数+汇率转换审计、2024 CNY 年度口径，以及 `salt_to_steam_generator / existing_turbine_reuse / new_power_block` 三类成本角色；
 - `price_basis.py`：加载 E0-D-4 官方价格快照，校验 manifest、snapshot 与逐源 SHA-256，拒绝篡改和同币种重复序列，并生成唯一 `PriceBasisConversion`；
 - `cost_evidence.py`：按期刊层级、价格基年、容量分母、技术边界、底层出处和允许用途执行正式成本资格门，并验证同作者官方扩展 crosswalk；当前参考审计只为 Rahman BESS 颁发一个来源层证书；
-- `formal_bess_costs.py`：固化 Rahman 2019 USD 原值、Li-ion footprint 派生围护基础成本、PCS/BoP/FOM/contingency 非电芯账本、统一价格转换与三个剩余模型接缝；
+- `formal_bess_costs.py`：固化 Rahman 2019 USD 原值、Li-ion footprint 派生围护基础成本、PCS/BoP/FOM/contingency 非电芯账本，并实现三接缝策略、统一价格转换和完整 fixed-capacity BESS 年度经济构建；
 - `sensitivity_cost_anchors.py`：加载 E0-D-11 NREL/OEDI 工作簿哈希包，保留 BESS `USD/kW_DC + USD/kWh_usable,DC` 双分母，闭合 4 h CAPEX/FOM，执行 2020 USD→2024 CNY 转换，并禁止含 augmentation 的源 FOM 与独立 replacement ledger 双计；
 - E0-D-12 文献审计由 E0-D-13 更新：机器矩阵 13 个候选中 Rahman 为唯一 `formal_candidate=true`；Guccione、Ahmadi/PNNL 与其他 TES 来源保持原降级；
 - `tes_cost_mapping.py`：将同一批盐、完整 LT→HT 显热库存、三罐和五端口转换为唯一 `kg / kWh_th / kW_el / kW_th` 容量账本；按部件温段检查文献温区，并把 bottom-up 成本安全绑定到寿命 portfolio；
@@ -49,10 +49,10 @@
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| 本地独立 Python 3.11 环境 | 原始热 Excel、正式双构建、严格输入适配、六个真实双机桥接、CHP/储能物理、UC/PWL、四架构模型、寿命/年度经济、TES 温区/拓扑/夹点/MT、损失辅机、成本认证门、官方工程敏感性锚点与 Rahman 正式来源账本 | `263 passed in 34.57s`；另有 1 个 `.pytest_cache` 写权限警告，不影响测试 |
+| 本地独立 Python 3.11 环境 | 原始热 Excel、正式双构建、严格输入适配、六个真实双机桥接、CHP/储能物理、UC/PWL、四架构模型、寿命/年度经济、TES 温区/拓扑/夹点/MT、损失辅机、成本认证门、官方工程敏感性锚点与 Rahman 正式 BESS 账本 | `268 passed in 32.53s`；另有 1 个 `.pytest_cache` 写权限警告，不影响测试 |
 | OpenBayes Python 3.10.18 隔离环境 | 已同步 E0-D-11 源码、测试和公开 NREL 工作簿证据包并核对 SHA-256，显式注入正式 E0-B 数据目录 | `258 passed in 21.36s` |
 
-本地与远端基线均使用 `Pyomo 6.10.1`、`highspy 1.15.1`。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式 E0-B 数据位于 `/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024/`。远端显式数据合同为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。E0-D-13 本地为 263 项通过；本轮尚未同步远端，因此远端最近仍为 258 项通过。`economics=None` 的 canonical CSV/manifest 仍锁定。
+本地与远端基线均使用 `Pyomo 6.10.1`、`highspy 1.15.1`。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式 E0-B 数据位于 `/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024/`。远端显式数据合同为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。E0-D-14 本地为 268 项通过；本轮尚未同步远端，因此远端最近仍为 258 项通过。`economics=None` 的 canonical CSV/manifest 仍锁定。
 
 E0-D-1 历史同步快照的本地/远端 SHA-256 为：
 
@@ -103,7 +103,7 @@ E0-D-8 当前同步文件的本地/远端 SHA-256 为：
 - `src/tes_bess_boundary/tes_temperature_scenarios.py`：`724252cf6c89fa5508a4a28d07e15099048dcf69e0932d63531a1b86869e960b`；
 - `tests/test_tes_temperature_scenarios.py`：`485be545e60d64836fe4beb5814bd7508e532ee7965b9e0b8f9a70ea6cf1afe5`。
 
-E0-D-9A/9B-1/9B-2 文件的本地/远端 SHA-256 见 `e0_tes_loss_auxiliary_contract.md`；E0-D-11 公开工作簿证据包哈希见 `e0_sensitivity_cost_anchor_contract.md`，本地/远端一致。E0-D-13 本地 SHA-256 为：`cost_evidence.py` `2b32079c6f7294d8303f51ec53d8f389abb141326e5825392bb500c22252080a`、`formal_bess_costs.py` `5b96b08d16dfd35a10f02928026e3bf6bdcbfc70fa1ac7c7357b16516e97874f`、`test_cost_evidence.py` `496e7a4abec80ebe697a7943d8bde5b93675f9ea1de262f2e2b81d8bf8280611`、`test_formal_bess_costs.py` `c64a0124d767a4db332682ce857196adb40ad4b6552f5d52ccc28479427bebda`。本地完整回归为 `263 passed in 34.57s`；远端尚未同步本轮代码。
+E0-D-9A/9B-1/9B-2 文件的本地/远端 SHA-256 见 `e0_tes_loss_auxiliary_contract.md`；E0-D-11 公开工作簿证据包哈希见 `e0_sensitivity_cost_anchor_contract.md`，本地/远端一致。E0-D-14 本地 SHA-256 为：`economics.py` `db0198ae5f29398e616b4986fb1370aee916e47d94f1f099ab1bcd7fe03392bf`、`formal_bess_costs.py` `37e132a684fa58736e93212caea0a1b44d0c91f7da7303c0eef7d75859cacaa3`、`model.py` `29cb4ef86c6f606bd38c65d17da93616529bab85f727fe1c318be5f375e7e568`、`test_annual_economics.py` `d432d27c529c2350a6259bd0cab01bec742cb0a62056fdd1cfbc0e5b28f9db7e`、`test_formal_bess_costs.py` `d66610b280c7b941f940dbc675211fb32795067ae6e23e4a7e6c61e921cb474b`。本地完整回归为 `268 passed in 32.53s`；远端尚未同步本轮代码。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -205,7 +205,7 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. E0-D-8 已注册 MT 归一化三点作者敏感性；继续争取杨凌一次网供回水温度、抽汽温压、换热器端差或 UA，但不得用现场缺失阻止敏感性验证，也不得把三点冒充现场值；
 2. E0-D-9B-2 已完成三档底层液压泵耗、标准循环及统一模型五路径/损失/辅机审计；后续正式算例直接复用该审计接口，继续争取杨凌泵曲线、压降和运行记录，但不得把作者情景升级为现场基线；
-3. E0-D-13 已关闭 BESS 正式价格来源、共同 2019 USD 与主要非电芯分项；下一步先闭合 cell lifetime/degradation、PCS scale、VOM throughput 三接缝，再处理 TES 分项价格年/包含边界和独立煤电改造聚合校准；工程锚点和聚合锚点均不能与被其包含的分项成本叠加；
+3. E0-D-14 已闭合 BESS 正式价格、cell lifetime/degradation、PCS 5–100 MW 和 AC-discharge VOM；下一步集中处理 TES 分项价格年/包含边界和独立煤电改造聚合校准，工程锚点和聚合锚点均不能与被其包含的分项成本叠加；
 4. 把 fixed-capacity 模型升级为正式 endogenous capacity，并用真实参数完成四架构 24 h 与 2 周样本验证，锁定 98–105 MW 低负荷煤耗规则敏感性；
 5. 为 E5 单独建立代表周块、显式 warm-up/计分角色和跨块状态边界；当前 `AnnualHorizonSpec` 不接受裸零权重；
 6. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。

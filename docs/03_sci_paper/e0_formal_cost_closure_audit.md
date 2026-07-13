@@ -1,7 +1,7 @@
 # E0-D-12 正式成本证据闭环审计
 
 更新时间：2026-07-13
-状态：**用户已批准 Rahman 关联证据政策；已颁发一个 BESS 来源层正式证书，TES/完整 TAC 与 E0 总门槛继续阻断。**
+状态：**用户已批准 Rahman 关联证据政策；BESS 来源证书与三个 fixed-capacity 模型接缝均已闭合，TES/系统级完整 TAC 与 E0 总门槛继续阻断。**
 
 ## 1. 审计问题
 
@@ -22,7 +22,7 @@ E0-D-12 不再问“能否找到一个看起来合理的单价”，而是检查
 | Guccione & Guédez, *Energy* (2023), DOI `10.1016/j.energy.2023.128528` | 熔盐电加热器 `140 EUR/kWe`，Table 4，真实报价 | 直接组件和分母合格；报价价格年缺失，`blocked_pending_quote_price_year` |
 | Guccione & Guédez, *Energy* (2024), DOI `10.1016/j.energy.2024.133500` | 电加热器 `15 EUR/kW` 电气项 + `125 EUR/kW` 热力项；报价来自三个欧盟项目框架 | 报价价格年缺失；温度因子缩放还需作者澄清，不编码 |
 | 同一 *Energy* (2024) 论文 | 双罐熔盐 TES `18–23 EUR/kWh_th`，对应 `ΔT=275–98°C` | 底层来自 NREL/历史工程来源；仅为工程敏感性锚点 |
-| Rahman et al., *Applied Energy* (2021), DOI `10.1016/j.apenergy.2020.116343` + University of Alberta 官方博士论文，DOI `10.7939/r3-jgnr-b764` | 博士论文明确说明 Chapter 3 已发表为该 *Applied Energy* 文章；扩展章节给出 2019 USD、完整分项、容量分母、replacement/FOM 与退役排除边界 | 用户已批准关联证据政策；`formal_candidate=true`，来源层证书已颁发；完整 TAC 仍需三个模型接缝 |
+| Rahman et al., *Applied Energy* (2021), DOI `10.1016/j.apenergy.2020.116343` + University of Alberta 官方博士论文，DOI `10.7939/r3-jgnr-b764` | 博士论文明确说明 Chapter 3 已发表为该 *Applied Energy* 文章；扩展章节给出 2019 USD、完整分项、容量分母、replacement/FOM 与退役排除边界 | 用户已批准关联证据政策；`formal_candidate=true`，三接缝 resolved contract 已实现；TES/系统 TAC 仍阻断 |
 | Ahmadi et al., *Applied Energy* (2025), DOI `10.1016/j.apenergy.2025.126706` | LiB 细分到 energy/PCS/BoP/construction/replacement/FOM/VOM | 原文明示为 PNNL 2030 projections，只作官方预测敏感性 |
 
 两篇 Guccione 论文报告的 2021 年平均 `USD/EUR=0.84` 只是换汇口径，不足以说明报价发生于 2021 年，也不能据此执行 2021 EUR→2024 CNY 换算。
@@ -43,12 +43,12 @@ E0-D-12 不再问“能否找到一个看起来合理的单价”，而是检查
 下一步仍执行严格模型门槛：
 
 1. 向 Guccione/Guédez 或相关项目方确认报价日期、原始币种和是否已做通胀归一化，并澄清 2024 温度因子公式缩放；
-2. Rahman 的 PCS、BoP、围护基础、battery/PCS FOM 和 contingency 已完成互斥映射；继续闭合 cell cycle-only replacement 与 calendar+throughput 合同、VOM 吞吐侧及 5 MW PCS 规模曲线；
+2. Rahman 的 PCS、BoP、围护基础、battery/PCS FOM 和 contingency 已完成互斥映射；E0-D-14 又锁定 Schmidt 13 年/3250 EFC 唯一退化核、AC 放电 VOM 与 5–100 MW PCS 常数单价，后续不得叠加 Rahman cycle-only replacement 或伪造 95% PWL；
 3. TES 如仍无法形成单层正式组合，是否采用复合证据路线需另行批准，不能由本次 BESS 关联证据批准自动扩张。
 
 2026-07-13 的进一步复核改变了 Rahman 行的访问判定：University of Alberta Scholaris 官方仓储公开了作者博士论文，且论文明确将 Chapter 3 与 Rahman et al. (2021, *Applied Energy*) 交叉对应；该章已恢复完整数值表、2019 USD 基年、容量分母和成本边界。Guccione 行没有同样闭合：KTH 全文与 CORDIS/SHARP-sCO2 公开材料仍未公开报价日期、原币、规模和完整成本边界，也没有公开勘误能够解释温度因子 `16` 的缩放。同日，两封作者询证邮件已由用户授权并通过浙江大学邮箱发送；Rahman 邮件回复可用于再确认，Guccione/Guédez 回复仍是解除电加热器阻断的关键。Unpaywall 仍需用户提供真实邮箱。
 
-同日用户批准 Rahman 关联证据政策，E0-D-13 新增 `formal_bess_costs.py` 与测试：`USD_2019→CNY_2024_real` 因子为 `8.73826631502364`，主要非电芯规格已可审计生成；来源合格与 `formal_portfolio_ready` 被分开，后者在三个接缝闭合前保持 `false`。本地完整回归为 `263 passed in 34.57s`，远端尚未同步本轮代码。
+同日用户批准 Rahman 关联证据政策，E0-D-13 新增 `formal_bess_costs.py` 与测试：`USD_2019→CNY_2024_real` 因子为 `8.73826631502364`，主要非电芯规格已可审计生成。E0-D-14 保留原始来源对象 `formal_portfolio_ready=false`，同时新增 `formal_fixed_capacity_ready=true` 的 resolved contract；完整 BESS 年度经济账本已可构造。本地完整回归为 `268 passed in 32.53s`，远端尚未同步本轮代码。
 
 机器证据与访问日志位于：
 

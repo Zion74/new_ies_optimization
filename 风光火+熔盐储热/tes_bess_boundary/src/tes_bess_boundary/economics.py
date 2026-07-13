@@ -328,6 +328,106 @@ class PriceBasisConversion:
 
 
 @dataclass(frozen=True)
+class BESSVariableOMSpec:
+    """Variable BESS O&M charged once on AC-side discharge throughput."""
+
+    currency: str
+    price_base_year: int
+    cost_per_ac_discharge_mwh: float
+
+    def __post_init__(self) -> None:
+        if (
+            not isinstance(self.currency, str)
+            or len(self.currency) != 3
+            or not self.currency.isalpha()
+            or self.currency != self.currency.upper()
+        ):
+            raise ValueError("currency must be an uppercase ISO 4217 code")
+        if (
+            isinstance(self.price_base_year, bool)
+            or not isinstance(self.price_base_year, int)
+            or self.price_base_year <= 0
+        ):
+            raise ValueError("price_base_year must be a positive integer")
+        if (
+            not _is_finite_real(self.cost_per_ac_discharge_mwh)
+            or self.cost_per_ac_discharge_mwh < 0.0
+        ):
+            raise ValueError(
+                "cost_per_ac_discharge_mwh must be finite and non-negative"
+            )
+
+
+@dataclass(frozen=True)
+class BESSVariableOMConversion:
+    """Auditable price-basis bridge for an AC-discharge variable O&M rate."""
+
+    source_spec: BESSVariableOMSpec
+    conversion: PriceBasisConversion
+    converted_spec: BESSVariableOMSpec
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.source_spec, BESSVariableOMSpec) or not isinstance(
+            self.converted_spec,
+            BESSVariableOMSpec,
+        ):
+            raise ValueError("variable O&M conversion specs must be canonical")
+        if not isinstance(self.conversion, PriceBasisConversion):
+            raise ValueError("variable O&M conversion must be canonical")
+        if (
+            self.source_spec.currency != self.conversion.source_currency
+            or self.source_spec.price_base_year
+            != self.conversion.source_price_base_year
+        ):
+            raise ValueError("variable O&M conversion source must be canonical")
+        expected = BESSVariableOMSpec(
+            currency=self.conversion.target_currency,
+            price_base_year=self.conversion.target_price_base_year,
+            cost_per_ac_discharge_mwh=(
+                self.source_spec.cost_per_ac_discharge_mwh
+                * self.conversion.conversion_factor
+            ),
+        )
+        if self.converted_spec != expected:
+            raise ValueError("variable O&M conversion must be canonical")
+
+    @property
+    def conversion_factor(self) -> float:
+        return self.conversion.conversion_factor
+
+
+def convert_bess_variable_om_spec(
+    spec: BESSVariableOMSpec,
+    conversion: PriceBasisConversion,
+) -> BESSVariableOMConversion:
+    """Convert a discharge-basis BESS variable O&M rate exactly once."""
+
+    if not isinstance(spec, BESSVariableOMSpec):
+        raise ValueError("spec must be a BESSVariableOMSpec")
+    if not isinstance(conversion, PriceBasisConversion):
+        raise ValueError("conversion must be a PriceBasisConversion")
+    if (
+        spec.currency != conversion.source_currency
+        or spec.price_base_year != conversion.source_price_base_year
+    ):
+        raise ValueError(
+            "spec must match the conversion source currency and price base year"
+        )
+    converted = BESSVariableOMSpec(
+        currency=conversion.target_currency,
+        price_base_year=conversion.target_price_base_year,
+        cost_per_ac_discharge_mwh=(
+            spec.cost_per_ac_discharge_mwh * conversion.conversion_factor
+        ),
+    )
+    return BESSVariableOMConversion(
+        source_spec=spec,
+        conversion=conversion,
+        converted_spec=converted,
+    )
+
+
+@dataclass(frozen=True)
 class LifecycleCostConversion:
     """Auditable source, conversion contract, and converted lifecycle spec."""
 
@@ -1233,6 +1333,7 @@ class AnnualEconomicsSpec:
     horizon: AnnualHorizonSpec
     non_cell_cost: FixedCapacityNonCellCost | None = None
     bess_cell_cost: BESSCellCostCalibration | FixedLifeBESSCellCost | None = None
+    bess_variable_om: BESSVariableOMSpec | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.horizon, AnnualHorizonSpec):
@@ -1247,6 +1348,11 @@ class AnnualEconomicsSpec:
             (BESSCellCostCalibration, FixedLifeBESSCellCost),
         ):
             raise ValueError("bess_cell_cost must be a canonical BESS cell cost")
+        if self.bess_variable_om is not None and not isinstance(
+            self.bess_variable_om,
+            BESSVariableOMSpec,
+        ):
+            raise ValueError("bess_variable_om must be a BESSVariableOMSpec")
 
         if (
             isinstance(
@@ -1289,6 +1395,9 @@ class AnnualEconomicsSpec:
             price_base_years.add(
                 self.bess_cell_cost.cell_lifecycle_spec.price_base_year
             )
+        if self.bess_variable_om is not None:
+            currencies.add(self.bess_variable_om.currency)
+            price_base_years.add(self.bess_variable_om.price_base_year)
         if currencies and currencies != {"CNY"}:
             raise ValueError("annual E0-D economics must use CNY cost inputs")
         if price_base_years and price_base_years != {2024}:
@@ -1313,6 +1422,12 @@ class AnnualEconomicsSpec:
         if self.bess_cell_cost is None:
             return 0.0
         return self.bess_cell_cost.cycle_cost_per_ac_discharge_mwh
+
+    @property
+    def bess_variable_om_per_ac_discharge_mwh(self) -> float:
+        if self.bess_variable_om is None:
+            return 0.0
+        return self.bess_variable_om.cost_per_ac_discharge_mwh
 
     @property
     def bess_reference_annual_ac_efc(self) -> float | None:

@@ -122,3 +122,118 @@ def test_rahman_builder_refuses_a_downgraded_evidence_record() -> None:
 
     with pytest.raises(ValueError, match="allowed_use"):
         build_rahman2019_bess_cost_basis(CostEvidenceAudit(records))
+
+
+def _formal_price_bridge() -> object:
+    from tes_bess_boundary.economics import PriceBasisConversion
+
+    return PriceBasisConversion(
+        source_currency="USD",
+        source_price_base_year=2019,
+        target_currency="CNY",
+        target_price_base_year=2024,
+        source_price_index=255.657,
+        target_price_index=313.689,
+        target_currency_per_source_currency=7.1217,
+        price_index_series_id="BLS CUUR0000SA0 CPI-U",
+        exchange_rate_series_id="NBS 2024 CNY per USD",
+    )
+
+
+def test_resolved_join_uses_one_calendar_throughput_replacement_kernel() -> None:
+    from tes_bess_boundary.economics import LifecycleAssetClass
+    from tes_bess_boundary.formal_bess_costs import (
+        BESSCellLifecycleJoin,
+        build_resolved_rahman_bess_join_contract,
+    )
+
+    contract = build_resolved_rahman_bess_join_contract()
+    degradation = contract.source_cell_degradation_spec(
+        reference_annual_ac_efc=365.0,
+        ac_deliverable_fraction=0.8,
+    )
+
+    assert contract.formal_fixed_capacity_ready is True
+    assert contract.cell_lifecycle_join is (
+        BESSCellLifecycleJoin.EXTERNAL_CALENDAR_AC_THROUGHPUT
+    )
+    assert degradation.cell_lifecycle.asset_class is LifecycleAssetClass.BESS_CELL
+    assert degradation.cell_lifecycle.initial_cost_per_unit == pytest.approx(216270.0)
+    assert degradation.cell_lifecycle.service_life_years == pytest.approx(13.0)
+    assert degradation.cycle_life_ac_efc == pytest.approx(3250.0)
+    assert degradation.cycle_life_ac_efc != pytest.approx(
+        contract.source_basis.reference_cycle_life
+    )
+
+
+def test_resolved_variable_om_is_converted_on_ac_discharge_basis() -> None:
+    from tes_bess_boundary.formal_bess_costs import (
+        BESSVariableOMBasis,
+        build_resolved_rahman_bess_join_contract,
+    )
+
+    contract = build_resolved_rahman_bess_join_contract()
+    converted = contract.convert_variable_om_spec(_formal_price_bridge())
+
+    assert contract.variable_om_basis is BESSVariableOMBasis.AC_DISCHARGE
+    assert converted.source_spec.cost_per_ac_discharge_mwh == pytest.approx(2.74)
+    assert converted.converted_spec.currency == "CNY"
+    assert converted.converted_spec.price_base_year == 2024
+    assert converted.converted_spec.cost_per_ac_discharge_mwh == pytest.approx(
+        2.74 * 8.73826631502364
+    )
+
+
+def test_resolved_pcs_policy_enforces_source_domain_without_fake_pwl() -> None:
+    from tes_bess_boundary.formal_bess_costs import (
+        PCSScalePolicy,
+        build_resolved_rahman_bess_join_contract,
+    )
+
+    contract = build_resolved_rahman_bess_join_contract()
+
+    assert contract.pcs_scale_policy is (
+        PCSScalePolicy.CONSTANT_UNIT_COST_WITHIN_SOURCE_RANGE
+    )
+    assert contract.exact_pcs_multiplicity_curve_supported is False
+    contract.validate_pcs_power_mw(5.0)
+    contract.validate_pcs_power_mw(100.0)
+    with pytest.raises(ValueError, match="5-100 MW"):
+        contract.validate_pcs_power_mw(4.999)
+    with pytest.raises(ValueError, match="5-100 MW"):
+        contract.validate_pcs_power_mw(100.001)
+
+
+def test_resolved_contract_builds_complete_fixed_capacity_bess_economics() -> None:
+    from tes_bess_boundary.economics import (
+        AnnualHorizonSpec,
+        BESSCellCostCalibration,
+        ProjectFinance,
+    )
+    from tes_bess_boundary.formal_bess_costs import (
+        build_resolved_rahman_bess_join_contract,
+    )
+
+    economics = build_resolved_rahman_bess_join_contract().build_annual_economics(
+        horizon=AnnualHorizonSpec(period_weights=(8784.0,)),
+        finance=ProjectFinance(project_years=20, real_discount_rate=0.10),
+        conversion=_formal_price_bridge(),
+        pcs_power_mw=5.0,
+        nominal_energy_mwh=20.0,
+        reference_annual_ac_efc=365.0,
+        ac_deliverable_fraction=0.8,
+    )
+
+    assert isinstance(economics.bess_cell_cost, BESSCellCostCalibration)
+    assert economics.bess_cell_cost.degradation.cell_lifecycle.service_life_years == (
+        pytest.approx(13.0)
+    )
+    assert economics.bess_variable_om_per_ac_discharge_mwh == pytest.approx(
+        2.74 * 8.73826631502364
+    )
+    assert economics.non_cell_cost is not None
+    quantities = economics.non_cell_cost.installed_quantities
+    assert quantities["bess_pcs"] == pytest.approx(5.0)
+    assert quantities["bess_bop"] == pytest.approx(5.0)
+    assert quantities["bess_enclosure_foundation"] == pytest.approx(20.0)
+    assert quantities["bess_energy_contingency"] == pytest.approx(20.0)
