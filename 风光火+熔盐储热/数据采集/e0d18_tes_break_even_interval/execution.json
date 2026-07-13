@@ -1,0 +1,27 @@
+{
+  "canonical_sha256": {
+    "e0d18_tes_break_even_interval.csv": "2d99fdc742bf1f23ca26e9149dcbbf906d47057e0ecfd7d1155aa60c7e3c506d",
+    "manifest.json": "2f70b67d9a04cde88b25630e1ab4e5e1e793887a4a47694e9001011d7b945fe4"
+  },
+  "environment": {
+    "highspy": "1.15.1",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pyomo": "6.10.1",
+    "python": "3.11.15"
+  },
+  "schema": "tes_bess_boundary.e0d18_performance.v1.execution",
+  "solves": [
+    {
+      "candidate_runtime_seconds": 28.113355100038,
+      "comparator_runtime_seconds": 1.023367499991,
+      "natural_runtime_seconds": 0.999324500037,
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "candidate_runtime_seconds": 138.147292799986,
+      "comparator_runtime_seconds": 93.533464099979,
+      "natural_runtime_seconds": 74.220799799979,
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

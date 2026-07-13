@@ -35,6 +35,24 @@ class MoltenSaltFlows:
 
 
 @dataclass(frozen=True)
+class MoltenSaltFlowBounds:
+    """Finite path-specific upper bounds used to tighten TES disjunctions."""
+
+    electric_lt_to_ht_tph: float
+    steam_lt_to_ht_tph: float
+    steam_lt_to_mt_tph: float
+    power_ht_to_mt_tph: float
+    heat_mt_to_lt_tph: float
+
+    def __post_init__(self) -> None:
+        values = tuple(getattr(self, field.name) for field in fields(self))
+        if not all(math.isfinite(value) for value in values):
+            raise ValueError("molten-salt path-flow bounds must be finite")
+        if any(value < 0.0 for value in values):
+            raise ValueError("molten-salt path-flow bounds must be non-negative")
+
+
+@dataclass(frozen=True)
 class MoltenSaltPhysics:
     salt_mass_t: float
     ht_tank_capacity_t: float
@@ -210,6 +228,7 @@ def add_molten_salt_dispatch(
     cyclic: bool = False,
     loss_auxiliary: TESLossAuxiliarySpec | None = None,
     ambient_temperature_c: tuple[float, ...] | None = None,
+    path_flow_bounds: MoltenSaltFlowBounds | None = None,
 ) -> object:
     """Attach linear HT/MT/LT mass balances and allowed path flows."""
 
@@ -243,15 +262,28 @@ def add_molten_salt_dispatch(
         block.states,
         bounds=(0.0, physics.lt_tank_capacity_t),
     )
-    flow_bound = physics.salt_mass_t / dt_hours
-    for name in (
-        "electric_lt_to_ht",
-        "steam_lt_to_ht",
-        "steam_lt_to_mt",
-        "power_ht_to_mt",
-        "heat_mt_to_lt",
-    ):
-        setattr(block, name, Var(periods, bounds=(0.0, flow_bound)))
+    inventory_flow_bound = physics.salt_mass_t / dt_hours
+    if path_flow_bounds is None:
+        flow_bounds = {
+            name: inventory_flow_bound
+            for name in (
+                "electric_lt_to_ht",
+                "steam_lt_to_ht",
+                "steam_lt_to_mt",
+                "power_ht_to_mt",
+                "heat_mt_to_lt",
+            )
+        }
+    else:
+        flow_bounds = {
+            field.name.removesuffix("_tph"): min(
+                inventory_flow_bound,
+                getattr(path_flow_bounds, field.name),
+            )
+            for field in fields(path_flow_bounds)
+        }
+    for name, upper_bound in flow_bounds.items():
+        setattr(block, name, Var(periods, bounds=(0.0, upper_bound)))
     period_to_step = {period: step for step, period in enumerate(period_values)}
     if loss_auxiliary is None:
         block.raw_loss_ht_to_mt = Expression(periods, rule=lambda _model, _period: 0.0)
@@ -325,35 +357,49 @@ def add_molten_salt_dispatch(
         ),
     )
     block.ht_receiving_mode = Var(periods, domain=Binary)
+    ht_receiving_bound = (
+        flow_bounds["electric_lt_to_ht"] + flow_bounds["steam_lt_to_ht"]
+    )
+    ht_sending_bound = flow_bounds["power_ht_to_mt"]
     block.ht_receiving_limit = Constraint(
         periods,
         rule=lambda model, period: (
             model.electric_lt_to_ht[period] + model.steam_lt_to_ht[period]
-            <= flow_bound * model.ht_receiving_mode[period]
+            <= ht_receiving_bound * model.ht_receiving_mode[period]
         ),
     )
     block.ht_sending_limit = Constraint(
         periods,
         rule=lambda model, period: (
             model.power_ht_to_mt[period]
-            <= flow_bound * (1 - model.ht_receiving_mode[period])
+            <= ht_sending_bound * (1 - model.ht_receiving_mode[period])
         ),
     )
+    if ht_receiving_bound == 0.0 or ht_sending_bound == 0.0:
+        fixed_mode = 0 if ht_receiving_bound == 0.0 else 1
+        for period in periods:
+            block.ht_receiving_mode[period].fix(fixed_mode)
     block.mt_direct_charge_mode = Var(periods, domain=Binary)
+    mt_direct_charge_bound = flow_bounds["steam_lt_to_mt"]
+    mt_heat_discharge_bound = flow_bounds["heat_mt_to_lt"]
     block.mt_direct_charge_limit = Constraint(
         periods,
         rule=lambda model, period: (
             model.steam_lt_to_mt[period]
-            <= flow_bound * model.mt_direct_charge_mode[period]
+            <= mt_direct_charge_bound * model.mt_direct_charge_mode[period]
         ),
     )
     block.mt_heat_discharge_limit = Constraint(
         periods,
         rule=lambda model, period: (
             model.heat_mt_to_lt[period]
-            <= flow_bound * (1 - model.mt_direct_charge_mode[period])
+            <= mt_heat_discharge_bound * (1 - model.mt_direct_charge_mode[period])
         ),
     )
+    if mt_direct_charge_bound == 0.0 or mt_heat_discharge_bound == 0.0:
+        fixed_mode = 0 if mt_direct_charge_bound == 0.0 else 1
+        for period in periods:
+            block.mt_direct_charge_mode[period].fix(fixed_mode)
 
     block.ht_mass[0].fix(initial_inventory.ht_mass_t)
     block.mt_mass[0].fix(initial_inventory.mt_mass_t)

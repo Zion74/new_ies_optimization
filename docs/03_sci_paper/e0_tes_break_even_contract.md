@@ -110,6 +110,7 @@ c_{sys,b}^{BE}=C_{TES,max}^{EAC}/X_b.
 - 回归测试：`tests/test_tes_break_even.py`；
 - TES 正式成本前置门：`e0_tes_formal_cost_readiness_contract.md`；
 - 容量分母前置合同：`e0_tes_cost_capacity_mapping_contract.md`；
-- E0-C 年度结果适配、24 h 产物和两周性能状态：`e0_tes_break_even_adapter_and_exploration_contract.md`。
+- E0-C 年度结果适配与 E0-D-17 历史 24 h 产物：`e0_tes_break_even_adapter_and_exploration_contract.md`；
+- E0-D-18 两窗口性能、主目标上下界与 EAC 区间传播：`e0_tes_two_window_performance_and_interval_contract.md`。
 
-E0-D-17 已完成无罚值服务审计、实际年度结果适配和 24 h 探索阈值；两周主 MILP 尚未闭合，非 TES 成本范围仍缺 VOM、碳和电力结算。下一接口不是填入一个“合理 TES 单价”，而是强化两周 formulation 并补齐同范围系统成本；正式 E1 仍等待 TES portfolio、系统级 TAC 与内生容量闭合。
+E0-D-17 已完成无罚值服务审计、实际年度结果适配和 24 h 探索阈值；E0-D-18 已闭合 24 h 精确点与 336 h 有界性能门，并把非零主 gap 转写为 EAC 区间。下一接口不是填入一个“合理 TES 单价”，而是由 E0-D-19 补齐 VOM、碳和电力结算等同范围系统成本；正式 E1 仍等待 TES portfolio、正式 TAC 与内生容量闭合。

@@ -17,7 +17,7 @@ The current E0 slice contains:
 - a 12-account formal-TES readiness gate that rejects aggregate anchors from component accounts and requires explicit approval before combining multiple source packages;
 - a penalty-free TES break-even accounting seam that reports one whole-system EAC ceiling plus fuel, curtailment, PCC-export, and auxiliary-energy deltas without allocating the ceiling back to components;
 - a conservative E0-C annual-result adapter with explicit curtailment service, weighted renewable/PCC audits, complete TES-ownership removal, and a primary-cost-incumbent-conditional curtailment tie-break;
-- a hash-locked E0-D-17 exploration CLI: the 2024-01-01 24-hour cascade-TES slice is reproducible across Windows/Linux, while the two-week performance gate remains open;
+- a hash-locked E0-D-17 historical exploration CLI plus an E0-D-18 performance runner that closes the 24-hour exact point and the 336-hour bounded-gap gate with explicit primal/dual propagation;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -64,8 +64,13 @@ actual annual E0-C results to that kernel and locks one 24-hour winter screening
 The slice uses formal heat but a legacy 2019 renewable shape mapped onto 2024, scores
 one day with a weight of 366, and includes fuel cost only. Its whole-system EAC ceiling
 must not be described as a full-year result, a TES component price, or an E1 winner.
-The 336-hour cascade-TES/UC case has not yet passed its controlled performance gate.
-Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
+E0-D-18 reduces the 336-hour model from 7,728 to 3,024 unfixed binaries using an exact
+logarithmic fuel-segment formulation, an explicitly selected continuous transition
+envelope, and path-specific TES flow bounds. The 24-hour primary/secondary solves are
+exact; the 336-hour primary gap is 0.004800 and the fixed-integer secondary gap is zero.
+Its whole-system EAC is therefore reported as the bounded interval
+57.572--59.818 million CNY/a, not as a point estimate. Formal sweeps must not start
+until the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
 
@@ -120,9 +125,9 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full results with the
-pytest cache disabled are `284 passed in 76.16s` locally and `284 passed in 21.37s`
-on OpenBayes. E0-D-17 source/tests and the authorized inputs are synchronized. The
-24-hour canonical CSV and manifest have identical Windows/Linux SHA-256 values.
+pytest cache disabled are `288 passed in 56.38s` locally and `288 passed in 21.23s`
+on OpenBayes. E0-D-18 source/tests and the authorized inputs are synchronized. The
+24-hour/336-hour canonical CSV and manifest have identical Windows/Linux SHA-256 values.
 With `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
 set explicitly, all remote data-integration tests pass; omitting it addresses a
 nonexistent repository-relative directory and is an environment-path error.

@@ -11,10 +11,16 @@ from tes_bess_boundary.components.bess import BESSPhysics
 from tes_bess_boundary.components.bess import add_bess_dispatch
 from tes_bess_boundary.components.chp import (
     CHPCommitmentSpec,
+    CommitmentTransitionFormulation,
+    FuelSegmentFormulation,
     HeatBasis,
     add_chp_unit_commitment,
 )
-from tes_bess_boundary.components.molten_salt import MoltenSaltPhysics, SaltInventory
+from tes_bess_boundary.components.molten_salt import (
+    MoltenSaltFlowBounds,
+    MoltenSaltPhysics,
+    SaltInventory,
+)
 from tes_bess_boundary.components.molten_salt import add_molten_salt_dispatch
 from tes_bess_boundary.economics import AnnualEconomicsSpec, LifecycleAssetClass
 from tes_bess_boundary.tes_loss_auxiliary import (
@@ -190,6 +196,12 @@ class E0CCase:
     objective: ValidationObjectiveSpec = field(default_factory=ValidationObjectiveSpec)
     economics: AnnualEconomicsSpec | None = None
     curtailment_service: AnnualCurtailmentServiceSpec | None = None
+    chp_fuel_segment_formulation: FuelSegmentFormulation = (
+        FuelSegmentFormulation.ONE_HOT
+    )
+    chp_transition_formulation: CommitmentTransitionFormulation = (
+        CommitmentTransitionFormulation.BINARY
+    )
 
     def __post_init__(self) -> None:
         if not isinstance(self.architecture, Architecture):
@@ -198,6 +210,17 @@ class E0CCase:
             raise ValueError("at least one fixed CHP unit is required")
         if any(not isinstance(unit, CHPCommitmentSpec) for unit in self.chp_units):
             raise ValueError("chp_units must contain CHPCommitmentSpec values")
+        if not isinstance(self.chp_fuel_segment_formulation, FuelSegmentFormulation):
+            raise ValueError(
+                "chp_fuel_segment_formulation must use FuelSegmentFormulation"
+            )
+        if not isinstance(
+            self.chp_transition_formulation,
+            CommitmentTransitionFormulation,
+        ):
+            raise ValueError(
+                "chp_transition_formulation must use CommitmentTransitionFormulation"
+            )
         if any(unit.heat_basis is not HeatBasis.USEFUL for unit in self.chp_units):
             raise ValueError(
                 "E0-C requires every CHP unit to use the useful heat basis"
@@ -465,6 +488,8 @@ class E0CResult:
     lexicographic_curtailment_tie_break: bool = False
     primary_cost_tolerance_cny: float | None = None
     primary_cost_mip_gap: float | None = None
+    primary_objective_lower_bound: float | None = None
+    primary_objective_upper_bound: float | None = None
     secondary_curtailment_mip_gap: float | None = None
     lexicographic_fixed_primary_integer_count: int | None = None
 
@@ -503,6 +528,8 @@ def build_e0c_model(case: E0CCase) -> object:
             time_step_hours=case.timeseries.dt_hours,
             initial_online=case.chp_initial_online[unit_index],
             cycle_event_cost_proxy_cny=(case.objective.cycle_event_cost_proxy_cny),
+            fuel_segment_formulation=case.chp_fuel_segment_formulation,
+            transition_formulation=case.chp_transition_formulation,
         )
         if case.chp_terminal_online is not None:
             model.chp[unit_index].terminal_online = Constraint(
@@ -548,6 +575,49 @@ def build_e0c_model(case: E0CCase) -> object:
 
     if case.tes is not None:
         model.tes = Block()
+        physics = case.tes.physics
+        caps = case.tes.port_caps
+        path_flow_bounds = MoltenSaltFlowBounds(
+            electric_lt_to_ht_tph=(
+                caps.electric_charge_input_mw
+                * physics.electric_heater_efficiency
+                / (
+                    physics.specific_heat_mwh_per_tonne_k
+                    * (physics.temperature_ht - physics.temperature_lt)
+                )
+            ),
+            steam_lt_to_ht_tph=(
+                caps.steam_to_ht_reference_input_mw
+                * physics.steam_to_ht_efficiency
+                / (
+                    physics.specific_heat_mwh_per_tonne_k
+                    * (physics.temperature_ht - physics.temperature_lt)
+                )
+            ),
+            steam_lt_to_mt_tph=(
+                caps.steam_to_mt_reference_input_mw
+                * physics.steam_to_mt_efficiency
+                / (
+                    physics.specific_heat_mwh_per_tonne_k * physics.delta_mt_lt
+                )
+            ),
+            power_ht_to_mt_tph=(
+                caps.electric_output_mw
+                / (
+                    physics.power_block_efficiency
+                    * physics.specific_heat_mwh_per_tonne_k
+                    * physics.delta_ht_mt
+                )
+            ),
+            heat_mt_to_lt_tph=(
+                caps.heat_output_mw
+                / (
+                    physics.heat_exchanger_efficiency
+                    * physics.specific_heat_mwh_per_tonne_k
+                    * physics.delta_mt_lt
+                )
+            ),
+        )
         add_molten_salt_dispatch(
             model.tes,
             model.periods,
@@ -557,8 +627,8 @@ def build_e0c_model(case: E0CCase) -> object:
             cyclic=case.tes.cyclic,
             loss_auxiliary=case.tes.loss_auxiliary,
             ambient_temperature_c=case.timeseries.ambient_temperature_c,
+            path_flow_bounds=path_flow_bounds,
         )
-        caps = case.tes.port_caps
         model.tes_electric_charge_cap = Constraint(
             model.periods,
             rule=lambda _block, period: (
@@ -859,17 +929,24 @@ def solve_e0c(
             return None
         return number if math.isfinite(number) else None
 
-    def solve_gap(solve_results: object) -> float | None:
+    def solve_bounds(solve_results: object) -> tuple[float | None, float | None]:
         if is_legacy_interface:
             feasible = finite_float(solve_results.problem.upper_bound)
             bound = finite_float(solve_results.problem.lower_bound)
         else:
             feasible = finite_float(solve_results.best_feasible_objective)
             bound = finite_float(solve_results.best_objective_bound)
+        return bound, feasible
+
+    def solve_gap(solve_results: object) -> float | None:
+        bound, feasible = solve_bounds(solve_results)
         if feasible is None or bound is None:
             return None
         return abs(feasible - bound) / max(abs(feasible), 1e-12)
 
+    primary_objective_lower_bound, primary_objective_upper_bound = solve_bounds(
+        results
+    )
     primary_cost_mip_gap = solve_gap(results)
     primary_cost_tolerance_cny = None
     fixed_primary_integer_count = None
@@ -1151,6 +1228,8 @@ def solve_e0c(
         ),
         primary_cost_tolerance_cny=primary_cost_tolerance_cny,
         primary_cost_mip_gap=primary_cost_mip_gap,
+        primary_objective_lower_bound=primary_objective_lower_bound,
+        primary_objective_upper_bound=primary_objective_upper_bound,
         secondary_curtailment_mip_gap=secondary_curtailment_mip_gap,
         lexicographic_fixed_primary_integer_count=fixed_primary_integer_count,
     )

@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**E0-C 年度结果到 E0-D-16 盈亏平衡内核的保守适配已实现；2024-01-01 的 24 h 探索窗口已通过本地/远端零 gap 复现，两周窗口尚未在受控时间预算内闭合。** 本合同不构成正式全年 TAC、TES CAPEX、杨凌风光实测基线或 E1 技术比较。
+状态：**E0-C 年度结果到 E0-D-16 盈亏平衡内核的保守适配已实现；2024-01-01 的 24 h 探索窗口已通过本地/远端零 gap 复现。本文保留 E0-D-17 的历史 formulation 与未闭合两周记录；当前两窗口权威状态已由 E0-D-18 合同取代。** 本合同不构成正式全年 TAC、TES CAPEX、杨凌风光实测基线或 E1 技术比较。
 
 ## 1. 解决的问题
 
@@ -71,13 +71,15 @@ E0-D-16 只定义了“同服务、无人工罚值”的全系统 TES 年化所�
 
 这是燃料单项范围的冬季典型日年化上限。不得写成全年节煤、正式 TES 成本、部件单价或技术赢家；PCC 外送下降也说明后续必须补齐电力结算后再谈系统经济性。
 
-## 5. 两周性能状态
+## 5. 历史两周性能状态
 
 336 h 全级联 TES 与双机 UC 的主 MILP 在本地 10 min 和 OpenBayes 15 min 受控预算内均未形成可接受的完整双窗口产物；固定第一阶段整数只消除了第二阶段重复整数搜索，未消除主 MILP 规模瓶颈。因此：
 
 - 不生成两周 CSV 行；
 - 不把超时解释为 TES 经济性为零或为负；
 - 下一步先强化 TES 流量 Big-M、可达状态和 UC/TES 联合 formulation，再重跑两周门。
+
+上述是 E0-D-17 结束时的历史判定。E0-D-18 已完成该强化：24 h 精确 gap 0，336 h 主目标 gap 0.004800、固定整数次目标 gap 0，并将非零主 gap 传播成 EAC 上下界。当前数字与允许表述以 `e0_tes_two_window_performance_and_interval_contract.md` 为准。
 
 ## 6. 复现证据
 
@@ -87,7 +89,7 @@ E0-D-16 只定义了“同服务、无人工罚值”的全系统 TES 年化所�
 - `manifest.json`：SHA-256 `5cec9f0c436bf3c5ea44e8d4cd170939c4fd4dc168c9f31e414feb92ca79a1e5`；
 - `execution.json`：非规范运行时 sidecar。
 
-CSV 浮点值统一保留 6 位小数；本地 Python 3.11/Windows 与远端 Python 3.10/Linux 生成的 CSV/manifest 哈希完全一致。最终完整回归为本地 `284 passed in 76.16s`、OpenBayes `284 passed in 21.37s`。
+CSV 浮点值统一保留 6 位小数；本地 Python 3.11/Windows 与远端 Python 3.10/Linux 生成的 CSV/manifest 哈希完全一致。生成 E0-D-17 产物时的完整回归为本地 `284 passed in 76.16s`、OpenBayes `284 passed in 21.37s`；E0-D-18 后当前完整回归已升级为本地 `288 passed in 56.38s`、OpenBayes `288 passed in 21.23s`。
 
 复现命令：
 
@@ -99,8 +101,8 @@ python -m tes_bess_boundary.e0d17_exploration \
   --window winter_day_20240101
 ```
 
-省略 `--window` 会尝试锁定的 24 h 与两周窗口，不会静默跳过尚未闭合的两周门。
+省略 `--window` 会尝试 E0-D-17 锁定的 24 h 与两周窗口；该入口只用于复现历史基线，新的性能验收与区间导出使用 `e0d18_performance.py`。
 
 ## 7. 下一接口
 
-E0-D-18 应先做两周 MILP 强化和性能验收，同时补齐非 TES 年度成本范围；TES 12 账户、系统级 TAC、结构化代表周和 endogenous capacity 仍是 E1 前置条件。
+E0-D-18 已完成两周 MILP 强化、性能验收和界区间传播。下一步 E0-D-19 补齐 CHP VOM、碳、电力结算和 TES VOM 等同范围年度成本；TES 12 账户、正式 TAC、结构化代表周和 endogenous capacity 仍是 E1 前置条件。

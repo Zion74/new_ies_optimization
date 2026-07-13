@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-16 已闭合 BESS fixed-capacity 账本、TES 12 账户门禁和全系统 EAC 上限内核；E0-D-17 新增实际年度结果适配与 24 h 探索产物。完整回归本地/远端均 284 项通过；两周性能门、杨凌现场泵参数、TES 正式参数、系统级 TAC、容量规划与 E1-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-17 已闭合 BESS fixed-capacity 账本、TES 12 账户门禁、全系统 EAC 上限内核和实际年度结果适配；E0-D-18 新增 24 h 精确点与 336 h 有界性能产物。完整回归本地/远端均 288 项通过；杨凌现场泵参数、TES 正式参数、同范围系统成本、正式 TAC、容量规划与 E1-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -11,8 +11,8 @@
 | T2-1 | 2024 年 8784 h 数据审计 | 锁定时区、单位、缺失、同步和边界 | `data.py`、`raw_heat.py`、`heat_dataset.py`、`heat_adapter.py`、原始机组数据 | E0-B 正式质量数据及 E0-C 主/敏感性消费规则均已生成并跨平台复现 |
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
-| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向与分部件寿命 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even.py`、`tes_break_even_adapter.py` | 三温区/五端口、损失/辅机、成本门与实际结果适配通过；12 账户仍阻断，24 h 系统 EAC 上限只能探索使用 |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py` + `highspy` | 本地 `284 passed in 76.16s`，OpenBayes `284 passed in 21.37s`；24 h canonical 跨平台一致，两周性能门未通过 |
+| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向与分部件寿命 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even.py`、`tes_break_even_adapter.py` | 三温区/五端口、损失/辅机、成本门、实际结果适配和路径紧 Big-M 通过；12 账户仍阻断，EAC 区间只能探索使用 |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py`、`e0d18_performance.py` + `highspy` | 本地 `288 passed in 56.38s`，OpenBayes `288 passed in 21.23s`；24 h gap 0，336 h 主 gap 0.004800，canonical 跨平台一致 |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 
@@ -31,7 +31,7 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `_ch4_p1_milp_compare.py` 仅作原型；E0-D-17 已补实际年度结果接缝和 24 h 探索阈值 | 24 h 年化筛查不等于 E1；两周、TES 正式成本、系统级 TAC 和内生容量闭合后才启动 E1 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `_ch4_p1_milp_compare.py` 仅作原型；E0-D-18 已补 24 h 精确点和 336 h 有界筛查 | 两窗口筛查不等于 E1；TES 正式成本、同范围系统成本、正式 TAC 和内生容量闭合后才启动 E1 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |

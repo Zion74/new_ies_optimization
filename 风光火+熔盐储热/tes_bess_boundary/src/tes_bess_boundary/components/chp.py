@@ -37,6 +37,20 @@ class LowLoadFuelRule(str, Enum):
     RAISE_MIN_POWER_TO_105 = "raise_min_power_to_105"
 
 
+class FuelSegmentFormulation(str, Enum):
+    """Exact encodings for selecting one adjacent CHP fuel segment."""
+
+    ONE_HOT = "one_hot"
+    LOGARITHMIC = "logarithmic"
+
+
+class CommitmentTransitionFormulation(str, Enum):
+    """Equivalent encodings of startup and shutdown transition indicators."""
+
+    BINARY = "binary"
+    CONTINUOUS_ENVELOPE = "continuous_envelope"
+
+
 @dataclass(frozen=True)
 class CHPFuelPoint:
     """A raw supply-coal-rate observation at generator-gross power."""
@@ -405,6 +419,10 @@ def add_chp_unit_commitment(
     time_step_hours: float = 1.0,
     initial_online: int = 0,
     cycle_event_cost_proxy_cny: float | None = None,
+    fuel_segment_formulation: FuelSegmentFormulation = FuelSegmentFormulation.ONE_HOT,
+    transition_formulation: CommitmentTransitionFormulation = (
+        CommitmentTransitionFormulation.BINARY
+    ),
 ) -> object:
     """Attach exact fuel segments and evidence-bounded commitment variables.
 
@@ -430,6 +448,14 @@ def add_chp_unit_commitment(
         raise ValueError("time_step_hours must be positive")
     if initial_online not in (0, 1):
         raise ValueError("initial_online must be zero or one")
+    if not isinstance(fuel_segment_formulation, FuelSegmentFormulation):
+        raise ValueError(
+            "fuel_segment_formulation must be selected with FuelSegmentFormulation"
+        )
+    if not isinstance(transition_formulation, CommitmentTransitionFormulation):
+        raise ValueError(
+            "transition_formulation must use CommitmentTransitionFormulation"
+        )
     if (
         cycle_event_cost_proxy_cny is not None
         and not isfinite(cycle_event_cost_proxy_cny)
@@ -447,8 +473,21 @@ def add_chp_unit_commitment(
         raise ValueError("at least one dispatch period is required")
     fuel_knots = spec.fuel_flow_knots()
     add_chp_dispatch(block, periods, spec.unit)
-    block.fuel_segment_index = RangeSet(0, len(fuel_knots) - 2)
-    block.fuel_segment_active = Var(periods, block.fuel_segment_index, domain=Binary)
+    segment_count = len(fuel_knots) - 1
+    block.fuel_segment_index = RangeSet(0, segment_count - 1)
+    if fuel_segment_formulation is FuelSegmentFormulation.ONE_HOT:
+        block.fuel_segment_active = Var(
+            periods,
+            block.fuel_segment_index,
+            domain=Binary,
+        )
+    else:
+        block.fuel_segment_active = Var(
+            periods,
+            block.fuel_segment_index,
+            domain=NonNegativeReals,
+            bounds=(0.0, 1.0),
+        )
     block.fuel_segment_fraction = Var(
         periods,
         block.fuel_segment_index,
@@ -465,6 +504,27 @@ def add_chp_unit_commitment(
         )
         == model.online[period],
     )
+    if fuel_segment_formulation is FuelSegmentFormulation.LOGARITHMIC:
+        code_bit_count = max(1, (segment_count - 1).bit_length())
+        block.fuel_code_bit_index = RangeSet(0, code_bit_count - 1)
+        block.fuel_code_bit = Var(
+            periods,
+            block.fuel_code_bit_index,
+            domain=Binary,
+        )
+
+        def fuel_code_rule(model: object, period: object, bit: int) -> object:
+            return sum(
+                model.fuel_segment_active[period, segment]
+                for segment in model.fuel_segment_index
+                if (int(segment) >> int(bit)) & 1
+            ) == model.fuel_code_bit[period, bit]
+
+        block.fuel_code = Constraint(
+            periods,
+            block.fuel_code_bit_index,
+            rule=fuel_code_rule,
+        )
     block.fuel_fraction_activation = Constraint(
         periods,
         block.fuel_segment_index,
@@ -495,8 +555,12 @@ def add_chp_unit_commitment(
     block.fuel_power_definition = Constraint(periods, rule=fuel_power_rule)
     block.fuel_flow_definition = Constraint(periods, rule=fuel_flow_rule)
 
-    block.startup = Var(periods, domain=Binary)
-    block.shutdown = Var(periods, domain=Binary)
+    if transition_formulation is CommitmentTransitionFormulation.BINARY:
+        block.startup = Var(periods, domain=Binary)
+        block.shutdown = Var(periods, domain=Binary)
+    else:
+        block.startup = Var(periods, domain=NonNegativeReals, bounds=(0.0, 1.0))
+        block.shutdown = Var(periods, domain=NonNegativeReals, bounds=(0.0, 1.0))
     first_period = period_order[0]
     previous_period = {
         period: period_order[index - 1]
@@ -504,24 +568,50 @@ def add_chp_unit_commitment(
         if index > 0
     }
 
-    def transition_rule(model: object, period: object) -> object:
-        previous_online = (
+    def previous_online(model: object, period: object) -> object:
+        return (
             initial_online
             if period == first_period
             else model.online[previous_period[period]]
         )
+
+    def transition_rule(model: object, period: object) -> object:
         return (
-            model.online[period] - previous_online
+            model.online[period] - previous_online(model, period)
             == model.startup[period] - model.shutdown[period]
         )
 
     block.commitment_transition = Constraint(periods, rule=transition_rule)
-    block.transition_exclusive = Constraint(
-        periods,
-        rule=lambda model, period: (
-            model.startup[period] + model.shutdown[period] <= 1
-        ),
-    )
+    if transition_formulation is CommitmentTransitionFormulation.BINARY:
+        block.transition_exclusive = Constraint(
+            periods,
+            rule=lambda model, period: (
+                model.startup[period] + model.shutdown[period] <= 1
+            ),
+        )
+    else:
+        block.startup_online_limit = Constraint(
+            periods,
+            rule=lambda model, period: model.startup[period] <= model.online[period],
+        )
+        block.startup_previous_offline_limit = Constraint(
+            periods,
+            rule=lambda model, period: (
+                model.startup[period] <= 1 - previous_online(model, period)
+            ),
+        )
+        block.shutdown_previous_online_limit = Constraint(
+            periods,
+            rule=lambda model, period: (
+                model.shutdown[period] <= previous_online(model, period)
+            ),
+        )
+        block.shutdown_offline_limit = Constraint(
+            periods,
+            rule=lambda model, period: (
+                model.shutdown[period] <= 1 - model.online[period]
+            ),
+        )
 
     if spec.normal_ramp_mw_per_min is not None:
         block.ramp_periods = Set(initialize=period_order[1:], ordered=True)

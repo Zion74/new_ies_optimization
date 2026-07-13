@@ -1,0 +1,88 @@
+{
+  "case": {
+    "coal_price_cny_per_tce": 800.86,
+    "curtailment_penalty_cny_per_mwh": 0.0,
+    "known_cost_scope": "fuel_only_2024_cny_exploratory",
+    "omitted_non_tes_cost_terms": [
+      "chp_variable_om",
+      "carbon",
+      "electricity_settlement",
+      "tes_variable_om"
+    ],
+    "pcc_capacity_mw": 700.0,
+    "pv_capacity_mw": 200.0,
+    "tes_port_capacity_mw": 150.0,
+    "tes_thermal_capacity_mwh_th": 1200.0,
+    "wind_capacity_mw": 1050.0
+  },
+  "formulation_audit": {
+    "legacy_constraint_count": 18147,
+    "legacy_fixed_binary_count": 336,
+    "legacy_inventory_flow_big_m_tph": 13913.71563843664,
+    "legacy_unfixed_binary_count": 7728,
+    "tight_ht_receiving_big_m_tph": 1652.253732064351,
+    "tight_ht_sending_big_m_tph": 8696.0722740229,
+    "tight_mt_direct_charge_big_m_tph": 0.0,
+    "tight_mt_heat_discharge_big_m_tph": 3661.504115378063,
+    "tightened_constraint_count": 22179,
+    "tightened_fixed_binary_count": 336,
+    "tightened_unfixed_binary_count": 3024,
+    "unfixed_binary_reduction_count": 4704,
+    "unfixed_binary_reduction_fraction": 0.608695652174
+  },
+  "inputs": {
+    "formal_heat": {
+      "file": "e0b_heat_hourly_2024.csv",
+      "locked_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+      "sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e"
+    },
+    "renewable_shape": {
+      "file": "e0d17_legacy_vre_2024.csv",
+      "locked_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "status": "legacy_2019_resource_year_mapped_to_2024_calendar"
+    }
+  },
+  "output": {
+    "csv": "e0d18_tes_break_even_interval.csv",
+    "csv_sha256": "2d99fdc742bf1f23ca26e9149dcbbf906d47057e0ecfd7d1155aa60c7e3c506d",
+    "float_decimals": 6,
+    "rows": 2
+  },
+  "schema": "tes_bess_boundary.e0d18_performance.v1",
+  "scientific_scope": "exploratory_interval_not_formal_tac_not_e1",
+  "solver_contract": {
+    "candidate_primary_mip_gap_by_hours": {
+      "24": 0.0,
+      "336": 0.005
+    },
+    "comparator_primary_mip_gap": 0.0,
+    "interval_definition": "lower=comparator_exact_cost-candidate_primal_bound;upper=comparator_exact_cost-candidate_dual_bound",
+    "random_seed": 0,
+    "secondary_tie_break": "fix_primary_incumbent_integers_then_minimize_curtailment",
+    "solver": "appsi_highs",
+    "threads": 1,
+    "time_limit_seconds_per_solve": 900.0
+  },
+  "sources": {
+    "components/chp.py": "6e16cedb711631fa03f7c647db6559c5a5f37eef46b2576a293fee968ff45b32",
+    "components/molten_salt.py": "7843c16d5ab42b229720b72258e2948c44eb508b05e6f9794547a0adb8f1068b",
+    "e0d18_performance.py": "ebc6b8c9e277d3b30ddead1c2aab8bcc21b08d2c85813268402705cd3cab0d66",
+    "model.py": "647e412226ad936ab421fa5f153027107c431b4ce2b4f4d0315d43bd14b81cf0",
+    "tes_break_even_adapter.py": "d036ee89b7f836b5491fe6832353e631ffb39b899b146289e695345f5bbb8318"
+  },
+  "windows": [
+    {
+      "hours": 24,
+      "service_id": "e0d18_primary_incumbent_no_storage:winter_day_20240101",
+      "start": "2024-01-01T00:00:00",
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "hours": 336,
+      "service_id": "e0d18_primary_incumbent_no_storage:winter_fortnight_20240101",
+      "start": "2024-01-01T00:00:00",
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

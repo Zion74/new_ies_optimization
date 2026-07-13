@@ -3,8 +3,13 @@
 *.sh       text eol=lf
 *.bash     text eol=lf
 
-# Python / text assets: normalize to LF in repo, let Git auto-detect on checkout.
-*.py       text
+# Hash-audited source and scientific artifacts must remain byte-stable across
+# Windows and Linux checkouts.
+*.py       text eol=lf
+*.csv      text eol=lf
+*.json     text eol=lf
+
+# Other text assets: normalize in the repository and use the platform checkout.
 *.md       text
 *.yml      text
 *.yaml     text
