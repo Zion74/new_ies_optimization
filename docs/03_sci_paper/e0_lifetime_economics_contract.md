@@ -231,4 +231,6 @@ E0-D-11 后本地完整回归为 `258 passed in 38.13s`，OpenBayes 为 `258 pas
 
 E0-D-14 当前更新：Rahman 负责 2019 USD 电芯与非电芯价格，Schmidt *Joule* 负责 13 年/3250 EFC 非价格寿命参数；replacement 只由 calendar+AC-throughput 核生成。`2.74 USD_2019/MWh` 按 AC 放电侧转换并与退化 cycle cost 分列，PCS 常数单价只允许 5–100 MW。代码现可构造完整 fixed-capacity BESS `AnnualEconomicsSpec`；加入 E0-D-15 TES 正式成本门禁后的本地完整回归为 `273 passed in 30.31s`（关闭 pytest cache）。这只关闭 BESS 生命周期子账本，不等于 TES 与系统级正式 TAC 已闭合；OpenBayes 尚未同步 E0-D-14/15 代码。
 
-E0-D-16 当前更新：`tes_break_even.py` 在剔除全部 TES 所有权成本后，按同情景、同服务、同 8,784 h 时域和同 2024 CNY 已知成本范围，计算全系统 TES 最大 EAC 上限；人工弃电罚值不得计入运行价值，容量归一化不得反解部件价格。当前 TES 正式 portfolio 与非 TES 系统成本范围均未闭合，因此只允许探索性阈值，不改变正式 TAC 门槛。本地完整回归为 `279 passed in 31.57s`，OpenBayes 尚未同步 E0-D-14–D-16 代码。
+E0-D-16 历史更新：`tes_break_even.py` 在剔除全部 TES 所有权成本后，按同情景、同服务、同 8,784 h 时域和同 2024 CNY 已知成本范围，计算全系统 TES 最大 EAC 上限；人工弃电罚值不得计入运行价值，容量归一化不得反解部件价格。
+
+E0-D-17 当前更新：实际 E0-C 年度解已经接入该内核；24 h 冬季典型日燃料范围阈值可跨平台复现，但两周性能门、TES 正式 portfolio 与 VOM/碳/电力结算仍未闭合。因此结果仍只允许探索使用，不改变正式 TAC 门槛。当前本地/远端完整回归均为 284 项通过。

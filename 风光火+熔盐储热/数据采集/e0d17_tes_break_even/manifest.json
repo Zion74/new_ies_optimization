@@ -1,0 +1,55 @@
+{
+  "case": {
+    "coal_price_cny_per_tce": 800.86,
+    "curtailment_penalty_cny_per_mwh": 0.0,
+    "dispatch_tie_break": "fix_primary_cost_incumbent_integers_then_minimize_curtailment",
+    "known_cost_scope": "fuel_only_2024_cny_exploratory",
+    "omitted_non_tes_cost_terms": [
+      "chp_variable_om",
+      "carbon",
+      "electricity_settlement",
+      "tes_variable_om"
+    ],
+    "pcc_capacity_mw": 700.0,
+    "pv_capacity_mw": 200.0,
+    "solver": "appsi_highs",
+    "solver_mip_rel_gap": 0.0,
+    "solver_random_seed": 0,
+    "solver_threads": 1,
+    "tes_cost_mode": "all_tes_ownership_costs_unpriced_with_zero_price_salt_to_steam_and_existing_turbine_reuse_classifications",
+    "tes_electric_charge_mw": 150.0,
+    "tes_electric_output_mw": 150.0,
+    "tes_heat_output_mw_th": 150.0,
+    "tes_thermal_capacity_mwh_th": 1200.0,
+    "wind_capacity_mw": 1050.0
+  },
+  "inputs": {
+    "formal_heat": {
+      "file": "e0b_heat_hourly_2024.csv",
+      "interpretation": "net_clipped=max(heat_net_mw,0)",
+      "sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e"
+    },
+    "renewable_shape": {
+      "sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "source_id": "legacy_vre_shape_2019_mapped_2024",
+      "status": "legacy_2019_resource_year_mapped_to_2024_calendar"
+    }
+  },
+  "output": {
+    "csv": "e0d17_tes_break_even.csv",
+    "csv_sha256": "ab2dbd3e77068826e41785f585ffe4e70c8ae4c72baaedde054428f265b780f3",
+    "float_decimals": 6,
+    "rows": 1
+  },
+  "schema": "tes_bess_boundary.e0d17_exploration.v1",
+  "scientific_scope": "exploratory_break_even_not_formal_tac_not_e1",
+  "windows": [
+    {
+      "annual_weight_per_hour": 366.0,
+      "hours": 24,
+      "service_id": "primary_incumbent_conditional_no_storage_plus_tolerance:winter_day_20240101",
+      "start": "2024-01-01T00:00:00",
+      "window_id": "winter_day_20240101"
+    }
+  ]
+}

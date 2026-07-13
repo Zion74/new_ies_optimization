@@ -155,6 +155,27 @@ class ValidationObjectiveSpec:
 
 
 @dataclass(frozen=True)
+class AnnualCurtailmentServiceSpec:
+    """Explicit annual renewable-curtailment service enforced without a penalty."""
+
+    service_id: str
+    maximum_curtailment_mwh: float
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.service_id, str) or not self.service_id.strip():
+            raise ValueError("annual curtailment service_id must be non-empty")
+        if (
+            isinstance(self.maximum_curtailment_mwh, bool)
+            or not isinstance(self.maximum_curtailment_mwh, (int, float))
+            or not math.isfinite(float(self.maximum_curtailment_mwh))
+            or self.maximum_curtailment_mwh < 0.0
+        ):
+            raise ValueError(
+                "annual maximum curtailment must be finite and non-negative"
+            )
+
+
+@dataclass(frozen=True)
 class E0CCase:
     """Complete fixed-capacity deterministic case for exactly one architecture."""
 
@@ -168,6 +189,7 @@ class E0CCase:
     tes: TESFixedSpec | None = None
     objective: ValidationObjectiveSpec = field(default_factory=ValidationObjectiveSpec)
     economics: AnnualEconomicsSpec | None = None
+    curtailment_service: AnnualCurtailmentServiceSpec | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.architecture, Architecture):
@@ -213,6 +235,18 @@ class E0CCase:
             if self.objective.cycle_event_cost_proxy_cny is not None:
                 raise ValueError(
                     "annual economics does not yet support the cycle-event cost proxy"
+                )
+        if self.curtailment_service is not None:
+            if not isinstance(
+                self.curtailment_service,
+                AnnualCurtailmentServiceSpec,
+            ):
+                raise ValueError(
+                    "curtailment_service must be an AnnualCurtailmentServiceSpec"
+                )
+            if self.economics is None:
+                raise ValueError(
+                    "annual curtailment service requires annual economics"
                 )
 
         includes_bess = self.architecture in (Architecture.BESS, Architecture.HYBRID)
@@ -322,6 +356,10 @@ class AnnualEconomicsAudit:
     weighted_hours: float
     weighted_fuel_tce: float
     weighted_curtailment_mwh: float
+    weighted_renewable_available_mwh: float
+    weighted_pcc_export_mwh: float
+    curtailment_service_id: str | None
+    curtailment_ceiling_mwh: float | None
     bess_ac_discharge_throughput_mwh: float | None
     bess_ac_discharge_limit_mwh: float | None
     operating_cost_cny: float
@@ -424,6 +462,11 @@ class E0CResult:
     tes_auxiliary_mwh: float | None
     annual_economics: AnnualEconomicsAudit | None = None
     tes_operation: TESOperationalAudit | None = None
+    lexicographic_curtailment_tie_break: bool = False
+    primary_cost_tolerance_cny: float | None = None
+    primary_cost_mip_gap: float | None = None
+    secondary_curtailment_mip_gap: float | None = None
+    lexicographic_fixed_primary_integer_count: int | None = None
 
     @property
     def objective_basis(self) -> str:
@@ -675,6 +718,29 @@ def build_e0c_model(case: E0CCase) -> object:
                 for period in model.periods
             )
         )
+        model.annual_renewable_available_mwh = Expression(
+            expr=case.timeseries.dt_hours
+            * sum(
+                model.annual_period_weight[period]
+                * (
+                    case.timeseries.wind_available_mw[period]
+                    + case.timeseries.pv_available_mw[period]
+                )
+                for period in model.periods
+            )
+        )
+        model.annual_pcc_export_mwh = Expression(
+            expr=case.timeseries.dt_hours
+            * sum(
+                model.annual_period_weight[period] * model.pcc_export[period]
+                for period in model.periods
+            )
+        )
+        if case.curtailment_service is not None:
+            model.annual_curtailment_service = Constraint(
+                expr=model.annual_curtailment_mwh
+                <= case.curtailment_service.maximum_curtailment_mwh
+            )
         model.annual_operating_cost_cny = Expression(
             expr=case.objective.coal_price_cny_per_tce * model.annual_fuel_tce
             + case.objective.curtailment_penalty_cny_per_mwh
@@ -740,15 +806,31 @@ def build_e0c_model(case: E0CCase) -> object:
     return model
 
 
-def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
-    """Solve one E0-C case with HiGHS and return boundary-level audit metrics."""
+def solve_e0c(
+    case: E0CCase,
+    *,
+    solver: object | None = None,
+    lexicographic_minimize_curtailment: bool = False,
+) -> E0CResult:
+    """Solve one E0-C case with HiGHS and return boundary-level audit metrics.
 
-    from pyomo.environ import value
+    When requested for an annual case, a second solve fixes the primary
+    cost-optimal incumbent's integer decisions and minimizes curtailment while
+    constraining annual cost to that incumbent.  This removes continuous
+    renewable-dispatch degeneracy without assigning an artificial monetary
+    curtailment penalty or reopening the full mixed-integer search.
+    """
+
+    from pyomo.environ import Constraint, Objective, Var, minimize, value
     from pyomo.contrib.appsi.base import LegacySolverInterface
     from pyomo.contrib.appsi.solvers import Highs
 
     from tes_bess_boundary.solver import create_highs_solver
 
+    if not isinstance(lexicographic_minimize_curtailment, bool):
+        raise ValueError("lexicographic_minimize_curtailment must be boolean")
+    if lexicographic_minimize_curtailment and case.economics is None:
+        raise ValueError("lexicographic curtailment tie-break requires annual economics")
     if solver is None:
         solver = create_highs_solver()
     elif not isinstance(solver, Highs):
@@ -777,22 +859,80 @@ def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
             return None
         return number if math.isfinite(number) else None
 
+    def solve_gap(solve_results: object) -> float | None:
+        if is_legacy_interface:
+            feasible = finite_float(solve_results.problem.upper_bound)
+            bound = finite_float(solve_results.problem.lower_bound)
+        else:
+            feasible = finite_float(solve_results.best_feasible_objective)
+            bound = finite_float(solve_results.best_objective_bound)
+        if feasible is None or bound is None:
+            return None
+        return abs(feasible - bound) / max(abs(feasible), 1e-12)
+
+    primary_cost_mip_gap = solve_gap(results)
+    primary_cost_tolerance_cny = None
+    fixed_primary_integer_count = None
+    if lexicographic_minimize_curtailment:
+        primary_cost = float(value(model.annual_total_cost_cny))
+        primary_cost_tolerance_cny = max(1e-6, 10.0 * math.ulp(primary_cost))
+        model.lexicographic_primary_cost_cap = Constraint(
+            expr=model.annual_total_cost_cny
+            <= primary_cost + primary_cost_tolerance_cny
+        )
+        model.validation_cost.deactivate()
+        model.lexicographic_curtailment_objective = Objective(
+            expr=model.annual_curtailment_mwh,
+            sense=minimize,
+        )
+        fixed_primary_integer_count = 0
+        for variable in model.component_data_objects(Var, active=True):
+            if variable.is_binary() or variable.is_integer():
+                incumbent_value = value(variable, exception=False)
+                if incumbent_value is None:
+                    raise RuntimeError(
+                        "primary cost solve left an integer variable without a value"
+                    )
+                variable.fix(round(float(incumbent_value)))
+                fixed_primary_integer_count += 1
+        second_solve_started = perf_counter()
+        results = (
+            solver.solve(model, tee=False)
+            if is_legacy_interface
+            else solver.solve(model)
+        )
+        measured_runtime_seconds += perf_counter() - second_solve_started
+        raw_termination = (
+            results.solver.termination_condition
+            if is_legacy_interface
+            else results.termination_condition
+        )
+        termination = getattr(raw_termination, "name", str(raw_termination)).lower()
+        if termination != "optimal":
+            raise RuntimeError(
+                "E0-C lexicographic curtailment solve did not solve optimally: "
+                f"{termination}"
+            )
+
     if is_legacy_interface:
-        incumbent = finite_float(results.problem.upper_bound)
-        objective_bound = finite_float(results.problem.lower_bound)
         runtime_seconds = measured_runtime_seconds
     else:
-        incumbent = finite_float(results.best_feasible_objective)
-        objective_bound = finite_float(results.best_objective_bound)
         reported_runtime = finite_float(results.wallclock_time)
-        runtime_seconds = (
-            reported_runtime
-            if reported_runtime is not None and reported_runtime >= 0.0
-            else measured_runtime_seconds
-        )
-    mip_gap = None
-    if incumbent is not None and objective_bound is not None:
-        mip_gap = abs(incumbent - objective_bound) / max(abs(incumbent), 1e-12)
+        runtime_seconds = measured_runtime_seconds
+        if not lexicographic_minimize_curtailment:
+            runtime_seconds = (
+                reported_runtime
+                if reported_runtime is not None and reported_runtime >= 0.0
+                else measured_runtime_seconds
+            )
+    secondary_curtailment_mip_gap = (
+        solve_gap(results) if lexicographic_minimize_curtailment else None
+    )
+    mip_gap = secondary_curtailment_mip_gap
+    if not lexicographic_minimize_curtailment:
+        mip_gap = primary_cost_mip_gap
+    elif primary_cost_mip_gap is not None:
+        mip_gap = max(mip_gap or 0.0, primary_cost_mip_gap)
 
     dt_hours = case.timeseries.dt_hours
     wind_curtailed_mwh = dt_hours * sum(
@@ -832,6 +972,20 @@ def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
             weighted_hours=float(value(model.annual_weighted_hours)),
             weighted_fuel_tce=float(value(model.annual_fuel_tce)),
             weighted_curtailment_mwh=float(value(model.annual_curtailment_mwh)),
+            weighted_renewable_available_mwh=float(
+                value(model.annual_renewable_available_mwh)
+            ),
+            weighted_pcc_export_mwh=float(value(model.annual_pcc_export_mwh)),
+            curtailment_service_id=(
+                case.curtailment_service.service_id
+                if case.curtailment_service is not None
+                else None
+            ),
+            curtailment_ceiling_mwh=(
+                float(case.curtailment_service.maximum_curtailment_mwh)
+                if case.curtailment_service is not None
+                else None
+            ),
             bess_ac_discharge_throughput_mwh=(
                 float(value(model.annual_bess_ac_discharge_throughput_mwh))
                 if case.bess is not None
@@ -927,7 +1081,11 @@ def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
         termination=termination,
         runtime_seconds=float(runtime_seconds),
         mip_gap=float(mip_gap) if mip_gap is not None else None,
-        objective_value=float(value(model.validation_cost)),
+        objective_value=float(
+            value(model.annual_total_cost_cny)
+            if case.economics is not None
+            else value(model.validation_cost)
+        ),
         fuel_tce=float(value(model.total_fuel_tce)),
         curtailment_mwh=float(value(model.total_curtailment_mwh)),
         wind_curtailed_mwh=float(wind_curtailed_mwh),
@@ -988,4 +1146,11 @@ def solve_e0c(case: E0CCase, *, solver: object | None = None) -> E0CResult:
         ),
         annual_economics=annual_economics,
         tes_operation=tes_operation,
+        lexicographic_curtailment_tie_break=(
+            lexicographic_minimize_curtailment
+        ),
+        primary_cost_tolerance_cny=primary_cost_tolerance_cny,
+        primary_cost_mip_gap=primary_cost_mip_gap,
+        secondary_curtailment_mip_gap=secondary_curtailment_mip_gap,
+        lexicographic_fixed_primary_integer_count=fixed_primary_integer_count,
     )

@@ -24,7 +24,8 @@
 | 编号 | 建议标签 | 目的 | 数据来源 | 状态 |
 |---|---|---|---|---|
 | Tab 1 | `tab:system_parameters` | 汇总 CHP、风光、PCC、价格和碳参数及来源 | E0 | 8784 h 结构已核；原始热异常和 CHP 口径待关闭 |
-| Tab 2 | `tab:storage_parameters` | 分列 BESS 功率/可用电量与 TES 端口/盐量/罐容、效率、寿命、更换和运维 | E0 | BESS 已闭合；E0-D-15 将 TES 拆成 12 个正式账户且目前全部 BLOCKED；E0-D-16 只提供全系统 EAC 上限定义，不能填充本表的部件价格；DLR 两罐 2020 EUR 值只作工程聚合校准 |
+| Tab 2 | `tab:storage_parameters` | 分列 BESS 功率/可用电量与 TES 端口/盐量/罐容、效率、寿命、更换和运维 | E0 | BESS 已闭合；TES 12 个正式账户仍全部 BLOCKED；E0-D-17 的 24 h 系统 EAC 上限不能填充本表部件价格，DLR 两罐值仍只作聚合校准 |
+| Tab S-E0D17 | `tab:e0d17_screening` | 24 h 冬季典型日年化燃煤、弃电、PCC、辅机与全系统 EAC 上限 | E0 | 可放补充材料并标明旧 2019 风光、燃料单项和非全年；两周无结果，不进入正式主结果表 |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |

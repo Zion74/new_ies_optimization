@@ -16,6 +16,8 @@ The current E0 slice contains:
 - a pre-model cost-evidence gate that separately checks venue tier, price basis, capacity denominator, technology boundary, provenance, and allowed use before any source can certify a formal baseline;
 - a 12-account formal-TES readiness gate that rejects aggregate anchors from component accounts and requires explicit approval before combining multiple source packages;
 - a penalty-free TES break-even accounting seam that reports one whole-system EAC ceiling plus fuel, curtailment, PCC-export, and auxiliary-energy deltas without allocating the ceiling back to components;
+- a conservative E0-C annual-result adapter with explicit curtailment service, weighted renewable/PCC audits, complete TES-ownership removal, and a primary-cost-incumbent-conditional curtailment tie-break;
+- a hash-locked E0-D-17 exploration CLI: the 2024-01-01 24-hour cascade-TES slice is reproducible across Windows/Linux, while the two-week performance gate remains open;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -57,7 +59,12 @@ maximum whole-system TES EAC consistent with a matched annual service outcome. I
 rejects artificial curtailment penalties, heat shortfall, non-optimal outcomes,
 zero-capacity TES, and cross-scope comparisons; normalized views cannot be allocated
 back to components. The current claim remains exploratory because the formal TES
-portfolio and complete non-TES system-cost scope are both unfinished.
+portfolio and complete non-TES system-cost scope are both unfinished. E0-D-17 connects
+actual annual E0-C results to that kernel and locks one 24-hour winter screening slice.
+The slice uses formal heat but a legacy 2019 renewable shape mapped onto 2024, scores
+one day with a weight of 366, and includes fuel cost only. Its whole-system EAC ceiling
+must not be described as a full-year result, a TES component price, or an E1 winner.
+The 336-hour cascade-TES/UC case has not yet passed its controlled performance gate.
 Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
@@ -111,16 +118,14 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 ```
 
 Data-integration tests read Yangling files outside this package and are run only
-where those private files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the
-formal directory is not in the local repository layout. The current local result is
-`279 passed in 31.57s` with the pytest cache disabled. E0-D-14 through E0-D-16 have not yet been synchronized to OpenBayes. The
-latest remote result therefore remains the E0-D-11 baseline; OpenBayes has matching
-SHA-256 values for that cost-anchor source, test, and public evidence files. With
-`TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
-set explicitly, the full remote result is `258 passed in 21.36s`. An initial E0-D-2 remote
-run without that variable produced 22 `FileNotFoundError` failures because the
-server data directory differs from the repository-relative default; this was an
-environment-path mismatch, not a model or test-logic failure.
+where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
+directory is not in the local repository layout. The current full results with the
+pytest cache disabled are `284 passed in 76.16s` locally and `284 passed in 21.37s`
+on OpenBayes. E0-D-17 source/tests and the authorized inputs are synchronized. The
+24-hour canonical CSV and manifest have identical Windows/Linux SHA-256 values.
+With `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
+set explicitly, all remote data-integration tests pass; omitting it addresses a
+nonexistent repository-relative directory and is an environment-path error.
 
 ```bash
 python -m pytest -q -m data_integration
