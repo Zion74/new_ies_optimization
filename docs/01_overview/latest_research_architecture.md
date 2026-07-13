@@ -93,8 +93,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **文献与科学问题**：已完成高质量文献门槛筛选，当前主空白可辩护；
 - **杨凌数据**：E0-B 正式构建已完成；保留 52,707 行源证据、52,704 点 canonical 网格和 8,784 h net/forward/zero-sensitivity 三口径。单位、老城单点哨兵、29 个东方双负、49 个仅流量为负、2,050 个居民负值与 5/85/226 三段全零均进入结构化质量合同；
 - **机制原型**：已有 `_ch4_*` MILP、储能对照、敏感性和典型期脚本；
-- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12 完成正式成本闭环审计，E0-D-13 建立唯一 Rahman BESS 正式来源候选；E0-D-14 又闭合电芯寿命所有权、AC 放电侧 VOM 和 PCS 5–100 MW 尺度口径，可直接构造完整 fixed-capacity BESS 生命周期账本。全部 TES 正式成本、系统级 TAC、内生容量和结构化代表周仍阻断 E1–E6；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，E0-B/E0-C 正式产物及 E0-D-1–D-11 源码、测试和允许上传的公开审计产物均已同步；Python 3.10.18、`Pyomo 6.10.1 + HiGHS 1.15.1` 环境中远端基线为 `258 passed in 21.36s`。E0-D-14 本地完整回归为 `268 passed in 32.53s`，尚未同步服务器；
+- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-11 已实现物理、寿命经济、证据资格与 BESS 官方工程敏感性锚点。E0-D-12 完成正式成本闭环审计，E0-D-13 建立唯一 Rahman BESS 正式来源候选，E0-D-14 闭合完整 fixed-capacity BESS 生命周期账本；E0-D-15 又建立 12 账户 TES 正式成本就绪度门禁，将 DLR 2020 EUR 两罐工程锚点、Klasing/Li 聚合锚点与部件账本隔离，并保持 TES 复合证据路线未批准。全部 TES 正式成本、系统级 TAC、内生容量和结构化代表周仍阻断 E1–E6；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，E0-B/E0-C 正式产物及 E0-D-1–D-11 源码、测试和允许上传的公开审计产物均已同步；Python 3.10.18、`Pyomo 6.10.1 + HiGHS 1.15.1` 环境中远端基线为 `258 passed in 21.36s`。E0-D-15 本地 Python 3.11 完整回归为 `273 passed in 30.31s`（关闭 pytest cache），尚未同步服务器；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -103,8 +103,9 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - SCI 模型实验：`docs/03_sci_paper/fair_storage_boundary_model_and_experiment_design.md`
 - E0 实现状态：`docs/03_sci_paper/e0_validation_status.md`
 - E0 正式成本闭环：`docs/03_sci_paper/e0_formal_cost_closure_audit.md`
+- TES 正式成本就绪度门禁：`docs/03_sci_paper/e0_tes_formal_cost_readiness_contract.md`
 - E0 Rahman BESS 关联证据合同：`docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
-- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`
+- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`；TES 正式成本复核：`风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`

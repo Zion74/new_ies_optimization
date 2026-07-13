@@ -1,7 +1,7 @@
 # E0-D-12 BESS—TES 成本证据缺口矩阵
 
 更新时间：2026-07-13
-状态：**E0-D-14 已闭合 Rahman BESS 三个模型接缝并可构造完整 fixed-capacity 生命周期账本。TES/电加热器仍无正式候选；系统级完整 TAC 尚未闭合。**
+状态：**E0-D-14 已闭合完整 fixed-capacity BESS 生命周期账本；E0-D-15 已把 TES 拆成 12 个正式成本账户并隔离聚合工程锚点。TES 正式候选仍为零，系统级完整 TAC 尚未闭合。**
 
 ## 1. 本轮解决的问题
 
@@ -57,6 +57,8 @@
 | Ahmadi et al., *Applied Energy* (2025), DOI `10.1016/j.apenergy.2025.126706`, Table 4 | LiB 189 USD/kWh、PCS 211 USD/kW、BoP 95 USD/kW、construction 96 USD/kWh、replacement 409.59 USD/kWh、FOM 7.59 USD/kW-y、VOM 2.31 USD/MWh | 2030 为技术情景年，不自动等于价格基年 | 分母细，但原文明示来自 PNNL 2030 projection | `official_projection_sensitivity_only` | 非作者 bottom-up，且价格基年未独立闭合 |
 | Trevisan et al., *Energy Conversion and Management* (2022), DOI `10.1016/j.enconman.2022.116362`, Table 8 | 变压器 30 EUR/kWel、EH 50 EUR/kWel、罐 30 EUR/kWhth、循环 25 EUR/kWhth、蒸汽发生器 120 EUR/kWth、盐 1 EUR/kg | 分项继承 2011–2022 的混合底层来源，论文未统一归一到一个明确价格年 | 工业 P2H、约 170–450°C；分母可映射，但循环固定单价与 10% CAPEX 口径只能二选一 | `blocked_pending_price_base` | 每项底层价格年、规模和项目附加项未闭合 |
 | Klasing et al., *Applied Energy* (2025), DOI `10.1016/j.apenergy.2024.124524`, Tables 4–5 | EH 100/115 EUR/kWel、steam generator 46/51 EUR/kWth、two-tank 21 EUR/kWhth；系统级 MS/Li-ion 成本 | 压力容器等作者相关式明确为 2023 EUR，但 EH、储罐和蒸汽发生器主要输入仍来自混合年份文献，不能把 2023 或发表年套给全系统 | 煤电改造拓扑接近；21 EUR/kWhth 已含盐、罐、基础及电气/管阀份额 | 分项 `blocked_pending_price_base`；系统总价 `aggregate_anchor_only` | 关键分项共同价格年与包含边界未闭合 |
+| Klasing 同文的 closed gas-handling system | 压力容器、压缩机、空冷器和气体电加热器作者相关式 | 明确为 2023 EUR | 服务 620°C 封闭气体管理；当前约 390°C HITEC 三温区拓扑不含该子系统 | `sensitivity_only` | 只有该子系统可称 EUR_2023，不能外推至整张 TES 成本表 |
+| Dersch et al., DLR 2021 report 0324253 | 两罐 Solar Salt 整套储热 20–22 EUR/kWhth，中心值 21 | Figure 4 明确 `Base year 2020` | 290–560°C、净热容量分母、两罐 CSP；系统边界包含多个部件和 markups | `official_engineering_anchor` / 聚合校准 | 非 Energy+ 同行评议，且拓扑/盐种不同；不能满足三罐 HITEC 部件账户 |
 | Wang et al., *Applied Energy* (2025), DOI `10.1016/j.apenergy.2025.126876` | HITEC 53/40/7、180/390°C、约 0.9 USD/kg | 价格年未注明 | 材料与温区直接相关；盐价为质量分母 | 物理参数可用；盐价 `sensitivity_only` | HITEC 采购价格年、规模与来源链未闭合 |
 | Li et al., *Energy* (2026), DOI `10.1016/j.energy.2026.141711`, Table 5 / p.14 | 罐、泵、换热器工程相关式；改造总投资约 54.19/55.205 million CNY | 公式与总投资均未明确统一价格基年 | 350 MW CHP 级联改造；总投资含多个项目项 | 相关式 `blocked_pending_price_base`；总投资 `aggregate_anchor_only` | 价格年、相关式适用范围及总投资包含边界未闭合 |
 | McTigue et al., *Energy Conversion and Management* (2022), DOI `10.1016/j.enconman.2021.115016` | 硝酸盐 0.5–1.3 USD/kg；PTES 安装因子、寿命、O&M 和系统成本 | 明确为 2020 USD | PTES 含压缩机/膨胀机，与既有 CHP 双用途熔盐 TES 不同 | `sensitivity_only` | 拓扑差异，不能作为直接 TES 基线 |
@@ -69,10 +71,11 @@
 
 1. **BESS 正式价格与寿命所有权已锁定。** Rahman 负责 2019 USD 的 battery/PCS/BoP/footprint/FOM/contingency/VOM；Schmidt *Joule* 负责 13 年/3250 EFC，replacement 只由 calendar+AC-throughput 核生成。
 2. **NREL 继续只作独立工程敏感性。** 60 MW / 240 MWh、2020 USD 双分母账本不与 Rahman 分项叠加，只用于量级和边界稳健性检查。
-3. **TES 主账本继续采用分项结构，但不填伪精确数值。** Trevisan 提供分母和组件结构；Klasing、Li 提供煤电改造聚合锚点；Wang 提供 HITEC 材料与温区。三者不能在价格年未闭合时拼成所谓“同一基年参数表”。
+3. **TES 主账本继续采用分项结构，但不填伪精确数值。** Trevisan 提供分母和组件结构；Klasing、Li 提供煤电改造聚合锚点；Wang 提供 HITEC 材料与温区；DLR 2020 EUR 只提供两罐 Solar Salt 工程总量锚点。它们不能拼成所谓“同一基年参数表”。
 4. **明确价格年的异拓扑来源只进入敏感性。** McTigue 和 Vecchi 的 2020 USD 可以直接换算为 `CNY_2024_real`，但只能形成 PTES/TMES 方法或范围锚点，不能升级为杨凌双用途熔盐 TES 基线。
 5. **电加热器出现近正式报价，但不能跨过价格年门槛。** `140 EUR/kWe` 是目前最清晰的单一分母候选；在作者或项目方确认报价价格年前，只能预注册为敏感性中心候选。
 6. **高等级论文转引官方数据不会改变证据层级。** Guccione TES 与 Ahmadi BESS 数值即使发表在 *Energy*/*Applied Energy*，仍分别属于 NREL 工程锚点和 PNNL 2030 预测。
+7. **正式 TES 门禁按 12 个账户逐项验收。** 高/中温蒸汽充热、对外供热和 power-block retrofit 当前没有满足严格门槛的直接候选；Guccione 回复只能关闭电加热器账户。多来源组合还需要单独批准 `composite_route_approved`。
 
 ## 5. 下一门槛
 
@@ -87,4 +90,4 @@
 
 在这些条件满足前，E0 仍不通过，E1–E6 批量实验不启动。
 
-E0-D-14 已新增 resolved join contract、AC 放电 VOM 和完整 fixed-capacity BESS 构建。本地完整回归为 `268 passed in 32.53s`；OpenBayes 最近结果仍为 `258 passed in 21.36s`，本轮尚未同步。机器 CSV 可读取，13 行中恰有一行 `formal_candidate=true`。
+E0-D-15 已新增 `formal_tes_costs.py`、聚合锚点隔离和复合证据审批门。本地完整回归为 `273 passed in 30.31s`（关闭 pytest cache）；OpenBayes 最近结果仍为 `258 passed in 21.36s`，本轮尚未同步。E0-D-12 历史机器 CSV 仍为 13 行且 Rahman 为唯一 true；当前代码参考审计扩展为 16 条记录，正式候选仍只有 Rahman BESS。

@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-12 已完成 TES 物理/作者筛查、成本认证门、NREL 4 h BESS 工程敏感性账本和正式来源审计，E0-D-13 建立 Rahman 唯一 BESS 正式来源候选。E0-D-14 已闭合 BESS 三个模型接缝并可构造完整 fixed-capacity 生命周期账本；但全部 TES 正式成本、endogenous capacity 及系统级 TAC 尚未闭合，因此 E0 总门槛及正式批量算例仍未通过。本地 268 项通过，OpenBayes 最近 258 项通过。
+状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-12 已完成 TES 物理/作者筛查、成本认证门、NREL 4 h BESS 工程敏感性账本和正式来源审计，E0-D-13/14 已建立并闭合完整 fixed-capacity BESS 生命周期账本。E0-D-15 又将 TES 正式成本拆成 12 个账户，隔离聚合工程锚点并要求复合证据另行批准；但账户仍全部阻断，endogenous capacity 及系统级 TAC 尚未闭合，因此 E0 总门槛及正式批量算例仍未通过。本地 273 项通过，OpenBayes 最近 258 项通过。
 
 ## 1. 科学问题与研究边界
 
@@ -550,7 +550,7 @@ E_T^{h,rate}=D\frac{Q^{MT\rightarrow LT,h}}{\eta_{Mh}}
 
 ## 8. 算力预算与 HiGHS 执行策略
 
-当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。远端最近全量回归为 `258 passed in 21.36s`；E0-D-14 本地重跑为 `268 passed in 32.53s`，尚未同步服务器。既有 E0-B/E0-C canonical hashes 保持锁定。
+当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。远端最近全量回归为 `258 passed in 21.36s`；E0-D-15 本地重跑为 `273 passed in 30.31s`（关闭 pytest cache），尚未同步服务器。既有 E0-B/E0-C canonical hashes 保持锁定。
 
 主模型采用 `Pyomo + highspy`，不依赖 Gurobi。推荐：
 

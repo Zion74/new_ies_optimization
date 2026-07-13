@@ -14,6 +14,7 @@ The current E0 slice contains:
 - three-temperature molten-salt inventory and enthalpy validation;
 - a unique salt/tank/five-port cost-capacity ledger with component temperature-range checks;
 - a pre-model cost-evidence gate that separately checks venue tier, price basis, capacity denominator, technology boundary, provenance, and allowed use before any source can certify a formal baseline;
+- a 12-account formal-TES readiness gate that rejects aggregate anchors from component accounts and requires explicit approval before combining multiple source packages;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -45,8 +46,11 @@ chapter as the only BESS formal-source candidate and maps the principal non-cell
 lines. E0-D-14 closes the fixed-capacity model joins: Rahman supplies cell price only,
 Schmidt supplies the 13-year/3250-EFC non-price life inputs, VOM is charged on AC
 discharge, and the constant PCS unit cost is rejected outside 5-100 MW. The resulting
-BESS lifecycle ledger is complete, while no TES formal-cost candidate has yet passed
-the gate.
+BESS lifecycle ledger is complete. E0-D-15 separates 12 mandatory TES cost accounts
+from aggregate calibration anchors and requires explicit approval for a multi-source
+evidence portfolio. All 12 accounts remain blocked under the strict route. The DLR
+2020-EUR two-tank Solar Salt value is retained for calibration/sensitivity only and
+cannot certify the component ledger or the proposed three-temperature HITEC topology.
 Formal sweeps must not start until the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
@@ -102,7 +106,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those private files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the
 formal directory is not in the local repository layout. The current local result is
-`268 passed in 32.53s`. E0-D-14 has not yet been synchronized to OpenBayes. The
+`273 passed in 30.31s` with the pytest cache disabled. E0-D-14/15 have not yet been synchronized to OpenBayes. The
 latest remote result therefore remains the E0-D-11 baseline; OpenBayes has matching
 SHA-256 values for that cost-anchor source, test, and public evidence files. With
 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`

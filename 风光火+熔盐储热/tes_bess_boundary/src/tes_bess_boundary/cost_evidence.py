@@ -43,6 +43,7 @@ class CostSourceProvenance(str, Enum):
     """Provenance of the underlying cost value, not merely the citing venue."""
 
     AUTHOR_BOTTOM_UP_OR_NORMALIZED = "author_bottom_up_or_normalized"
+    AUDITABLE_PRIMARY_QUOTE = "auditable_primary_quote"
     MIXED_REUSED_SOURCES = "mixed_reused_sources"
     OFFICIAL_BOTTOM_UP = "official_bottom_up"
     SECONDARY_TRANSCRIPTION = "secondary_transcription"
@@ -184,7 +185,10 @@ class CostEvidenceRecord:
             blockers.append("price_base")
         if self.technology_fit is not TechnologyBoundaryFit.DIRECT:
             blockers.append("technology_boundary")
-        if self.provenance is not CostSourceProvenance.AUTHOR_BOTTOM_UP_OR_NORMALIZED:
+        if self.provenance not in {
+            CostSourceProvenance.AUTHOR_BOTTOM_UP_OR_NORMALIZED,
+            CostSourceProvenance.AUDITABLE_PRIMARY_QUOTE,
+        }:
             blockers.append("source_provenance")
         if (
             expected_capacity_denominator is not None
@@ -354,6 +358,55 @@ def build_e0d10_reference_cost_audit() -> CostEvidenceAudit:
                 note="System total contains components that must not be counted again.",
             ),
             CostEvidenceRecord(
+                evidence_id="klasing2025_gas_handling_2023",
+                source_locator="10.1016/j.apenergy.2024.124524",
+                venue_tier=VenueEvidenceTier.CORE_PEER_REVIEWED,
+                price_base_status=PriceBaseStatus.EXPLICIT,
+                currency="EUR",
+                price_base_year=2023,
+                capacity_denominator="component_specific",
+                technology_fit=TechnologyBoundaryFit.TOPOLOGY_MISMATCH,
+                provenance=CostSourceProvenance.AUTHOR_BOTTOM_UP_OR_NORMALIZED,
+                allowed_use=CostEvidenceUse.SENSITIVITY_ONLY,
+                note=(
+                    "Only the closed gas-handling subsystem correlations are "
+                    "explicitly reported in 2023 EUR; that subsystem is absent from "
+                    "the current HITEC three-temperature topology."
+                ),
+            ),
+            CostEvidenceRecord(
+                evidence_id="guccione2023_electric_heater_quote",
+                source_locator="10.1016/j.energy.2023.128528",
+                venue_tier=VenueEvidenceTier.CORE_PEER_REVIEWED,
+                price_base_status=PriceBaseStatus.NOT_REPORTED,
+                currency="EUR",
+                price_base_year=None,
+                capacity_denominator="kW_el",
+                technology_fit=TechnologyBoundaryFit.DIRECT,
+                provenance=CostSourceProvenance.AUDITABLE_PRIMARY_QUOTE,
+                allowed_use=CostEvidenceUse.BLOCKED_PENDING_PRICE_BASE,
+                note=(
+                    "The 140 EUR/kW_el real-quote value lacks the quote date, "
+                    "original currency, scale, and complete inclusion boundary."
+                ),
+            ),
+            CostEvidenceRecord(
+                evidence_id="guccione2024_electric_heater_quote",
+                source_locator="10.1016/j.energy.2024.133500",
+                venue_tier=VenueEvidenceTier.CORE_PEER_REVIEWED,
+                price_base_status=PriceBaseStatus.NOT_REPORTED,
+                currency="EUR",
+                price_base_year=None,
+                capacity_denominator="kW_el",
+                technology_fit=TechnologyBoundaryFit.DIRECT,
+                provenance=CostSourceProvenance.AUDITABLE_PRIMARY_QUOTE,
+                allowed_use=CostEvidenceUse.BLOCKED_PENDING_PRICE_BASE,
+                note=(
+                    "The 15+125 EUR/kW_el quote still lacks a price year and the "
+                    "temperature-cost scaling expression remains ambiguous."
+                ),
+            ),
+            CostEvidenceRecord(
                 evidence_id="wang2025_hitec_salt",
                 source_locator="10.1016/j.apenergy.2025.126876",
                 venue_tier=VenueEvidenceTier.CORE_PEER_REVIEWED,
@@ -433,6 +486,23 @@ def build_e0d10_reference_cost_audit() -> CostEvidenceAudit:
                 provenance=CostSourceProvenance.OFFICIAL_BOTTOM_UP,
                 allowed_use=CostEvidenceUse.OFFICIAL_ENGINEERING_ANCHOR,
                 note="FOM includes augmentation and the source is not an Energy+ paper.",
+            ),
+            CostEvidenceRecord(
+                evidence_id="dlr2021_csp_tes_aggregate",
+                source_locator="https://elib.dlr.de/141315/",
+                venue_tier=VenueEvidenceTier.OFFICIAL_ENGINEERING,
+                price_base_status=PriceBaseStatus.EXPLICIT,
+                currency="EUR",
+                price_base_year=2020,
+                capacity_denominator="kWh_th_net",
+                technology_fit=TechnologyBoundaryFit.SYSTEM_AGGREGATE,
+                provenance=CostSourceProvenance.OFFICIAL_BOTTOM_UP,
+                allowed_use=CostEvidenceUse.OFFICIAL_ENGINEERING_ANCHOR,
+                note=(
+                    "DLR reports a 20-22 EUR/kWh_th two-tank Solar Salt system "
+                    "range (21 central) on net thermal capacity with base year 2020; "
+                    "it is calibration-only for the three-tank HITEC model."
+                ),
             ),
             CostEvidenceRecord(
                 evidence_id="bahloul2022_table9",

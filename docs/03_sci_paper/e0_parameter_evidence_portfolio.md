@@ -1,7 +1,7 @@
 # E0-D-12 BESS—熔盐 TES 参数、温区、拓扑、夹点、MT 与成本证据
 
 更新时间：2026-07-13
-状态：证据组合 v1.1。E0-D-14 已把 Rahman 价格、Schmidt 非价格寿命、AC 放电侧 VOM 和 5–100 MW PCS 口径闭合为完整 fixed-capacity BESS 生命周期账本。TES 正式候选仍为零；系统级完整 TAC 尚未闭合。
+状态：证据组合 v1.2。E0-D-14 已把 Rahman 价格、Schmidt 非价格寿命、AC 放电侧 VOM 和 5–100 MW PCS 口径闭合为完整 fixed-capacity BESS 生命周期账本。E0-D-15 已把 TES 拆成 12 个正式成本账户，登记 DLR 2020 EUR 两罐工程聚合锚点并实现复合证据审批门；TES 正式候选仍为零，系统级完整 TAC 尚未闭合。
 
 ## 1. 目的与非结论
 
@@ -71,6 +71,7 @@ Yuan et al. (2016) 与 Yu et al. (2018) 的 `Energies` 论文已按用户门槛�
 18. *Energy* 2024 的双罐熔盐 TES `18–23 EUR/kWh_th` 分别对应约 275°C 与 98°C 温差，但底层来自 NREL/历史工程文献，不属于作者 bottom-up；只能校验 TES 能量成本量级，不能替代本项目三罐双服务 ledger。
 19. Rahman et al. (*Applied Energy*, 2021) 与其 University of Alberta 官方博士论文 Chapter 3 已闭合 2019 USD、分项表、精确分母、replacement/FOM 与退役排除边界；用户批准后成为唯一 `formal_candidate=true`。Ahmadi et al. (*Applied Energy*, 2025) 仍因 PNNL 2030 projections 只进敏感性。
 20. E0-D-14 已直接映射 PCS、BoP、围护基础、battery/PCS FOM 与 contingency，并预注册三接缝：Rahman cycle-only replacement 不进入正式基线，Schmidt 13 年/3250 EFC 驱动唯一 calendar+throughput 核；VOM 按 AC 放电；PCS 常数单价限 5–100 MW。来源层合格与 resolved fixed-capacity contract 仍是两个不同状态。
+21. E0-D-15 追溯 DLR 2021 原报告后确认 Klasing 两罐中心值为 `21 EUR_2020/kWh_th-net`、范围 20–22，但该值仍是两罐 Solar Salt 官方工程聚合锚点。`formal_tes_costs.py` 要求 12 个账户逐项闭合，并拒绝 Klasing/Li/DLR 聚合锚点满足部件账户；Guccione 回复也只能关闭电加热器一项。
 
 ### E0-D-8 物理候选与禁用替代
 
@@ -124,10 +125,11 @@ E0-D-11 使用上述官方快照把 NREL 60 MW / 240 MWh 工程锚点换算为 `
 - 分项 ledger 与至少一个独立聚合项目成本完成总量校准；
 - 逐来源的价格年、容量分母、技术边界和允许用途缺口矩阵；**E0-D-13 更新后 13 个候选中 Rahman BESS 为唯一 true**；
 - 成本来源资格的可执行认证门、唯一 Rahman 正式候选及降级拒绝回归；**本地已完成，远端待同步**；
+- TES 12 账户就绪度、聚合锚点隔离和复合证据审批门；**本地已完成，账户仍全部阻断，远端待同步**；
 - NREL/OEDI 原工作簿、精确单元格提取、manifest、功率—可用能量双分母台账、2024 CNY 转换及 augmentation 防双计；**已完成，本地/OpenBayes 均 258 项通过**；
 - `power block` 分类修正有测试保护；**已完成**；
 - 价格转换机制、ISO 币种和 2024 CNY 年度口径有独立合成金标准；**已完成**；
 - 官方快照、逐源哈希、重复序列和篡改拒绝有独立金标准；**已完成**；
 - 低—中—高三档参数均能通过年度现金流审计。
 
-上述剩余门槛未全部满足前，E0 保持“完整 fixed-capacity BESS 生命周期账本已闭合，但全部 TES 正式成本与系统级 TAC 未闭合”，E1 与批量边界扫描不启动。E0-D-14 本地完整回归为 `268 passed in 32.53s`；OpenBayes 最近仍为 `258 passed in 21.36s`，本轮尚未同步。
+上述剩余门槛未全部满足前，E0 保持“完整 fixed-capacity BESS 生命周期账本已闭合，但全部 TES 正式成本与系统级 TAC 未闭合”，E1 与批量边界扫描不启动。E0-D-15 本地完整回归为 `273 passed in 30.31s`（关闭 pytest cache）；OpenBayes 最近仍为 `258 passed in 21.36s`，本轮尚未同步。

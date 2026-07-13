@@ -33,7 +33,7 @@ def test_e0d10_reference_audit_promotes_only_the_approved_linked_package() -> No
 
     audit = build_e0d10_reference_cost_audit()
 
-    assert len(audit.records) == 12
+    assert len(audit.records) == 16
     assert audit.formal_candidate_ids == (
         "rahman2021_bess_component_package",
     )
@@ -50,6 +50,16 @@ def test_e0d10_reference_audit_promotes_only_the_approved_linked_package() -> No
     assert audit.get("vecchi2023_tmes_method").formal_blockers() == (
         "allowed_use",
         "technology_boundary",
+    )
+    assert audit.get("guccione2023_electric_heater_quote").formal_blockers() == (
+        "allowed_use",
+        "price_base",
+    )
+    assert audit.get("dlr2021_csp_tes_aggregate").formal_blockers() == (
+        "venue_tier",
+        "allowed_use",
+        "technology_boundary",
+        "source_provenance",
     )
 
     with pytest.raises(ValueError, match="price_base"):
@@ -139,6 +149,32 @@ def test_price_basis_and_source_invariants_are_strict() -> None:
         source_locator="https://example.test/report",
     )
     assert official.source_locator.startswith("https://")
+
+
+def test_auditable_primary_quote_is_provenance_eligible_but_not_self_certifying() -> None:
+    from dataclasses import replace
+
+    from tes_bess_boundary.cost_evidence import (
+        CostEvidenceUse,
+        CostSourceProvenance,
+        PriceBaseStatus,
+    )
+
+    quote = replace(
+        _eligible_record("auditable_quote"),
+        provenance=CostSourceProvenance.AUDITABLE_PRIMARY_QUOTE,
+    )
+    assert quote.formal_blockers(expected_capacity_denominator="kWh_th") == ()
+
+    missing_price_year = replace(
+        quote,
+        price_base_status=PriceBaseStatus.NOT_REPORTED,
+        price_base_year=None,
+        allowed_use=CostEvidenceUse.BLOCKED_PENDING_PRICE_BASE,
+    )
+    assert missing_price_year.formal_blockers(
+        expected_capacity_denominator="kWh_th"
+    ) == ("allowed_use", "price_base")
 
 
 def test_linked_author_expansion_requires_an_official_locator() -> None:

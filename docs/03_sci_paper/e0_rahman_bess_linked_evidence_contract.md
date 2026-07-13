@@ -130,5 +130,5 @@ Rahman 使用 5 MW PCS 模块，并对并联模块使用 95% multiplicity learni
 - `src/tes_bess_boundary/model.py`：退化成本与 VOM 分列，并在年度总成本中各计一次；
 - `tests/test_cost_evidence.py`：关联证据资格、精确分母与降级拒绝；
 - `tests/test_formal_bess_costs.py` 与 `tests/test_annual_economics.py`：寿命所有权、VOM 分母、PCS 范围、完整构建和 HiGHS 年度目标回归；
-- 本地完整回归：`268 passed in 32.53s`，仅保留既有 `.pytest_cache` 写权限警告；
+- 加入 E0-D-15 TES 正式成本门禁后的本地完整回归：`273 passed in 30.31s`（关闭 pytest cache，无警告）；
 - OpenBayes：尚未同步本轮 E0-D-14，远端最近基线仍为 `258 passed in 21.36s`。

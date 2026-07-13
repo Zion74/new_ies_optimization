@@ -2,7 +2,7 @@
 
 更新时间：2026-07-13
 
-除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14 已闭合 Rahman BESS 三接缝及完整 fixed-capacity 生命周期账本；本地 268 项通过，OpenBayes 最近 258 项通过。杨凌现场泵参数、TES 正式参数、系统级 TAC、容量规划与 E1-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14 已闭合完整 fixed-capacity BESS 生命周期账本；E0-D-15 新增 `formal_tes_costs.py` 的 12 账户 TES 正式就绪度门禁。本地 273 项通过，OpenBayes 最近 258 项通过。杨凌现场泵参数、TES 正式参数、系统级 TAC、容量规划与 E1-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -11,8 +11,8 @@
 | T2-1 | 2024 年 8784 h 数据审计 | 锁定时区、单位、缺失、同步和边界 | `data.py`、`raw_heat.py`、`heat_dataset.py`、`heat_adapter.py`、原始机组数据 | E0-B 正式质量数据及 E0-C 主/敏感性消费规则均已生成并跨平台复现 |
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
-| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向与分部件寿命 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`tes_loss_calibration.py`、`tes_pump_calibration.py`、`model.py`、`economics.py`、`tes_cost_mapping.py` | 三温区/五端口、库存—环境温差损失、固定伴热、五路径泵耗和 PCC 防双计结构通过；三 MT 损失、三档底层液压泵耗、标准循环与统一运行审计通过；杨凌现场泵参数和正式成本换算值待补 |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py` + `highspy` | 当前代码基线：本地 `268 passed in 32.53s`，OpenBayes 最近 `258 passed in 21.36s`；E0-D-14 尚未同步远端 |
+| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向与分部件寿命 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`tes_loss_calibration.py`、`tes_pump_calibration.py`、`model.py`、`economics.py`、`tes_cost_mapping.py`、`formal_tes_costs.py` | 三温区/五端口、库存—环境温差损失、固定伴热、五路径泵耗和 PCC 防双计结构通过；12 账户正式成本门禁通过但全部账户仍阻断；杨凌现场泵参数和正式成本换算值待补 |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py` + `highspy` | 当前代码基线：本地 `273 passed in 30.31s`（关闭 pytest cache），OpenBayes 最近 `258 passed in 21.36s`；E0-D-15 尚未同步远端 |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 
