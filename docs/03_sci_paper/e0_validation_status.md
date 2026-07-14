@@ -2,7 +2,7 @@
 
 更新时间：2026-07-14
 
-状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门；E0-D-26 已完成约束缩放、严格容差、条件面证人和有限界分离；E0-D-27 已完成固定支持方向与等价正负符号重构；E0-D-28 已完成两个预注册异质符号种子的单步方向筛查；E0-D-29 已完成外送耦合全局上界紧化；E0-D-30 已完成静态物理 PCC 可达外包络、年度服务传播与区间感知符号紧化；E0-D-31 已完成跨时段连续松弛 OBBT 负筛查；E0-D-32 已完成联合 24 h 分块 L1 包络、24 h reopened 等价门及 336 h 结果前材料性负筛查。E0 总门槛仍未通过。** 24 h 全局严格包络保持 `26,010.171143–26,010.174929 MWh/a`；D30 将 336 h 最大严格区间从 D29 的 `[36,382.462799,845,052.030831]` 收紧为 `[36,382.462799,777,141.368858] MWh/a`，上界较 D29 改善 `8.0363%`、较 D26 累计改善 `42.9474%`。D31 的 336 h 正/负符号宽度相对 D30 仅再改善 `0.0329%/0.0864%`；D32 的 14 个受保护日块 dual 之和为 `1,930,160.868929 MWh/a`，高于 D30，上界改善为 0。两轮均未启动新的 336 h global probe，故最新全局界仍为 D30 且外界仍宽。D24 严格正式账户为 `0/16`；D25 当前三类运行账户 `missing`、CHP 为 6/14 字段的 `partial`，因此 `ready_account_count=0/4`。D25–D32 均不指定项目价格、不产生正式 TAC 或技术赢家；内生容量及 E1–E6 仍不得启动。
+状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门；E0-D-26–D-32 已完成严格数值证书与两轮负筛查；E0-D-33 已建立两套公开 TES 成本敏感性组合和 BESS/TES 线性内生容量核。E0 总门槛仍未通过。** 24 h 全局严格包络保持 `26,010.171143–26,010.174929 MWh/a`；最新 336 h 严格区间继续引用 D30 的 `[36,382.462799,777,141.368858] MWh/a`。D24 严格正式账户为 `0/16`；D25 当前 `ready_account_count=0/4`。D33 的公开组合在显式确认作者假设后只允许 `public_sensitivity`，永久 `formal_project_eligible=false`；容量核尚未接入完整双机 CHP/PCC、TES 损失辅机和独立额定放能轨迹。因此本阶段不产生杨凌正式 TAC 或技术赢家，正式 E1–E6 仍未启动。
 
 ## 1. 已实现代码
 
@@ -25,6 +25,8 @@
 - E0-D-12 文献审计由 E0-D-13 更新：机器矩阵 13 个候选中 Rahman 为唯一 `formal_candidate=true`；Guccione、Ahmadi/PNNL 与其他 TES 来源保持原降级；
 - `tes_cost_mapping.py`：将同一批盐、完整 LT→HT 显热库存、三罐和五端口转换为唯一 `kg / kWh_th / kW_el / kW_th` 容量账本；按部件温段检查文献温区，并把 bottom-up 成本安全绑定到寿命 portfolio；
 - `formal_tes_costs.py`：要求盐、三罐/循环、两类充热、发电/供热放热、power-block retrofit、项目附加费和寿命项等 12 个账户逐项闭合；Klasing/Li/DLR 聚合锚点不能满足部件账户，多 DOI 复合路线需要另行批准；当前 12 账户全部阻断，不生成 TES 正式证书；
+- `public_tes_costs.py`：建立 `aggregate_storage` 与 `component_ledger` 两套互斥成本账，登记来源等级、价格年状态、直接/聚合/相似部件映射和 12 账户覆盖；调用官方快照转换到 CNY2024，复用生命周期 EAC 核，并阻止 DLR 聚合包内部工程加成二次乘算；默认未确认作者假设时拒绝接入，确认后仍永久禁止正式项目用途；
+- `capacity_planning.py`：建立 BESS 的独立能量/充放功率容量与 TES 的盐质量/三罐/五端口容量变量；使用固定工程上界构造线性互斥、状态守恒和 2–24 h 服务约束，并把公开 TES 组合映射为年度容量成本表达式；当前是独立容量核，不含完整 CHP/PCC、损失辅机或额定放能测试轨迹；
 - `tes_break_even.py`：在同一情景、服务、8,784 h 时域和成本范围下比较无 TES 架构与 TES/HYBRID，剔除全部 TES 所有权成本后计算全系统最大 EAC 上限，并报告燃煤、弃电、PCC 外送和 TES 辅机差值；拒绝人工弃电罚值、缺热、非最优结果、零容量 TES 和跨口径比较；四个容量归一化只重构同一系统上限，不反解部件单价；
 - `tes_break_even_adapter.py`：把实际 E0-C 年度解保守适配到 E0-D-16；要求显式弃电服务、零罚值、最优 HiGHS 与平衡/循环残差通过，并剔除全部 TES 资产类别；当前系统 VOM、碳、电力结算与 TES VOM 未闭合，故强制探索性主张；
 - `e0d17_exploration.py`：哈希锁定正式热输入和旧 2019 风光形状，使用成本主目标、固定主目标整数 incumbent 后的弃电次目标，保留 E0-D-17 的 24 h 零 gap 历史基线；
@@ -60,14 +62,15 @@
 - 闭合 Rahman BESS 的 cell cycle-only replacement 与现有 calendar+AC-throughput 退化合同、VOM 吞吐侧和 5 MW PCS 模块/95% multiplicity 规模曲线；来源价格与主要非电芯账本已经闭合，不得再写成“Rahman 全文缺失”；
 - 闭合 TES 12 账户正式成本寿命 portfolio；Guccione 电加热器真实报价仍缺报价价格年，但它不是唯一阻塞，罐/循环、两条蒸汽充热、盐—蒸汽发生、供热换热、power-block retrofit、项目附加费和寿命项也未闭合；DLR `20–22 EUR_2020/kWh_th-net` 只作两罐 Solar Salt 工程聚合校准；
 - E0-D-9B-2 作者级筛查已闭合，但没有杨凌正式损失率、伴热比例、管网压降、泵曲线或五路径现场比泵耗；当前 40/50/200 kPa 与标准循环只能用于敏感性和量级审计，仍不能写成杨凌正式损失价值；
-- 正式 endogenous capacity、将已实现的寿命现金流核按真实参数 portfolio 接入完整 TAC，以及低负荷煤耗规则敏感性；E0-D-24 已证明 16 账户均未严格闭合，D25 已把四个项目账户变成可交付请求但尚未收到正式记录，D21 只给出风险预算，D22/D23 只闭合暴露边界；本地 `price_sell/price_buy` 仍只是作者生成情景；
+- 把已实现的 endogenous-capacity 核接入完整双机 CHP/PCC、TES 损失/伴热/泵耗、两个独立额定放能测试、BESS 正式成本和低负荷煤耗规则敏感性；E0-D-24 已证明 16 账户均未严格闭合，D25 项目记录仍不完整，D33 公开组合不能生成杨凌正式 TAC；本地 `price_sell/price_buy` 仍只是作者生成情景；
 - 代表周、场景网格、全年回代和批量执行。
 
 ## 2. 测试证据
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| OpenBayes Python 3.10.18 隔离环境 | 原始热 Excel、正式构建/适配、真实双机桥接、CHP/储能物理、UC/PWL、四架构、寿命/年度经济、TES 证据与成本门、E0-D-17–D-32、严格数值证书及项目取证隐私门 | `377 passed in 26.91s`（关闭 pytest cache） |
+| Windows `.venv-e0` | 全包；含 D33 公开成本、容量核、路径可移植性与 HiGHS | `396 passed in 47.87s`（关闭 pytest cache） |
+| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、E0-D-17–D-33、19 项新增定向测试和 HiGHS | `396 passed in 27.27s`（关闭 pytest cache） |
 
 D26–D32 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，求解器仅为 HiGHS。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`。本轮只上传新增测试代码和既有授权范围内的锁定输入，未上传本地受限资料。
 
@@ -157,6 +160,8 @@ E0-D-30 本地/远端一致的源码/测试 SHA-256 为：`d30_physics_service_b
 E0-D-31 本地/远端一致的源码/测试 SHA-256 为：`d31_intertemporal_obbt.py` `ee9da51267bfa4ac52b97fa25f19129f14574a232b8a06d86201b551f7ed651d`、`d31_screening_bundle.py` `f2989a26cf099014f4ee263dec2e8f50a2e480780a6ae5bda49e41f3d6512efa`、`test_d31_intertemporal_obbt.py` `ee64cb44b4bbcd1c902d46e50d8f15a7103410664cb4fcf094cb832e93b66a47`、`test_d31_screening_bundle.py` `5a598ae72b955a64927e7c6693db0c142bd3d61e7115d351c49c50afc25797b4`。schema v1 规范 CSV 为 `93cee79a930c32920f7eb0e89326ed3190fea5c5c3ca461cafe9a10200d3aad0`、manifest 为 `55bb55c9b26a11dc8ece3fc5f283e39a616736ac3f0737944f5a7997ad615821`、非规范 execution sidecar 为 `35ab773e13418d73ca550c461a978d57444d15e36c43b10ce4e61d27605404b6`；24 h/336 h OBBT 屏幕分别为 `acf2c49126485ad9d4d41e9d036ed45ec0487fdeeeab71958412d370c03f5836` 与 `1789b76b5589f890e14b9dcbece0cec0dfdea486baa89613f24284bc670f668e`，24 h 等价探针为 `32a0589b26cda583feff3d85d10ad60ab3b406ace88bf064ab5f73347389ac3e`，本地/远端逐字节一致。OpenBayes D31 定向回归为 `9 passed in 0.49s`，最终完整回归为 `372 passed in 26.73s`。24 h/336 h 分别完成 96/1344 个最优 LP；336 h 正/负平均符号宽度相对 D30 仅改善 `0.0329%/0.0864%`，`global_probe_336h_launched=false`，最新 336 h global dual 继续引用 D30。
 
 E0-D-32 本地/远端一致的源码/测试 SHA-256 为：`d32_joint_block_envelope.py` `91daa633ef5b713d577f8ea2b00274b683385feb8da01cd25f3f75c0087c2a66`、`d32_screening_bundle.py` `82600cbf921d5bc740f5afb969ba3f616253821b6d957d8d93afa43ab6e3cc67`、`test_d32_joint_block_envelope.py` `d0fe8354d7d4ba16f2a2c4f0e3ca47ee22d88fdea34d7fc4ab420e37194c9b7e`、`test_d32_screening_bundle.py` `d07a6c1c2673b16fbd98a2a30ab5214b371c08b644d135bc7f5542b80ae1df24`。schema v1 规范 CSV 为 `47b273c511717cb4f9c19cf640d806df2c00250a929bd0936df4a4601a534939`、manifest 为 `bb425167c7eb781c1b91d0e31e98f83ac3e7de5ee94967dc4c9c22005ee6bdc8`、非规范 execution sidecar 为 `4eff8405d49f28bcded74c6b45b81355fb81e5181ff8451c3fac558b0551782e`；24 h/336 h 分块屏幕分别为 `721754d4c06423963e4273b13a43f36521a1af6b6b0857d113d7e43619e85f3e` 与 `bb3212c24852f8d0ef6655ff298e4bcf04f34c6ea0ef10e60d13566c51fced91`，24 h reopened 等价探针为 `f1ae9d076cc00547f8003df4c5adf161f38a6f3e9a78fedd01a5c39efc027968`，本地/远端逐字节一致。15 个块子问题全部返回有限 dual；336 h 为 4 个 `optimal`、10 个 `maxtimelimit`，受保护 dual 之和 `1,930,160.868929 MWh/a`，高于 D30，故 `global_probe_336h_launched=false`。
+
+E0-D-33 本地/远端一致的源码/测试 SHA-256 为：`public_tes_costs.py` `ae28f6dfbec2d9f926b32a85ef43a2e4c794ca0e17760ce846b2dda0001894bc`、`capacity_planning.py` `5754ea51658703308c5190753c6de68ef683a240c9e0a45f9bc533568169290f`、`test_public_tes_costs.py` `37225482b4a8ec88b00939af49c8a2cfd8a03a00b5aedf89b25b7a080b44130e`、`test_capacity_planning.py` `29443c486c134968fb4a0424b4f4d0f8a50971040cb808fa4c4362753c1d6e64`。OpenBayes 新增定向回归为 `19 passed in 0.54s`，完整回归为 `396 passed in 27.27s`。价格快照解析按 `TES_BESS_PRICE_BASIS_DIR`、本地 `数据采集`、远端 `formal_data` 的显式顺序定位，但仍由同一 D4 manifest 与逐源 SHA 校验；不创建或上传临时价格副本。`public_sensitivity_ready` 需要显式确认作者假设，`formal_project_eligible=false`，`full_endogenous_planning_ready=false`。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -256,13 +261,13 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 下一步按以下顺序推进：
 
-1. E0-D-8 已注册 MT 归一化三点作者敏感性；继续争取杨凌一次网供回水温度、抽汽温压、换热器端差或 UA，但不得用现场缺失阻止敏感性验证，也不得把三点冒充现场值；
-2. E0-D-9B-2 已完成三档底层液压泵耗、标准循环及统一模型五路径/损失/辅机审计；后续正式算例直接复用该审计接口，继续争取杨凌泵曲线、压降和运行记录，但不得把作者情景升级为现场基线；
-3. E0-D-25 已把四个运行账户转为 51 项项目数据请求。优先按空白模板索取杨凌合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM；材料先本地隔离登记，接收完整后按 D20/D24 重新发证，不上传原文或提交值；
-4. E0-D-24 的 12 个 TES 所有权账户仍为 8 个候选不完整、4 个无直接候选。继续补齐 Guccione 报价年/边界，并定向检索蒸汽充热、对外供热和 power-block retrofit；Energy+ 聚合值与官方工程锚点只能映射/校准，不能反向分摊或回填 D25；
-5. D30 已把 336 h 上界降至 `777,141.368858 MWh/a`；D31 排除了同类 scalar OBBT，D32 又排除了“逐日独立联合上界后求和”：14 个块 dual 之和反而为 `1,930,160.868929 MWh/a`。若继续数值认证，必须直接保留跨块共同轨迹互斥性并能给出单一 global dual，例如整体库存路径割或有严格主问题上界的分解证书；不再追加通用 FBBT、随机符号种子、逐变量 OBBT、事后改块长或可分离日块求和；
-6. 同范围成本、TES 正式 portfolio 与正式风光输入闭合后，再把 fixed-capacity 模型升级为 endogenous capacity，并用真实参数完成四架构样本验证，锁定 98–105 MW 低负荷煤耗规则敏感性；
-7. 为 E5 单独建立代表周块、显式 warm-up/计分角色和跨块状态边界；当前 `AnnualHorizonSpec` 不接受裸零权重；
+1. 把 `capacity_planning.py` 的 BESS/TES 容量变量接入 `model.py` 的双机 CHP、统一 PCC、供热安全、风光消纳和年度经济；保持四架构在 Python 构建期隔离，不增加技术选择大二元；
+2. 将 E0-D-9 的库存损失、伴热和五路径泵耗改写为随可变盐质量/端口容量缩放，并增加 HT 发电、MT 供热两个独立额定放能测试轨迹；当前代数服务盐量只能作为容量核测试，不能替代正式可达性认证；
+3. 接入 Rahman BESS 正式账本和 D33 公开 TES 低/基准/高组合，运行 No storage / BESS / TES / Hybrid 的 24 h 与 336 h 小样本；只有同 PCC、同供热、同弃风、线性、零容量和成本防重复全部通过，才允许启动公开参数 E1 受控机制实验；
+4. 为 E5 单独建立代表周块、显式 warm-up/计分角色和跨块状态边界；先完成三个预验证状态，再决定是否启动 E3/E4 广义边界试算。公开边界必须同时检查聚合/分项两模式和低/基准/高情景，不能称为杨凌项目赢家；
+5. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
+6. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
+7. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 8. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-上述剩余 E0 门槛通过后才进入 E1；禁止现在启动 699 次边界扫描。
+上述完整模型集成与四架构小样本门通过后，才可启动使用公开组合的受控 E1；杨凌正式 E2 经济结论继续等待 D24/D25。代表周预验证通过前禁止启动 699 次边界扫描。

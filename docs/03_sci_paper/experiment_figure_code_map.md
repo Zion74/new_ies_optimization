@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、HiGHS 状态与求解误差 | D21–D23 已闭合风险预算、选择轨迹与联合包络，D26/D27 建立严格证书并闭合 24 h 最大端，D28 两种子未改善 336 h 下界，D29 将 336 h 上界收紧至 `845,052.030831 MWh/a`，D30 通过物理可达域与年度服务联合紧化再收紧至 `777,141.368858 MWh/a`；D31 完成跨时段连续松弛 OBBT 负筛查，D32 又完成结果前 24 h 联合分块 L1 上界负筛查：14 个 336 h 日块 dual 之和 `1,930,160.868929 MWh/a`，高于 D30，故两轮均不生成新 336 h global dual。D24 严格就绪 `0/16`，D25 将四个项目账户转成 51 字段模板但仍为 `0/4` 可进入复核。真实项目账户、336 h 外界闭合、TES 正式 portfolio、完整 TAC 和容量规划仍未完成 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、内生容量核、HiGHS 状态与求解误差 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24 严格就绪 `0/16`，D25 项目账户仍为 `0/4` 可复核。D33 已完成聚合/分项公开成本组合和 BESS/TES 线性容量核；新增 19 项定向测试及本地/服务器全回归通过。真实项目账户、正式 TAC、容量核向 CHP/PCC/损失辅机与额定放能轨迹的集成、代表周和 336 h 外界闭合仍未完成 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -33,7 +33,7 @@
 | Fig S2 | 参数变化引起的边界移动 | E6 | 边界位移和无差异带 | 待生成 |
 | Fig S3 | 4 个 medoid 周、2 个极端周与年末 48 h | E5 | 周权重、覆盖和极端事件 | 待生成 |
 | Tab 1 | 系统物理、价格与碳参数 | E0 | 来源、基准值、范围、等级证据 | 待核查 |
-| Tab 2 | BESS 与 TES 功率、质量、效率、寿命和成本参数 | E0 | 技术特定参数、成本拆分、价格基年与证据等级 | BESS 已闭合；D24 严格账户 `0/16`。D25 已形成四账户 51 字段请求但 `0/4` 可复核；DLR/NREL/DOE 只作工程校准 |
+| Tab 2 | BESS 与 TES 功率、质量、效率、寿命和成本参数 | E0 | 技术特定参数、成本拆分、价格基年与证据等级 | BESS 正式账本已闭合；D24 严格账户 `0/16`。D33 新增公开敏感性低/基准/高组合，必须同时报告聚合/分项模式、作者价格年和代理账户；不得与杨凌正式参数混表 |
 | Tab 3 | 公平比较口径与四架构定义 | E1/E2 | 服务约束、容量变量、成本项 | 待整理 |
 | Tab 4 | 杨凌基准点最优配置与运行结果 | E2 | TAC、P/E/盐量、弃风、煤耗、碳排 | 待生成 |
 | Tab 5 | 代表周—全年验收 | E5 | 误差、后悔值、MIP gap、运行时间 | 待生成 |
@@ -72,6 +72,8 @@
 | `src/tes_bess_boundary/price_basis.py` | 官方 CPI/HICP/汇率快照、逐源哈希与唯一转换构造 | E0/E2-E6 | E0-D-4 已实现；正式快照本地/OpenBayes 哈希一致 |
 | `src/tes_bess_boundary/tes_cost_mapping.py` | 盐/显热/三罐/五端口容量基准、部件温区覆盖与寿命 portfolio 绑定 | E0/E2-E6 | E0-D-5 已实现；本地容量、端口和温区金标准通过，正式成本值待闭合 |
 | `src/tes_bess_boundary/formal_tes_costs.py` | TES 12 账户正式来源就绪度、聚合锚点隔离与复合证据审批 | E0/E2-E6 | E0-D-15 已实现；当前全部账户阻断，不颁发 TES 正式证书 |
+| `src/tes_bess_boundary/public_tes_costs.py` | 聚合包/分项台账互斥、Energy+ 来源等级、作者价格年、代理映射、CNY2024 EAC 与公开敏感性门 | E0/E1/E3-E4 | E0-D-33 已实现；显式确认后仅允许 `public_sensitivity`，永久 `formal_project_eligible=false` |
+| `src/tes_bess_boundary/capacity_planning.py` | BESS/TES 独立容量变量、固定工程 Big-M、状态守恒、2–24 h 服务和年度容量成本表达式 | E0/E1-E4 | E0-D-33 容量核已实现并通过独立 HiGHS；尚未接入完整 CHP/PCC、TES 损失辅机及独立额定放能测试 |
 | `src/tes_bess_boundary/tes_break_even.py` | 同服务无罚值的全系统 TES EAC 上限、燃煤/弃电/PCC/辅机差值和四种容量分母视图 | E0/E1 | E0-D-16 已实现；当前只能形成探索性阈值，不分摊部件单价、不启动 E1 |
 | `src/tes_bess_boundary/tes_break_even_adapter.py` | 实际 E0-C 年度解的可比性审计、TES 所有权成本剔除和成本范围缺口披露 | E0/E1 | E0-D-17 已实现；系统 VOM/碳/结算未闭合时强制探索性主张 |
 | `src/tes_bess_boundary/e0d17_exploration.py` | 正式热量 + 旧风光形状的 24 h/两周固定容量级联 TES 探索与 canonical 导出 | E0 | E0-D-17 历史基线；24 h 零 gap 跨平台哈希一致，两周未在旧 formulation 下闭合 |
