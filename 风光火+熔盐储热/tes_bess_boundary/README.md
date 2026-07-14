@@ -89,7 +89,12 @@ positive/negative sign formulation. The strict 24-hour global envelope is
 positive/negative mass constraints without changing the integer feasible set; the
 336-hour maximum is further tightened to
 36,382.462799--845,052.030831 MWh/a, a 21.8737% upper-bound improvement over D27.
-Its global envelope remains open. A support
+E0-D-30 then constructs per-period PCC outer bounds from CHP/heat/TES-port physics,
+propagates the common annual PCC service, and adds interval-aware sign inequalities.
+It preserves the exact 24-hour point and tightens the 336-hour maximum to
+36,382.462799--777,141.368858 MWh/a, an additional 8.0363% upper-bound improvement
+over D29 and a cumulative 42.9474% improvement over D26. Its global envelope remains
+open. A support
 direction dual bounds only that direction and is never reported as the global L1
 upper bound. These are
 settlement-exposure bounds, not actual price losses or a technology winner. Formal sweeps must not start until
@@ -107,6 +112,12 @@ E0-D-29 preserves the exact 24-hour interval and produces a finite 336-hour glob
 dual of 845,052.030831 MWh/a. The 336-hour solve still ends at the 1,800-second time
 limit with a wide strict interval, so this is bound tightening rather than global
 closure.
+
+E0-D-30 first screens a static period-separable outer relaxation. The 336-hour
+positive sign width falls by 33.3107% on average; the subsequent 1,800-second global
+probe returns a finite dual of 777,141.368858 MWh/a with zero L1 recomputation
+mismatch and a maximum positive normalized residual of 4.24e-13. All primary and
+sign binaries remain open, and the integer feasible set is unchanged.
 
 `AnnualHorizonSpec` currently describes scored periods only. Every weight must be
 strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
@@ -159,8 +170,8 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full OpenBayes
-regression and D27--D29 hashes are recorded in
-`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D29 source/tests and the
+regression and D27--D30 hashes are recorded in
+`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D30 source/tests and the
 authorized D19/D22 inputs are synchronized; their strict probes and deterministic
 bundles are generated on the server. The D23/D26 historical outputs remain
 hash-locked but no longer define the preferred maximum-end numerical precision.
