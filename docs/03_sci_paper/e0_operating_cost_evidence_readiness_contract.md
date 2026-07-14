@@ -94,3 +94,5 @@ E0-D-21 只允许两条并行但不混淆的路线：
 在正式数据缺失时，优先推进第 2 条以检验结论稳健性，但所有图表和正文必须标记为 `sensitivity`，且 E0 总门槛、E1–E6 正式实验仍保持关闭。
 
 E0-D-24 已把本合同的 4 个账户与 12 个 TES 所有权账户统一审计。四项均标记为 `PROJECT_PRIMARY_REQUIRED`，公开 Energy+ 论文或官方规则不能替代杨凌项目账本；统一合同见 `e0_formal_tac_evidence_route_contract.md`。
+
+E0-D-25 进一步把四账户的项目取证要求冻结为 51 项机器可读字段和空白提交模板。当前三账户 `missing`、CHP VOM 为 6/14 字段的 `partial`，仍为 `0/4` 可进入正式复核。D25 只负责接收完整性和隐私隔离，不改变本合同的正式证书判定；详见 `e0_project_primary_evidence_intake_contract.md`。

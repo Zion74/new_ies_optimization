@@ -2,7 +2,7 @@
 
 更新时间：2026-07-14
 
-除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-24 已闭合 BESS fixed-capacity 账本、TES 12 账户门禁、两窗口性能、同 PCC 服务、四账户证据门、影子成本稳健性、逐时 PCC、替代调度联合极值及 16 账户统一证据路线产物；完整回归本地 `322 passed in 54.69s`、OpenBayes `322 passed in 26.55s`。24 h 替代调度包络已精确闭合，336 h 仍是严格宽区间。D24 严格证据路线仍为 `0/16`；杨凌现场泵参数、TES 正式参数、项目级 VOM/碳/真实逐时结算、336 h 数值收紧、正式 TAC、容量规划与 E1-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-25 已闭合 BESS fixed-capacity 账本、TES 12 账户门禁、两窗口性能、同 PCC 服务、四账户证据门、影子成本稳健性、逐时 PCC、替代调度联合极值、16 账户统一路线及 51 字段项目取证接口；完整回归本地 `328 passed in 61.48s`、OpenBayes `328 passed in 26.64s`。24 h 替代调度包络已精确闭合，336 h 仍是严格宽区间。严格证据路线为 `0/16`，项目运行账户为 `0/4` 可进入正式复核；正式 TAC、容量规划与 E1-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -11,8 +11,8 @@
 | T2-1 | 2024 年 8784 h 数据审计 | 锁定时区、单位、缺失、同步和边界 | `data.py`、`raw_heat.py`、`heat_dataset.py`、`heat_adapter.py`、原始机组数据 | E0-B 正式质量数据及 E0-C 主/敏感性消费规则均已生成并跨平台复现 |
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
-| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向、分部件寿命和缺证成本风险 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even*.py`、`operating_cost_evidence.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` | 三温区/五端口、损失/辅机、成本门、同 PCC 燃料空间、影子成本传播、当前轨迹和替代调度价差暴露通过；12 账户及四个项目运行成本账户仍阻断，阈值只能作 sensitivity |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py`、`e0d18_performance.py`、`e0d19_same_pcc_service.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` + `highspy` | 24 h D23 双向 gap 0；336 h 双向到时并保留界；D23/D24 产物哈希锁定；本地/远端均 `322 passed` |
+| T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向、分部件寿命和缺证成本风险 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even*.py`、`operating_cost_evidence.py`、`project_primary_evidence_intake.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` | 三温区/五端口、损失/辅机、成本门、同 PCC 燃料空间、影子成本传播、调度价差暴露和 51 字段取证门通过；12 个 TES 与四个项目运行账户仍阻断，阈值只能作 sensitivity |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py`、`e0d18_performance.py`、`e0d19_same_pcc_service.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` + `highspy` | 24 h D23 双向 gap 0；336 h 双向到时并保留界；D23–D25 产物哈希锁定；本地/远端均 `328 passed` |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 

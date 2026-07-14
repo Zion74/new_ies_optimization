@@ -1,0 +1,52 @@
+account,field_key,description,accepted_unit,granularity,validation_rule,confidentiality,export_policy,required_for_formal_review
+time_varying_electricity_settlement,project_legal_entity,Settlement legal entity,text,project,Must identify the Yangling settlement entity,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,market_participant_id,Market participant identifier,text,project,Must match the settlement statement,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,settlement_period,Covered settlement period,YYYY-MM-DD/YYYY-MM-DD,statement,Must overlap the modeled operating year,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,timestamp,Settlement interval timestamp,ISO-8601,settlement interval,Must be unique within one market participant,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,contract_position_mwh,Contracted electricity position,MWh,settlement interval,Must be finite and non-negative,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,market_export_mwh,Metered or settled electricity export,MWh,settlement interval,Must be finite and non-negative,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,settlement_price_cny_per_mwh,Applied settlement price,CNY/MWh,settlement interval,Must be finite and traceable to the statement,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,imbalance_volume_mwh,Imbalance settlement volume,MWh,settlement interval,Signed convention must be documented,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,imbalance_charge_cny,Imbalance charge or credit,CNY,settlement interval,Signed convention must be documented,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,ancillary_service_charge_cny,Ancillary-service charge or credit,CNY,settlement interval,Included services must be enumerated,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,source_document_id,Opaque settlement document identifier,text,source document,Must resolve in the local evidence register,confidential_local_only,metadata_only,True
+time_varying_electricity_settlement,source_locator,Local statement locator,text,source document,Must resolve locally and must not be publicly exported,confidential_local_only,do_not_export,True
+carbon_compliance_allowance,regulated_entity,Regulated entity name and identifier,text,compliance entity,Must match the official ETS entity,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,compliance_period,ETS compliance period,year or date range,compliance period,Must identify the covered compliance cycle,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,verified_emissions_tco2,Verified covered emissions,tCO2,compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,free_allowance_tco2,Free allowance allocation,tCO2,compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,opening_allowance_tco2,Opening allowance holding,tCO2,compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,closing_allowance_tco2,Closing allowance holding,tCO2,compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,ccer_surrendered_tco2,CCER surrendered for compliance,tCO2,compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,purchased_allowance_tco2,Purchased allowance quantity,tCO2,transaction or compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,allowance_purchase_cost_cny,Total allowance acquisition cost,CNY,transaction or compliance period,Must be finite and non-negative,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,source_document_id,Opaque compliance-ledger identifier,text,source document,Must resolve in the local evidence register,confidential_local_only,metadata_only,True
+carbon_compliance_allowance,source_locator,Local compliance-ledger locator,text,source document,Must resolve locally and must not be publicly exported,confidential_local_only,do_not_export,True
+chp_variable_om,unit_id,CHP unit identifier,text,unit,Must distinguish unit 1 and unit 2,confidential_local_only,metadata_only,True
+chp_variable_om,reporting_period,Cost reporting period,year or date range,unit-period,Must overlap the modeled operating year,confidential_local_only,metadata_only,True
+chp_variable_om,raw_cost_label,Verbatim cost-account label,text,cost account,Must retain the source accounting label,confidential_local_only,metadata_only,True
+chp_variable_om,annual_amount_cny,Reported annual account amount,CNY/year,unit-period-account,Must be finite and non-negative,confidential_local_only,metadata_only,True
+chp_variable_om,cost_category,Audited cost category,text,cost account,"Must distinguish fuel, fixed O&M, variable O&M, and other",confidential_local_only,metadata_only,True
+chp_variable_om,fuel_included,Whether the account includes fuel,boolean,cost account,Must be explicitly confirmed from the ledger definition,confidential_local_only,metadata_only,True
+chp_variable_om,fixed_variable_class,Fixed or variable classification,fixed|variable|mixed,cost account,Mixed accounts require an auditable split,confidential_local_only,metadata_only,True
+chp_variable_om,driver_type,Incremental cost driver,text,cost account,"Must identify MWh, starts, hours, or another physical driver",confidential_local_only,metadata_only,True
+chp_variable_om,driver_quantity,Observed driver quantity,numeric,unit-period-account,Must be finite and non-negative,confidential_local_only,metadata_only,True
+chp_variable_om,driver_unit,Driver unit,text,cost account,Must be dimensionally consistent with the amount,confidential_local_only,metadata_only,True
+chp_variable_om,inclusion_boundary,Included subaccounts,text,cost account,Must enumerate included cost items,confidential_local_only,metadata_only,True
+chp_variable_om,exclusion_boundary,Excluded subaccounts,text,cost account,Must exclude fuel and ownership costs counted elsewhere,confidential_local_only,metadata_only,True
+chp_variable_om,source_document_id,Opaque CHP ledger identifier,text,source document,Must resolve in the local evidence register,confidential_local_only,metadata_only,True
+chp_variable_om,source_locator,Local CHP ledger locator,text,source document,Must resolve locally and must not be publicly exported,confidential_local_only,do_not_export,True
+tes_variable_om,reference_project,TES project or quotation identifier,text,project,Must identify the Yangling design or a separately labeled sensitivity source,confidential_local_only,metadata_only,True
+tes_variable_om,reporting_period,O&M or quotation period,year or date range,project-period,Must state the operating or price basis period,confidential_local_only,metadata_only,True
+tes_variable_om,technology_topology,TES technology and interface topology,text,project,"Must map to the three-temperature, five-path, dual-service boundary",confidential_local_only,metadata_only,True
+tes_variable_om,price_base_date,Price base date,YYYY-MM,quotation,Must be explicit for escalation and currency handling,confidential_local_only,metadata_only,True
+tes_variable_om,cost_category,TES operating-cost category,text,cost account,"Must distinguish fixed O&M, variable O&M, electricity, and replacement",confidential_local_only,metadata_only,True
+tes_variable_om,annual_amount_cny,Reported annual TES account amount,CNY/year,project-period-account,Must be finite and non-negative,confidential_local_only,metadata_only,True
+tes_variable_om,fixed_variable_class,Fixed or variable classification,fixed|variable|mixed,cost account,Mixed accounts require an auditable split,confidential_local_only,metadata_only,True
+tes_variable_om,driver_type,Incremental TES cost driver,text,cost account,"Must identify throughput, starts, hours, inventory, or another driver",confidential_local_only,metadata_only,True
+tes_variable_om,driver_quantity,Observed or quoted driver quantity,numeric,project-period-account,Must be finite and non-negative,confidential_local_only,metadata_only,True
+tes_variable_om,driver_unit,Driver unit,text,cost account,Must be dimensionally consistent with the amount,confidential_local_only,metadata_only,True
+tes_variable_om,inclusion_boundary,Included TES subaccounts,text,cost account,Must enumerate included equipment and services,confidential_local_only,metadata_only,True
+tes_variable_om,exclusion_boundary,Excluded TES subaccounts,text,cost account,"Must identify costs counted in ownership, fuel, or electricity accounts",confidential_local_only,metadata_only,True
+tes_variable_om,source_document_id,Opaque TES evidence identifier,text,source document,Must resolve in the local evidence register,confidential_local_only,metadata_only,True
+tes_variable_om,source_locator,Local TES evidence locator,text,source document,Must resolve locally and must not be publicly exported,confidential_local_only,do_not_export,True
