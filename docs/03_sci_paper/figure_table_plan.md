@@ -28,10 +28,11 @@
 | Tab S-E0D18 | `tab:e0d18_screening` | 24 h 精确点与 336 h 有界窗口的燃煤、弃电、PCC、辅机、主目标界及全系统 EAC 区间 | E0 | 可放补充材料；必须标明旧 2019 风光、燃料单项、非全年，以及 336 h 0.48% 主 gap；不进入正式主结果表 |
 | Tab S-E0D23 | `tab:e0d23_settlement_envelope` | D19 可接受调度集内 24 h/336 h PCC 重分配最小值、最大值、primal/dual 与 D22 可行证人 | E0 | 24 h 精确闭合；336 h 只报告严格宽区间。必须标明未赋实际价格、不是结算损失、完整 TAC 或技术赢家 |
 | Tab S-E0D26 | `tab:e0d26_numerical_certificate` | 无量纲 cap、strict tolerance、D19 条件面与开放整数模式的最小/最大 primal/dual、有限界标志和证人支配审计 | E0 | 24 h 报告 D26 修正后的严格精确值；336 h 仅报告严格区间及条件面最大可行证人，不把 `optimal` 标签等同于完整证书 |
+| Tab S-E0D27 | `tab:e0d27_direction_sign_certificate` | 固定方向 primal/dual、符号固定点、正负分解全局 primal/dual、L1 重算和严格残差 | E0 | 方向 dual 必须明确标为非全局；24 h 报告修正后精确最大值，336 h 报告收紧后严格区间和时限终止 |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |
-| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18、D23 与 D26 已有 24 h/336 h 验收；D26 使用 60 核服务器分批并行、单任务显式线程上限，必须保留方向正确的 primal/dual、有限界标志和条件证人；E1-E6 批量性能待生成 |
+| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18、D23、D26 与 D27 已有 24 h/336 h 验收；必须保留方向正确的 primal/dual、有限界标志、证人和方向/全局语义；E1-E6 批量性能待生成 |
 
 ## 3. 图表信息纪律
 
@@ -54,7 +55,7 @@
 4. Fig 5：形成物理适用域；
 5. Fig 6：形成经济适用域；
 6. Fig 7 + Tab 5：通过全年验证；
-7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26 与 Tab S1。
+7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26、Tab S-E0D27 与 Tab S1。
 
 在 E0、E1 未通过前，不允许先跑大规模边界图。
 

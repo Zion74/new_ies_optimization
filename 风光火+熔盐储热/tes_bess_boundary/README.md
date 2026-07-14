@@ -21,6 +21,7 @@ The current E0 slice contains:
 - an E0-D-19 same-PCC-service runner, E0-D-20 operating-cost evidence gate, and E0-D-21 source-independent shadow-cost robustness layer;
 - an E0-D-22 hourly-PCC settlement-exposure exporter plus an E0-D-23 joint alternative-dispatch envelope that reopens both architectures' integer patterns under the D19 cost and curtailment caps;
 - an E0-D-26 strict numerical certificate that normalizes annual admissibility rows, separates the D19-selected integer face from the reopened global set, seeds global solves with known feasible witnesses, and distinguishes a termination label from a finite bound certificate;
+- an E0-D-27 direction-generation and sign-reformulation certificate that removes sign binaries from fixed support directions, recomputes feasible L1 exposure from returned PCC traces, and replaces the global `2M` absolute-value rows with an exact positive/negative disaggregation;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -78,12 +79,15 @@ E0-D-19 then enforces the same annual PCC export and reduces the fuel-only space
 E0-D-20 keeps settlement, carbon compliance, CHP VOM, and TES VOM blocked rather than
 inventing project values; E0-D-21 propagates those missing accounts as risk budgets.
 E0-D-22 exports the selected hourly PCC traces, and E0-D-23 defines their joint
-annualized L1 envelope. E0-D-26 supersedes the old numerical precision claim with
-dimensionless cap rows, `1e-9` feasibility tolerances, PCC trace recomputation, and
-known-witness dominance checks. The strict 24-hour global envelope is
-26,010.171143--26,010.174918 MWh/a. The 336-hour minimum is bounded by
-0--15,594.993900 MWh/a and the maximum by
-36,382.462799--1,362,149.106858 MWh/a; its global envelope remains open. These are
+annualized L1 envelope. E0-D-26 adds dimensionless cap rows, `1e-9` feasibility
+tolerances, PCC trace recomputation, and known-witness dominance checks. E0-D-27
+supersedes the D26 maximum-end precision with fixed support directions and an exact
+positive/negative sign formulation. The strict 24-hour global envelope is
+26,010.171143--26,010.174929 MWh/a. The 336-hour minimum remains bounded by
+0--15,594.993900 MWh/a and the maximum is tightened to
+36,382.462799--1,081,649.139331 MWh/a; its global envelope remains open. A support
+direction dual bounds only that direction and is never reported as the global L1
+upper bound. These are
 settlement-exposure bounds, not actual price losses or a technology winner. Formal sweeps must not start until
 the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
@@ -139,11 +143,12 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
-directory is not in the local repository layout. The current full OpenBayes result is
-`334 passed in 27.26s`. E0-D-26 source/tests and the authorized D19/D22 inputs are
-synchronized; its eight strict probes and deterministic bundle are generated on the
-server. The D23 historical CSV/manifest remain hash-locked but no longer define the
-preferred 24-hour numerical precision.
+directory is not in the local repository layout. The current full OpenBayes
+regression and D27 hashes are recorded in
+`docs/03_sci_paper/e0_validation_status.md`. E0-D-26/D27 source/tests and the
+authorized D19/D22 inputs are synchronized; their strict probes and deterministic
+bundles are generated on the server. The D23/D26 historical outputs remain
+hash-locked but no longer define the preferred maximum-end numerical precision.
 With `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`
 set explicitly, all remote data-integration tests pass; omitting it addresses a
 nonexistent repository-relative directory and is an environment-path error.

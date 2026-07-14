@@ -368,3 +368,120 @@ def test_d26_conditional_face_copy_uses_block_relative_names() -> None:
     assert copied == 2
     assert value(target_model.comparator.dispatch[0]) == pytest.approx(3.5)
     assert value(target_model.comparator.dispatch[1]) == pytest.approx(7.0)
+
+
+def test_d27_support_direction_removes_sign_binaries_and_recovers_l1_witness(
+) -> None:
+    from pyomo.environ import value
+
+    from tes_bess_boundary.alternative_dispatch_envelope import (
+        DispatchAdmissibility,
+        RedistributionDirection,
+        build_joint_redistribution_model,
+    )
+    from tes_bess_boundary.d27_direction_generation import (
+        _configure_support_objective,
+        _sign_pattern_from_model,
+    )
+    from tes_bess_boundary.solver import create_highs_solver
+
+    case = _alternate_dispatch_case()
+    cap = DispatchAdmissibility(
+        primary_cost_upper_bound_cny=1e-6,
+        curtailment_upper_bound_mwh=8_784.0,
+    )
+    model = build_joint_redistribution_model(
+        case,
+        case,
+        comparator_admissibility=cap,
+        candidate_admissibility=cap,
+        direction=RedistributionDirection.MAXIMUM,
+    )
+    _configure_support_objective(
+        model,
+        (1, -1),
+        annual_weights=case.economics.horizon.period_weights,
+        dt_hours=case.timeseries.dt_hours,
+    )
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.d27_support_objective) == pytest.approx(8_784.0)
+    assert _sign_pattern_from_model(model) == (1, -1)
+    for period in model.redistribution_periods:
+        assert model.delta_nonnegative[period].fixed
+        assert not model.delta_nonnegative[period].is_binary()
+
+
+def test_d27_zero_delta_keeps_the_previous_support_sign() -> None:
+    from tes_bess_boundary.alternative_dispatch_envelope import (
+        DispatchAdmissibility,
+        RedistributionDirection,
+        build_joint_redistribution_model,
+    )
+    from tes_bess_boundary.d27_direction_generation import (
+        _sign_pattern_from_model,
+    )
+
+    case = _alternate_dispatch_case()
+    cap = DispatchAdmissibility(
+        primary_cost_upper_bound_cny=1e-6,
+        curtailment_upper_bound_mwh=8_784.0,
+    )
+    model = build_joint_redistribution_model(
+        case,
+        case,
+        comparator_admissibility=cap,
+        candidate_admissibility=cap,
+        direction=RedistributionDirection.MAXIMUM,
+    )
+    for period in model.redistribution_periods:
+        model.comparator.pcc_export[period].set_value(1.0)
+        model.candidate.pcc_export[period].set_value(1.0)
+
+    assert _sign_pattern_from_model(model, fallback=(-1, 1)) == (-1, 1)
+
+
+def test_d27_disaggregated_sign_formulation_is_exact() -> None:
+    from pyomo.environ import value
+
+    from tes_bess_boundary.alternative_dispatch_envelope import (
+        DispatchAdmissibility,
+        RedistributionDirection,
+        build_joint_redistribution_model,
+    )
+    from tes_bess_boundary.d27_direction_generation import (
+        _replace_big_m_with_disaggregated_sign_formulation,
+    )
+    from tes_bess_boundary.solver import create_highs_solver
+
+    case = _alternate_dispatch_case()
+    cap = DispatchAdmissibility(
+        primary_cost_upper_bound_cny=1e-6,
+        curtailment_upper_bound_mwh=8_784.0,
+    )
+    model = build_joint_redistribution_model(
+        case,
+        case,
+        comparator_admissibility=cap,
+        candidate_admissibility=cap,
+        direction=RedistributionDirection.MAXIMUM,
+    )
+    _replace_big_m_with_disaggregated_sign_formulation(
+        model,
+        pcc_capacity_mw=case.pcc_export_capacity_mw,
+    )
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.redistribution_objective) == pytest.approx(8_784.0)
+    for period in model.redistribution_periods:
+        delta = value(model.delta_pcc_export_mw[period])
+        positive = value(model.d27_delta_positive_mw[period])
+        negative = value(model.d27_delta_negative_mw[period])
+        assert delta == pytest.approx(positive - negative)
+        assert value(model.absolute_delta_pcc_export_mw[period]) == pytest.approx(
+            positive + negative
+        )

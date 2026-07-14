@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、HiGHS 状态与求解误差 | D21–D23 已闭合风险预算、选择轨迹与联合包络，D26 修正 24 h 精确值并收紧 336 h 可行内界；D24 严格就绪 `0/16`，D25 将四个项目账户转成 51 字段模板但仍为 `0/4` 可进入复核。真实项目账户、336 h 外界闭合、TES 正式 portfolio、完整 TAC 和容量规划仍未完成 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、HiGHS 状态与求解误差 | D21–D23 已闭合风险预算、选择轨迹与联合包络，D26 建立严格缩放证书，D27 修正 24 h 最大端并将 336 h 最大上界收紧 20.59%；D24 严格就绪 `0/16`，D25 将四个项目账户转成 51 字段模板但仍为 `0/4` 可进入复核。真实项目账户、336 h 外界闭合、TES 正式 portfolio、完整 TAC 和容量规划仍未完成 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -90,6 +90,8 @@
 | `数据采集/e0d23_alternative_dispatch_envelope/` | 两窗口 solver 极值、服务/cap 审计、源锁 manifest 与 runtime sidecar | E0 | schema v1 规范产物；336 h 最大 solver incumbent 未支配 D22 外部可行证人，科学解释须合并两者 |
 | `src/tes_bess_boundary/d26_numerical_certification.py` | 年度 cap 无量纲化、`1e-9` 严格容差、条件/开放整数范围、固定整数域移除、条件面 warm witness、PCC L1 重算与有限界标志 | E0/E6 | E0-D-26 已实现；24 h 全局严格包络 `26,010.171143–26,010.174918 MWh/a`；336 h 内界改善但外界仍宽，`formal_tac=false` |
 | `src/tes_bess_boundary/d26_certification_bundle.py`、`数据采集/e0d26_numerical_certification/` | 8 个探针的身份/残差/证人支配验证、两窗口确定性 CSV、manifest 与非规范 execution sidecar | E0 | D26 规范汇总；`termination` 与 `bound_certificate_complete` 分离，条件面最大 incumbent 不冒充全局最优 |
+| `src/tes_bess_boundary/d27_direction_generation.py` | 固定支持方向、符号固定点、轨迹 L1 重算、正负差值分解与全局有限界 | E0/E6 | 24 h 精确最大值 `26,010.174929 MWh/a`；336 h 严格最大区间 `[36,382.462799,1,081,649.139331] MWh/a`；方向 dual 不是全局界 |
+| `src/tes_bess_boundary/d27_certification_bundle.py`、`数据采集/e0d27_direction_generation/` | 24 h 联合探针、336 h 方向/全局探针的科学边界、证人支配、严格残差和确定性汇总 | E0 | D27 规范汇总；明确拒绝将 support dual 提升为全局 L1 上界 |
 | `src/tes_bess_boundary/formal_tac_evidence_route.py` | D15/D20 合并、16 账户路线、Energy+ / 官方工程 / 项目原始层级隔离、期刊指标审计与禁止用途 | E0/E2-E6 | E0-D-24 已实现；`strict_formal_account_count=0`、`layered_route_approved=false`、`formal_tac_ready=false` |
 | `数据采集/e0d24_formal_tac_evidence_route/` | 16 行账户路线、5 条公开来源和自哈希 manifest | E0 | schema v1 规范产物；不包含成本估计，不产生技术赢家 |
 | `src/tes_bess_boundary/project_primary_evidence_intake.py` | 四账户 51 字段要求、当前 coverage、接收证书语义和隐私隔离导出 | E0/E2-E6 | E0-D-25 已实现；`ready_account_count=0`、`formal_tac_ready=false`、`e1_ready=false` |
@@ -118,7 +120,7 @@
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | E0-D-18 新增精确对数段编码与可选连续启停包络；默认旧 formulation 保持兼容，二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | E0-D-18 新增路径特定流量上界、紧 Big-M 与零容量模式固定；正式成本和现场数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-26 回归 | E0 | OpenBayes `334 passed in 27.26s`；关闭 pytest cache；求解器仅 HiGHS |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-27 回归 | E0 | OpenBayes `340 passed in 26.74s`；关闭 pytest cache；求解器仅 HiGHS |
 | `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计、逐时 PCC 只读轨迹与 TES 五路径运行审计 | E0-E6 | D22 增加逐时 PCC 返回接口，D23 在外层复用模型构造联合极值；完整 TAC、336 h 数值收紧与容量规划待补 |
 | `representative_weeks.py` | 4 个聚类周 + 2 个强制极端周 | E3-E5 | 待实现 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
@@ -133,7 +135,7 @@ E0 当前状态详见 `docs/03_sci_paper/e0_validation_status.md`。
 - 求解器：HiGHS，通过 `highspy`；
 - 隔离环境：`/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0`；
 - 已验证：`Pyomo 6.10.1`、`highspy / HiGHS 1.15.1`，微型 MILP 状态 `optimal`；
-- 完整 E0 当前回归：OpenBayes Python 3.10.18 为 `334 passed in 27.26s`。D26 八探针与确定性汇总在服务器生成；D23–D25 既有规范产物保持锁定；
+- 完整 E0 当前回归：OpenBayes Python 3.10.18 为 `340 passed in 26.74s`。D27 三探针与确定性汇总在服务器生成；D23–D26 既有规范产物保持锁定；
 - 复现依赖：`风光火+熔盐储热/requirements-highs.txt`；
 - 未安装且当前不需要：`oemof.solph`；
 - 输出路径：`/output`；

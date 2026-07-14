@@ -1,0 +1,46 @@
+{
+  "execution_sidecar": {
+    "canonical": false,
+    "file": "execution.json",
+    "sha256": "349decf0fe351141549b48a52a8a01b48bdb9814a522068d7586e28cf580c405"
+  },
+  "output": {
+    "csv": "e0d27_numerical_certificate.csv",
+    "csv_sha256": "f3f8b0756fad1bf806aa631c7a6e72e1f83285fa5e45d0ac01307da5e37ee894",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "probe_contract": {
+    "global_formulation": "positive_negative_disaggregation_single_binary",
+    "primary_integer_patterns_reopened": true,
+    "strict_feasibility_tolerance": 1e-09,
+    "support_dual_is_global_l1_upper_bound": false,
+    "witness_dominance_required": true
+  },
+  "probes": {
+    "24h_final.json": "ffd15055bd37980a221a130391ac408e1768cdd403defada35ccb2ae8686b063",
+    "336h_global.json": "1dfa94e360525d73f045ade9e79886d5431aec21a5b6db1ff1350674f38862e8",
+    "336h_support_final.json": "a3c3fcaa1694eae6fc2abb9b7a382541bdc984fd3f6e36be6c5f9a0325971187"
+  },
+  "schema": "tes_bess_boundary.e0d27_numerical_certificate.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false
+  },
+  "scientific_scope": "strict_global_l1_maximum_not_price_not_tac_not_e1",
+  "source_locks": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "sources": {
+    "alternative_dispatch_envelope.py": "92fc66a4b6ba84bbeccc332f53adab68b3be40b4d11a4f7aa66e148394cea787",
+    "d27_certification_bundle.py": "ab386684a1e4a36146a1fb41841b9dbc1aaa0a0a322b202ee51ff024219b8954",
+    "d27_direction_generation.py": "123ddd38d65a5f8dac09b5bebf9e02adc612db19012666200b99f0a96638fd9d"
+  }
+}
