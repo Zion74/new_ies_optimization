@@ -1,0 +1,20 @@
+{
+  "account_count": 16,
+  "e1_ready": false,
+  "files": {
+    "e0d24_formal_tac_account_routes.csv": "643850ead0c71c70bbe405130b8f234a69c631b25bac11cbe68a368b4bac0180",
+    "e0d24_public_source_audit.csv": "162a7e4fdd82db87f3729c371122ec86efddac4f47ce2643e9d9025ded7659c1"
+  },
+  "formal_tac_ready": false,
+  "layered_route_approved": false,
+  "prohibitions": [
+    "no_public_source_substitution_for_project_primary_accounts",
+    "no_venue_laundering_of_official_engineering_values",
+    "no_aggregate_anchor_allocation_to_component_accounts",
+    "no_formal_tac_or_technology_winner_claim"
+  ],
+  "project_primary_required_count": 4,
+  "public_source_count": 5,
+  "schema": "tes_bess_boundary.e0d24_formal_tac_evidence_route.v1",
+  "strict_formal_account_count": 0
+}

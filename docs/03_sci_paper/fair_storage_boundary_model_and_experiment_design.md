@@ -2,7 +2,7 @@
 
 更新时间：2026-07-14
 
-状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-20 已完成 TES 物理/作者筛查、成本认证门、BESS fixed-capacity 生命周期账本、TES 12 账户门禁、无罚值全系统 EAC 上限、两窗口性能、同 PCC 服务与四类非燃料成本证据门。D21 将四个缺证账户转为来源无关的影子成本翻转边界，D22 导出两架构逐时 PCC，D23 在 D19 可接受调度集内完成联合双向极值：24 h 包络精确闭合，336 h 仍为严格宽区间。两窗口继续使用旧 2019 风光形状；12 个 TES 账户、项目级非燃料成本、336 h 数值收紧、endogenous capacity 及正式 TAC 尚未闭合，因此 E0 总门槛及批量算例仍未通过。
+状态：**当前主 SCI 的模型与实验权威设计**。E0-D-5–D-20 已完成 TES 物理/作者筛查、成本认证门、BESS fixed-capacity 生命周期账本、TES 12 账户门禁、无罚值全系统 EAC 上限、两窗口性能、同 PCC 服务与四类非燃料成本证据门。D21 将四个缺证账户转为来源无关的影子成本翻转边界，D22 导出两架构逐时 PCC，D23 在 D19 可接受调度集内完成联合双向极值：24 h 包络精确闭合，336 h 仍为严格宽区间。D24 又把 12 个 TES 与 4 个非燃料账户合并为不可洗白的完整 TAC 证据路线，严格就绪为 `0/16`。两窗口继续使用旧 2019 风光形状；TES 正式账户、项目级非燃料成本、336 h 数值收紧、endogenous capacity 及正式 TAC 尚未闭合，因此 E0 总门槛及批量算例仍未通过。
 
 ## 1. 科学问题与研究边界
 
@@ -448,7 +448,8 @@ E0 分阶段执行：
 - **E0-D-21 影子成本稳健性边界已建立**：不对四个阻断账户填项目估计，而把其有符号区间传播到 D19 同 PCC 燃料空间。24 h 合计不利遗漏成本阈值为 `12.893 million CNY/a`；336 h `<15.031 million CNY/a` 时稳健为正、`15.031–16.330 million CNY/a` 时跨零不确定、`>16.330 million CNY/a` 时稳健为负。单账户阈值保持其他账户为零，不能相加；所有结果仅为 sensitivity，不是正式 TAC；
 - **E0-D-22 逐时 PCC 与价差暴露已建立**：24 h/336 h 当前所选轨迹分别年化重新分配 `26,010.175/31,228.008 MWh`，占共同交付 `0.559%/0.731%`；固定平价严格抵消，任意有界价格对当前轨迹的结算差上界为“价差 × 重新分配电量”。结算单账户临界价差约为 `495.695 CNY/MWh` 和 `481.334–522.934 CNY/MWh`，但不是杨凌实际价格；
 - **E0-D-23 替代调度联合极值已建立**：在 D19 主成本/弃电 cap 内重新开放两架构整数模式，24 h 精确包络为 `26,009.982–26,010.175 MWh/a`，D22 选择轨迹几乎位于最大端；336 h 最小可能值仅能约束在 `0–31,172.816 MWh/a`，最大可能值在合并 D22 外部可行证人后为 `31,228.008–983,262.067 MWh/a`。原始 solver incumbent 与 dual 均保留，dual 不能解释为实际暴露；
-- **后续经济/规划切片待完成**：先收紧 336 h 替代调度界，并优先取得杨凌 2024 发电侧合同结算、机组配额清缴、CHP O&M 科目拆分与双服务 TES VOM。若只能使用公开来源，必须先登记 Energy+ / 官方来源、单位、价格年、驱动量和技术映射，再作为 `public_sensitivity` 输入 D21–D23 内核。之后再闭合真实 TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
+- **E0-D-24 完整 TAC 证据路线已建立**：D15 的 12 个 TES 所有权账户与 D20 的 4 个非燃料运行账户统一出表；严格正式账户为 `0/16`。TES 中 8 个直接候选仍缺价格基年/来源/分母/用途，4 个账户没有直接候选；4 个运行账户全部需要杨凌项目原始记录。Zhang et al. *Energy* 2024 通过期刊等级且官方 IF 为 `9.4`，但只作聚合技术锚点；NREL/DLR/DOE 报告保持官方工程层。`layered_route_approved=false`，且审批本身不能补齐证据；
+- **后续经济/规划切片待完成**：先收紧 336 h 替代调度界，并优先取得杨凌 2024 发电侧合同结算、机组配额清缴、CHP O&M 科目拆分与双服务 TES VOM。若只能使用公开来源，必须先登记 Energy+ / 官方来源、单位、价格年、驱动量和技术映射，再作为 `public_sensitivity` 输入 D21–D24 内核。之后再闭合真实 TES 分部件参数、endogenous capacity、结构化代表周 warm-up 及 98–105 MW 规则敏感性。
 
 详细证据和禁止启动条件见 `docs/03_sci_paper/e0_validation_status.md`。
 
@@ -558,7 +559,7 @@ E_T^{h,rate}=D\frac{Q^{MT\rightarrow LT,h}}{\eta_{Mh}}
 
 ## 8. 算力预算与 HiGHS 执行策略
 
-当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-23 本地完整回归为 `316 passed in 54.51s`，远端为 `316 passed in 26.54s`；源码/测试哈希一致，正式两窗口 CSV、manifest 与 runtime sidecar 已下载锁定。
+当前 OpenBayes 服务器为 60 核 CPU、约 100 GB 内存，项目按 50 GB 工作空间配额规划。隔离环境 `/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0` 使用 Python 3.10.18、`Pyomo 6.10.1` 与 `highspy 1.15.1`。E0-D-24 完整回归为本地 `322 passed in 54.69s`、远端 `322 passed in 26.55s`；远端 D24 源码、测试和三份规范化证据路线产物均与本地哈希一致。D23 正式两窗口 CSV、manifest 与 runtime sidecar 继续保持下载锁定。
 
 主模型采用 `Pyomo + highspy`，不依赖 Gurobi。推荐：
 
@@ -644,6 +645,7 @@ src/tes_bess_boundary/
 ├── shadow_cost_robustness.py # 已实现：E0-D-21 影子成本区间传播、翻转阈值与确定性导出
 ├── pcc_settlement_exposure.py # 已实现：E0-D-22 逐时 PCC、固定平价恒等式与价格跨度包络
 ├── alternative_dispatch_envelope.py # 已实现：E0-D-23 联合双向极值、warm start 与 primal/dual 包络
+├── formal_tac_evidence_route.py # 已实现：E0-D-24 的 16 账户统一证据路线、来源分层和确定性导出
 ├── tes_topology_evidence.py  # 已实现：五路径证据与创新披露合同
 ├── tes_heat_delivery.py      # 已实现：MT→LT 夹点、材料温区、热量与流量审计
 ├── tes_temperature_scenarios.py # 已实现：MT 归一化焓分配三点候选与认证

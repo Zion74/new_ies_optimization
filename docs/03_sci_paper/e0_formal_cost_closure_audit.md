@@ -1,7 +1,7 @@
 # E0-D-12 正式成本证据闭环审计
 
-更新时间：2026-07-13
-状态：**用户已批准 Rahman 关联证据政策；BESS 来源证书与三个 fixed-capacity 模型接缝均已闭合。E0-D-15 已将 TES 正式成本拆成 12 个账户并建立可执行门禁，但账户仍全部阻断，系统级完整 TAC 与 E0 总门槛继续阻断。**
+更新时间：2026-07-14
+状态：**用户已批准 Rahman 关联证据政策；BESS 来源证书与三个 fixed-capacity 模型接缝均已闭合。E0-D-15 已将 TES 正式成本拆成 12 个账户，E0-D-24 又与 4 个非燃料运行账户合并为完整 TAC 统一门；当前严格正式账户为 `0/16`，系统级完整 TAC 与 E0 总门槛继续阻断。**
 
 ## 1. 审计问题
 
@@ -64,3 +64,15 @@ DLR 2021 官方报告已关闭一个较窄的访问问题：Klasing 的两罐中
 - `风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/follow-up-access-log.json`
 - `风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/alternative-source-audit.md`
 - `风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/evidence-memo.md`
+
+## 5. E0-D-24 统一证据路线复核
+
+E0-D-24 没有把公开来源拼成伪 TAC，而是将 12 个 TES 账户与 4 个项目特异运行账户统一出表。判定为：
+
+- 8 个 TES 账户有直接候选但价格基年、来源、分母或允许用途不完整；
+- 高品位蒸汽充热、中品位蒸汽充热、对外供热和 power-block retrofit 仍无直接候选；
+- 分时结算、碳履约、CHP VOM 和 TES VOM 均需要杨凌项目原始记录；
+- Zhang et al. *Energy* 2024（DOI `10.1016/j.energy.2023.130132`）满足期刊等级，且 *Energy* 官方页面当前显示 IF `9.4`，但可访问记录只有煤电熔盐改造的系统总成本，缺价格基年和部件分配，只作聚合技术锚点；
+- NREL 2011/2013、DOE/Black & Veatch 2016 与 DLR 2021 保持官方工程/方法层，不因被 Energy 论文引用而升级为正式部件值。
+
+当前 `layered_route_approved=false`。回归测试还证明，单独将该标志改为 true 也不会补齐缺失证据。统一合同见 `docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`，机器产物见 `风光火+熔盐储热/数据采集/e0d24_formal_tac_evidence_route/`。

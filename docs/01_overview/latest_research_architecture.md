@@ -93,8 +93,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **文献与科学问题**：已完成高质量文献门槛筛选，当前主空白可辩护；
 - **杨凌数据**：E0-B 正式构建已完成；保留 52,707 行源证据、52,704 点 canonical 网格和 8,784 h net/forward/zero-sensitivity 三口径。单位、老城单点哨兵、29 个东方双负、49 个仅流量为负、2,050 个居民负值与 5/85/226 三段全零均进入结构化质量合同；
 - **机制原型**：已有 `_ch4_*` MILP、储能对照、敏感性和典型期脚本；
-- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-20 已闭合相应物理、寿命经济、证据资格、同 PCC 服务和四类非燃料成本证据门。E0-D-21 不猜项目价格，而将 D19 燃料空间与 D20 缺口连接成来源无关的影子成本稳健性边界：24 h 合计不利遗漏成本阈值为 12.893 百万元/a；336 h 小于 15.031 百万元/a 时燃料空间稳健为正，15.031–16.330 百万元/a 时跨零不确定，大于 16.330 百万元/a 时稳健为负。E0-D-22 导出同服务逐时 PCC，所选轨迹 24 h/336 h 年化重新分配为 26,010.175/31,228.008 MWh。E0-D-23 在 D19 成本/弃电 cap 内重新开放整数模式并做联合双向极值：24 h 精确包络为 26,009.982–26,010.175 MWh/a，证明 D22 几乎位于最大端；336 h 最小可能值为 0–31,172.816 MWh/a、最大可能值为 31,228.008–983,262.067 MWh/a，仍是宽区间。固定平价严格抵消，但没有指定杨凌实际价格；结果仍使用正式热量 + 旧 2019 风光形状，只是风险预算，不是实际 VOM、碳成本、结算损失、全年 TAC 或技术赢家。TES 正式成本、336 h 包络收紧、内生容量和结构化代表周继续阻断 E1–E6；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 已独立生成并下载锁定。Windows Python 3.11 为 `316 passed in 54.51s`，OpenBayes Python 3.10 为 `316 passed in 26.54s`；代码、测试、D23 两行极值、manifest 与 execution sidecar 已核对哈希；
+- **公平主模型**：E0-C fixed-capacity 四架构统一调度、真实热需求桥接及 E0-D-1–D-20 已闭合相应物理、寿命经济、证据资格、同 PCC 服务和四类非燃料成本证据门。E0-D-21 不猜项目价格，而将 D19 燃料空间与 D20 缺口连接成来源无关的影子成本稳健性边界；D22 导出同服务逐时 PCC；D23 联合双向极值使 24 h 暴露精确闭合，336 h 仍是宽区间。D24 将 12 个 TES 与 4 个非燃料账户合并为完整 TAC 证据路线：严格正式账户 `0/16`，TES 为 8 个直接候选不完整、4 个无直接候选，4 个运行账户均要求杨凌原始记录。Energy 论文和 NREL/DLR/DOE 工程报告已分层登记，禁止期刊转引洗白；`layered_route_approved=false`。固定平价严格抵消，但现有结果仍不是实际 VOM、碳成本、结算损失、全年 TAC 或技术赢家。TES 正式成本、336 h 包络收紧、内生容量和结构化代表周继续阻断 E1–E6；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 双窗口产物已独立生成并下载锁定，E0-D-24 证据路线产物也已远端独立再生成且与本地哈希一致。Windows 与 OpenBayes E0 隔离环境的 D24 完整回归分别为 `322 passed in 54.69s` 和 `322 passed in 26.55s`；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -112,7 +112,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0 非燃料影子成本稳健性：`docs/03_sci_paper/e0_shadow_cost_robustness_contract.md`
 - E0 逐时 PCC 与结算价差暴露：`docs/03_sci_paper/e0_pcc_settlement_exposure_contract.md`
 - E0 替代可接受调度的结算暴露包络：`docs/03_sci_paper/e0_alternative_dispatch_settlement_envelope_contract.md`
+- E0 完整 TAC 16 账户证据路线：`docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
-- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`；TES 正式成本复核：`风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`；同 PCC 服务边界：`风光火+熔盐储热/research-sessions/2026-07-13-e0d19-operating-cost-boundary/`；非燃料成本证据门控：`风光火+熔盐储热/research-sessions/2026-07-14-e0d20-operating-cost-evidence/`；影子成本稳健性：`风光火+熔盐储热/research-sessions/2026-07-14-e0d21-shadow-cost-robustness/`；逐时 PCC 结算暴露：`风光火+熔盐储热/research-sessions/2026-07-14-e0d22-pcc-settlement-exposure/`；替代调度包络：`风光火+熔盐储热/research-sessions/2026-07-14-e0d23-alternative-dispatch-envelope/`
+- 文献证据包：`风光火+熔盐储热/research-sessions/2026-07-11-tes-ees-regime-boundary/`；成本闭环证据：`风光火+熔盐储热/research-sessions/2026-07-13-e0d12-formal-cost-closure/`；BESS 三接缝闭合记录：`风光火+熔盐储热/research-sessions/2026-07-13-e0d14-bess-join-closure/`；TES 正式成本复核：`风光火+熔盐储热/research-sessions/2026-07-13-e0d15-tes-formal-cost-closure/`；同 PCC 服务边界：`风光火+熔盐储热/research-sessions/2026-07-13-e0d19-operating-cost-boundary/`；非燃料成本证据门控：`风光火+熔盐储热/research-sessions/2026-07-14-e0d20-operating-cost-evidence/`；影子成本稳健性：`风光火+熔盐储热/research-sessions/2026-07-14-e0d21-shadow-cost-robustness/`；逐时 PCC 结算暴露：`风光火+熔盐储热/research-sessions/2026-07-14-e0d22-pcc-settlement-exposure/`；替代调度包络：`风光火+熔盐储热/research-sessions/2026-07-14-e0d23-alternative-dispatch-envelope/`；完整 TAC 证据路线：`风光火+熔盐储热/research-sessions/2026-07-14-e0d24-formal-tac-evidence-route/`

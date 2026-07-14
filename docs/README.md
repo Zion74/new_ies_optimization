@@ -34,15 +34,16 @@
 16. 将 E0-D-19 燃料空间与四类缺证成本连接、复现遗漏成本阈值或审计区间稳健性时读 `docs/03_sci_paper/e0_shadow_cost_robustness_contract.md`
 17. 审计同年度 PCC 下的逐时外送轨迹、固定平价恒等式、价格跨度结算包络或 D21 结算单账户临界价差时读 `docs/03_sci_paper/e0_pcc_settlement_exposure_contract.md`
 18. 在 D19 可接受调度集内复现 PCC 重分配双向极值、审计 24 h 精确包络或解释 336 h primal/dual 宽区间时读 `docs/03_sci_paper/e0_alternative_dispatch_settlement_envelope_contract.md`
-19. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
-20. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
-21. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
-22. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
-23. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
-24. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
-25. 对应层级的实验 / 图表 / 代码映射文档
-26. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-27. 需要做清理或迁移时，再读 `docs/90_governance/`
+19. 合并审计 12 个 TES 与 4 个非燃料账户、判断公开来源能否替代项目账本或复现 E0-D-24 的证据分层时读 `docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`
+20. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
+21. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
+22. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
+23. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
+24. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
+25. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
+26. 对应层级的实验 / 图表 / 代码映射文档
+27. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+28. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 
