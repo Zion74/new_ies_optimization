@@ -25,20 +25,21 @@
 17. `e0_d28_multistart_direction_screening_contract.md`
 18. `e0_d29_export_linked_bound_tightening_contract.md`
 19. `e0_d30_physics_service_bound_tightening_contract.md`
-20. `e0_formal_tac_evidence_route_contract.md`
-21. `e0_project_primary_evidence_intake_contract.md`
-22. `e0_cost_evidence_gap_matrix.md`
-23. `e0_formal_cost_closure_audit.md`
-24. `e0_rahman_bess_linked_evidence_contract.md`
-25. `e0_sensitivity_cost_anchor_contract.md`
-26. `e0_tes_topology_evidence_contract.md`
-27. `e0_tes_heat_delivery_pinch_contract.md`
-28. `e0_tes_mt_scenario_contract.md`
-29. `e0_tes_loss_auxiliary_contract.md`
-30. `e0_parameter_evidence_portfolio.md`
-31. `e0_original_source_evidence_audit.md`
-32. `experiment_figure_code_map.md`
-33. `figure_table_plan.md`
+20. `e0_d31_intertemporal_relaxation_obbt_contract.md`
+21. `e0_formal_tac_evidence_route_contract.md`
+22. `e0_project_primary_evidence_intake_contract.md`
+23. `e0_cost_evidence_gap_matrix.md`
+24. `e0_formal_cost_closure_audit.md`
+25. `e0_rahman_bess_linked_evidence_contract.md`
+26. `e0_sensitivity_cost_anchor_contract.md`
+27. `e0_tes_topology_evidence_contract.md`
+28. `e0_tes_heat_delivery_pinch_contract.md`
+29. `e0_tes_mt_scenario_contract.md`
+30. `e0_tes_loss_auxiliary_contract.md`
+31. `e0_parameter_evidence_portfolio.md`
+32. `e0_original_source_evidence_audit.md`
+33. `experiment_figure_code_map.md`
+34. `figure_table_plan.md`
 
 主题为：热约束型 CHP 中 BESS、双用途熔盐 TES 与 Hybrid 的公平比较、价值机理和技术选择边界。
 

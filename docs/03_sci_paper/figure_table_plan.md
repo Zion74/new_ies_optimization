@@ -32,10 +32,11 @@
 | Tab S-E0D28 | `tab:e0d28_multistart_screening` | 两个预注册种子的初始 support 证人、primal/dual、返回轨迹 L1、符号变化、固定点和改善量 | E0 | 补充材料负筛查；必须标明单轮 1800 s、未达固定点、方向 dual 非全局，不能写成全正交域排除或全局最优证明 |
 | Tab S-E0D29 | `tab:e0d29_export_linked_bound` | 逐时/聚合 cut 数、D27 参考区间、solver primal、轨迹重算 L1、finite global dual、上界改善与严格残差 | E0 | 补充材料数值证书；24 h 沿用 D27 精确点，336 h 报告收紧后宽区间；不得写成实际结算或 E1 结果 |
 | Tab S-E0D30 | `tab:e0d30_physics_service_bound` | 静态 PCC 外包络宽度、年度服务传播、正反向符号宽度压缩、已知证人包含性、D29 参考区间、primal/轨迹重算/dual、数值钳制和严格残差 | E0 | 补充材料物理界紧化证书；24 h 保留精确点，336 h 上界收紧至 `777,141.368858 MWh/a`；不得写成闭合或实际结算 |
+| Tab S-E0D31 | `tab:e0d31_intertemporal_obbt_screen` | 双窗口 LP 数/最优计数/进程分配、D30→D31 正负宽度、证人包含、24 h 等价门、336 h 1% 停止门槛与 retained D30 interval | E0 | 补充材料负筛查证书；重点报告 24 h 明显收紧但 336 h 增量不足 `0.1%`，未启动 336 h global probe；不得画成新 global bound |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |
-| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18、D23、D26–D30 已有 24 h/336 h 验收；必须保留方向正确的 primal/dual、有限界标志、证人、数值钳制和方向/全局语义；E1-E6 批量性能待生成 |
+| Tab S1 | `tab:solver_performance` | HiGHS MIP gap、时间、内存和失败重试 | E0-E6 | E0-D-18、D23、D26–D31 已有 24 h/336 h 验收；必须保留方向正确的 primal/dual、有限界标志、证人、数值钳制、OBBT worker 重建和方向/全局语义；E1-E6 批量性能待生成 |
 
 ## 3. 图表信息纪律
 
@@ -58,7 +59,7 @@
 4. Fig 5：形成物理适用域；
 5. Fig 6：形成经济适用域；
 6. Fig 7 + Tab 5：通过全年验证；
-7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26、Tab S-E0D27、Tab S-E0D28、Tab S-E0D29、Tab S-E0D30 与 Tab S1。
+7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26、Tab S-E0D27、Tab S-E0D28、Tab S-E0D29、Tab S-E0D30、Tab S-E0D31 与 Tab S1。
 
 在 E0、E1 未通过前，不允许先跑大规模边界图。
 

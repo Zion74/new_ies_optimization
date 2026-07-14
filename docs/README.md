@@ -39,17 +39,18 @@
 21. 复现 D28 的 `negated`/`alternating` 一步多起点筛查、解释负 support primal 或审计“局部 dual 非全局界”时读 `docs/03_sci_paper/e0_d28_multistart_direction_screening_contract.md`
 22. 复现 D29 的外送/余量有效不等式、正负年化质量平衡、24 h 等价性门或审计 D29 历史 336 h global dual 时读 `docs/03_sci_paper/e0_d29_export_linked_bound_tightening_contract.md`
 23. 复现 D30 的静态物理 PCC 外包络、年度服务区间传播、区间感知符号不等式、数值钳制审计或读取最新 336 h global dual 时读 `docs/03_sci_paper/e0_d30_physics_service_bound_tightening_contract.md`
-24. 合并审计 12 个 TES 与 4 个非燃料账户、判断公开来源能否替代项目账本或复现 E0-D-24 的证据分层时读 `docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`
-25. 向项目方索取结算、碳、CHP/TES VOM 数据，复核字段缺口、空白提交模板或隐私隔离规则时读 `docs/03_sci_paper/e0_project_primary_evidence_intake_contract.md`
-26. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
-27. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
-28. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
-29. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
-30. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
-31. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
-32. 对应层级的实验 / 图表 / 代码映射文档
-33. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-34. 需要做清理或迁移时，再读 `docs/90_governance/`
+24. 复现 D31 的完整跨时段连续松弛 OBBT、并行 worker 重建、24 h 等价性门或审计 336 h 负筛查/停止门槛时读 `docs/03_sci_paper/e0_d31_intertemporal_relaxation_obbt_contract.md`
+25. 合并审计 12 个 TES 与 4 个非燃料账户、判断公开来源能否替代项目账本或复现 E0-D-24 的证据分层时读 `docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`
+26. 向项目方索取结算、碳、CHP/TES VOM 数据，复核字段缺口、空白提交模板或隐私隔离规则时读 `docs/03_sci_paper/e0_project_primary_evidence_intake_contract.md`
+27. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
+28. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
+29. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
+30. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
+31. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
+32. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
+33. 对应层级的实验 / 图表 / 代码映射文档
+34. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+35. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

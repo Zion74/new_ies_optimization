@@ -6,7 +6,7 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、HiGHS 状态与求解误差 | D21–D23 已闭合风险预算、选择轨迹与联合包络，D26/D27 建立严格证书并闭合 24 h 最大端，D28 两种子未改善 336 h 下界，D29 将 336 h 上界收紧至 `845,052.030831 MWh/a`，D30 通过物理可达域与年度服务联合紧化再收紧至 `777,141.368858 MWh/a`；D24 严格就绪 `0/16`，D25 将四个项目账户转成 51 字段模板但仍为 `0/4` 可进入复核。真实项目账户、336 h 外界闭合、TES 正式 portfolio、完整 TAC 和容量规划仍未完成 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、HiGHS 状态与求解误差 | D21–D23 已闭合风险预算、选择轨迹与联合包络，D26/D27 建立严格证书并闭合 24 h 最大端，D28 两种子未改善 336 h 下界，D29 将 336 h 上界收紧至 `845,052.030831 MWh/a`，D30 通过物理可达域与年度服务联合紧化再收紧至 `777,141.368858 MWh/a`；D31 完成跨时段连续松弛 OBBT，336 h 增量宽度改善不足 `0.1%`，负筛查后不生成新 global dual。D24 严格就绪 `0/16`，D25 将四个项目账户转成 51 字段模板但仍为 `0/4` 可进入复核。真实项目账户、336 h 外界闭合、TES 正式 portfolio、完整 TAC 和容量规划仍未完成 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | `_ch4_p1_milp_compare.py` 仅为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
@@ -98,6 +98,8 @@
 | `src/tes_bess_boundary/d29_certification_bundle.py`、`数据采集/e0d29_export_linked_bound_tightening/` | 双窗口 D27 源锁、cut audit、primal/轨迹重算/dual、严格区间与确定性汇总 | E0 | D29 规范汇总；全部主整数/符号二元开放，finite global dual 才进入上界 |
 | `src/tes_bess_boundary/d30_physics_service_bound_tightening.py` | CHP/热平衡/TES 端口与辅机上界的静态 PCC 外包络、年度 PCC 服务传播、区间感知符号不等式和 reopened global probe | E0/E6 | 24 h 保留精确点；336 h 正向宽度平均收紧 `33.3107%`，global dual `777,141.368858 MWh/a`，较 D29 改善 `8.0363%` |
 | `src/tes_bess_boundary/d30_certification_bundle.py`、`数据采集/e0d30_physics_service_bound_tightening/` | bounds-only 双窗口审计、D29 源锁、已知证人包含性、primal/轨迹重算/dual、数值钳制审计和确定性证书 | E0 | D30 规范汇总；全部主整数/符号二元开放，整数可行集不变，只有 finite global dual 进入上界 |
+| `src/tes_bess_boundary/d31_intertemporal_obbt.py` | 完整 D19 单架构跨时段连续松弛、逐时 PCC min/max OBBT、并行 worker 重建审计和可选等价/global probe | E0/E6 | 24 h 96 LP、336 h 1344 LP 全部最优；24 h 等价门精确，336 h 宽度增量不足 `0.1%`，未启动全局 probe |
+| `src/tes_bess_boundary/d31_screening_bundle.py`、`数据采集/e0d31_intertemporal_obbt/` | D30/D19/D22 源锁、双窗口 OBBT 屏幕、1% 资源门槛、24 h 等价性门和确定性负筛查证书 | E0 | 336 h 明确保留 D30 严格区间；门槛不是结果前预注册，不得误写成新上界或全局排除 |
 | `src/tes_bess_boundary/formal_tac_evidence_route.py` | D15/D20 合并、16 账户路线、Energy+ / 官方工程 / 项目原始层级隔离、期刊指标审计与禁止用途 | E0/E2-E6 | E0-D-24 已实现；`strict_formal_account_count=0`、`layered_route_approved=false`、`formal_tac_ready=false` |
 | `数据采集/e0d24_formal_tac_evidence_route/` | 16 行账户路线、5 条公开来源和自哈希 manifest | E0 | schema v1 规范产物；不包含成本估计，不产生技术赢家 |
 | `src/tes_bess_boundary/project_primary_evidence_intake.py` | 四账户 51 字段要求、当前 coverage、接收证书语义和隐私隔离导出 | E0/E2-E6 | E0-D-25 已实现；`ready_account_count=0`、`formal_tac_ready=false`、`e1_ready=false` |
@@ -141,7 +143,7 @@ E0 当前状态详见 `docs/03_sci_paper/e0_validation_status.md`。
 - 求解器：HiGHS，通过 `highspy`；
 - 隔离环境：`/root/e0-b-20260711-019f4f64/tes_bess_boundary/.venv-e0`；
 - 已验证：`Pyomo 6.10.1`、`highspy / HiGHS 1.15.1`，微型 MILP 状态 `optimal`；
-- 完整 E0 当前回归见 `e0_validation_status.md`。D27 三探针、D28 两种子筛查、D29 双窗口上界探针、D30 双窗口 bounds-only/全局探针及其确定性汇总均在服务器生成；D23–D30 既有规范产物保持锁定；
+- 完整 E0 当前回归见 `e0_validation_status.md`。D27 三探针、D28 两种子筛查、D29 双窗口上界探针、D30 双窗口 bounds-only/全局探针、D31 双窗口 OBBT 与 24 h 等价性探针及其确定性汇总均在服务器生成；D23–D31 既有规范产物保持锁定；
 - 复现依赖：`风光火+熔盐储热/requirements-highs.txt`；
 - 未安装且当前不需要：`oemof.solph`；
 - 输出路径：`/output`；
