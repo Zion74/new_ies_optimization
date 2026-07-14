@@ -22,6 +22,7 @@ The current E0 slice contains:
 - an E0-D-22 hourly-PCC settlement-exposure exporter plus an E0-D-23 joint alternative-dispatch envelope that reopens both architectures' integer patterns under the D19 cost and curtailment caps;
 - an E0-D-26 strict numerical certificate that normalizes annual admissibility rows, separates the D19-selected integer face from the reopened global set, seeds global solves with known feasible witnesses, and distinguishes a termination label from a finite bound certificate;
 - an E0-D-27 direction-generation and sign-reformulation certificate that removes sign binaries from fixed support directions, recomputes feasible L1 exposure from returned PCC traces, and replaces the global `2M` absolute-value rows with an exact positive/negative disaggregation;
+- an E0-D-28 preregistered multistart direction screen that tests negated and alternating sign seeds without promoting fixed-direction duals to global L1 bounds;
 - a hash-locked NREL 2022 ATB 4-hour utility-BESS sensitivity ledger with separate power/usable-energy denominators, aggregate/FOM reconciliation, and a hard guard against counting source FOM together with a second augmentation-replacement ledger;
 - a five-path topology-evidence audit that distinguishes Energy+ direct evidence, reduced-order mapping, modular synthesis, and explicitly proposed extensions;
 - a provenance-aware MT-to-LT heat-delivery audit covering endpoint pinches, HITEC liquid/material limits, inventory/port heat caps, and salt/water flow units;
@@ -93,6 +94,12 @@ the real BESS/TES component portfolio, site-calibrated
 TES loss and auxiliary parameters, VOM/carbon/settlement terms,
 structured representative periods, and endogenous capacity are completed.
 
+E0-D-28 tested one 1,800-second fixed-support iteration from each of two diverse
+336-hour seeds. Neither returned an L1 witness above 36,382.462799 MWh/a, so the
+D27 interval is unchanged. Both solves ended at the time limit without a sign fixed
+point; this bounded negative screen does not exclude other orthants or prove global
+optimality.
+
 `AnnualHorizonSpec` currently describes scored periods only. Every weight must be
 strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
 module must give warm-up periods an explicit structural role and state boundary;
@@ -144,8 +151,8 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full OpenBayes
-regression and D27 hashes are recorded in
-`docs/03_sci_paper/e0_validation_status.md`. E0-D-26/D27 source/tests and the
+regression and D27/D28 hashes are recorded in
+`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D28 source/tests and the
 authorized D19/D22 inputs are synchronized; their strict probes and deterministic
 bundles are generated on the server. The D23/D26 historical outputs remain
 hash-locked but no longer define the preferred maximum-end numerical precision.
