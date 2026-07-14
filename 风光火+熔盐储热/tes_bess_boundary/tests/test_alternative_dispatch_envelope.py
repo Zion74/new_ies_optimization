@@ -234,3 +234,137 @@ def test_d23_source_lock_rejects_tampered_d22_exposure(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="D22 exposure hash"):
         load_e0d23_source_rows(copied_d19, copied_d22)
+
+
+@pytest.mark.parametrize(
+    ("direction_name", "expected_mwh"),
+    [("minimum", 0.0), ("maximum", 8_784.0)],
+)
+def test_d26_strict_probe_recomputes_the_pcc_l1_certificate(
+    direction_name: str, expected_mwh: float
+) -> None:
+    from tes_bess_boundary.alternative_dispatch_envelope import (
+        DispatchAdmissibility,
+        RedistributionDirection,
+        build_joint_redistribution_model,
+    )
+    from tes_bess_boundary.d26_numerical_certification import (
+        STRICT_FEASIBILITY_TOLERANCE,
+        IntegerScope,
+        _strict_solve,
+    )
+    from tes_bess_boundary.e0d17_exploration import DEFAULT_WINDOWS
+
+    case = _alternate_dispatch_case()
+    cap = DispatchAdmissibility(
+        primary_cost_upper_bound_cny=1e-6,
+        curtailment_upper_bound_mwh=8_784.0,
+    )
+    direction = RedistributionDirection(direction_name)
+    model = build_joint_redistribution_model(
+        case,
+        case,
+        comparator_admissibility=cap,
+        candidate_admissibility=cap,
+        direction=direction,
+    )
+
+    result = _strict_solve(
+        model,
+        comparator_case=case,
+        candidate_case=case,
+        comparator_cap=cap,
+        candidate_cap=cap,
+        pcc_service=case.pcc_export_service,
+        window=DEFAULT_WINDOWS[0],
+        scope=IntegerScope.REOPENED,
+        direction=direction,
+        fixed_primary_integer_count=0,
+        warm_start_runtime_seconds=0.0,
+        time_limit_seconds=60.0,
+        threads=2,
+        tee=False,
+    )
+
+    assert result.termination == "optimal"
+    assert result.strict_feasibility_tolerance == pytest.approx(1e-9)
+    assert result.strict_feasibility_tolerance == STRICT_FEASIBILITY_TOLERANCE
+    assert result.normalized_admissibility_constraints is True
+    assert result.fixed_primary_integrality_removed is False
+    assert result.conditional_face_warm_start_mwh is None
+    assert result.conditional_face_warm_start_runtime_seconds == pytest.approx(0.0)
+    assert result.conditional_face_warm_start_termination is None
+    assert result.conditional_face_fixed_primary_integer_count == 0
+    assert (
+        result.maximum_positive_normalized_constraint_residual
+        <= STRICT_FEASIBILITY_TOLERANCE
+    )
+    assert result.auxiliary_objective_mwh == pytest.approx(expected_mwh)
+    assert result.recomputed_redistribution_mwh == pytest.approx(expected_mwh)
+    assert result.auxiliary_objective_mismatch_mwh == pytest.approx(0.0)
+    assert result.bound_certificate_complete is True
+    assert result.primal_bound_mwh == pytest.approx(expected_mwh)
+    assert result.dual_bound_mwh == pytest.approx(expected_mwh)
+    assert result.relative_gap == pytest.approx(0.0)
+    assert result.comparator_pcc_service_residual_mwh == pytest.approx(0.0)
+    assert result.candidate_pcc_service_residual_mwh == pytest.approx(0.0)
+    assert result.common_pcc_difference_mwh == pytest.approx(0.0)
+    assert result.actual_price_path_assigned is False
+    assert result.formal_tac is False
+    assert result.e1_ready is False
+
+
+def test_d26_fixed_integer_face_removes_redundant_integrality() -> None:
+    from pyomo.environ import Binary, ConcreteModel, Integers, Var, value
+
+    from tes_bess_boundary.d26_numerical_certification import (
+        _fix_integer_pattern,
+    )
+
+    source = ConcreteModel()
+    source.commitment = Var((0, 1), domain=Binary)
+    source.start_count = Var(domain=Integers, bounds=(0, 4))
+    source.commitment[0].set_value(1)
+    source.commitment[1].set_value(0)
+    source.start_count.set_value(2)
+    target = source.clone()
+
+    fixed = _fix_integer_pattern(target, source)
+
+    assert fixed == 3
+    for variable in (
+        target.commitment[0],
+        target.commitment[1],
+        target.start_count,
+    ):
+        assert variable.fixed
+        assert not variable.is_binary()
+        assert not variable.is_integer()
+    assert value(target.commitment[0]) == pytest.approx(1.0)
+    assert value(target.commitment[1]) == pytest.approx(0.0)
+    assert value(target.start_count) == pytest.approx(2.0)
+
+
+def test_d26_conditional_face_copy_uses_block_relative_names() -> None:
+    from pyomo.environ import Block, ConcreteModel, Var, value
+
+    from tes_bess_boundary.d26_numerical_certification import (
+        _copy_joint_block_values,
+    )
+
+    source_model = ConcreteModel()
+    source_model.comparator = Block()
+    source_model.comparator.dispatch = Var((0, 1))
+    source_model.comparator.dispatch[0].set_value(3.5)
+    source_model.comparator.dispatch[1].set_value(7.0)
+    target_model = ConcreteModel()
+    target_model.comparator = Block()
+    target_model.comparator.dispatch = Var((0, 1), initialize=0.0)
+
+    copied = _copy_joint_block_values(
+        source_model.comparator, target_model.comparator
+    )
+
+    assert copied == 2
+    assert value(target_model.comparator.dispatch[0]) == pytest.approx(3.5)
+    assert value(target_model.comparator.dispatch[1]) == pytest.approx(7.0)

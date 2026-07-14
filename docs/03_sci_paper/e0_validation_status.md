@@ -2,7 +2,7 @@
 
 更新时间：2026-07-14
 
-状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合来源无关的影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门。E0 总门槛仍未通过。** D24 严格正式账户为 `0/16`；D25 当前三类运行账户 `missing`、CHP 为 6/14 字段的 `partial`，因此 `ready_account_count=0/4`。D25 只形成 51 字段数据请求，不指定项目价格、不输出受限资料或提交值、不产生正式 TAC 或技术赢家；内生容量及 E1–E6 仍不得启动。
+状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合来源无关的影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门；E0-D-26 已完成约束缩放、严格容差、条件面证人和有限界分离的数值加固。E0 总门槛仍未通过。** D26 将 24 h 全局严格包络闭合为 `26,010.171143–26,010.174918 MWh/a`，336 h 内界显著收紧但 dual 外界仍宽。D24 严格正式账户为 `0/16`；D25 当前三类运行账户 `missing`、CHP 为 6/14 字段的 `partial`，因此 `ready_account_count=0/4`。D25/D26 均不指定项目价格、不产生正式 TAC 或技术赢家；内生容量及 E1–E6 仍不得启动。
 
 ## 1. 已实现代码
 
@@ -34,6 +34,8 @@
 - `shadow_cost_robustness.py`：哈希锁定 E0-D-19 schema v2 canonical，联动 E0-D-20 四账户门控，将有符号账户区间或未分配合计不利成本传播到燃料空间；按调整后上下界判定稳健为正、跨零不确定、精确盈亏平衡或稳健为负，并导出只允许 sensitivity 的 LF 规范 CSV/manifest；
 - `pcc_settlement_exposure.py`：从 D19 同服务重求解导出的逐时 PCC 轨迹计算年化重新分配电量、固定平价恒等式、显式价格序列结算差和任意有界价格跨度包络；写出器哈希锁定 D19 canonical 并拒绝聚合结果漂移，明确当前轨迹未证明连续解唯一；
 - `alternative_dispatch_envelope.py`：哈希锁定 D19/D22，将两架构嵌入同一联合 MILP，在主成本/弃电 cap 内重新开放整数模式并极小化/极大化 PCC 年化 L1 重分配；336 h 复现 D19 三阶段状态作为纯 warm start，按目标方向保留 primal/dual；
+- `d26_numerical_certification.py`：把年度成本/弃电准入行无量纲化，统一使用 `1e-9` 可行性容差，分开 D19 条件整数面与开放整数模式；移除已固定变量的冗余 integrality，以条件面极值回灌全局 warm start，并强制全局 incumbent 支配已知子集证人；`termination` 与有限界证书分离，PCC L1 从时序独立重算；
+- `d26_certification_bundle.py`：校验 8 个 D26 探针的身份、严格残差、科学边界和条件面证人，导出两窗口确定性 CSV、manifest 与非规范 execution sidecar；
 - `formal_tac_evidence_route.py`：连接 D15 的 12 个 TES 与 D20 的 4 个非燃料账户；分别记录严格候选阻断、项目原始数据要求、Energy+ 与官方工程层级、期刊指标和禁止用途，并确定性导出 16 行账户路线、5 条公开来源和自哈希 manifest；
 - `project_primary_evidence_intake.py`：把 D20/D24 的四个项目运行账户转为 51 项字段要求、四账户当前 coverage、空白提交模板和隐私 manifest；现有杨凌工作簿只以不透明 ID、哈希和最小单元格元数据登记，不导出金额；接收证书显式保留 `formal_validation_required=true`；
 - `tes_topology_evidence.py`：逐条登记五个 TES 活跃路径的 Energy+ 直接证据、降阶映射、模块化合成或本文扩展；阻塞路径拒绝正式认证，`MT→LT` 供热级联必须显式披露为 proposed extension；
@@ -61,10 +63,9 @@
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| 本地独立 Python 3.11 环境 | 原始热 Excel、正式构建/适配、真实双机桥接、CHP/储能物理、UC/PWL、四架构、寿命/年度经济、TES 证据与成本门、E0-D-17–D-25 适配、紧化、证据审计、暴露包络、16 账户路线与项目取证隐私门 | `328 passed in 61.48s`（关闭 pytest cache） |
-| OpenBayes Python 3.10.18 隔离环境 | E0-D-25 新增源码/测试同步；远端独立生成三份 CSV 与 manifest，全部和本地哈希一致 | `328 passed in 26.64s`（关闭 pytest cache） |
+| OpenBayes Python 3.10.18 隔离环境 | 原始热 Excel、正式构建/适配、真实双机桥接、CHP/储能物理、UC/PWL、四架构、寿命/年度经济、TES 证据与成本门、E0-D-17–D-26、严格数值证书及项目取证隐私门 | `334 passed in 27.26s`（关闭 pytest cache） |
 
-本地与远端 D25 基线均使用 `Pyomo 6.10.1`、`highspy 1.15.1`。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D25 独立再生成件位于 `/root/e0-b-20260711-019f4f64/e0d25_project_primary_evidence_intake_remote/`；本轮只同步新增源码和测试，本地受限资料未上传。
+D26 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，求解器仅为 HiGHS。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D26 探针位于 `/root/e0-b-20260711-019f4f64/e0d26_numeric_normalized/`；本轮未上传本地受限资料。
 
 E0-D-1 历史同步快照的本地/远端 SHA-256 为：
 
@@ -138,6 +139,8 @@ E0-D-23 最终源码/测试 SHA-256 为 `alternative_dispatch_envelope.py` `92fc
 E0-D-24 本地/远端一致的源码/测试 SHA-256 为 `formal_tac_evidence_route.py` `d598bf962ae16270c457f50e2bc4b1a9bc70fef544f662de5222b9a906d35f57`、`test_formal_tac_evidence_route.py` `75f0263c9494ac7d80e9af334f0be9f13a9fafd5051b4375a75461dfa6e1d33b`。两端独立生成的 schema v1 规范账户 CSV 均为 `643850ead0c71c70bbe405130b8f234a69c631b25bac11cbe68a368b4bac0180`、公开来源 CSV 均为 `162a7e4fdd82db87f3729c371122ec86efddac4f47ce2643e9d9025ded7659c1`、manifest 均为 `c153b11cc59067a911c1cdc24a3b3cf4d1456d19051786ccf4c9f22832ccec86`；`strict_formal_account_count=0`、`layered_route_approved=false`、`formal_tac_ready=false`、`e1_ready=false`。
 
 E0-D-25 本地/远端一致的源码/测试 SHA-256 为 `project_primary_evidence_intake.py` `a05a85549e859b64aea7b8c7b43f45b9440455cf2f2f684da4d6687a211d1af8`、`test_project_primary_evidence_intake.py` `86e7b7cfb4c66477022d467cab9c7646686d1e195534295b0b4bcfd5bb77355b`。两端独立生成的 schema v1 字段 CSV 为 `877923986fe6d689e75e5a8c7225bff6b8775a02d46a3fa31a35674884c7a347`、coverage CSV 为 `f0134129f5db358c1cadb89d1c25a8b4524594200a15994d4f48a8c26db00263`、空白模板为 `f7b4157e996ec45a2837045f3c5105e9727cfad7177b0ac0494b6fc0f8b0d0c6`、manifest 为 `f98b8925b40be066e132a0bfda449d30d927ecc835cfe0690cddc5217aa1b74c`；`ready_account_count=0`、`raw_confidential_sources_exported=false`、`formal_tac_ready=false`、`e1_ready=false`。
+
+E0-D-26 本地/远端一致的源码/测试 SHA-256 为：`d26_numerical_certification.py` `d5498b933260914152619d25e64011ff4fcce9bb8b14b8a5e9c60ec0a9d0b5b9`、`d26_certification_bundle.py` `15f25c7c1cd51c6aefdfe44d9c5518027f3c485c62c1b57a89bd8c676e51e240`、`test_alternative_dispatch_envelope.py` `8395f27a2e12d9bd780bece22740909e23fce8c96ba3f7a5056c183639152444`、`test_d26_certification_bundle.py` `9d54fb2aacd30de7cd702b425dea6f6f8c32096ec775eae212e4a895c6d9e056`。schema v1 规范 CSV 为 `7006e43c110967affe8633f4e0913a121e349e153b505e010e6a9b87830d54ea`、manifest 为 `63dcb72346af58a3cb5e2052b891b51441b37f0b1ab6b3c9880295310caa15ff`、非规范 execution sidecar 为 `75c55e092762cb004a763713707db9398adb4629ae2750687edbdced97e93b18`；8 个原始探针的逐文件哈希由 manifest 锁定且下载后逐字节一致。OpenBayes 完整回归为 `334 passed in 27.26s`；`actual_price_path_assigned=false`、`formal_tac=false`、`e1_ready=false`。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 

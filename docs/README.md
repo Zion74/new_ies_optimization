@@ -34,6 +34,7 @@
 16. 将 E0-D-19 燃料空间与四类缺证成本连接、复现遗漏成本阈值或审计区间稳健性时读 `docs/03_sci_paper/e0_shadow_cost_robustness_contract.md`
 17. 审计同年度 PCC 下的逐时外送轨迹、固定平价恒等式、价格跨度结算包络或 D21 结算单账户临界价差时读 `docs/03_sci_paper/e0_pcc_settlement_exposure_contract.md`
 18. 在 D19 可接受调度集内复现 PCC 重分配双向极值、审计 24 h 精确包络或解释 336 h primal/dual 宽区间时读 `docs/03_sci_paper/e0_alternative_dispatch_settlement_envelope_contract.md`
+19. 审计 D23/D26 的约束尺度、严格容差、条件整数面证人、有限界标志或修正后的双窗口数值时读 `docs/03_sci_paper/e0_d26_numerical_certification_contract.md`
 19. 合并审计 12 个 TES 与 4 个非燃料账户、判断公开来源能否替代项目账本或复现 E0-D-24 的证据分层时读 `docs/03_sci_paper/e0_formal_tac_evidence_route_contract.md`
 20. 向项目方索取结算、碳、CHP/TES VOM 数据，复核字段缺口、空白提交模板或隐私隔离规则时读 `docs/03_sci_paper/e0_project_primary_evidence_intake_contract.md`
 21. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
