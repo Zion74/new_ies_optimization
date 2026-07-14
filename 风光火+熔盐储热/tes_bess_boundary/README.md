@@ -98,7 +98,14 @@ open. E0-D-31 retains the complete intertemporal single-architecture model, rela
 all integer domains, and solves per-period PCC OBBT LPs. The 24-hour intervals tighten
 materially and preserve the exact gate, but the 336-hour positive/negative sign widths
 improve by only 0.0329%/0.0864% relative to D30. No 336-hour global probe is launched,
-so D30 remains the latest global bound. A support
+so D30 remains the latest global bound. E0-D-32 then preregisters fourteen contiguous
+24-hour joint L1 envelopes. Each block retains both complete 336-hour architecture
+paths and annual service/admissibility rows, relaxes the primary integer domains, and
+keeps exact sign binaries only inside the active block. All fourteen finite duals
+contain the locked D22 witness, but their protected sum is
+1,930,160.868929 MWh/a, above D30's 777,141.368858 MWh/a. The one-percent gate
+therefore fails and no 336-hour global probe is launched. The 24-hour reopened
+equivalence probe remains exact. A support
 direction dual bounds only that direction and is never reported as the global L1
 upper bound. These are
 settlement-exposure bounds, not actual price losses or a technology winner. Formal sweeps must not start until
@@ -130,6 +137,14 @@ all integer domains. A one-percent materiality gate is adopted after the OBBT sc
 but before any 336-hour global probe; it is explicitly not represented as an ex-ante
 preregistration. The 336-hour screen fails that gate, so its D30 strict interval is
 retained rather than relabeled as a new D31 upper bound.
+
+E0-D-32 solves one 24-hour and fourteen 336-hour block-envelope subproblems. The
+24-hour exact global equivalence probe terminates optimal with all primary and sign
+binaries reopened. For 336 hours, four block subproblems terminate optimal and ten
+return finite time-limit duals. Their sum fails the result-preregistered one-percent
+materiality gate, so D32 is a negative screen and D30 remains the latest global bound.
+The failure identifies cross-block trajectory compatibility as the missing structure;
+it does not justify changing block length after observing the result.
 
 `AnnualHorizonSpec` currently describes scored periods only. Every weight must be
 strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
@@ -182,8 +197,8 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full OpenBayes
-regression and D27--D31 hashes are recorded in
-`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D31 source/tests and the
+regression and D27--D32 hashes are recorded in
+`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D32 source/tests and the
 authorized D19/D22 inputs are synchronized; their strict probes and deterministic
 bundles are generated on the server. The D23/D26 historical outputs remain
 hash-locked but no longer define the preferred maximum-end numerical precision.

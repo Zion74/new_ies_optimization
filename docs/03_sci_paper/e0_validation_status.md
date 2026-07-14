@@ -2,7 +2,7 @@
 
 更新时间：2026-07-14
 
-状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门；E0-D-26 已完成约束缩放、严格容差、条件面证人和有限界分离；E0-D-27 已完成固定支持方向与等价正负符号重构；E0-D-28 已完成两个预注册异质符号种子的单步方向筛查；E0-D-29 已完成外送耦合全局上界紧化；E0-D-30 已完成静态物理 PCC 可达外包络、年度服务传播与区间感知符号紧化；E0-D-31 已完成跨时段连续松弛 OBBT 与 24 h 等价性门，并对 336 h 形成负筛查。E0 总门槛仍未通过。** 24 h 全局严格包络保持 `26,010.171143–26,010.174929 MWh/a`；D30 将 336 h 最大严格区间从 D29 的 `[36,382.462799,845,052.030831]` 收紧为 `[36,382.462799,777,141.368858] MWh/a`，上界较 D29 改善 `8.0363%`、较 D26 累计改善 `42.9474%`。D31 的 336 h 正/负符号宽度相对 D30 仅再改善 `0.0329%/0.0864%`，低于资源门槛，未启动新 global probe，故最新全局界仍为 D30 且外界仍宽。D24 严格正式账户为 `0/16`；D25 当前三类运行账户 `missing`、CHP 为 6/14 字段的 `partial`，因此 `ready_account_count=0/4`。D25–D31 均不指定项目价格、不产生正式 TAC 或技术赢家；内生容量及 E1–E6 仍不得启动。
+状态：**E0-A 通过；E0-B 正式带标志数据集通过；E0-C 固定容量统一调度与正式热需求适配/真实双机 24 h 桥接通过；E0-D-1–D-20 已闭合相应数据、物理、成本门、同 PCC 燃料空间和非燃料成本证据审计；E0-D-21 已闭合影子成本区间传播与翻转阈值；E0-D-22 已闭合选择轨迹的逐时 PCC 与价差暴露；E0-D-23 已完成替代可接受调度的联合双向极值；E0-D-24 已建立 16 账户统一证据路线；E0-D-25 已建立项目原始证据接收与隐私隔离门；E0-D-26 已完成约束缩放、严格容差、条件面证人和有限界分离；E0-D-27 已完成固定支持方向与等价正负符号重构；E0-D-28 已完成两个预注册异质符号种子的单步方向筛查；E0-D-29 已完成外送耦合全局上界紧化；E0-D-30 已完成静态物理 PCC 可达外包络、年度服务传播与区间感知符号紧化；E0-D-31 已完成跨时段连续松弛 OBBT 负筛查；E0-D-32 已完成联合 24 h 分块 L1 包络、24 h reopened 等价门及 336 h 结果前材料性负筛查。E0 总门槛仍未通过。** 24 h 全局严格包络保持 `26,010.171143–26,010.174929 MWh/a`；D30 将 336 h 最大严格区间从 D29 的 `[36,382.462799,845,052.030831]` 收紧为 `[36,382.462799,777,141.368858] MWh/a`，上界较 D29 改善 `8.0363%`、较 D26 累计改善 `42.9474%`。D31 的 336 h 正/负符号宽度相对 D30 仅再改善 `0.0329%/0.0864%`；D32 的 14 个受保护日块 dual 之和为 `1,930,160.868929 MWh/a`，高于 D30，上界改善为 0。两轮均未启动新的 336 h global probe，故最新全局界仍为 D30 且外界仍宽。D24 严格正式账户为 `0/16`；D25 当前三类运行账户 `missing`、CHP 为 6/14 字段的 `partial`，因此 `ready_account_count=0/4`。D25–D32 均不指定项目价格、不产生正式 TAC 或技术赢家；内生容量及 E1–E6 仍不得启动。
 
 ## 1. 已实现代码
 
@@ -38,6 +38,8 @@
 - `d26_certification_bundle.py`：校验 8 个 D26 探针的身份、严格残差、科学边界和条件面证人，导出两窗口确定性 CSV、manifest 与非规范 execution sidecar；
 - `d27_direction_generation.py`：对固定符号方向移除绝对值符号二元并重新开放主整数模式，从返回轨迹重算可行 L1；全局最大化使用正负差值分解与单符号二元，并严格分离方向 dual 与全局 dual；
 - `d27_certification_bundle.py`：校验 24 h 联合探针和 336 h 方向/全局探针的身份、严格残差、证人支配和科学边界，导出两窗口最大端确定性 CSV、manifest 与非规范 execution sidecar；
+- `d32_joint_block_envelope.py`：在两架构完整全时域路径、年度 PCC 服务和 D19 准入条件上，逐个保留 24 h 块内符号二元并放松主整数域，以有限 dual 构造块 L1 上界；可将块上界作为有效割加回 reopened 全局 MILP；
+- `d32_screening_bundle.py`：验证 15 个块子问题的有限 dual、D22 分块证人、24 h reopened 等价门、336 h 结果前 1% 停止门和无 `336h.json` 事实，导出确定性 CSV、manifest 与非规范 execution sidecar；
 - `formal_tac_evidence_route.py`：连接 D15 的 12 个 TES 与 D20 的 4 个非燃料账户；分别记录严格候选阻断、项目原始数据要求、Energy+ 与官方工程层级、期刊指标和禁止用途，并确定性导出 16 行账户路线、5 条公开来源和自哈希 manifest；
 - `project_primary_evidence_intake.py`：把 D20/D24 的四个项目运行账户转为 51 项字段要求、四账户当前 coverage、空白提交模板和隐私 manifest；现有杨凌工作簿只以不透明 ID、哈希和最小单元格元数据登记，不导出金额；接收证书显式保留 `formal_validation_required=true`；
 - `tes_topology_evidence.py`：逐条登记五个 TES 活跃路径的 Energy+ 直接证据、降阶映射、模块化合成或本文扩展；阻塞路径拒绝正式认证，`MT→LT` 供热级联必须显式披露为 proposed extension；
@@ -65,9 +67,9 @@
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| OpenBayes Python 3.10.18 隔离环境 | 原始热 Excel、正式构建/适配、真实双机桥接、CHP/储能物理、UC/PWL、四架构、寿命/年度经济、TES 证据与成本门、E0-D-17–D-31、严格数值证书及项目取证隐私门 | `372 passed in 26.73s`（关闭 pytest cache） |
+| OpenBayes Python 3.10.18 隔离环境 | 原始热 Excel、正式构建/适配、真实双机桥接、CHP/储能物理、UC/PWL、四架构、寿命/年度经济、TES 证据与成本门、E0-D-17–D-32、严格数值证书及项目取证隐私门 | `377 passed in 26.91s`（关闭 pytest cache） |
 
-D26–D31 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，求解器仅为 HiGHS。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`。本轮未上传本地受限资料。
+D26–D32 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，求解器仅为 HiGHS。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`。本轮只上传新增测试代码和既有授权范围内的锁定输入，未上传本地受限资料。
 
 E0-D-1 历史同步快照的本地/远端 SHA-256 为：
 
@@ -153,6 +155,8 @@ E0-D-29 本地/远端一致的源码/测试 SHA-256 为：`d29_export_linked_bou
 E0-D-30 本地/远端一致的源码/测试 SHA-256 为：`d30_physics_service_bound_tightening.py` `2484676d410a94323c93505fa9e930f360b26d9dbc8d89756e72253134b8eceb`、`d30_certification_bundle.py` `d60a5401462a3d4b6b8dd401850de453e3d3bb23b8cdcc1e6cc1fbe6ac0f777a`、`test_d30_physics_service_bound_tightening.py` `b12d38181d815408a7dcb61449ea8879f1d41f61839d98bbb12487c27d5fefe4`、`test_d30_certification_bundle.py` `2776be79b39d3a2bdd90c424ffa6d3ec1348a6a6dd9aa26750011e3886d8a5b4`。schema v1 规范 CSV 为 `32ca2a7171d35da1311c3316127b9285eb3ab2af5c9e8680741e7c5efc735e6c`、manifest 为 `c430fa852f3934c8466387a32f2ce67152764b8bd7fb1d228fc1fc416f08520e`、非规范 execution sidecar 为 `31235b956ea0e1497369e861aa5d5921a56cf295d8c6b46aa42bf45bc7eb8eec`；24 h/336 h 原始探针分别为 `13d4a9ca232beebab05e16d5b88534c3b3d0e40452d07bc39265a77495440ca0` 与 `c27abd940a66582cf541cb3cc6bffbf283d7e7cdf66d51e582266edf6e81fbf7`，bounds-only 筛查分别为 `e412e702f856e7576027380d17082f842a64f29b0b3c23a3149efc60ec907cf6` 与 `9b06d54073906fd3676aeb2ec03e4408331f942eb686828cc3dfc19a2d949f08`，本地/远端逐字节一致。OpenBayes D29+D30 定向回归为 `15 passed in 0.52s`，完整回归为 `363 passed in 26.75s`；336 h 正向/反向符号宽度平均收紧 `33.3107%/1.8659%`，global dual 为 `777,141.368858 MWh/a`，较 D29 改善 `8.0363%`。`known_witness_within_bounds=true`、`feasible_set_changed_for_integer_solutions=false`、`primary_integer_patterns_reopened=true`、`sign_binaries_reopened=true`、`global_dual_is_valid_l1_upper_bound=true`、`actual_price_path_assigned=false`、`formal_tac=false`、`e1_ready=false`。
 
 E0-D-31 本地/远端一致的源码/测试 SHA-256 为：`d31_intertemporal_obbt.py` `ee9da51267bfa4ac52b97fa25f19129f14574a232b8a06d86201b551f7ed651d`、`d31_screening_bundle.py` `f2989a26cf099014f4ee263dec2e8f50a2e480780a6ae5bda49e41f3d6512efa`、`test_d31_intertemporal_obbt.py` `ee64cb44b4bbcd1c902d46e50d8f15a7103410664cb4fcf094cb832e93b66a47`、`test_d31_screening_bundle.py` `5a598ae72b955a64927e7c6693db0c142bd3d61e7115d351c49c50afc25797b4`。schema v1 规范 CSV 为 `93cee79a930c32920f7eb0e89326ed3190fea5c5c3ca461cafe9a10200d3aad0`、manifest 为 `55bb55c9b26a11dc8ece3fc5f283e39a616736ac3f0737944f5a7997ad615821`、非规范 execution sidecar 为 `35ab773e13418d73ca550c461a978d57444d15e36c43b10ce4e61d27605404b6`；24 h/336 h OBBT 屏幕分别为 `acf2c49126485ad9d4d41e9d036ed45ec0487fdeeeab71958412d370c03f5836` 与 `1789b76b5589f890e14b9dcbece0cec0dfdea486baa89613f24284bc670f668e`，24 h 等价探针为 `32a0589b26cda583feff3d85d10ad60ab3b406ace88bf064ab5f73347389ac3e`，本地/远端逐字节一致。OpenBayes D31 定向回归为 `9 passed in 0.49s`，最终完整回归为 `372 passed in 26.73s`。24 h/336 h 分别完成 96/1344 个最优 LP；336 h 正/负平均符号宽度相对 D30 仅改善 `0.0329%/0.0864%`，`global_probe_336h_launched=false`，最新 336 h global dual 继续引用 D30。
+
+E0-D-32 本地/远端一致的源码/测试 SHA-256 为：`d32_joint_block_envelope.py` `91daa633ef5b713d577f8ea2b00274b683385feb8da01cd25f3f75c0087c2a66`、`d32_screening_bundle.py` `82600cbf921d5bc740f5afb969ba3f616253821b6d957d8d93afa43ab6e3cc67`、`test_d32_joint_block_envelope.py` `d0fe8354d7d4ba16f2a2c4f0e3ca47ee22d88fdea34d7fc4ab420e37194c9b7e`、`test_d32_screening_bundle.py` `d07a6c1c2673b16fbd98a2a30ab5214b371c08b644d135bc7f5542b80ae1df24`。schema v1 规范 CSV 为 `47b273c511717cb4f9c19cf640d806df2c00250a929bd0936df4a4601a534939`、manifest 为 `bb425167c7eb781c1b91d0e31e98f83ac3e7de5ee94967dc4c9c22005ee6bdc8`、非规范 execution sidecar 为 `4eff8405d49f28bcded74c6b45b81355fb81e5181ff8451c3fac558b0551782e`；24 h/336 h 分块屏幕分别为 `721754d4c06423963e4273b13a43f36521a1af6b6b0857d113d7e43619e85f3e` 与 `bb3212c24852f8d0ef6655ff298e4bcf04f34c6ea0ef10e60d13566c51fced91`，24 h reopened 等价探针为 `f1ae9d076cc00547f8003df4c5adf161f38a6f3e9a78fedd01a5c39efc027968`，本地/远端逐字节一致。15 个块子问题全部返回有限 dual；336 h 为 4 个 `optimal`、10 个 `maxtimelimit`，受保护 dual 之和 `1,930,160.868929 MWh/a`，高于 D30，故 `global_probe_336h_launched=false`。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -256,7 +260,7 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 2. E0-D-9B-2 已完成三档底层液压泵耗、标准循环及统一模型五路径/损失/辅机审计；后续正式算例直接复用该审计接口，继续争取杨凌泵曲线、压降和运行记录，但不得把作者情景升级为现场基线；
 3. E0-D-25 已把四个运行账户转为 51 项项目数据请求。优先按空白模板索取杨凌合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM；材料先本地隔离登记，接收完整后按 D20/D24 重新发证，不上传原文或提交值；
 4. E0-D-24 的 12 个 TES 所有权账户仍为 8 个候选不完整、4 个无直接候选。继续补齐 Guccione 报价年/边界，并定向检索蒸汽充热、对外供热和 power-block retrofit；Energy+ 聚合值与官方工程锚点只能映射/校准，不能反向分摊或回填 D25；
-5. D30 已确认通用 FBBT 无紧化并把 336 h 上界降至 `777,141.368858 MWh/a`；D31 又确认保留完整跨时段/准入约束的 scalar OBBT 在 336 h 只额外改善不足 `0.1%`，未启动新 global probe。若继续数值认证，只允许研究保留多时段联合结构的分解、路径/库存割或其他能直接给出更强 global dual 的证书；不再追加通用 FBBT、随机符号种子或同类逐变量 OBBT；
+5. D30 已把 336 h 上界降至 `777,141.368858 MWh/a`；D31 排除了同类 scalar OBBT，D32 又排除了“逐日独立联合上界后求和”：14 个块 dual 之和反而为 `1,930,160.868929 MWh/a`。若继续数值认证，必须直接保留跨块共同轨迹互斥性并能给出单一 global dual，例如整体库存路径割或有严格主问题上界的分解证书；不再追加通用 FBBT、随机符号种子、逐变量 OBBT、事后改块长或可分离日块求和；
 6. 同范围成本、TES 正式 portfolio 与正式风光输入闭合后，再把 fixed-capacity 模型升级为 endogenous capacity，并用真实参数完成四架构样本验证，锁定 98–105 MW 低负荷煤耗规则敏感性；
 7. 为 E5 单独建立代表周块、显式 warm-up/计分角色和跨块状态边界；当前 `AnnualHorizonSpec` 不接受裸零权重；
 8. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
