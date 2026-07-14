@@ -85,8 +85,11 @@ tolerances, PCC trace recomputation, and known-witness dominance checks. E0-D-27
 supersedes the D26 maximum-end precision with fixed support directions and an exact
 positive/negative sign formulation. The strict 24-hour global envelope is
 26,010.171143--26,010.174929 MWh/a. The 336-hour minimum remains bounded by
-0--15,594.993900 MWh/a and the maximum is tightened to
-36,382.462799--1,081,649.139331 MWh/a; its global envelope remains open. A support
+0--15,594.993900 MWh/a. E0-D-29 adds export-linked valid inequalities and annual
+positive/negative mass constraints without changing the integer feasible set; the
+336-hour maximum is further tightened to
+36,382.462799--845,052.030831 MWh/a, a 21.8737% upper-bound improvement over D27.
+Its global envelope remains open. A support
 direction dual bounds only that direction and is never reported as the global L1
 upper bound. These are
 settlement-exposure bounds, not actual price losses or a technology winner. Formal sweeps must not start until
@@ -99,6 +102,11 @@ E0-D-28 tested one 1,800-second fixed-support iteration from each of two diverse
 D27 interval is unchanged. Both solves ended at the time limit without a sign fixed
 point; this bounded negative screen does not exclude other orthants or prove global
 optimality.
+
+E0-D-29 preserves the exact 24-hour interval and produces a finite 336-hour global
+dual of 845,052.030831 MWh/a. The 336-hour solve still ends at the 1,800-second time
+limit with a wide strict interval, so this is bound tightening rather than global
+closure.
 
 `AnnualHorizonSpec` currently describes scored periods only. Every weight must be
 strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
@@ -151,8 +159,8 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full OpenBayes
-regression and D27/D28 hashes are recorded in
-`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D28 source/tests and the
+regression and D27--D29 hashes are recorded in
+`docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D29 source/tests and the
 authorized D19/D22 inputs are synchronized; their strict probes and deterministic
 bundles are generated on the server. The D23/D26 historical outputs remain
 hash-locked but no longer define the preferred maximum-end numerical precision.

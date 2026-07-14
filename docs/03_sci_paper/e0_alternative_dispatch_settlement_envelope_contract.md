@@ -2,9 +2,9 @@
 
 更新时间：2026-07-14
 
-状态：**D23 数学合同与历史规范产物保持锁定；其默认容差与 `2M` 符号形式的首选数值精度已由 E0-D-26/D27 严格证书取代。D27 将 24 h 全局包络修正为 `26,010.171143–26,010.174929 MWh/a`，并将 336 h 最大区间收紧为 `[36,382.462799,1,081,649.139331] MWh/a`，但外界仍宽。真实分时价格、完整 TAC 与 E1 仍未闭合。**
+状态：**D23 数学合同与历史规范产物保持锁定；其默认容差与 `2M` 符号形式的首选数值精度已由 E0-D-26–D29 严格证书取代。D27 将 24 h 全局包络修正为 `26,010.171143–26,010.174929 MWh/a`；D29 又把 336 h 最大严格区间收紧为 `[36,382.462799,845,052.030831] MWh/a`，但外界仍宽。真实分时价格、完整 TAC 与 E1 仍未闭合。**
 
-数值引用规则：本文件第 6 节保留 D23 当次运行值以便复现；论文最新版最小端以 `e0_d26_numerical_certification_contract.md` 为准，最大端与严格残差以 `e0_d27_direction_generation_and_sign_reformulation_contract.md` 为准。
+数值引用规则：本文件第 6 节保留 D23 当次运行值以便复现；论文最新版最小端以 `e0_d26_numerical_certification_contract.md` 为准，24 h 最大端以 `e0_d27_direction_generation_and_sign_reformulation_contract.md` 为准，336 h 最大全局界与严格残差以 `e0_d29_export_linked_bound_tightening_contract.md` 为准。
 
 ## 1. 科学问题
 

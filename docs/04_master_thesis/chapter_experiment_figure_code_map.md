@@ -12,7 +12,7 @@
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
 | T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向、分部件寿命和缺证成本风险 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even*.py`、`operating_cost_evidence.py`、`project_primary_evidence_intake.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` | 三温区/五端口、损失/辅机、成本门、同 PCC 燃料空间、影子成本传播、调度价差暴露和 51 字段取证门通过；12 个 TES 与四个项目运行账户仍阻断，阈值只能作 sensitivity |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py`、`e0d18_performance.py`、`e0d19_same_pcc_service.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py`、`d26_numerical_certification.py`、`d27_direction_generation.py`、`d28_multistart_direction.py` + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合，336 h 保留方向正确的收紧区间；D28 两个单步种子未改善下界且不生成全局界 |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、`e0d17_exploration.py`、`e0d18_performance.py`、`e0d19_same_pcc_service.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py`、`d26_numerical_certification.py`、`d27_direction_generation.py`、`d28_multistart_direction.py`、`d29_export_linked_bound_tightening.py` + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合；D28 两个单步种子未改善下界且不生成全局界；D29 的出口联动有效不等式将 336 h 全局上界再收紧 `21.8737%` 至 `845,052.030831 MWh/a`，但区间仍未闭合 |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 
@@ -31,7 +31,7 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `_ch4_p1_milp_compare.py` 仅作原型；E0-D-19–D-23 已补同 PCC 双窗口、缺证成本翻转区间、当前轨迹与替代调度价差暴露，D26/D27 加固其数值证书，D28 对两个异质符号种子作有界负筛查 | 两窗口/影子成本/价差筛查不等于 E1；24 h 严格包络已闭合但 336 h 仍宽，D28 也未闭合外界。TES 正式成本、项目级非燃料账户、真实结算、正式 TAC 和内生容量闭合后才启动 E1 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `_ch4_p1_milp_compare.py` 仅作原型；E0-D-19–D-23 已补同 PCC 双窗口、缺证成本翻转区间、当前轨迹与替代调度价差暴露，D26/D27 加固其数值证书，D28 对两个异质符号种子作有界负筛查，D29 加入不改变可行集的出口联动收紧 | 两窗口/影子成本/价差筛查不等于 E1；24 h 严格包络已闭合，D29 虽将 336 h 上界降低 `21.8737%`，但外界仍宽。TES 正式成本、项目级非燃料账户、真实结算、正式 TAC 和内生容量闭合后才启动 E1 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
