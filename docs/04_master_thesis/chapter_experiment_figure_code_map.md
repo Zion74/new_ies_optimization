@@ -1,8 +1,8 @@
 # 硕士论文：章节 / 实验 / 图表 / 代码映射
 
-更新时间：2026-07-14
+更新时间：2026-07-15
 
-除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-34 已闭合 BESS fixed-capacity/共同 PCS 规划账本、TES 证据门、同服务边界、严格数值证书、公开成本组合和完整内生容量接缝。24 h 严格替代调度包络已精确闭合；D30 将 336 h 上界收紧至 `777.141 GWh/a`，D31/D32 为负筛查。D34 已接入双机 CHP/PCC、可变损失/辅机、独立额定认证与年度服务，并冻结双窗口同服务样本和 1% 严格 ε 初筛。严格证据路线仍为 `0/16`，项目运行账户仍为 `0/4` 可进入正式复核；正式 TAC、工程尺度材料性门、代表周与 E2-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-35 已闭合 BESS fixed-capacity/共同 PCS 规划账本、TES 证据门、同服务边界、严格数值证书、公开成本组合、完整内生容量接缝和受控材料性网格。24 h 严格替代调度包络已精确闭合；D30 将 336 h 上界收紧至 `777.141 GWh/a`，D31/D32 为负筛查。D35 自然服务在 5%/10% 门下折叠为无储能，1% 仅有经济无差异带内的 heat-only TES；严格服务保留 TES，但 Hybrid 均无 BESS 且 TES/Hybrid bounds 重叠。双端完整回归均为 414 项。严格证据路线仍为 `0/16`，项目运行账户仍为 `0/4` 可进入正式复核；正式 TAC、结构化代表周与 E2-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -31,7 +31,7 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D34 已冻结同弃电上限、同年度 PCC 的双窗口基线和 1% 严格 ε 初筛。BESS 非零容量门已通过，TES/Hybrid 只形成约 `98–104 t` TES，Hybrid 的 BESS 为零；下一步先做相对旧 `1,200 MWhth` 参考切片的无量纲材料性网格，不得把该结果写成杨凌正式 TAC 或技术赢家 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35 已完成 `0/1%/5%/10%` 盐量+五端口材料性网格。自然服务 5%/10% 精确回到无储能，1% 只有约 `139–142 t` heat-only TES 且改善落在 5% 无差异带；严格服务保留 TES，但 Hybrid 均无 BESS且 TES/Hybrid bounds 重叠。下一步建立结构化代表周预验证，不得写成杨凌正式 TAC 或技术赢家 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |

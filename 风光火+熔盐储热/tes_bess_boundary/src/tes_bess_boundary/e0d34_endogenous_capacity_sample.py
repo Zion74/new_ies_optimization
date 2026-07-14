@@ -20,6 +20,7 @@ from time import perf_counter
 from tes_bess_boundary.capacity_planning import (
     BESSPlanningBounds,
     BESSPlanningSpec,
+    TESMaterialityPolicy,
     TESPlanningBounds,
     TESPlanningSpec,
 )
@@ -74,7 +75,11 @@ def _window(rows: tuple, start: datetime, hours: int) -> tuple:
     return selected
 
 
-def _planning_inputs(price_basis_path: Path):
+def _planning_inputs(
+    price_basis_path: Path,
+    *,
+    tes_materiality: TESMaterialityPolicy | None = None,
+):
     snapshot = load_price_basis_snapshot(price_basis_path)
     fixed_tes = build_e0d17_tes_spec()
     template = replace(
@@ -102,6 +107,7 @@ def _planning_inputs(price_basis_path: Path):
         minimum_service_duration_hours=2.0,
         maximum_service_duration_hours=24.0,
         cyclic=True,
+        materiality=tes_materiality,
     )
     bess = BESSPlanningSpec(
         bounds=BESSPlanningBounds(

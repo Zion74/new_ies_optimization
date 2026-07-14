@@ -140,8 +140,19 @@ class EndogenousCapacityResult:
     bess_common_pcs_power_capacity_mw: float | None
     bess_ac_discharge_throughput_mwh: float | None
     tes_salt_mass_t: float | None
+    tes_ht_service_salt_mass_t: float | None
+    tes_mt_service_salt_mass_t: float | None
+    tes_electric_charge_input_capacity_mw: float | None
+    tes_steam_to_ht_input_capacity_mw: float | None
+    tes_steam_to_mt_input_capacity_mw: float | None
     tes_electric_output_capacity_mw: float | None
     tes_heat_output_capacity_mw: float | None
+    tes_installation_binary: float | None
+    tes_electric_charge_installation_binary: float | None
+    tes_steam_to_ht_installation_binary: float | None
+    tes_steam_to_mt_installation_binary: float | None
+    tes_electric_output_installation_binary: float | None
+    tes_heat_output_installation_binary: float | None
     tes_auxiliary_mwh: float | None
     tes_public_cost_mode: str | None
     tes_public_cost_scenario: str | None
@@ -399,6 +410,7 @@ def solve_endogenous_capacity(
 
     has_bess = hasattr(model, "bess")
     has_tes = hasattr(model, "tes")
+    has_tes_materiality = has_tes and hasattr(model.tes, "installed")
     tes_auxiliary_mwh = None
     if has_tes:
         tes_auxiliary_mwh = float(
@@ -483,6 +495,46 @@ def solve_endogenous_capacity(
             if has_tes
             else None
         ),
+        tes_ht_service_salt_mass_t=(
+            _nonnegative_solution_value(
+                model.tes.ht_service_salt_mass_t,
+                name="TES HT service salt mass",
+            )
+            if has_tes
+            else None
+        ),
+        tes_mt_service_salt_mass_t=(
+            _nonnegative_solution_value(
+                model.tes.mt_service_salt_mass_t,
+                name="TES MT service salt mass",
+            )
+            if has_tes
+            else None
+        ),
+        tes_electric_charge_input_capacity_mw=(
+            _nonnegative_solution_value(
+                model.tes.electric_charge_input_capacity_mw,
+                name="TES electric charge input capacity",
+            )
+            if has_tes
+            else None
+        ),
+        tes_steam_to_ht_input_capacity_mw=(
+            _nonnegative_solution_value(
+                model.tes.steam_to_ht_input_capacity_mw,
+                name="TES steam-to-HT input capacity",
+            )
+            if has_tes
+            else None
+        ),
+        tes_steam_to_mt_input_capacity_mw=(
+            _nonnegative_solution_value(
+                model.tes.steam_to_mt_input_capacity_mw,
+                name="TES steam-to-MT input capacity",
+            )
+            if has_tes
+            else None
+        ),
         tes_electric_output_capacity_mw=(
             _nonnegative_solution_value(
                 model.tes.electric_output_capacity_mw,
@@ -497,6 +549,54 @@ def solve_endogenous_capacity(
                 name="TES heat output capacity",
             )
             if has_tes
+            else None
+        ),
+        tes_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.installed,
+                name="TES installation binary",
+            )
+            if has_tes_materiality
+            else None
+        ),
+        tes_electric_charge_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.port_installed["electric_charge_input"],
+                name="TES electric charge installation binary",
+            )
+            if has_tes_materiality
+            else None
+        ),
+        tes_steam_to_ht_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.port_installed["steam_to_ht_input"],
+                name="TES steam-to-HT installation binary",
+            )
+            if has_tes_materiality
+            else None
+        ),
+        tes_steam_to_mt_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.port_installed["steam_to_mt_input"],
+                name="TES steam-to-MT installation binary",
+            )
+            if has_tes_materiality
+            else None
+        ),
+        tes_electric_output_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.port_installed["electric_output"],
+                name="TES electric output installation binary",
+            )
+            if has_tes_materiality
+            else None
+        ),
+        tes_heat_output_installation_binary=(
+            _nonnegative_solution_value(
+                model.tes.port_installed["heat_output"],
+                name="TES heat output installation binary",
+            )
+            if has_tes_materiality
             else None
         ),
         tes_auxiliary_mwh=tes_auxiliary_mwh,

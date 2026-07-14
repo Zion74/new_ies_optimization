@@ -391,6 +391,50 @@ class TESPlanningBounds:
 
 
 @dataclass(frozen=True)
+class TESMaterialityPolicy:
+    """Author-defined semi-continuous TES installation sensitivity.
+
+    The policy scales one disclosed reference portfolio.  It is deliberately
+    separate from :class:`TESPlanningBounds`: bounds describe the feasible
+    engineering envelope, whereas this policy tests whether conclusions survive
+    a disclosed minimum material scale.  Omitting the policy preserves the
+    continuous-capacity D34 model exactly.
+    """
+
+    reference_sensible_heat_mwh: float
+    reference_salt_mass_t: float
+    reference_port_capacity_mw: float
+    minimum_reference_fraction: float
+    source_id: str
+
+    def __post_init__(self) -> None:
+        _finite_positive(
+            self.reference_sensible_heat_mwh,
+            "reference_sensible_heat_mwh",
+        )
+        _finite_positive(self.reference_salt_mass_t, "reference_salt_mass_t")
+        _finite_positive(
+            self.reference_port_capacity_mw,
+            "reference_port_capacity_mw",
+        )
+        if (
+            not math.isfinite(self.minimum_reference_fraction)
+            or not 0.0 < self.minimum_reference_fraction <= 1.0
+        ):
+            raise ValueError("minimum_reference_fraction must lie in (0, 1]")
+        if not isinstance(self.source_id, str) or not self.source_id.strip():
+            raise ValueError("source_id must be non-empty")
+
+    @property
+    def minimum_salt_mass_t(self) -> float:
+        return self.minimum_reference_fraction * self.reference_salt_mass_t
+
+    @property
+    def minimum_port_capacity_mw(self) -> float:
+        return self.minimum_reference_fraction * self.reference_port_capacity_mw
+
+
+@dataclass(frozen=True)
 class TESPlanningSpec:
     """Physics and service-duration policy for endogenous molten-salt TES."""
 
@@ -400,6 +444,7 @@ class TESPlanningSpec:
     minimum_service_duration_hours: float = 2.0
     maximum_service_duration_hours: float = 24.0
     cyclic: bool = True
+    materiality: TESMaterialityPolicy | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.physics_template, MoltenSaltPhysics):
@@ -431,6 +476,43 @@ class TESPlanningSpec:
         )
         if self.minimum_service_duration_hours > self.maximum_service_duration_hours:
             raise ValueError("TES duration bounds are reversed")
+        if self.materiality is not None:
+            if not isinstance(self.materiality, TESMaterialityPolicy):
+                raise ValueError("materiality must be TESMaterialityPolicy")
+            implied_reference_heat = (
+                self.materiality.reference_salt_mass_t
+                * self.physics_template.specific_heat_mwh_per_tonne_k
+                * (
+                    self.physics_template.temperature_ht
+                    - self.physics_template.temperature_lt
+                )
+            )
+            if not math.isclose(
+                implied_reference_heat,
+                self.materiality.reference_sensible_heat_mwh,
+                rel_tol=1e-10,
+                abs_tol=1e-10,
+            ):
+                raise ValueError(
+                    "materiality reference heat is inconsistent with TES physics"
+                )
+            if (
+                self.materiality.minimum_salt_mass_t
+                > self.bounds.salt_mass_upper_t
+            ):
+                raise ValueError("materiality salt minimum exceeds the planning bound")
+            port_uppers = (
+                self.bounds.electric_charge_input_upper_mw,
+                self.bounds.steam_to_ht_input_upper_mw,
+                self.bounds.steam_to_mt_input_upper_mw,
+                self.bounds.electric_output_upper_mw,
+                self.bounds.heat_output_upper_mw,
+            )
+            if any(
+                self.materiality.minimum_port_capacity_mw > upper
+                for upper in port_uppers
+            ):
+                raise ValueError("materiality port minimum exceeds a planning bound")
 
 
 def _tes_quantity_expressions(block: object, physics: MoltenSaltPhysics) -> dict:
@@ -487,7 +569,7 @@ def add_endogenous_tes_dispatch(
 ) -> object:
     """Attach a linear endogenous TES kernel with five capacity-limited ports."""
 
-    from pyomo.environ import Binary, Constraint, Expression, RangeSet, Var
+    from pyomo.environ import Binary, Constraint, Expression, RangeSet, Set, Var
 
     if not isinstance(spec, TESPlanningSpec):
         raise ValueError("spec must be TESPlanningSpec")
@@ -548,6 +630,91 @@ def add_endogenous_tes_dispatch(
     )
     block.ht_service_salt_mass_t = Var(bounds=(0.0, bounds.salt_mass_upper_t))
     block.mt_service_salt_mass_t = Var(bounds=(0.0, bounds.salt_mass_upper_t))
+
+    if spec.materiality is not None:
+        materiality = spec.materiality
+        block.installed = Var(domain=Binary)
+        materiality_port_names = (
+            "electric_charge_input",
+            "steam_to_ht_input",
+            "steam_to_mt_input",
+            "electric_output",
+            "heat_output",
+        )
+        block.materiality_ports = Set(
+            initialize=materiality_port_names,
+            ordered=True,
+        )
+        block.port_installed = Var(block.materiality_ports, domain=Binary)
+        port_capacity = {
+            "electric_charge_input": block.electric_charge_input_capacity_mw,
+            "steam_to_ht_input": block.steam_to_ht_input_capacity_mw,
+            "steam_to_mt_input": block.steam_to_mt_input_capacity_mw,
+            "electric_output": block.electric_output_capacity_mw,
+            "heat_output": block.heat_output_capacity_mw,
+        }
+        port_upper = {
+            "electric_charge_input": bounds.electric_charge_input_upper_mw,
+            "steam_to_ht_input": bounds.steam_to_ht_input_upper_mw,
+            "steam_to_mt_input": bounds.steam_to_mt_input_upper_mw,
+            "electric_output": bounds.electric_output_upper_mw,
+            "heat_output": bounds.heat_output_upper_mw,
+        }
+        block.material_salt_lower = Constraint(
+            expr=(
+                block.salt_mass_t
+                >= materiality.minimum_salt_mass_t * block.installed
+            )
+        )
+        block.material_salt_upper = Constraint(
+            expr=block.salt_mass_t <= bounds.salt_mass_upper_t * block.installed
+        )
+        block.material_ht_tank_upper = Constraint(
+            expr=(
+                block.ht_tank_capacity_t
+                <= bounds.ht_tank_capacity_upper_t * block.installed
+            )
+        )
+        block.material_mt_tank_upper = Constraint(
+            expr=(
+                block.mt_tank_capacity_t
+                <= bounds.mt_tank_capacity_upper_t * block.installed
+            )
+        )
+        block.material_lt_tank_upper = Constraint(
+            expr=(
+                block.lt_tank_capacity_t
+                <= bounds.lt_tank_capacity_upper_t * block.installed
+            )
+        )
+        block.material_port_lower = Constraint(
+            block.materiality_ports,
+            rule=lambda model, port: (
+                port_capacity[port]
+                >= materiality.minimum_port_capacity_mw
+                * model.port_installed[port]
+            ),
+        )
+        block.material_port_upper = Constraint(
+            block.materiality_ports,
+            rule=lambda model, port: (
+                port_capacity[port]
+                <= port_upper[port] * model.port_installed[port]
+            ),
+        )
+        block.material_port_requires_tes = Constraint(
+            block.materiality_ports,
+            rule=lambda model, port: (
+                model.port_installed[port] <= model.installed
+            ),
+        )
+        block.material_useful_output_presence = Constraint(
+            expr=(
+                block.installed
+                <= block.port_installed["electric_output"]
+                + block.port_installed["heat_output"]
+            )
+        )
 
     block.ht_mass_t = Var(
         block.states,

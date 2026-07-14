@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 
@@ -88,6 +90,18 @@ def _public_portfolio(mode: str, *, acknowledged: bool = True):
         mode,
         "base",
         acknowledge_author_assumptions=acknowledged,
+    )
+
+
+def _materiality_policy():
+    from tes_bess_boundary.capacity_planning import TESMaterialityPolicy
+
+    return TESMaterialityPolicy(
+        reference_sensible_heat_mwh=13.4,
+        reference_salt_mass_t=100.0,
+        reference_port_capacity_mw=10.0,
+        minimum_reference_fraction=0.1,
+        source_id="synthetic-materiality-reference",
     )
 
 
@@ -252,6 +266,99 @@ def test_endogenous_tes_allows_zero_capacity_without_service() -> None:
     assert value(model.tes.salt_mass_t) == pytest.approx(0.0)
     assert value(model.tes.electric_output_capacity_mw) == pytest.approx(0.0)
     assert value(model.tes.heat_output_capacity_mw) == pytest.approx(0.0)
+
+
+def test_endogenous_tes_materiality_keeps_zero_or_auditable_portfolio() -> None:
+    from pyomo.environ import Block, ConcreteModel, Constraint, Objective, RangeSet, value
+
+    from tes_bess_boundary.capacity_planning import add_endogenous_tes_dispatch
+    from tes_bess_boundary.solver import create_highs_solver
+
+    model = ConcreteModel()
+    model.periods = RangeSet(0, 0)
+    model.tes = Block()
+    spec = replace(_tes_spec(), materiality=_materiality_policy())
+    add_endogenous_tes_dispatch(
+        model.tes,
+        model.periods,
+        spec,
+        cost_portfolio=_public_portfolio("aggregate_storage"),
+    )
+    model.micro_request = Constraint(
+        expr=model.tes.electric_output_capacity_mw >= 0.5
+    )
+    model.objective = Objective(expr=model.tes.annual_capacity_cost_cny)
+    _assert_linear(model)
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.tes.installed) == pytest.approx(1.0)
+    assert value(model.tes.salt_mass_t) >= 10.0 - 1e-8
+    assert value(model.tes.electric_output_capacity_mw) >= 1.0 - 1e-8
+    assert value(model.tes.port_installed["electric_output"]) == pytest.approx(1.0)
+    assert (
+        value(model.tes.port_installed["electric_output"])
+        + value(model.tes.port_installed["heat_output"])
+        >= 1.0 - 1e-8
+    )
+    for port, capacity in (
+        ("electric_charge_input", model.tes.electric_charge_input_capacity_mw),
+        ("steam_to_ht_input", model.tes.steam_to_ht_input_capacity_mw),
+        ("steam_to_mt_input", model.tes.steam_to_mt_input_capacity_mw),
+        ("electric_output", model.tes.electric_output_capacity_mw),
+        ("heat_output", model.tes.heat_output_capacity_mw),
+    ):
+        installed = round(value(model.tes.port_installed[port]))
+        assert value(capacity) <= 100.0 * installed + 1e-8
+        if installed:
+            assert value(capacity) >= 1.0 - 1e-8
+
+
+def test_endogenous_tes_materiality_can_select_no_installation() -> None:
+    from pyomo.environ import Block, ConcreteModel, Objective, RangeSet, value
+
+    from tes_bess_boundary.capacity_planning import add_endogenous_tes_dispatch
+    from tes_bess_boundary.solver import create_highs_solver
+
+    model = ConcreteModel()
+    model.periods = RangeSet(0, 1)
+    model.tes = Block()
+    add_endogenous_tes_dispatch(
+        model.tes,
+        model.periods,
+        replace(
+            _tes_spec(cyclic=True),
+            materiality=_materiality_policy(),
+        ),
+        cost_portfolio=_public_portfolio("aggregate_storage"),
+    )
+    model.objective = Objective(expr=model.tes.annual_capacity_cost_cny)
+    _assert_linear(model)
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.tes.installed) == pytest.approx(0.0)
+    assert value(model.tes.salt_mass_t) == pytest.approx(0.0)
+    assert all(
+        value(model.tes.port_installed[port]) == pytest.approx(0.0)
+        for port in model.tes.materiality_ports
+    )
+
+
+def test_tes_materiality_reference_heat_must_match_the_physics() -> None:
+    from tes_bess_boundary.capacity_planning import TESMaterialityPolicy
+
+    inconsistent = TESMaterialityPolicy(
+        reference_sensible_heat_mwh=99.0,
+        reference_salt_mass_t=100.0,
+        reference_port_capacity_mw=10.0,
+        minimum_reference_fraction=0.1,
+        source_id="synthetic-inconsistent-reference",
+    )
+    with pytest.raises(ValueError, match="reference heat"):
+        replace(_tes_spec(), materiality=inconsistent)
 
 
 def test_endogenous_tes_loss_auxiliary_and_two_rated_tests_are_linear() -> None:

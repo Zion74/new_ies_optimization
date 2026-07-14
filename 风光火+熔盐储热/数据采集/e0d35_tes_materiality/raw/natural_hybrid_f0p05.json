@@ -1,0 +1,138 @@
+{
+  "claim_scope": "controlled_public_cost_materiality_sensitivity_not_formal_project_tac",
+  "data_scope": "formal_2024_heat_plus_legacy_2019_vre_shapes",
+  "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+  "formal_project_tac_ready": false,
+  "generated_at": "2026-07-14T16:58:18.565329+00:00",
+  "hours": 24,
+  "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+  "materiality_audit": {
+    "actual_salt_mass_t": 0.0,
+    "curtailment_margin_mwh": 0.001000000280328095,
+    "fraction": 0.05,
+    "minimum_active_port_capacity_mw": 7.5,
+    "minimum_salt_mass_t": 695.6857819218321,
+    "passed": true,
+    "pcc_export_residual_mwh": 9.313225746154785e-10,
+    "ports": {
+      "electric_charge_input": {
+        "capacity_mw": 0.0,
+        "installation_binary": 0,
+        "minimum_if_active_mw": 7.5,
+        "passed": true
+      },
+      "electric_output": {
+        "capacity_mw": 0.0,
+        "installation_binary": 0,
+        "minimum_if_active_mw": 7.5,
+        "passed": true
+      },
+      "heat_output": {
+        "capacity_mw": 0.0,
+        "installation_binary": 0,
+        "minimum_if_active_mw": 7.5,
+        "passed": true
+      },
+      "steam_to_ht_input": {
+        "capacity_mw": 0.0,
+        "installation_binary": 0,
+        "minimum_if_active_mw": 7.5,
+        "passed": true
+      },
+      "steam_to_mt_input": {
+        "capacity_mw": 0.0,
+        "installation_binary": 0,
+        "minimum_if_active_mw": 7.5,
+        "passed": true
+      }
+    },
+    "service_tolerance_mwh": 0.001,
+    "tes_installation_binary": 0
+  },
+  "materiality_enabled": true,
+  "materiality_fraction": 0.05,
+  "materiality_grid": [
+    0.0,
+    0.01,
+    0.05,
+    0.1
+  ],
+  "materiality_policy": {
+    "minimum_reference_fraction": 0.05,
+    "reference_port_capacity_mw": 150.0,
+    "reference_salt_mass_t": 13913.71563843664,
+    "reference_sensible_heat_mwh": 1200.0,
+    "source_id": "e0-d-17:1200mwhth-150mw-cascade-slice-v1"
+  },
+  "project_minimum_scale_claimed": false,
+  "reference": {
+    "common_port_scale_is_author_normalization": true,
+    "common_port_scale_mw": 150.0,
+    "project_minimum_scale_claimed": false,
+    "salt_mass_t": 13913.71563843664,
+    "sensible_heat_mwh": 1200.0,
+    "source_id": "e0-d-17:1200mwhth-150mw-cascade-slice-v1",
+    "steam_ports_in_legacy_slice_mw": [
+      0.0,
+      0.0
+    ],
+    "temperature_ht_c": 390.0,
+    "temperature_lt_c": 180.0,
+    "temperature_mt_c": 285.0
+  },
+  "reference_port_applies_to_all_active_ports": true,
+  "result": {
+    "annual_bess_cycle_cost_cny": 0.0,
+    "annual_bess_variable_om_cost_cny": 0.0,
+    "annual_operating_cost_cny": 544956988.5685356,
+    "annual_storage_capacity_cost_cny": 0.0,
+    "annual_total_cost_cny": 544956988.5685356,
+    "architecture": "hybrid",
+    "bess_ac_discharge_throughput_mwh": 0.0,
+    "bess_charge_power_capacity_mw": 0.0,
+    "bess_common_pcs_power_capacity_mw": 0.0,
+    "bess_discharge_power_capacity_mw": 0.0,
+    "bess_energy_capacity_mwh": 0.0,
+    "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+    "formal_project_tac_ready": false,
+    "objective_lower_bound_cny": 544572679.1591641,
+    "objective_upper_bound_cny": 544956988.5685357,
+    "relative_mip_gap": 0.000705210534837067,
+    "runtime_seconds": 5.339784963987768,
+    "termination_condition": "optimal",
+    "tes_auxiliary_mwh": 0.0,
+    "tes_electric_charge_input_capacity_mw": 0.0,
+    "tes_electric_charge_installation_binary": 0.0,
+    "tes_electric_output_capacity_mw": 0.0,
+    "tes_electric_output_installation_binary": 0.0,
+    "tes_heat_output_capacity_mw": 0.0,
+    "tes_heat_output_installation_binary": 0.0,
+    "tes_ht_service_salt_mass_t": 0.0,
+    "tes_installation_binary": 0.0,
+    "tes_mt_service_salt_mass_t": 0.0,
+    "tes_public_cost_mode": "aggregate_storage",
+    "tes_public_cost_scenario": "base",
+    "tes_salt_mass_t": 0.0,
+    "tes_steam_to_ht_input_capacity_mw": 0.0,
+    "tes_steam_to_ht_installation_binary": 0.0,
+    "tes_steam_to_mt_input_capacity_mw": 0.0,
+    "tes_steam_to_mt_installation_binary": 0.0,
+    "weighted_curtailment_mwh": 578514.5015707758,
+    "weighted_fuel_tce": 680464.7361193412,
+    "weighted_pcc_export_mwh": 4656918.485025816
+  },
+  "schema_id": "tes_bess_boundary.e0d35_tes_materiality.v1",
+  "service": {
+    "curtailment_ceiling_mwh": 578514.502570776,
+    "pcc_export_target_mwh": 4656918.485025815,
+    "service_id": "e0d35_natural_same_pcc_24h"
+  },
+  "service_name": "natural",
+  "solver": {
+    "mip_rel_gap": 0.001,
+    "name": "appsi_highs",
+    "random_seed": 0,
+    "threads": 1
+  },
+  "start": "2024-01-01T00:00:00"
+}

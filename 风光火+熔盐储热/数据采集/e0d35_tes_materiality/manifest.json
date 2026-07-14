@@ -1,0 +1,70 @@
+{
+  "all_materiality_audits_passed": true,
+  "architectures": [
+    "tes",
+    "hybrid"
+  ],
+  "canonical_csv": "e0d35_tes_materiality_grid.csv",
+  "canonical_csv_sha256": "8a321001878a7d0b14f8441f96272cdd18303201fa5c9facbccd97825ea016d2",
+  "claim_scope": "controlled_public_cost_materiality_sensitivity_not_formal_project_tac",
+  "formal_project_tac_ready": false,
+  "materiality_grid": [
+    0.0,
+    0.01,
+    0.05,
+    0.1
+  ],
+  "probe_schema_id": "tes_bess_boundary.e0d35_tes_materiality.v1",
+  "project_minimum_scale_claimed": false,
+  "reference": {
+    "common_port_scale_is_author_normalization": true,
+    "common_port_scale_mw": 150.0,
+    "project_minimum_scale_claimed": false,
+    "salt_mass_t": 13913.71563843664,
+    "sensible_heat_mwh": 1200.0,
+    "source_id": "e0-d-17:1200mwhth-150mw-cascade-slice-v1",
+    "steam_ports_in_legacy_slice_mw": [
+      0.0,
+      0.0
+    ],
+    "temperature_ht_c": 390.0,
+    "temperature_lt_c": 180.0,
+    "temperature_mt_c": 285.0
+  },
+  "refined_zero_gap_identities": [
+    [
+      "natural",
+      "hybrid",
+      0.05
+    ],
+    [
+      "natural",
+      "hybrid",
+      0.1
+    ],
+    [
+      "natural",
+      "tes",
+      0.05
+    ],
+    [
+      "natural",
+      "tes",
+      0.1
+    ]
+  ],
+  "row_count": 16,
+  "schema_id": "tes_bess_boundary.e0d35_materiality_bundle.v1",
+  "services": {
+    "natural": {
+      "curtailment_ceiling_mwh": 578514.502570776,
+      "pcc_export_target_mwh": 4656918.485025815,
+      "service_id": "e0d35_natural_same_pcc_24h"
+    },
+    "strict_1pct": {
+      "curtailment_ceiling_mwh": 572729.356555068,
+      "pcc_export_target_mwh": 4656918.485025815,
+      "service_id": "e0d35_strict_1pct_same_pcc_24h"
+    }
+  }
+}
