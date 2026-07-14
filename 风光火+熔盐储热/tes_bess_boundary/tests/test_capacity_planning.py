@@ -148,6 +148,50 @@ def test_endogenous_bess_allows_zero_capacity_without_service() -> None:
     assert value(model.bess.discharge_power_capacity_mw) == pytest.approx(0.0)
 
 
+def test_formal_endogenous_bess_uses_zero_or_source_domain_common_pcs() -> None:
+    from pyomo.environ import Block, ConcreteModel, Constraint, Objective, RangeSet, value
+
+    from tes_bess_boundary.capacity_planning import (
+        BESSAnnualCapacityCost,
+        BESSPlanningEconomics,
+        add_endogenous_bess_dispatch,
+    )
+    from tes_bess_boundary.solver import create_highs_solver
+
+    economics = BESSPlanningEconomics(
+        annual_capacity_cost=BESSAnnualCapacityCost(
+            energy_cny_per_mwh_year=1.0,
+            common_pcs_power_cny_per_mw_year=1.0,
+        ),
+        cycle_cost_cny_per_ac_discharge_mwh=0.0,
+        variable_om_cny_per_ac_discharge_mwh=0.0,
+        reference_annual_ac_efc=365.0,
+        ac_deliverable_fraction=0.8 * 0.95,
+        minimum_installed_pcs_power_mw=5.0,
+        maximum_installed_pcs_power_mw=100.0,
+        source_id="synthetic-formal-bess-test",
+    )
+    model = ConcreteModel()
+    model.periods = RangeSet(0, 0)
+    model.bess = Block()
+    add_endogenous_bess_dispatch(
+        model.bess,
+        model.periods,
+        _bess_spec(),
+        planning_economics=economics,
+    )
+    model.service = Constraint(expr=model.bess.discharge_ac_mw[0] >= 1.0)
+    model.objective = Objective(expr=model.bess.annual_capacity_cost_cny)
+    _assert_linear(model)
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.bess.installed) == pytest.approx(1.0)
+    assert value(model.bess.pcs_power_capacity_mw) == pytest.approx(5.0)
+    assert value(model.bess.discharge_power_capacity_mw) == pytest.approx(1.0)
+
+
 @pytest.mark.parametrize("mode", ["aggregate_storage", "component_ledger"])
 def test_endogenous_tes_is_linear_and_accepts_each_public_cost_route(mode: str) -> None:
     from pyomo.environ import Block, ConcreteModel, Constraint, Objective, RangeSet, value
@@ -208,6 +252,62 @@ def test_endogenous_tes_allows_zero_capacity_without_service() -> None:
     assert value(model.tes.salt_mass_t) == pytest.approx(0.0)
     assert value(model.tes.electric_output_capacity_mw) == pytest.approx(0.0)
     assert value(model.tes.heat_output_capacity_mw) == pytest.approx(0.0)
+
+
+def test_endogenous_tes_loss_auxiliary_and_two_rated_tests_are_linear() -> None:
+    from pyomo.environ import Block, ConcreteModel, Constraint, Objective, RangeSet, value
+
+    from tes_bess_boundary.capacity_planning import add_endogenous_tes_dispatch
+    from tes_bess_boundary.solver import create_highs_solver
+    from tes_bess_boundary.tes_loss_auxiliary import (
+        LossCompensationMode,
+        TESLossAuxiliarySpec,
+        TESParameterIdentity,
+        TESPumpAuxiliarySpec,
+    )
+
+    loss_auxiliary = TESLossAuxiliarySpec(
+        ht_standing_loss_fraction_per_hour=0.01,
+        mt_standing_loss_fraction_per_hour=0.01,
+        ht_loss_compensation_fraction=0.5,
+        mt_loss_compensation_fraction=0.5,
+        tracing_heater_efficiency=0.95,
+        pump=TESPumpAuxiliarySpec(0.1, 0.1, 0.1, 0.1, 0.1),
+        compensation_mode=LossCompensationMode.FIXED_FRACTION,
+        parameter_identity=TESParameterIdentity.AUTHOR_SENSITIVITY,
+        parameter_source_id="author:capacity-planning-test",
+        evidence_source_ids=("synthetic-test",),
+        reference_ambient_temperature_c=20.0,
+    )
+    model = ConcreteModel()
+    model.periods = RangeSet(0, 0)
+    model.tes = Block()
+    add_endogenous_tes_dispatch(
+        model.tes,
+        model.periods,
+        _tes_spec(),
+        cost_portfolio=_public_portfolio("aggregate_storage"),
+        loss_auxiliary=loss_auxiliary,
+        ambient_temperature_c=(20.0,),
+    )
+    model.power_service = Constraint(
+        expr=model.tes.electric_output_capacity_mw >= 1.0
+    )
+    model.heat_service = Constraint(expr=model.tes.heat_output_capacity_mw >= 1.0)
+    model.objective = Objective(expr=model.tes.annual_capacity_cost_cny)
+    _assert_linear(model)
+
+    results = create_highs_solver().solve(model)
+
+    assert str(results.solver.termination_condition).lower() == "optimal"
+    assert value(model.tes.raw_loss_ht_to_mt[0]) > 0.0
+    assert value(model.tes.tracing_auxiliary_mw[0]) > 0.0
+    assert value(model.tes.ht_rated_output[0].body) == pytest.approx(0.0)
+    assert value(model.tes.ht_rated_output[1].body) == pytest.approx(0.0)
+    assert value(model.tes.mt_rated_output[0].body) == pytest.approx(0.0)
+    assert value(model.tes.mt_rated_output[1].body) == pytest.approx(0.0)
+    assert value(model.tes.ht_service_salt_mass_t) > 0.0
+    assert value(model.tes.mt_service_salt_mass_t) > 0.0
 
 
 def test_endogenous_tes_rejects_unacknowledged_public_assumptions() -> None:

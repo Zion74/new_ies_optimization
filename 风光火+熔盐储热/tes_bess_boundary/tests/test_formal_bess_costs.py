@@ -237,3 +237,26 @@ def test_resolved_contract_builds_complete_fixed_capacity_bess_economics() -> No
     assert quantities["bess_bop"] == pytest.approx(5.0)
     assert quantities["bess_enclosure_foundation"] == pytest.approx(20.0)
     assert quantities["bess_energy_contingency"] == pytest.approx(20.0)
+
+
+def test_resolved_contract_builds_endogenous_common_pcs_coefficients() -> None:
+    from tes_bess_boundary.economics import ProjectFinance
+    from tes_bess_boundary.formal_bess_costs import (
+        RAHMAN_EVIDENCE_ID,
+        build_resolved_rahman_bess_join_contract,
+    )
+
+    economics = build_resolved_rahman_bess_join_contract().build_planning_economics(
+        finance=ProjectFinance(project_years=20, real_discount_rate=0.10),
+        conversion=_formal_price_bridge(),
+        reference_annual_ac_efc=365.0,
+        ac_deliverable_fraction=0.8,
+    )
+
+    assert economics.source_id == RAHMAN_EVIDENCE_ID
+    assert economics.minimum_installed_pcs_power_mw == pytest.approx(5.0)
+    assert economics.maximum_installed_pcs_power_mw == pytest.approx(100.0)
+    assert economics.annual_capacity_cost.energy_cny_per_mwh_year > 0.0
+    assert economics.annual_capacity_cost.common_pcs_power_cny_per_mw_year > 0.0
+    assert economics.annual_capacity_cost.charge_power_cny_per_mw_year == 0.0
+    assert economics.annual_capacity_cost.discharge_power_cny_per_mw_year == 0.0

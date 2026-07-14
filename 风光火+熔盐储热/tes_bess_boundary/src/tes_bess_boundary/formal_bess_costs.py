@@ -11,6 +11,10 @@ from dataclasses import dataclass
 from enum import Enum
 import math
 
+from tes_bess_boundary.capacity_planning import (
+    BESSAnnualCapacityCost,
+    BESSPlanningEconomics,
+)
 from tes_bess_boundary.cost_evidence import (
     CostEvidenceAudit,
     FormalCostEvidenceCertificate,
@@ -498,6 +502,68 @@ class RahmanBESSResolvedJoinContract:
             ),
             bess_cell_cost=cell_cost,
             bess_variable_om=variable_om,
+        )
+
+    def build_planning_economics(
+        self,
+        *,
+        finance: ProjectFinance,
+        conversion: PriceBasisConversion,
+        reference_annual_ac_efc: float,
+        ac_deliverable_fraction: float,
+    ) -> BESSPlanningEconomics:
+        """Build endogenous common-PCS coefficients from the resolved evidence.
+
+        Unlike ``build_annual_economics``, this method does not bind quantities.
+        It annualizes every per-unit ledger once and exposes linear CNY2024
+        coefficients for the capacity variables in the planning model.
+        """
+
+        degradation = self.convert_cell_degradation_spec(
+            reference_annual_ac_efc=reference_annual_ac_efc,
+            ac_deliverable_fraction=ac_deliverable_fraction,
+            conversion=conversion,
+        )
+        cell_cost = calibrate_bess_cell_cost(degradation, finance)
+        converted_specs = tuple(
+            item.converted_spec
+            for item in self.source_basis.convert_non_cell_specs(conversion)
+        )
+        portfolio = build_lifecycle_cost_portfolio(
+            converted_specs,
+            finance,
+            bess_cell_cost=cell_cost,
+        )
+        power_eac = 0.0
+        energy_eac = 0.0
+        for ledger in portfolio.ledgers:
+            if ledger.spec.capacity_unit == "MW_ac":
+                power_eac += ledger.total_equivalent_annual_cost
+            elif ledger.spec.capacity_unit == "MWh_internal":
+                energy_eac += ledger.total_equivalent_annual_cost
+            else:
+                raise ValueError(
+                    "formal BESS non-cell ledger has an unsupported planning basis"
+                )
+        variable_om = self.convert_variable_om_spec(conversion).converted_spec
+        return BESSPlanningEconomics(
+            annual_capacity_cost=BESSAnnualCapacityCost(
+                energy_cny_per_mwh_year=(
+                    cell_cost.calendar_cost_per_nominal_mwh_year + energy_eac
+                ),
+                common_pcs_power_cny_per_mw_year=power_eac,
+            ),
+            cycle_cost_cny_per_ac_discharge_mwh=(
+                cell_cost.cycle_cost_per_ac_discharge_mwh
+            ),
+            variable_om_cny_per_ac_discharge_mwh=(
+                variable_om.cost_per_ac_discharge_mwh
+            ),
+            reference_annual_ac_efc=reference_annual_ac_efc,
+            ac_deliverable_fraction=ac_deliverable_fraction,
+            minimum_installed_pcs_power_mw=self.pcs_source_min_mw,
+            maximum_installed_pcs_power_mw=self.pcs_source_max_mw,
+            source_id=RAHMAN_EVIDENCE_ID,
         )
 
 

@@ -1,7 +1,7 @@
 # E0-D-14 Rahman BESS 关联证据与模型接缝合同
 
-更新时间：2026-07-13
-状态：**关联证据政策、三个模型接缝与 fixed-capacity BESS 生命周期账本均已闭合；TES 正式成本、系统级完整 TAC、内生容量与 E1–E6 仍未闭合。**
+更新时间：2026-07-14
+状态：**关联证据政策、三个模型接缝、fixed-capacity 生命周期账本与 D34 共同 PCS 内生规划系数均已闭合；TES 正式成本和系统级完整 TAC 仍未闭合。D34 只允许公开成本下的 E1 受控小样本，不打开 E2–E6 正式结论。**
 
 ## 1. 证据资格
 
@@ -116,19 +116,25 @@ Rahman 使用 5 MW PCS 模块，并对并联模块使用 95% multiplicity learni
 - `formal_source_qualified=True`：是；
 - 来源对象 `formal_portfolio_ready=False`：仍为是，因为它只表示“尚未选择模型口径”的原始证据层；
 - `RahmanBESSResolvedJoinContract.formal_fixed_capacity_ready=True`：是，表示三个接缝已按预注册口径闭合；
+- `RahmanBESSResolvedJoinContract.build_planning_economics(...)`：已把非电芯 MW 账本合并为一个共同 PCS 年化系数，把电芯/围护/能量 contingency 合并为 MWh 年化系数，并保留 AC 放电 cycle/VOM；
 - BESS 来源层正式候选数：1；
 - TES/电加热器正式候选数：0；
 - fixed-capacity BESS 生命周期子账本：可完整构造；
-- 系统级完整 TAC：未闭合，阻断项已转移为 TES 正式成本、碳/电力结算与后续容量规划接口；
-- E1–E6：仍不启动。
+- endogenous BESS 规划账本：已接入 D34 共同 PCS 容量块，`0` 或 `5–100 MW` 来源域由安装二进制执行，充/放容量共享同一 PCS 且只计费一次；
+- 系统级完整 TAC：未闭合，阻断项仍为 TES 正式成本、碳/电力结算和项目运行账户；
+- E1：仅允许受控公开成本小样本；E2–E6：仍不启动。
 
 ## 7. 代码与测试
 
 - `src/tes_bess_boundary/cost_evidence.py`：支持并验证同作者官方扩展材料，参考审计只提升 Rahman；
-- `src/tes_bess_boundary/formal_bess_costs.py`：Rahman 数值、边界、三接缝策略、完整 fixed-capacity BESS `AnnualEconomicsSpec` 构建与 5–100 MW 拒绝门；
+- `src/tes_bess_boundary/formal_bess_costs.py`：Rahman 数值、边界、三接缝策略、完整 fixed-capacity BESS `AnnualEconomicsSpec` 与不绑定装机量的 `BESSPlanningEconomics` 构建；
+- `src/tes_bess_boundary/capacity_planning.py`：共同 PCS 安装析取、充放端共享与唯一容量计费；
+- `src/tes_bess_boundary/planning_model.py`：共同 PCS 账本进入双机 CHP/PCC/年度服务总目标；
 - `src/tes_bess_boundary/economics.py`：AC 放电侧 `BESSVariableOMSpec`、价格转换及年度经济合同；
 - `src/tes_bess_boundary/model.py`：退化成本与 VOM 分列，并在年度总成本中各计一次；
 - `tests/test_cost_evidence.py`：关联证据资格、精确分母与降级拒绝；
 - `tests/test_formal_bess_costs.py` 与 `tests/test_annual_economics.py`：寿命所有权、VOM 分母、PCS 范围、完整构建和 HiGHS 年度目标回归；
 - 加入 E0-D-18 两窗口性能与区间合同后的本地完整回归：`288 passed in 56.38s`（关闭 pytest cache，无警告）；
 - OpenBayes 已同步 E0-D-14–D-18，完整回归为 `288 passed in 21.23s`。
+
+D34 最新定向/完整回归与源码哈希统一见 `e0_validation_status.md`；本合同中的 288 项记录只保留为 D18 历史快照。

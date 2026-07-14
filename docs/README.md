@@ -44,13 +44,15 @@
 26. 向项目方索取结算、碳、CHP/TES VOM 数据，复核字段缺口、空白提交模板或隐私隔离规则时读 `docs/03_sci_paper/e0_project_primary_evidence_intake_contract.md`
 27. 使用 Rahman BESS 正式来源候选、2019 USD→2024 CNY、三接缝口径或完整 fixed-capacity BESS 生命周期账本时读 `docs/03_sci_paper/e0_rahman_bess_linked_evidence_contract.md`
 28. 使用 NREL BESS 工程敏感性成本、2020 USD→2024 CNY 换算或 FOM/replacement 互斥时读 `docs/03_sci_paper/e0_sensitivity_cost_anchor_contract.md`
-29. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
-30. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
-31. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
-32. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
-33. 对应层级的实验 / 图表 / 代码映射文档
-34. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-35. 需要做清理或迁移时，再读 `docs/90_governance/`
+29. 使用公开聚合/分项 TES 成本组合、审计作者价格年/代理账户或独立容量核时读 `docs/03_sci_paper/e0_public_tes_cost_portfolio_and_capacity_gate_contract.md`
+30. 使用完整内生容量模型、共同 PCS、TES 可变损失/辅机、独立额定放能认证或 D34 双窗口样本时读 `docs/03_sci_paper/e0_d34_endogenous_capacity_full_model_contract.md`
+31. 涉及三罐、双服务、五路径文献依据或创新边界时读 `docs/03_sci_paper/e0_tes_topology_evidence_contract.md`
+32. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
+33. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
+34. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
+35. 对应层级的实验 / 图表 / 代码映射文档
+36. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+37. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 
