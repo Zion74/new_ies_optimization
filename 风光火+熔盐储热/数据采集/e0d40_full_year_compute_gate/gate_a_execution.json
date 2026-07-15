@@ -1,0 +1,52 @@
+{
+  "case_execution": {
+    "bess": {
+      "architecture": "bess",
+      "available_memory_after_gib": 96.83267593383789,
+      "available_memory_before_gib": 97.31585311889648,
+      "manifest_sha256": "1c1f775a9bb7d00968e2186ac78c77ecd4109800db4fd8e6b041e7ca4c411baf",
+      "peak_process_rss_gib": 0.5176277160644531,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "runtime_seconds": 11.70366245135665,
+      "schema_id": "tes_bess_boundary.e0d40_full_year_build_audit.v1.execution"
+    },
+    "hybrid": {
+      "architecture": "hybrid",
+      "available_memory_after_gib": 96.70494079589844,
+      "available_memory_before_gib": 97.31559753417969,
+      "manifest_sha256": "063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9",
+      "peak_process_rss_gib": 0.6451492309570312,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "runtime_seconds": 15.012533738277853,
+      "schema_id": "tes_bess_boundary.e0d40_full_year_build_audit.v1.execution"
+    },
+    "no_storage": {
+      "architecture": "no_storage",
+      "available_memory_after_gib": 96.86297225952148,
+      "available_memory_before_gib": 97.31544876098633,
+      "manifest_sha256": "535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9",
+      "peak_process_rss_gib": 0.4821319580078125,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "runtime_seconds": 10.36725698132068,
+      "schema_id": "tes_bess_boundary.e0d40_full_year_build_audit.v1.execution"
+    },
+    "tes": {
+      "architecture": "tes",
+      "available_memory_after_gib": 96.73492431640625,
+      "available_memory_before_gib": 97.3154067993164,
+      "manifest_sha256": "2f12564fb9b261b27f10ca3a859ffc317923b2f41d80027062bc5862df952816",
+      "peak_process_rss_gib": 0.6098480224609375,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "runtime_seconds": 14.404049783945084,
+      "schema_id": "tes_bess_boundary.e0d40_full_year_build_audit.v1.execution"
+    }
+  },
+  "manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "schema_id": "tes_bess_boundary.e0d40_gate_a_manifest.v1.execution"
+}

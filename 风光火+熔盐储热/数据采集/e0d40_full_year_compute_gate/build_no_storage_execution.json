@@ -1,0 +1,11 @@
+{
+  "architecture": "no_storage",
+  "available_memory_after_gib": 96.86297225952148,
+  "available_memory_before_gib": 97.31544876098633,
+  "manifest_sha256": "535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9",
+  "peak_process_rss_gib": 0.4821319580078125,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "runtime_seconds": 10.36725698132068,
+  "schema_id": "tes_bess_boundary.e0d40_full_year_build_audit.v1.execution"
+}

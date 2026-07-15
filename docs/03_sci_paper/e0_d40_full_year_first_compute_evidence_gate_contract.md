@@ -1,6 +1,6 @@
 # E0-D-40 全年优先可计算性与证据门合同
 
-状态：**结果前合同已冻结；尚未构造或求解任何 D40 案例**
+状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 尚未实现或启动**
 
 适用范围：D38-R1 与 D39 时间聚合连续失败后的全年直接求解路线判定
 
@@ -117,10 +117,21 @@ D40 可作为硕士论文第 5 章 Agentic 决策支持案例：agent 负责读�
 - 本地：`风光火+熔盐储热/数据采集/e0d40_full_year_compute_gate/`；
 - OpenBayes：`/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate/`。
 
-## 11. 实现登记（尚无 Gate A 数值）
+## 11. 实现与 Gate A 结果登记
 
 结果前提交 `2529ae5` 之后才新增 `e0d40_full_year_compute_gate.py` 与 6 项定向测试。实现已完成三类隔离入口：从 D38/D39 冻结证据生成无代表期依赖的 D40 服务文件；在独立进程中为单一架构执行 build-only 线性/容量边界/全年循环审计；汇总四架构 manifest 与 execution sidecar 并施加 20 GiB/40 GiB 资源门。服务和结构 manifest 不含平台时间与内存，execution sidecar 单独记录这些非规范字段。
 
 Gate A 首轮服务器构造在 No storage/BESS 通过后，由审计器错误地把 D34 连续 TES 容量口径当成必须带安装二元的半连续口径，因此 TES 结构审计返回 false；模型本身的 8784 h、线性、有限上界和循环边界均已通过，Hybrid 未启动。修订后的审计器显式接受两种预先存在的容量策略：有安装二元时核验全部 materiality 联动；无安装二元时核验连续零容量、有限上界、三罐库存—罐容、五端口—额定容量和服务盐量—总盐量联动。该修订不改变模型、服务、成本、资源阈值或 Gate B 精度，并保证失败 manifest 先落盘再返回非零。
 
-修订后源码与测试 SHA-256 分别为 `9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877` 与 `437bc138e2111f8dc56af9832621c1d9c80855315c40aa011b84346757693f9c`，Windows 定向回归为 `8 passed`。首轮服务器产物必须隔离，待固定修订提交、服务器完整回归和新服务哈希完成后，才可从 No storage 重新执行正式 Gate A。
+修订后源码与测试 SHA-256 分别为 `9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877` 与 `437bc138e2111f8dc56af9832621c1d9c80855315c40aa011b84346757693f9c`，Windows 定向回归为 `8 passed`，OpenBayes 完整回归为 `462 passed in 33.82s`。首轮服务器产物已整体隔离到 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate_pre_audit_fix_20260715/`，不进入正式结果目录。
+
+正式 Gate A 随后从 No storage 重新执行。服务文件 SHA-256 为 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95`，明确记录 `representative_period_input_used=false`、baseline 10% 绝对弃电帽和同一 PCC 目标。四架构均通过 8784 h 单循环、服务、容量联动、线性和资源审计：
+
+| 架构 | 活动变量 | 二元变量 | 活动约束 | 峰值 RSS / GiB | 构造后可用内存 / GiB | 构造 manifest SHA-256 |
+|---|---:|---:|---:|---:|---:|---|
+| No storage | 562,176 | 70,272 | 465,554 | 0.482 | 96.863 | `535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9` |
+| BESS | 597,318 | 79,057 | 527,053 | 0.518 | 96.833 | `1c1f775a9bb7d00968e2186ac78c77ecd4109800db4fd8e6b041e7ca4c411baf` |
+| TES | 650,052 | 87,840 | 606,163 | 0.610 | 96.735 | `2f12564fb9b261b27f10ca3a859ffc317923b2f41d80027062bc5862df952816` |
+| Hybrid | 685,194 | 96,625 | 667,662 | 0.645 | 96.705 | `063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9` |
+
+全部非线性组件计数为零，四案均满足 20 GiB/40 GiB 资源门，架构规模排序符合预期。Gate A manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`，execution sidecar SHA-256 为 `30dceb1aa52acbc051ae735c287c5506334aeda268de50671cce90268e86c223`。规范目录已下载至本地并逐文件验哈，manifest—execution—服务引用链全部一致。Gate A 全程 `solver_invoked=false`，因此仍不存在容量、成本、gap 或技术排序结果；下一步只能实现并执行第 6–7 节锁定的 Gate B。

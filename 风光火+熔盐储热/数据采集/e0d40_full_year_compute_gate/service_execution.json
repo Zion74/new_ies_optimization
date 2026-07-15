@@ -1,0 +1,7 @@
+{
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "runtime_seconds": 0.009129795245826244,
+  "schema_id": "tes_bess_boundary.e0d40_full_year_service.v1.execution",
+  "service_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95"
+}

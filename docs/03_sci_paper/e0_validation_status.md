@@ -72,14 +72,14 @@
 - D35 已闭合 24 h 受控材料性网格，但它不能定义杨凌现场最小设备规模；D24 的 16 账户和 D25 项目记录仍未闭合，D33 公开组合不能生成杨凌正式 TAC；本地 `price_sell/price_buy` 仍只是作者生成情景；
 - D38 原三状态合同已执行到真实全年无储能参考门；`H*=0.80/G*=0.70` 状态在最小弃电第一阶段即 `infeasible`。静态诊断给出 490 MW PCC 下最大供热 `766.076788 MWth`，冻结高热序列 36 h 超限且全部位于代表周 4。因此原 D38 不能关闭，尚未进入该状态的代表期规划、固定容量回代或全年重优化。
 - D38-R1 静态诊断为 0 h 超限，但正式 baseline 链确认 D36/D37 代表期无储能在 10% 帽内 `complete`、真实 8784 h 同服务回放 `infeasible`。真实全年与代表期零燃料自然最小弃电分别为 `565,916.122/338,704.669 MWh`，低估 `227,211.453 MWh`；R1 三状态合同据此失败。
-- D40 已结果前冻结全年优先合同并完成 Gate A 执行器与审计测试，但尚未在 OpenBayes 构造四个真实 8784 h 模型，也没有任何 D40 容量、成本或技术排序结果。
+- D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计；没有调用求解器，也没有任何 D40 容量、成本、gap 或技术排序结果。
 
 ## 2. 测试证据
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| Windows `.venv-e0` | 全包；含 D33–D39、D40 服务/结构/资源门单元回归与 HiGHS | `460 passed in 226.52s`（关闭 pytest cache；同机前一轮 62.77s，本轮负载波动） |
-| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、E0-D-17–D39 Gate A、严格 Gate B 接入、bundle auditor、周级失败诊断和 HiGHS；D40 实现待同步 | `454 passed in 34.19s`（关闭 pytest cache） |
+| Windows `.venv-e0` | 最近完整回归；含 D33–D39 及修订前 D40 6 项测试 | `460 passed in 226.52s`（关闭 pytest cache；新增两项 D40 审计测试后定向回归 `8 passed in 3.12s`） |
+| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、E0-D-17–D40、严格接入、bundle auditor、周级失败诊断和 HiGHS | `462 passed in 33.82s`（关闭 pytest cache） |
 
 D26–D37 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，正式求解器仅为 HiGHS；D37 结构审计本身不调用求解器。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`；D36 正式构造位于 `/root/e0-b-20260711-019f4f64/e0d36_representative_weeks/`；D37 结构审计位于 `/root/e0-b-20260711-019f4f64/e0d37_block_cyclic_boundaries/`。本轮只上传新增测试代码和既有授权范围内的锁定输入，未上传本地受限资料。
 
@@ -190,7 +190,9 @@ E0-D-38-R1 执行后，静态必要条件仍通过，但 baseline 已在时间�
 
 E0-D-39 已在任何新数据或结果产生前把失败诊断转化为一次性、可审计修订：原六周加第 49/16 周，52 周沿用 D36 的 672 维距离重分配，年尾 72 h 与所有物理/服务/成本规则不变。Gate A 已在 Windows/OpenBayes 双端通过：最终代表周为第 `4/5/8/16/29/39/48/49` 周，权重为 `1/2/9/2/13/19/4/2`，1416 个模型时段、1392 行计分源记录及 8784 加权小时全部通过结构审计；assignment CSV、period CSV、manifest 和 execution sidecar 的 SHA-256 分别为 `7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e`、`fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac`、`dabb565087e9adb2e597d00ea7c12fcb30bf9e522517a7f8e6ed7ee73d9a16a9` 与 `572faa4ff34c6e6ad00322dbd4bf50674e0ced6849416ecb840296f639de5d78`，三个规范文件逐字节一致。首次 Gate B 命令在求解前被 D37 的 D36-only 哈希锁拒绝，未产生数值结果；严格接入后双端 `454 passed`。正式 Gate B 中，真实全年与八周自然最小弃电分别为 `565,916.122/390,148.306 MWh`，均超过 10% 帽，但弃电率误差 `5.1762` 个百分点超过 1 个百分点门，故 D39 失败。结果 JSON SHA-256 为 `47f33db2d3a00bbe5f70cd342198fd5daa1538663c49b8ec7d39641fd27b645b`；Gate C/D 未启动，不继续加周或放宽阈值。
 
-E0-D-40 已在任何新模型规模或求解结果出现前冻结真实 8784 h 全年优先路线。当前实现只提供无代表期 provenance 的服务提取、四架构 clean-process build-only 审计、完整容量上界/联动、线性扫描、单全年循环边界和 20 GiB/40 GiB 资源汇总；不创建求解器。可移植夹具修订后服务器完整回归为 `460 passed`。首轮 Gate A 中 No storage/BESS 构造通过，TES 模型的线性、有限上界和全年循环也通过，但审计器误要求连续 TES 必须存在安装二元，故在汇总前停止且 Hybrid 未启动。修订后审计显式区分连续零容量与半连续安装两种既有策略，并让失败 manifest 先落盘；未改变科学模型或阈值。当前源码/测试 SHA-256 为 `9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877` 与 `437bc138e2111f8dc56af9832621c1d9c80855315c40aa011b84346757693f9c`，Windows 定向回归 `8 passed`；正式 Gate A 待隔离首轮产物后从头执行。
+E0-D-40 已在任何新模型规模或求解结果出现前冻结真实 8784 h 全年优先路线。当前实现只提供无代表期 provenance 的服务提取、四架构 clean-process build-only 审计、完整容量上界/联动、线性扫描、单全年循环边界和 20 GiB/40 GiB 资源汇总；不创建求解器。首轮 Gate A 的 No storage/BESS 模型和 TES 线性/边界/循环均通过，但审计器误要求连续 TES 必须存在安装二元；该拒绝证据已隔离到 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate_pre_audit_fix_20260715/`。修订后审计显式区分连续零容量与半连续安装两种既有策略，并让失败 manifest 先落盘；未改变科学模型或阈值。源码/测试 SHA-256 为 `9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877` 与 `437bc138e2111f8dc56af9832621c1d9c80855315c40aa011b84346757693f9c`，Windows 定向回归 `8 passed`，OpenBayes 完整回归 `462 passed in 33.82s`。
+
+正式 Gate A 已从 No storage 重新执行并通过。D40 服务文件 SHA-256 为 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95`；No storage/BESS/TES/Hybrid 构造 manifest 分别为 `535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9`、`1c1f775a9bb7d00968e2186ac78c77ecd4109800db4fd8e6b041e7ca4c411baf`、`2f12564fb9b261b27f10ca3a859ffc317923b2f41d80027062bc5862df952816` 与 `063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9`。四案活动变量/二元变量/活动约束依次为 `562176/70272/465554`、`597318/79057/527053`、`650052/87840/606163`、`685194/96625/667662`，非线性组件均为零；峰值 RSS 依次为 `0.482/0.518/0.610/0.645 GiB`，构造后可用内存最低为 `96.705 GiB`。Gate A manifest/execution SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577` 与 `30dceb1aa52acbc051ae735c287c5506334aeda268de50671cce90268e86c223`；服务器与本地副本逐文件同哈希，且 `solver_invoked=false`。Gate B 尚未实现或启动。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -292,7 +294,7 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 Gate A 通过但 Gate B 定量保真失败，Gate C/D 已按合同停止；D40 已另立并实现全年优先结果前合同，下一步只执行四架构 Gate A，不在 D39 名下继续加周、改权重或放宽阈值；
+3. D39 Gate A 通过但 Gate B 定量保真失败，Gate C/D 已按合同停止；D40 全年优先 Gate A 已通过，下一步只实现并执行受限 Gate B，不在 D39 名下继续加周、改权重或放宽阈值；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
