@@ -347,3 +347,43 @@ def test_complete_capacity_snapshot_fixes_every_storage_design_variable() -> Non
     assert replayed_snapshot.tes_heat_output_capacity_mw == pytest.approx(
         snapshot.tes_heat_output_capacity_mw
     )
+
+
+def test_zero_fuel_objective_relaxation_preserves_minimum_curtailment() -> None:
+    from dataclasses import replace
+
+    from tes_bess_boundary.components.chp import FuelSegmentFormulation
+    from tes_bess_boundary.model import Architecture, ValidationObjectiveSpec
+    from tes_bess_boundary.planning_model import solve_endogenous_capacity
+
+    case = replace(
+        _case(Architecture.NO_STORAGE),
+        objective=ValidationObjectiveSpec(
+            coal_price_cny_per_tce=0.0,
+            curtailment_penalty_cny_per_mwh=1.0,
+        ),
+        chp_fuel_segment_formulation=FuelSegmentFormulation.LOGARITHMIC,
+    )
+
+    exact = solve_endogenous_capacity(case)
+    projected = solve_endogenous_capacity(
+        case,
+        relax_zero_cost_fuel_segments=True,
+    )
+
+    assert projected.weighted_curtailment_mwh == pytest.approx(
+        exact.weighted_curtailment_mwh,
+        abs=1e-7,
+    )
+    assert projected.binary_variable_count < exact.binary_variable_count
+
+
+def test_fuel_segment_relaxation_rejects_a_fuel_cost_objective() -> None:
+    from tes_bess_boundary.model import Architecture
+    from tes_bess_boundary.planning_model import solve_endogenous_capacity
+
+    with pytest.raises(ValueError, match="only at zero fuel cost"):
+        solve_endogenous_capacity(
+            _case(Architecture.NO_STORAGE),
+            relax_zero_cost_fuel_segments=True,
+        )

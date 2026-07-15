@@ -383,6 +383,10 @@ def run_service_reference(args: argparse.Namespace) -> dict:
         "epsilon_curtailment_ceiling_mwh": (
             CURTAILMENT_FRACTION * horizon_input.renewable_available_mwh
         ),
+        "minimum_curtailment_search_formulation": {
+            "fuel_segment_code": "continuous_exact_zero_fuel_objective_projection",
+            "physical_commitment_and_ramping": "unchanged",
+        },
         "solver": {
             "name": "appsi_highs",
             "threads": args.solver_threads,
@@ -410,6 +414,7 @@ def run_service_reference(args: argparse.Namespace) -> dict:
             min_curtailment_case,
             solver=solver,
             maximum_accepted_relative_gap=args.mip_rel_gap,
+            relax_zero_cost_fuel_segments=True,
         )
     except Exception as error:  # noqa: BLE001 - retain the formal failure artifact
         return {

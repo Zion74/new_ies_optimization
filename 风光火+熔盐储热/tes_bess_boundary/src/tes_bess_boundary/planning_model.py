@@ -620,12 +620,50 @@ def fix_endogenous_capacity_snapshot(
                 model.tes.port_installed[port].fix(value_to_fix)
 
 
+def relax_zero_cost_fuel_segment_binaries(
+    model: object,
+    case: EndogenousCapacityCase,
+) -> int:
+    """Remove redundant fuel-segment adjacency binaries from a zero-fuel objective.
+
+    The logarithmic segment code affects only the interpolation of fuel flow at
+    a gross-power value.  When the fuel coefficient is exactly zero, relaxing
+    those code bits preserves the projection onto CHP power, heat, commitment,
+    ramping, PCC export, and curtailment.  It therefore preserves the first-stage
+    minimum-curtailment optimum while avoiding fuel-accounting branch decisions
+    that have no role in that objective.  The relaxation is forbidden whenever
+    fuel enters the objective.
+    """
+
+    from pyomo.environ import UnitInterval
+
+    if not math.isclose(
+        case.objective.coal_price_cny_per_tce,
+        0.0,
+        rel_tol=0.0,
+        abs_tol=0.0,
+    ):
+        raise ValueError("fuel segment binaries may relax only at zero fuel cost")
+    if case.chp_fuel_segment_formulation is not FuelSegmentFormulation.LOGARITHMIC:
+        raise ValueError("fuel segment relaxation requires logarithmic formulation")
+    relaxed = 0
+    for unit in model.chp:
+        block = model.chp[unit]
+        if not hasattr(block, "fuel_code_bit"):
+            raise ValueError("logarithmic CHP block is missing fuel code bits")
+        for index in block.fuel_code_bit:
+            block.fuel_code_bit[index].domain = UnitInterval
+            relaxed += 1
+    return relaxed
+
+
 def solve_endogenous_capacity(
     case: EndogenousCapacityCase,
     *,
     solver: object | None = None,
     fixed_capacity: EndogenousCapacitySnapshot | None = None,
     maximum_accepted_relative_gap: float | None = None,
+    relax_zero_cost_fuel_segments: bool = False,
 ) -> EndogenousCapacityResult:
     """Solve one architecture with HiGHS and return a capacity/cost audit."""
 
@@ -642,6 +680,8 @@ def solve_endogenous_capacity(
     model = build_endogenous_capacity_model(case)
     if fixed_capacity is not None:
         fix_endogenous_capacity_snapshot(model, case, fixed_capacity)
+    if relax_zero_cost_fuel_segments:
+        relax_zero_cost_fuel_segment_binaries(model, case)
     active_solver = solver or create_highs_solver(threads=1, random_seed=0)
     solved = active_solver.solve(model)
     termination = str(solved.solver.termination_condition).lower()
