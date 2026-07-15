@@ -6,12 +6,12 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、HiGHS 状态与求解误差 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24/D25 仍为 `0/16` 与 `0/4`。D33–D35 完成公开成本、完整容量接缝和材料性网格；D36 冻结代表周与年尾段；D37 已实现共享容量下七块独立 CHP/BESS/TES 循环边界，定向 `7 passed`、双端全回归 `427 passed`。真实项目账户、正式 TAC、D38 和 336 h 外界闭合仍未完成 |
-| E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36 代表周数据和 D37 分块状态边界均已冻结；D38 三状态、同服务和验收规则已预注册但尚未求解，下一步只能按该合同执行，再继续机制分解；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、HiGHS 状态与求解误差 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24/D25 仍为 `0/16` 与 `0/4`。D33–D37 已完成公开成本、完整容量、材料性、代表周和分块边界。D38 执行器已实现、本地 `437 passed`，但原高热紧 PCC 状态在真实全年无储能参考阶段物理不可行，故 D38 未关闭。真实项目账户、正式 TAC 和 336 h 外界闭合仍未完成 |
+| E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36/D37 已冻结；原 D38 高热状态有 36 h 超出 490 MW PCC 下无储能静态供热上限，且全在代表周 4，因此先修订状态合同，不能继续机制扫描；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 验证代表周与真实点 | 6 个代表周 + 年末 48 h；三状态预验证；12 点固定容量 8784 h；6 点全年重优化 | 代表周误差、后悔值、全年赢家 | D36 数据包与 D37 分块边界已实现；D38 已冻结基准、高热+紧 PCC、24 h 长时边界三状态及同服务/失败处置规则，但尚无求解结果；正式全年验证仍待实现；`_ch4_p3_typdays.py` 仅作旧原型 |
+| E5 | 验证代表周与真实点 | 6 个代表周 + 年末 48 h；三状态预验证；固定容量 8784 h；全年重优化 | 代表周误差、后悔值、全年赢家 | D36/D37 与 D38 执行器已实现；原 `H*=0.80/G*=0.70` 状态在同服务参考前物理失败，尚未产生可用于验收的三状态结果。失败小时已全部被代表周 4 覆盖，不能通过加周修复；正式全年验证仍待实现；`_ch4_p3_typdays.py` 仅作旧原型 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -142,7 +142,9 @@
 | `src/tes_bess_boundary/e0d36_representative_weeks.py` | 4 个 PAM medoid + 2 个强制极端周及年尾段 | E0/E3-E5 | D36 数据构造已实现；由 D37 适配器严格读取，不再直接进入旧单循环模型 |
 | `src/tes_bess_boundary/e0d37_block_horizon.py` | D36 哈希/结构校验、七块时域和 1080 时段规划输入适配 | E0/E5 | 已实现；保持六周权重与 24 h warm-up + 48 h 计分段不变 |
 | `src/tes_bess_boundary/e0d37_structural_audit.py` | 完整 Hybrid 分块边界只建模审计 | E0/E5 | 已实现；不调用求解器，规范 manifest 双端 SHA-256 为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6` |
-| `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md` | 三状态、同服务、代表期规划/8784 h 固定容量回代/全年重优化与失败处置 | E0/E5 | 已预注册；尚无求解结果或代码入口 |
+| `src/tes_bess_boundary/e0d38_prevalidation.py`、`planning_model.py` | 同服务参考、完整容量快照、代表期/全年可续跑任务和固定容量回放 | E0/E5 | 已实现；本地完整回归 `437 passed`，原高热状态在参考门失败 |
+| `src/tes_bess_boundary/e0d38_static_feasibility.py` | PCC—CHP 静态最大供热必要条件与逐时违规定位 | E0/E5 | 已实现；490 MW 下 `766.077 MWth`，36 h 超限且全在代表周 4 |
+| `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`、`e0_d38_original_high_heat_state_failure.md` | 原三状态结果前合同及不覆盖合同的失败记录 | E0/E5 | 原合同不能关闭；不得删除失败状态后写成通过 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

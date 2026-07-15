@@ -1,0 +1,31 @@
+{
+  "schema_id": "tes_bess_boundary.e0d38_prevalidation_manifest.v1",
+  "generated_at": "2026-07-15T12:20:00+08:00",
+  "status": "original_contract_failed_before_temporal_aggregation",
+  "formal_project_tac_ready": false,
+  "claim_scope": "negative_prevalidation_result_not_formal_project_tac",
+  "contract": "docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md",
+  "failure_record": "docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md",
+  "commits": {
+    "preregistration": "f24b301",
+    "runner": "9c55a4b",
+    "failure_capture": "c46ecde",
+    "static_diagnostic": "d4b37ac",
+    "zero_fuel_projection": "86ae1b1"
+  },
+  "files": [
+    {
+      "path": "service_high_heat_tight_pcc.json",
+      "sha256": "c96e5eaf3833c31596dfe6792a3b3ac4810438ac24d36ef78bd23878fa2baa2d",
+      "status": "infeasible",
+      "failed_stage": "minimum_curtailment_search"
+    },
+    {
+      "path": "high_heat_static_pcc_diagnostic.json",
+      "sha256": "566bdd5666bce4b63a302585b285bd5682f4ad2dd4af043151365f7856a3c7b2",
+      "violating_hour_count": 36,
+      "violating_week_numbers": [4],
+      "all_violating_hours_covered_by_d36": true
+    }
+  ]
+}
