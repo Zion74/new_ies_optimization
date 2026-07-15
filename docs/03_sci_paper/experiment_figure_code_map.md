@@ -155,6 +155,7 @@
 | `docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md` | 真实 8784 h 全年优先的构造、资源、精度和停止合同 | E0/E5 | 结果前第 1–9 节已冻结；Gate A 已通过，正式 BESS 为 `monolithic_not_viable`，D40 单体路线失败且不生成技术赢家 |
 | `src/tes_bess_boundary/e0d41_strict_full_year_decomposition.py`、`tests/test_e0d41_strict_full_year_decomposition.py`、`数据采集/e0d41_strict_full_year_decomposition/` | 二元变量全覆盖分类、R0/R1 域变换、完整轨迹固定、三架构全年 Gate A 汇总 | E0/E5 | 9 项新增测试与 OpenBayes `478 passed`；三架构 Gate A 均通过，汇总 manifest SHA-256 `50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937`；未调用求解器 |
 | `src/tes_bess_boundary/e0d41_gate_b_lower_bound.py`、`tests/test_e0d41_gate_b_lower_bound.py` | R0/R1 全年 HiGHS dual、独立硬墙钟、5 s 心跳、进程树资源门、目标/方向审计、R1 候选轨迹与架构汇总 | E0/E5 | 首次接入因 `.periods` 接口错误在求解器前拒绝并隔离；修复后 10 项新增测试、Windows 全包 `488 passed`、Ruff 通过，待服务器复核后重启 BESS |
+| `src/tes_bess_boundary/e0d41_gate_b_bundle.py`、`tests/test_e0d41_gate_b_bundle.py` | 只读核验逐架构 manifest，执行 BESS→TES→Hybrid 串行停止与最弱案例规则，确定性生成总 manifest/execution | E0/E5 | 源码/测试哈希已登记；3 项新增测试、D40/D41 定向 `29 passed`、Windows 全包 `491 passed`；不调用求解器，尚未对正式证据运行 |
 | `docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md` | 全年合法松弛下界、候选离散轨迹、原始全年可行修复上界、父进程硬墙钟与 gap 分类 | E0/E5 | 第 1–10 节已结果前冻结；Gate A 已通过，Gate B 执行器已结果前登记，下一步服务器回归和正式串行执行 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |

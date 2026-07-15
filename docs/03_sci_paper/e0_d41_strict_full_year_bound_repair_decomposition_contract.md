@@ -187,3 +187,9 @@ Gate A 因此登记为 `gate_a_passed`。该结果只关闭包含关系、二元
 失败产物永久隔离到 `pre_adapter_rejection_period_count/`。R0/R1/汇总 manifest/execution SHA-256 分别为 `993a4b8eb0dcb05c09e7bd83117012ae5599f1eaec0814106368817da683533f`、`fe58f26fe44a1fd6b672673afdca3d1568910b9de4153d1528977f169f1b4893`、`cad5e0e09709f5c06ba1a3168d10d6f714baf5f2e8454540d1463ed750340e2b` 与 `3e0c346d20f46c5834eefa097ccb9ba8dee282374ac47600d4fca15db361d460`。
 
 修复仅把服务小时数读取改为 `case.timeseries.period_count`，并在任一阶段没有 `formal_lower_bound_eligible=true` 时停止后续松弛；没有改动第 1–10 节科学输入、服务、模型、软/硬时限、资源门或判定阈值。修复后源码/测试 SHA-256 为 `2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217` 与 `053b490b4267d676acef50b1168b4d474ea23ac1513cdb357bfb37a55bf5f28a`；新增测试 `10 passed`、D40/D41 定向回归 `26 passed in 3.61s`、Windows 完整回归 `488 passed in 48.92s`，Ruff 通过。修复代码尚待服务器同哈希回归后才能重新启动 BESS。
+
+## 16. Gate B 总证据汇编器登记
+
+正式 Gate B 总判定继续逐字执行第 6、10 和 12 节已经冻结的规则：架构顺序固定为 BESS → TES → Hybrid；首个未通过架构之后不得再启动后续架构；只有三架构全部具有合法有限下界时才允许进入 Gate C。为避免人工摘录改变这些规则，新增只读后处理模块 `e0d41_gate_b_bundle.py`。该模块只读取 Gate A manifest 与逐架构 Gate B manifest，复核 schema、架构身份、Gate A 哈希、代表期禁用标志、技术排序禁用标志、下界数值资格和串行停止规则，并确定性写出 `gate_b_manifest.json` 与 `gate_b_execution.json`。
+
+汇编器不构造模型、不调用求解器、不修改任何已有架构产物，也不生成容量、上界、gap 或技术赢家。源码与测试 SHA-256 分别为 `77084f736eaceb1220198ed1f2043b24ba0be6604352ee383f6e8229f76c29c3` 与 `6bdae782a194d1f4fdefd5dc40121871cab59070bd2cd911d29d85282f9ff867`；新增 3 项测试覆盖“BESS 通过/TES 失败/Hybrid 停止”、失败后仍启动后续架构时拒绝，以及三架构全通过前不得开放 Gate C。D40/D41 合并定向回归为 `29 passed in 4.67s`，Windows 完整回归为 `491 passed in 87.37s`，Ruff 通过。截至本登记，汇编器尚未对正式 Gate B 证据运行；其正式输出只能在本登记形成独立提交后生成并追加记录。
