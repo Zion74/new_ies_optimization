@@ -14,6 +14,15 @@ def _canonical_periods_csv() -> Path:
     )
 
 
+def _canonical_d39_periods_csv() -> Path:
+    return (
+        Path(__file__).resolve().parents[2]
+        / "数据采集"
+        / "e0d39_service_aware_representative_weeks"
+        / "e0d39_representative_periods.csv"
+    )
+
+
 def _price_basis_dir() -> Path:
     return Path(__file__).resolve().parents[2] / "数据采集" / "e0d4_price_basis_2024"
 
@@ -74,6 +83,23 @@ def test_high_heat_representative_input_changes_only_heat() -> None:
     assert high.timeseries.wind_available_mw == baseline.timeseries.wind_available_mw
     assert high.timeseries.pv_available_mw == baseline.timeseries.pv_available_mw
     assert high.renewable_available_mwh == baseline.renewable_available_mwh
+
+
+def test_d39_representative_input_uses_explicit_eight_week_contract() -> None:
+    from tes_bess_boundary.e0d38_prevalidation import (
+        load_representative_input,
+        state_spec,
+    )
+
+    loaded = load_representative_input(
+        _canonical_d39_periods_csv(),
+        state_spec("baseline"),
+    )
+
+    assert loaded.horizon_id == "d39_eight_weeks_plus_year_end_tail_block_cyclic"
+    assert loaded.timeseries.period_count == 1_416
+    assert len(loaded.horizon.dispatch_blocks) == 9
+    assert loaded.horizon.weighted_hours(dt_hours=1.0) == pytest.approx(8_784.0)
 
 
 def test_long_duration_state_sets_both_storage_service_durations_to_24h() -> None:

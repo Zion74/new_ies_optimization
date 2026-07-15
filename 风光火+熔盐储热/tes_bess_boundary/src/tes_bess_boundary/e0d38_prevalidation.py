@@ -66,6 +66,21 @@ SERVICE_TOLERANCE_MWH = 1e-3
 CURTAILMENT_FRACTION = 0.10
 FORMAL_MIP_REL_GAP = 0.001
 FULL_YEAR_HOURS = 8_784
+D39_PERIODS_NAME = "e0d39_representative_periods.csv"
+D39_PERIODS_SHA256 = (
+    "fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac"
+)
+D39_REPRESENTATIVE_BLOCKS = (
+    ("representative_week_04", 1.0),
+    ("representative_week_05", 2.0),
+    ("representative_week_08", 9.0),
+    ("representative_week_16", 2.0),
+    ("representative_week_29", 13.0),
+    ("representative_week_39", 19.0),
+    ("representative_week_48", 4.0),
+    ("representative_week_49", 2.0),
+)
+D39_MODEL_PERIOD_COUNT = 1_416
 
 
 @dataclass(frozen=True)
@@ -221,9 +236,21 @@ def load_representative_input(
     periods_path: str | Path,
     state: E0D38StateSpec,
 ) -> E0D38HorizonInput:
-    """Load D36 through the strict D37 adapter and apply only heat scaling."""
+    """Load a locked D36/D39 artifact and apply only state heat scaling."""
 
-    representative = load_e0d37_block_horizon(periods_path)
+    path = Path(periods_path)
+    if path.name == D39_PERIODS_NAME:
+        representative = load_e0d37_block_horizon(
+            path,
+            expected_sha256=D39_PERIODS_SHA256,
+            expected_representative_blocks=D39_REPRESENTATIVE_BLOCKS,
+            expected_model_period_count=D39_MODEL_PERIOD_COUNT,
+            artifact_label="D39",
+        )
+        horizon_id = "d39_eight_weeks_plus_year_end_tail_block_cyclic"
+    else:
+        representative = load_e0d37_block_horizon(path)
+        horizon_id = "d36_six_weeks_plus_year_end_tail_d37_block_cyclic"
     timeseries = replace(
         representative.timeseries,
         heat_demand_mw=tuple(
@@ -232,7 +259,7 @@ def load_representative_input(
         ),
     )
     return E0D38HorizonInput(
-        horizon_id="d36_six_weeks_plus_year_end_tail_d37_block_cyclic",
+        horizon_id=horizon_id,
         timeseries=timeseries,
         horizon=representative.horizon,
         renewable_available_mwh=_weighted_renewable_available_mwh(

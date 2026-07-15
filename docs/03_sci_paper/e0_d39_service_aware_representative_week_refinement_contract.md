@@ -128,3 +128,5 @@ D39 不产生杨凌正式 TAC、项目技术赢家或正式 E5 全部结果。�
 - D39 定向回归双端各 `10 passed`，完整回归为 Windows `452 passed in 67.31s`、OpenBayes `452 passed in 33.51s`。
 
 Gate A 到此通过；上述误差不授权继续选周。下一步只能执行 Gate B baseline 零燃料保真门。
+
+Gate B 首次命令在求解器启动前被 D37 的 D36-only period SHA 锁拒绝，没有生成任何数值结果。接入修订保留 D36 默认锁，仅允许文件名、SHA、块顺序、权重和 1416 时段全部匹配的 D39 period 数据；D39 assignments 另受文件名与 SHA 双锁。修订后 Windows/OpenBayes 完整回归均为 `454 passed`。该修订只补足预注册 D39 数据的严格读取能力，不改变 Gate B 物理、服务、目标或阈值。

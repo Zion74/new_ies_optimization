@@ -23,6 +23,8 @@ from pyomo.environ import value
 
 from tes_bess_boundary.e0d38_prevalidation import (
     CURTAILMENT_FRACTION,
+    D39_PERIODS_NAME,
+    D39_PERIODS_SHA256,
     FORMAL_MIP_REL_GAP,
     build_d38_case,
     load_full_year_input,
@@ -44,6 +46,10 @@ FULL_WEEK_COUNT = 52
 FULL_WEEK_SCORING_HOURS = FULL_WEEK_HOURS * FULL_WEEK_COUNT
 SERVICE_CLASSIFICATION_TOLERANCE_MWH = 1e-3
 MAXIMUM_NATURAL_CURTAILMENT_RATE_ERROR_PP = 1.0
+D39_ASSIGNMENTS_NAME = "e0d39_week_assignments.csv"
+D39_ASSIGNMENTS_SHA256 = (
+    "7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e"
+)
 
 
 def _sha256(path: Path) -> str:
@@ -57,6 +63,37 @@ def _sha256(path: Path) -> str:
 def _read_csv(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         return list(csv.DictReader(stream))
+
+
+def validate_d39_gate_b_artifacts(
+    periods_path: Path,
+    assignments_path: Path,
+) -> dict[str, str] | None:
+    """Fail fast unless a requested D39 Gate B pair is exactly canonical."""
+
+    d39_requested = (
+        periods_path.name == D39_PERIODS_NAME
+        or assignments_path.name == D39_ASSIGNMENTS_NAME
+    )
+    if not d39_requested:
+        return None
+    if periods_path.name != D39_PERIODS_NAME:
+        raise ValueError(f"D39 periods file must be named {D39_PERIODS_NAME}")
+    if assignments_path.name != D39_ASSIGNMENTS_NAME:
+        raise ValueError(
+            f"D39 assignments file must be named {D39_ASSIGNMENTS_NAME}"
+        )
+    actual = {
+        "representative_periods_sha256": _sha256(periods_path),
+        "week_assignments_sha256": _sha256(assignments_path),
+    }
+    expected = {
+        "representative_periods_sha256": D39_PERIODS_SHA256,
+        "week_assignments_sha256": D39_ASSIGNMENTS_SHA256,
+    }
+    if actual != expected:
+        raise ValueError(f"D39 Gate B artifact hash mismatch: {actual}")
+    return actual
 
 
 def _minimum_curtailment_case(
@@ -317,6 +354,7 @@ def evaluate_minimum_curtailment_gate(
 
 
 def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
+    validate_d39_gate_b_artifacts(args.periods_path, args.assignments_path)
     state = state_spec(args.state)
     planning_inputs = planning_inputs_for_state(args.price_basis_path, state)
     actual_input = load_full_year_input(args.heat_path, args.vre_path, state)

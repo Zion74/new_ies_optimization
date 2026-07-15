@@ -32,7 +32,7 @@
 - `e0d35_tes_materiality.py`：锁定旧 `1,200 MWhth / 13,913.716 t / 150 MW` 参考组合、`0/1%/5%/10%` 网格和自然/严格两组同服务；正比例时对盐量和五个启用端口分别施加 0-or-min 半连续域，并逐项审计安装二进制、服务残差和容量下限；比例 0 不增加二进制，保持 D34 连续模型；
 - `e0d35_materiality_bundle.py`：验证 16 个预注册身份，强制自然服务 5%/10% 四案采用 gap=0 refined 证人，生成 LF 规范 CSV、自包含 manifest 与 execution 原始哈希侧车；
 - `e0d36_representative_weeks.py`：按结果前合同将 8784 h 拆为 52 个完整周与 48 h 年尾，使用热负荷/风/光/气温 672 维标准化曲线执行确定性 PAM，强制热峰与高可再生/PCC 压力周，重新分配全部 52 周，并导出六周、年尾真实 24 h warm-up、1056 个计分行和 8784 加权小时；D36 不调用现有单循环优化模型；
-- `e0d37_block_horizon.py`：逐字节校验 D36 period CSV，把 1080 时段映射为六个 168 h 周块和一个 72 h 年尾块，并生成允许块首零权重 warm-up 的显式年度分块时域；
+- `e0d37_block_horizon.py`：默认逐字节校验 D36 period CSV，同时允许调用方提供另一套完整哈希/块/时段合同；D39 只通过显式八周合同接入。适配器生成允许块首零权重 warm-up 的显式年度分块时域；
 - `e0d37_structural_audit.py`：使用正式 D36 输入和 D34 规划参数构建完整 Hybrid 模型，只审计共享容量、1087 个分块状态节点、CHP 首尾转移/爬坡、年尾权重和线性，不调用求解器；
 - `tes_break_even.py`：在同一情景、服务、8,784 h 时域和成本范围下比较无 TES 架构与 TES/HYBRID，剔除全部 TES 所有权成本后计算全系统最大 EAC 上限，并报告燃煤、弃电、PCC 外送和 TES 辅机差值；拒绝人工弃电罚值、缺热、非最优结果、零容量 TES 和跨口径比较；四个容量归一化只重构同一系统上限，不反解部件单价；
 - `tes_break_even_adapter.py`：把实际 E0-C 年度解保守适配到 E0-D-16；要求显式弃电服务、零罚值、最优 HiGHS 与平衡/循环残差通过，并剔除全部 TES 资产类别；当前系统 VOM、碳、电力结算与 TES VOM 未闭合，故强制探索性主张；
@@ -77,8 +77,8 @@
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| Windows `.venv-e0` | 全包；含 D33–D39 Gate A、bundle auditor、周级失败诊断与 HiGHS | `452 passed in 67.31s`（关闭 pytest cache） |
-| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、E0-D-17–D39 Gate A、bundle auditor、周级失败诊断和 HiGHS | `452 passed in 33.51s`（关闭 pytest cache） |
+| Windows `.venv-e0` | 全包；含 D33–D39 Gate A、严格 Gate B 接入、bundle auditor、周级失败诊断与 HiGHS | `454 passed in 83.92s`（关闭 pytest cache） |
+| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、E0-D-17–D39 Gate A、严格 Gate B 接入、bundle auditor、周级失败诊断和 HiGHS | `454 passed in 34.19s`（关闭 pytest cache） |
 
 D26–D37 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，正式求解器仅为 HiGHS；D37 结构审计本身不调用求解器。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`；D36 正式构造位于 `/root/e0-b-20260711-019f4f64/e0d36_representative_weeks/`；D37 结构审计位于 `/root/e0-b-20260711-019f4f64/e0d37_block_cyclic_boundaries/`。本轮只上传新增测试代码和既有授权范围内的锁定输入，未上传本地受限资料。
 
@@ -187,7 +187,7 @@ E0-D-38-R1 在任何修订状态求解前冻结一次性 `H*=G*=0.70`：热量�
 
 E0-D-38-R1 执行后，静态必要条件仍通过，但 baseline 已在时间聚合门失败。当前代码生成的服务、代表期与全年案例 provenance 完全一致；混用 pre-R1 服务代码的首轮服务器产物已隔离。正式 baseline 服务/代表期/全年失败/周级诊断 SHA-256 分别为 `93f3d7b5c50312d08ea3dd78b1af70661facf880fcc882b1bb1ac32a783977b3`、`f8dcae636c35b7d7b9e476c3c974b6cffb0da403de13e6807808011212068fe5`、`ea266a9ab37922368e08a85c72be41a2c25e418953cff230e3577c2451ed5b49` 与 `3ea98ef46b72705617a3dc436c57b158f7819aa8e358c8d85448e66f5bc46329`。第 49/16 周分别低估 `20,547.320/20,063.702 MWh`。
 
-E0-D-39 已在任何新数据或结果产生前把失败诊断转化为一次性、可审计修订：原六周加第 49/16 周，52 周沿用 D36 的 672 维距离重分配，年尾 72 h 与所有物理/服务/成本规则不变。Gate A 已在 Windows/OpenBayes 双端通过：最终代表周为第 `4/5/8/16/29/39/48/49` 周，权重为 `1/2/9/2/13/19/4/2`，1416 个模型时段、1392 行计分源记录及 8784 加权小时全部通过结构审计；assignment CSV、period CSV、manifest 和 execution sidecar 的 SHA-256 分别为 `7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e`、`fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac`、`dabb565087e9adb2e597d00ea7c12fcb30bf9e522517a7f8e6ed7ee73d9a16a9` 与 `572faa4ff34c6e6ad00322dbd4bf50674e0ced6849416ecb840296f639de5d78`，三个规范文件逐字节一致。Gate B 仍预先要求 D39 代表期与真实全年对 no-storage 10% 服务的可行性分类一致，且自然最小弃电率误差不超过 1 个百分点；否则 D39 失败，不继续加周或放宽阈值。当前尚无 Gate B 求解结果。
+E0-D-39 已在任何新数据或结果产生前把失败诊断转化为一次性、可审计修订：原六周加第 49/16 周，52 周沿用 D36 的 672 维距离重分配，年尾 72 h 与所有物理/服务/成本规则不变。Gate A 已在 Windows/OpenBayes 双端通过：最终代表周为第 `4/5/8/16/29/39/48/49` 周，权重为 `1/2/9/2/13/19/4/2`，1416 个模型时段、1392 行计分源记录及 8784 加权小时全部通过结构审计；assignment CSV、period CSV、manifest 和 execution sidecar 的 SHA-256 分别为 `7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e`、`fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac`、`dabb565087e9adb2e597d00ea7c12fcb30bf9e522517a7f8e6ed7ee73d9a16a9` 与 `572faa4ff34c6e6ad00322dbd4bf50674e0ced6849416ecb840296f639de5d78`，三个规范文件逐字节一致。首次 Gate B 命令在求解前被 D37 的 D36-only 哈希锁拒绝，未产生数值结果；现已增加 D39 period 的显式文件名/SHA/块合同与 assignments 文件名/SHA 双锁，双端 `454 passed`。Gate B 仍预先要求 D39 代表期与真实全年对 no-storage 10% 服务的可行性分类一致，且自然最小弃电率误差不超过 1 个百分点；否则 D39 失败，不继续加周或放宽阈值。当前尚无 Gate B 求解结果。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 

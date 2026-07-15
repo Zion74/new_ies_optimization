@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from tes_bess_boundary.e0d38_weekly_diagnostic import (
@@ -7,7 +9,42 @@ from tes_bess_boundary.e0d38_weekly_diagnostic import (
     group_actual_weeks,
     group_representative_weeks,
     summarize_assignment_error,
+    validate_d39_gate_b_artifacts,
 )
+
+
+def _d39_data_file(name: str) -> Path:
+    return (
+        Path(__file__).resolve().parents[2]
+        / "数据采集"
+        / "e0d39_service_aware_representative_weeks"
+        / name
+    )
+
+
+def test_d39_gate_b_artifact_pair_is_hash_and_name_locked(tmp_path: Path) -> None:
+    periods = _d39_data_file("e0d39_representative_periods.csv")
+    assignments = _d39_data_file("e0d39_week_assignments.csv")
+
+    validated = validate_d39_gate_b_artifacts(periods, assignments)
+    assert validated == {
+        "representative_periods_sha256": (
+            "fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac"
+        ),
+        "week_assignments_sha256": (
+            "7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e"
+        ),
+    }
+
+    wrong_name = tmp_path / "assignments.csv"
+    wrong_name.write_bytes(assignments.read_bytes())
+    with pytest.raises(ValueError, match="must be named"):
+        validate_d39_gate_b_artifacts(periods, wrong_name)
+
+    tampered = tmp_path / "e0d39_week_assignments.csv"
+    tampered.write_bytes(assignments.read_bytes() + b"tampered")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        validate_d39_gate_b_artifacts(periods, tampered)
 
 
 def test_minimum_curtailment_gate_requires_classification_and_one_pp() -> None:

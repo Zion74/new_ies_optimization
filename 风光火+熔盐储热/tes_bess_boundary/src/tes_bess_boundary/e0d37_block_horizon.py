@@ -1,8 +1,8 @@
-"""Strict D36-to-D37 adapter for independent block-cyclic annual planning.
+"""Strict representative-period adapter for independent block-cyclic planning.
 
-The adapter validates the frozen representative-period artifact and exposes a
-single shared-capacity time series plus seven independent cyclic state blocks.
-It does not build or solve any D38 planning case.
+The default contract remains the frozen D36 artifact.  Explicit callers may
+provide another fully locked hash/block contract, such as the preregistered D39
+eight-week refinement.  The adapter does not build or solve a planning case.
 """
 
 from __future__ import annotations
@@ -103,15 +103,34 @@ def load_e0d37_block_horizon(
     periods_csv: str | Path,
     *,
     expected_sha256: str = D36_PERIODS_SHA256,
+    expected_representative_blocks: tuple[tuple[str, float], ...] = (
+        EXPECTED_REPRESENTATIVE_BLOCKS
+    ),
+    expected_model_period_count: int = MODEL_PERIOD_COUNT,
+    artifact_label: str = "D36",
 ) -> E0D37BlockHorizonInput:
-    """Load the canonical D36 periods without changing selection or weights."""
+    """Load one hash-locked representative-period artifact."""
+
+    if not artifact_label.strip():
+        raise ValueError("representative-period artifact label must be non-empty")
+    if not expected_representative_blocks:
+        raise ValueError("at least one representative block is required")
+    structural_period_count = (
+        len(expected_representative_blocks) * REPRESENTATIVE_WEEK_HOURS
+        + TAIL_WARMUP_HOURS
+        + TAIL_SCORED_HOURS
+    )
+    if expected_model_period_count != structural_period_count:
+        raise ValueError(
+            "representative-period model count does not match its block contract"
+        )
 
     path = Path(periods_csv)
     payload = path.read_bytes()
     source_sha256 = hashlib.sha256(payload).hexdigest()
     if source_sha256 != expected_sha256:
         raise ValueError(
-            "D36 representative-period SHA-256 mismatch: "
+            f"{artifact_label} representative-period SHA-256 mismatch: "
             f"expected {expected_sha256}, received {source_sha256}"
         )
 
@@ -120,11 +139,14 @@ def load_e0d37_block_horizon(
         fieldnames = frozenset(reader.fieldnames or ())
         missing = sorted(_REQUIRED_COLUMNS - fieldnames)
         if missing:
-            raise ValueError(f"D36 periods CSV is missing columns: {missing}")
+            raise ValueError(
+                f"{artifact_label} periods CSV is missing columns: {missing}"
+            )
         rows = tuple(reader)
-    if len(rows) != MODEL_PERIOD_COUNT:
+    if len(rows) != expected_model_period_count:
         raise ValueError(
-            f"D36 periods CSV must contain {MODEL_PERIOD_COUNT} model rows"
+            f"{artifact_label} periods CSV must contain "
+            f"{expected_model_period_count} model rows"
         )
 
     heat_demand: list[float] = []
@@ -148,7 +170,9 @@ def load_e0d37_block_horizon(
             raise ValueError(f"row {row_number} has an empty block_id")
         if block_id != current_block_id:
             if block_id in block_ids:
-                raise ValueError("D36 block rows must be contiguous")
+                raise ValueError(
+                    f"{artifact_label} block rows must be contiguous"
+                )
             block_ids.append(block_id)
             block_rows.append([])
             current_block_id = block_id
@@ -188,13 +212,15 @@ def load_e0d37_block_horizon(
             raise ValueError("scored flag must be equivalent to a positive annual weight")
 
     expected_block_ids = tuple(
-        block_id for block_id, _weight in EXPECTED_REPRESENTATIVE_BLOCKS
+        block_id for block_id, _weight in expected_representative_blocks
     ) + (TAIL_BLOCK_ID,)
     if tuple(block_ids) != expected_block_ids:
-        raise ValueError("D36 representative block ids or order changed")
+        raise ValueError(
+            f"{artifact_label} representative block ids or order changed"
+        )
 
     for block_index, (expected_id, expected_weight) in enumerate(
-        EXPECTED_REPRESENTATIVE_BLOCKS
+        expected_representative_blocks
     ):
         periods = block_rows[block_index]
         if len(periods) != REPRESENTATIVE_WEEK_HOURS:
@@ -221,7 +247,10 @@ def load_e0d37_block_horizon(
         period_weights=tuple(weights),
         dispatch_blocks=dispatch_blocks,
     )
-    horizon.validate_time_grid(period_count=MODEL_PERIOD_COUNT, dt_hours=1.0)
+    horizon.validate_time_grid(
+        period_count=expected_model_period_count,
+        dt_hours=1.0,
+    )
     timeseries = E0CTimeSeries(
         heat_demand_mw=tuple(heat_demand),
         wind_available_mw=tuple(wind_available),
