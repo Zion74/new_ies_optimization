@@ -163,6 +163,40 @@ python -m tes_bess_boundary.e0d37_structural_audit \
 This command constructs the full 1080-period Hybrid model and checks linearity and
 boundary counts; it does not invoke HiGHS or produce D38 capacity results.
 
+After the D38-R1/D39 temporal-aggregation failures, E0-D-40 isolates the actual
+8784-hour build/resource gate from every representative-period input. Generate the
+locked service file, then build each architecture in a fresh process and compile
+Gate A:
+
+```bash
+python -m tes_bess_boundary.e0d40_full_year_compute_gate service \
+  --source-service /path/to/service_baseline.json \
+  --d39-gate-b /path/to/gate_b_baseline_minimum_curtailment.json \
+  --heat-path /path/to/e0b_heat_hourly_2024.csv \
+  --vre-path /path/to/e0d17_legacy_vre_2024.csv \
+  --price-basis-path /path/to/e0d4_price_basis_2024 \
+  --output-dir /path/to/e0d40_full_year_compute_gate
+
+for architecture in no_storage bess tes hybrid; do
+  python -m tes_bess_boundary.e0d40_full_year_compute_gate build \
+    --architecture "$architecture" \
+    --service-file /path/to/e0d40_full_year_compute_gate/e0d40_full_year_service.json \
+    --heat-path /path/to/e0b_heat_hourly_2024.csv \
+    --vre-path /path/to/e0d17_legacy_vre_2024.csv \
+    --price-basis-path /path/to/e0d4_price_basis_2024 \
+    --output-dir /path/to/e0d40_full_year_compute_gate
+done
+
+python -m tes_bess_boundary.e0d40_full_year_compute_gate audit \
+  --service-file /path/to/e0d40_full_year_compute_gate/e0d40_full_year_service.json \
+  --build-dir /path/to/e0d40_full_year_compute_gate \
+  --output-dir /path/to/e0d40_full_year_compute_gate
+```
+
+These commands do not create a solver. Platform-dependent runtime/RSS values are
+kept in execution sidecars, while service and structural manifests remain
+deterministic scientific artifacts.
+
 Build the formal E0-B artifacts without overwriting legacy CSV files:
 
 ```python

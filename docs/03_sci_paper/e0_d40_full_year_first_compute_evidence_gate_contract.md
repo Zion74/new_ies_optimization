@@ -116,3 +116,9 @@ D40 可作为硕士论文第 5 章 Agentic 决策支持案例：agent 负责读�
 
 - 本地：`风光火+熔盐储热/数据采集/e0d40_full_year_compute_gate/`；
 - OpenBayes：`/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate/`。
+
+## 11. 实现登记（尚无 Gate A 数值）
+
+结果前提交 `2529ae5` 之后才新增 `e0d40_full_year_compute_gate.py` 与 6 项定向测试。实现已完成三类隔离入口：从 D38/D39 冻结证据生成无代表期依赖的 D40 服务文件；在独立进程中为单一架构执行 build-only 线性/容量边界/全年循环审计；汇总四架构 manifest 与 execution sidecar 并施加 20 GiB/40 GiB 资源门。服务和结构 manifest 不含平台时间与内存，execution sidecar 单独记录这些非规范字段。
+
+实现源码与测试 SHA-256 分别为 `1110af20f9b300f171dfbd5c21882822f2fa932908dbced65cbfaee8dcc30f6a` 与 `8f61afc9b47782fac4e77f2e567e88d160b27362a360bd9a28df1a9308f5aac`。Windows 锁定环境定向回归为 `6 passed`，最终完整回归为 `460 passed in 226.52s`；同机前一轮曾为 `62.77s`，本轮本地负载波动不影响测试判定。本节只登记实现和测试；尚未生成 D40 服务文件、四架构模型规模、内存结果或 Gate A 判定。
