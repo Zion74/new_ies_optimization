@@ -219,10 +219,10 @@ Agentic 只可核验哈希、选择已冻结的下一状态、监控资源、保
 
 ## 12. Gate A 核心实现证据（不改写第 1–11 节）
 
-2026-07-15 已实现 `e0d42_native_highs_certificate.py`、`e0d42_full_year_structure_gate.py` 及对应两份测试。四个文件 SHA-256 依次为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`e0dbb5a442765e73396491b93ece8c96cf9f613a4b4fc58a8e265807b5fc54f7`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `eaae8acf6d36633f9cc4428bccfe033b257e87220e96d9f2022e5f2d6d2c91e7`，Windows 与 OpenBayes 副本逐字节一致。结构审计器在正式结果前由提交 `80b5b5c` 固定。
+2026-07-15 已实现 `e0d42_native_highs_certificate.py`、`e0d42_full_year_structure_gate.py` 及对应两份测试。四个文件 SHA-256 依次为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `f0ed8ad3c148a3098e348f4d5954439098df318d8458189d0559feb006388ff1`，Windows 与 OpenBayes 副本逐字节一致。结构审计器在正式结果前由提交 `80b5b5c` 固定，并由提交 `781db23` 把价格合同改为 D40 同口径的目录树哈希。
 
 本阶段已经关闭以下实现级风险：完整 `HighsLp` 数值指纹；NaN/倒置边界拒绝；Pyomo 6.10.1 到原生 HiGHS 1.15.1 的版本锁定翻译；显式一次 presolve；不少于 80 位 Decimal 定向舍入拉格朗日区间；单边无穷行乘子投影；所需列端点无穷时拒证；IPX/simplex callback 中断；同指纹 basis 恢复和异指纹提前拒绝；五案例标签/松弛/分支/D41 结构锁汇编。测试还暴露并修复了 HiGHS 进程级全局线程调度器复用问题：每个顺序阶段现在先阻塞重置调度器、逐项检查锁定选项，且 `HighsStatus.kError` 不得被包装为快照或证书。
 
-测试证据为：Windows D42 定向 `16 passed`、D40–D42 定向 `53 passed in 2.69s`、全包 `507 passed in 62.62s`，Ruff 通过；OpenBayes D40–D42 定向 `53 passed in 0.73s`、全包 `507 passed in 34.06s`。这些测试只证明适配器、证书器和结构汇编器在解析/合成 LP 上方向正确，不是正式全年数值结果。
+测试证据为：Windows D42 定向 `17 passed`、D40–D42 定向 `54 passed in 4.22s`、全包 `508 passed in 66.17s`，Ruff 通过；OpenBayes D40–D42 定向 `54 passed in 0.65s`、全包 `508 passed in 34.22s`。这些测试只证明适配器、证书器和结构汇编器在解析/合成 LP 上方向正确，不是正式全年数值结果。
 
 尚未执行第 6 节要求的真实 8784 h build-only 结构门：TES R0/R1 的原始与预求解 LP 指纹一致性、Hybrid R1 唯一拓扑二元及 0/1 两支完整覆盖仍须在 OpenBayes 单独重建、落盘和审计。因此当前没有 D42 全年 LP 指纹、下界、容量、成本、gap 或技术排序；正式 Gate B 继续禁止。

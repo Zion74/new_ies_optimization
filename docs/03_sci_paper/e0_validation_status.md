@@ -74,14 +74,14 @@
 - D38-R1 静态诊断为 0 h 超限，但正式 baseline 链确认 D36/D37 代表期无储能在 10% 帽内 `complete`、真实 8784 h 同服务回放 `infeasible`。真实全年与代表期零燃料自然最小弃电分别为 `565,916.122/338,704.669 MWh`，低估 `227,211.453 MWh`；R1 三状态合同据此失败。
 - D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计。正式 BESS 随后因墙钟执行链超限且无可审计结果被分类为 `monolithic_not_viable`；仍没有任何 D40 容量、成本、gap 或技术排序结果。
 - D41 已在结果前冻结严格全年界—修复分解合同并完成 Gate A/B。BESS R0/R1 均形成合法有限下界，取 `1,144,950,604.8368804 CNY`；TES R0 进入 dual simplex 后在 `720.462 s` 硬墙钟内没有返回合法 dual 或不可行证明，TES R1/Hybrid/Gate C/D 按停止规则未启动。总状态 `no_strict_certificate`。BESS 数值只是受控公开成本敏感性下界，不是可行方案、正式 TAC 或技术赢家；当前仍没有三架构可比的容量、成本、上界或 gap。
-- D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A 核心适配器、证书器和五案例结构审计器现已在提交 `80b5b5c` 前后固定并通过双端回归；真实 8784 h TES R0/R1 指纹一致性与 Hybrid 单二元两分支 build-only 结构门尚未执行，Gate B 未启动。D41 数值和总判定不变。
+- D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A 核心适配器、证书器和五案例结构审计器现已由提交 `80b5b5c`、`781db23` 固定并通过双端回归；真实 8784 h TES R0/R1 指纹一致性与 Hybrid 单二元两分支 build-only 结构门尚未执行，Gate B 未启动。D41 数值和总判定不变。
 
 ## 2. 测试证据
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
-| Windows `.venv-e0` | 全包；含 E0-D-17–D42 Gate A 结构审计器 | `507 passed in 62.62s`（关闭 pytest cache；D40–D42 定向 `53 passed in 2.69s`） |
-| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、D41 证据汇编与 D42 Gate A 结构回归 | `507 passed in 34.06s`（关闭 pytest cache；D40–D42 定向 `53 passed in 0.73s`） |
+| Windows `.venv-e0` | 全包；含 E0-D-17–D42 Gate A 结构审计器 | `508 passed in 66.17s`（关闭 pytest cache；D40–D42 定向 `54 passed in 4.22s`） |
+| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、D41 证据汇编与 D42 Gate A 结构回归 | `508 passed in 34.22s`（关闭 pytest cache；D40–D42 定向 `54 passed in 0.65s`） |
 
 D26–D42 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，正式求解器仅为 HiGHS；D37 结构审计本身不调用求解器。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`；D36 正式构造位于 `/root/e0-b-20260711-019f4f64/e0d36_representative_weeks/`；D37 结构审计位于 `/root/e0-b-20260711-019f4f64/e0d37_block_cyclic_boundaries/`。本轮只上传 D42 新增源码与测试，未上传本地受限资料。
 
@@ -214,7 +214,7 @@ Gate B 总证据汇编器在提交 `0fb9346` 中先于正式汇编固定；源�
 
 Gate B 总 manifest/execution SHA-256 为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef` 与 `0b71fc77d7aa4faaad3b84f294faddd035dc8ea66df744df1ba27164c247af19`；`gate_c_permitted=false`、`gate_d_permitted=false`、`technical_ranking_permitted=false`。该失败定位的是 TES 全年 LP 收敛/终止与合法 dual 提取瓶颈，不是 TES 原问题物理不可行性证明。
 
-E0-D-42 原生证书/结构审计源码及两份测试 SHA-256 为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`e0dbb5a442765e73396491b93ece8c96cf9f613a4b4fc58a8e265807b5fc54f7`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `eaae8acf6d36633f9cc4428bccfe033b257e87220e96d9f2022e5f2d6d2c91e7`，本地/远端逐字节一致。实现覆盖完整 `HighsLp` 指纹、边界审计、Pyomo→原生模型翻译、显式 presolve、IPX/simplex callback、同/异指纹 basis 规则、80 位拉格朗日证书，以及五案例 D41 结构锁和分支汇编。Windows D42 定向 `16 passed`、D40–D42 定向 `53 passed`、全包 `507 passed in 62.62s`，Ruff 通过；OpenBayes 定向 `53 passed in 0.73s`、全包 `507 passed in 34.06s`。尚未产生真实 8784 h D42 指纹或下界，下一步只允许执行 build-only 结构门。
+E0-D-42 原生证书/结构审计源码及两份测试 SHA-256 为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `f0ed8ad3c148a3098e348f4d5954439098df318d8458189d0559feb006388ff1`，本地/远端逐字节一致。实现覆盖完整 `HighsLp` 指纹、边界审计、Pyomo→原生模型翻译、显式 presolve、IPX/simplex callback、同/异指纹 basis 规则、80 位拉格朗日证书，以及五案例 D41 结构锁、价格目录树哈希和分支汇编。Windows D42 定向 `17 passed`、D40–D42 定向 `54 passed`、全包 `508 passed in 66.17s`，Ruff 通过；OpenBayes 定向 `54 passed in 0.65s`、全包 `508 passed in 34.22s`。尚未产生真实 8784 h D42 指纹或下界，下一步只允许执行 build-only 结构门。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
