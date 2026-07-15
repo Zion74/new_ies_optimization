@@ -1,6 +1,6 @@
 # E0-D-43 冻结 HiGHS 快照离线对偶证书恢复合同
 
-状态：**第 1–10 节结果前合同已冻结；Gate A 本地/OpenBayes 双端实现门通过；尚未运行正式 D43**
+状态：**第 1–10 节结果前合同已冻结；Gate A 双端通过；唯一一次正式 Gate B 已结束，结果为 `no_strict_certificate`**
 
 适用范围：D42 已保存 TES R0 原生 solution 快照、但 80 位拉格朗日证书未在父进程硬墙钟内落盘之后的只读恢复
 
@@ -118,4 +118,14 @@ D43 禁止：重跑 D42 TES 求解、延长 D42 墙钟、修改 D42 证书公式
 
 实现已覆盖：case/lp/phase execution、BESS reuse、structure manifest 与 solution 的完整哈希引用链；schema、LP 指纹、四数组集合与维度、`dual_valid` 和 finite row dual 准入；未修改的 80 位证书调用；两个 clean child 的固定并行编排；父进程硬墙钟、RSS、可用内存、5 s 心跳和停止优先级；Decimal 最大合法下界选择与 tie 时 IPX 优先；只读总 manifest/execution/README；非空输出拒绝。所有正式结果字段固定 `optimization_invoked=false`、`native_solver_invoked=false`、`technical_ranking_permitted=false`。
 
-本地新增测试 `15 passed in 1.03s`，D40–D43 定向回归 `80 passed in 5.81s`，完整回归 `534 passed in 62.51s`，Ruff 通过。结果前实现已提交为 `78e30ee`。OpenBayes 上源码/测试与本地逐字节同哈希，`py_compile`、D40–D43 定向 `80 passed in 0.75s`、完整回归 `534 passed in 34.18s`；正式输出目录仍不存在。两端测试都只使用合成小 LP 和人工 solution 归档，没有读取 D42 正式 row dual，也没有调用 D43 正式入口。Gate A 至此关闭；本节状态提交后才允许执行唯一一次正式 D43。
+本地新增测试 `15 passed in 1.03s`，D40–D43 定向回归 `80 passed in 5.81s`，完整回归 `534 passed in 62.51s`，Ruff 通过。结果前实现已提交为 `78e30ee`。OpenBayes 上源码/测试与本地逐字节同哈希，`py_compile`、D40–D43 定向 `80 passed in 0.75s`、完整回归 `534 passed in 34.18s`；在 Gate A 提交时正式输出目录仍不存在。两端测试都只使用合成小 LP 和人工 solution 归档，没有读取 D42 正式 row dual，也没有调用 D43 正式入口。Gate A 至此关闭；本节状态提交后才允许执行唯一一次正式 D43。
+
+## 12. Gate B 正式结果登记（不改写第 1–10 节）
+
+唯一一次正式 D43 已在 OpenBayes 按第 6 节冻结设置执行。两个 D42 solution 归档均通过完整元数据、LP 指纹、数组维度、`dual_valid=true` 和 finite row dual 准入；两个 clean child 并行读取各自完整 `439,018` 维 row dual，未重建模型、未调用优化器或原生求解器，也未修改 80 位证书函数。
+
+IPX child 运行 `1800.4872665889561 s`，simplex child 运行 `1800.4875770630315 s`；二者均在证书计算尚未完成时因冻结 child 硬墙钟被父进程终止，返回码均为 `-15`。两个 child 都没有生成 result 或 certificate，因此没有有限 Decimal 下界可供选择。总运行时间为 `1800.489843642339 s`，峰值父子合计 RSS 为 `0.7346572875976562 GiB`，最低可用内存为 `96.6288833618164 GiB`；内存门未触发，失败不能归因于内存不足。
+
+规范总 manifest SHA-256 为 `c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526`，总 execution SHA-256 为 `ef431921d46369d44cbe83ab593685c71349868a3be603b392d40e4d68fca109`。IPX/simplex execution SHA-256 分别为 `1691096160ab961efcc51b61de749672cad6e8caaf0f6750ae019a5ee1840a0e` 与 `957f7660904e82462c209402e08d573d40cbb95d031dbe7b48eb520c79353870`。服务器规范输出已下载至 `风光火+熔盐储热/数据采集/e0d43_offline_dual_certificate_recovery/`，9 个规范文件逐文件 SHA-256 与服务器一致，启动日志另存为 `launcher.log`。
+
+Gate B 最终状态为 `no_strict_certificate`，`formal_lower_bound_eligible=false`、`selected_phase=null`、`hybrid_lower_bound_contract_permitted=false`、`technical_ranking_permitted=false`。该失败只说明两个冻结 dual 都未在既定 1800 s 内完成不变的高精度认证；它不证明 TES 不可行，不证明 BESS 更优，也不产生可行上界、容量、项目 TAC 或技术排序。D43 不得重跑或事后改变精度、时限、并行度和选择规则。若继续数值证书路线，必须另立新的结果前合同，例如数学等价但更快的严格证书算法、数值缩放/对偶修复，或新的严格分解路线；Hybrid 仍不得启动。

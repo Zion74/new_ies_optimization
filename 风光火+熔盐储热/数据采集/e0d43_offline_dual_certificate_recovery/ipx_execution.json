@@ -1,0 +1,16 @@
+{
+  "certificate_sha256": null,
+  "child_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "formal_lower_bound_eligible": false,
+  "heartbeat_sha256": "63fd888feefb01ab531a0c4fe4ec732ba4812f36c6385b8cbb49739b8c90c404",
+  "minimum_available_memory_gib": 96.6288833618164,
+  "peak_child_process_tree_rss_gib": 0.3547248840332031,
+  "peak_parent_child_aggregate_rss_gib": 0.7346572875976562,
+  "phase": "ipx",
+  "result_sha256": null,
+  "return_code": -15,
+  "runtime_seconds": 1800.4872665889561,
+  "schema_id": "tes_bess_boundary.e0d43_offline_dual_certificate.v1.phase.execution",
+  "stop_reason": "child_hard_wall_reached:ipx",
+  "technical_ranking_permitted": false
+}
