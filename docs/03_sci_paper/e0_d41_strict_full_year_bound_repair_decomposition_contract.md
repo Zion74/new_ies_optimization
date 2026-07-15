@@ -179,3 +179,11 @@ Gate A 因此登记为 `gate_a_passed`。该结果只关闭包含关系、二元
 在任何 D41 Gate B 全年求解启动前，已新增 `e0d41_gate_b_lower_bound.py` 与 8 项测试。执行器逐架构串行执行 `R0→R1`，把 HiGHS 软时限与父进程硬墙钟分离，使用独立进程组、`5 s` 非缓冲心跳、进程树/父子合计 RSS 和主机可用内存监控；达到硬墙钟后先发 `SIGTERM`，最多等待 `30 s` 后再发 `SIGKILL`。只有完整通过 Gate A 哈希锁、域审计、8784 h 服务审计、线性审计、最小化目标身份和 finite dual 方向审计的数值才标记为 `formal_lower_bound_eligible=true`。R1 可加载 primal 时把全部变量写入确定性 `csv.gz`，但永久标记 `candidate_only=true`、`formal_bound_eligible=false`。
 
 源码与测试 SHA-256 分别为 `cd532a31d1712a2237e3fe46ccfd395443c16c97a1be6502f2a72861461f1e70` 与 `5ce44ef3c895eb909f23882938b7b737d52145abbcf317ef8ca0ad8abc1aacd3`。新增测试 `8 passed in 2.39s`，D40/D41 定向回归 `24 passed in 2.46s`，Windows 完整回归 `486 passed in 68.78s`，Ruff 检查通过。上述均为小模型和回归测试；尚未启动正式 8784 h Gate B，因而没有合法数值下界、容量、成本、gap 或技术排序。
+
+## 15. Gate B 首次接入拒绝与实现修复
+
+结果前实现提交 `226f590` 同步到 OpenBayes 后，首次 BESS R0 在模型构造完成后的服务审计访问了不存在的 `E0CTimeSeries.periods`，触发 `AttributeError`；正确既有接口为 `period_count`。R0 的 `solver_invoked=false`、`formal_lower_bound_eligible=false`，没有调用 HiGHS。编排器随后错误地把“子进程正常写出 build failure”当作可继续条件而启动 R1；R1 在同一审计处拒绝，同样没有调用 HiGHS。整次运行 `62.698 s`，只构成接入失败，不消耗或替代正式数值证据。
+
+失败产物永久隔离到 `pre_adapter_rejection_period_count/`。R0/R1/汇总 manifest/execution SHA-256 分别为 `993a4b8eb0dcb05c09e7bd83117012ae5599f1eaec0814106368817da683533f`、`fe58f26fe44a1fd6b672673afdca3d1568910b9de4153d1528977f169f1b4893`、`cad5e0e09709f5c06ba1a3168d10d6f714baf5f2e8454540d1463ed750340e2b` 与 `3e0c346d20f46c5834eefa097ccb9ba8dee282374ac47600d4fca15db361d460`。
+
+修复仅把服务小时数读取改为 `case.timeseries.period_count`，并在任一阶段没有 `formal_lower_bound_eligible=true` 时停止后续松弛；没有改动第 1–10 节科学输入、服务、模型、软/硬时限、资源门或判定阈值。修复后源码/测试 SHA-256 为 `2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217` 与 `053b490b4267d676acef50b1168b4d474ea23ac1513cdb357bfb37a55bf5f28a`；新增测试 `10 passed`、D40/D41 定向回归 `26 passed in 3.61s`、Windows 完整回归 `488 passed in 48.92s`，Ruff 通过。修复代码尚待服务器同哈希回归后才能重新启动 BESS。

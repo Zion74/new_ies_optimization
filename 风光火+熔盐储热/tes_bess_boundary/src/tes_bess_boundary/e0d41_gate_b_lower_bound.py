@@ -249,7 +249,7 @@ def _service_audit(model: object, case: object) -> dict[str, Any]:
 
     weighted_hours = float(value(model.annual_weighted_hours))
     audit = {
-        "period_count": len(case.timeseries.periods),
+        "period_count": case.timeseries.period_count,
         "weighted_annual_hours": weighted_hours,
         "single_full_year_dispatch_block": len(case.horizon.dispatch_blocks) == 1,
         "curtailment_constraint_active": bool(
@@ -994,6 +994,8 @@ def run_architecture(
         result_path = _paths(output_dir, architecture, mode)["result"]
         result = json.loads(result_path.read_text(encoding="utf-8"))
         if result.get("global_original_milp_infeasibility_proven") is True:
+            break
+        if result.get("formal_lower_bound_eligible") is not True:
             break
     manifest = write_architecture_manifest(
         architecture=architecture,

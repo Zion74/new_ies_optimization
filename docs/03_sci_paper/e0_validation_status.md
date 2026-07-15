@@ -73,7 +73,7 @@
 - D38 原三状态合同已执行到真实全年无储能参考门；`H*=0.80/G*=0.70` 状态在最小弃电第一阶段即 `infeasible`。静态诊断给出 490 MW PCC 下最大供热 `766.076788 MWth`，冻结高热序列 36 h 超限且全部位于代表周 4。因此原 D38 不能关闭，尚未进入该状态的代表期规划、固定容量回代或全年重优化。
 - D38-R1 静态诊断为 0 h 超限，但正式 baseline 链确认 D36/D37 代表期无储能在 10% 帽内 `complete`、真实 8784 h 同服务回放 `infeasible`。真实全年与代表期零燃料自然最小弃电分别为 `565,916.122/338,704.669 MWh`，低估 `227,211.453 MWh`；R1 三状态合同据此失败。
 - D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计。正式 BESS 随后因墙钟执行链超限且无可审计结果被分类为 `monolithic_not_viable`；仍没有任何 D40 容量、成本、gap 或技术排序结果。
-- D41 已在任何代码或数值结果产生前冻结严格全年界—修复分解合同。正式下界只接受保留 8784 h、年度服务与单全年循环的 `R0/R1` 合法松弛 dual；168/336 h 分块只生成候选离散轨迹；正式上界必须由原始全年模型固定全部离散轨迹后的可行修复给出。Gate A 已在 OpenBayes 通过：三架构 R0 剩余二元均为 0，R1 只剩 `1/0/1` 个时间不变拓扑二元，完整固定均无遗漏。Gate B 执行器已在本地完成并通过 486 项回归，但正式全年求解未启动；当前仍没有容量、成本、上下界或 gap。
+- D41 已在任何代码或数值结果产生前冻结严格全年界—修复分解合同。正式下界只接受保留 8784 h、年度服务与单全年循环的 `R0/R1` 合法松弛 dual；168/336 h 分块只生成候选离散轨迹；正式上界必须由原始全年模型固定全部离散轨迹后的可行修复给出。Gate A 已在 OpenBayes 通过。Gate B 首次 BESS 接入在调用 HiGHS 前因真实时序接口误用而拒绝，失败产物已隔离；修复后本地回归 488 项通过，待服务器复核。当前仍没有容量、成本、上下界或 gap。
 
 ## 2. 测试证据
 
@@ -202,6 +202,8 @@ E0-D-40 已在任何新模型规模或求解结果出现前冻结真实 8784 h �
 E0-D-41 Gate A 已在结果前提交 `d7a1929` 之后实现。源码/测试 SHA-256 为 `c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e` 与 `cc5c7bee44eea158f8523a4f9d531e407f4004562c8d55735e4ae49d4fe84ddb`；Windows 新增测试 `9 passed`、D40/D41 定向回归 `24 passed`，OpenBayes 完整回归 `478 passed in 34.20s`。BESS/TES/Hybrid 原始二元为 `79,057/87,840/96,625`，R0 均剩 0，R1 剩 `1/0/1`，完整 fixing audit 均为 0 漏项；运行时间 `67.762/76.311/81.217 s`，峰值 RSS `0.759/0.865/0.907 GiB`。三案均保留 8784 h、年度服务与单全年循环，`solver_invoked=false`。汇总 manifest/execution SHA-256 为 `50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937` 与 `b2d9778e927d3925c7c247ee9816732ed299df3c204fc6a6d746fbe29451b88b`；本地/远端逐文件一致。Gate A 只关闭包含关系与二元覆盖门，不提供数值上下界。
 
 Gate B 结果前执行器源码/测试 SHA-256 为 `cd532a31d1712a2237e3fe46ccfd395443c16c97a1be6502f2a72861461f1e70` 与 `5ce44ef3c895eb909f23882938b7b737d52145abbcf317ef8ca0ad8abc1aacd3`。它实现冻结的 `600/720 s` R0、`1200/1320 s` R1 软/硬时限，独立进程组、5 s 心跳、30 s SIGTERM 宽限、进程树/聚合 RSS 门、目标与 finite dual 审计，以及 R1 全变量 `candidate_only` 压缩轨迹。新增测试 `8 passed`、D40/D41 定向回归 `24 passed`、Windows 完整回归 `486 passed in 68.78s`，Ruff 通过。此处只登记实现，不登记任何全年数值结果。
+
+首次 BESS 接入 R0/R1 均在服务审计因 `AttributeError: 'E0CTimeSeries' object has no attribute 'periods'` 拒绝，`solver_invoked=false`；原编排器还错误继续了 R1。产物已隔离为 `pre_adapter_rejection_period_count/`，汇总 manifest SHA-256 `cad5e0e09709f5c06ba1a3168d10d6f714baf5f2e8454540d1463ed750340e2b`。修复只改用 `period_count` 并增加“无合法下界即停止”规则，不改变科学合同。修复后源码/测试 SHA-256 为 `2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217` 与 `053b490b4267d676acef50b1168b4d474ea23ac1513cdb357bfb37a55bf5f28a`；新增测试 `10 passed`、定向回归 `26 passed`、Windows 全包 `488 passed in 48.92s`。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 

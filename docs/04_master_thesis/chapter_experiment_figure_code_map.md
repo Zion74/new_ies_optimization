@@ -35,7 +35,7 @@
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
-| T4-5 / E5 | 8784 h 全年证据与时间方法 | 建立不依赖失真代表期的正式边界路线 | D36–D39 失败证据；D40 合同/代码/证据；D41 合同、`e0d41_strict_full_year_decomposition.py`、`e0d41_gate_b_lower_bound.py`、Gate A 证据与待建 Gate C/D | D40 单体路线未通过；D41 Gate A 已证明三架构 `R0/R1` 与完整固定无二元遗漏，Gate B 执行器本地全包 `486 passed`，下一步服务器回归与正式全年下界 |
+| T4-5 / E5 | 8784 h 全年证据与时间方法 | 建立不依赖失真代表期的正式边界路线 | D36–D39 失败证据；D40 合同/代码/证据；D41 合同、`e0d41_strict_full_year_decomposition.py`、`e0d41_gate_b_lower_bound.py`、Gate A 证据与 Gate B 接入失败证据 | D40 单体路线未通过；D41 Gate A 已通过；Gate B 接入缺陷修复后本地全包 `488 passed`，下一步服务器回归与 BESS 正式全年下界 |
 | T4-6 / E6 | 确定性稳健性 | 检查边界移动 | `run_sweep.py` | 待实现 |
 
 建议图表与 SCI 相同：价值分解、ε 前沿、物理主地图、经济主地图、全年验证和边界敏感性。

@@ -5,6 +5,7 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -143,6 +144,26 @@ def test_monitor_stop_reason_enforces_hard_wall_before_memory() -> None:
         )
         == "process_tree_rss_limit_reached"
     )
+
+
+def test_service_audit_uses_the_real_timeseries_period_count_property() -> None:
+    from pyomo.environ import ConcreteModel, Constraint, Expression
+
+    from tes_bess_boundary.e0d41_gate_b_lower_bound import _service_audit
+
+    model = ConcreteModel()
+    model.annual_weighted_hours = Expression(expr=8_784.0)
+    model.annual_curtailment_service = Constraint(expr=Constraint.Feasible)
+    model.annual_pcc_export_service = Constraint(expr=Constraint.Feasible)
+    case = SimpleNamespace(
+        timeseries=SimpleNamespace(period_count=8_784),
+        horizon=SimpleNamespace(dispatch_blocks=(tuple(range(8_784)),)),
+    )
+
+    audit = _service_audit(model, case)
+
+    assert audit["period_count"] == 8_784
+    assert audit["passed"] is True
 
 
 def test_r0_and_r1_solver_payloads_are_finite_and_r1_writes_guide(
@@ -313,6 +334,51 @@ def test_architecture_compiler_rejects_missing_or_unmonitored_stage(
         result_dir=tmp_path,
     )
     assert manifest["gate_b_passed"] is False
+
+
+def test_architecture_runner_stops_after_invalid_r0(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import tes_bess_boundary.e0d41_gate_b_lower_bound as gate_b
+    from tes_bess_boundary.model import Architecture
+
+    calls: list[str] = []
+
+    def fake_run(**kwargs: object) -> dict[str, object]:
+        mode = kwargs["mode"]
+        calls.append(gate_b._mode_token(mode))
+        result_path = gate_b._paths(
+            tmp_path, Architecture.BESS, mode
+        )["result"]
+        gate_b._write_json(
+            result_path,
+            {
+                "solver_invoked": False,
+                "formal_lower_bound_eligible": False,
+                "global_original_milp_infeasibility_proven": False,
+            },
+        )
+        return {"status": "complete"}
+
+    monkeypatch.setattr(gate_b, "run_monitored_relaxation", fake_run)
+    monkeypatch.setattr(
+        gate_b,
+        "write_architecture_manifest",
+        lambda **_kwargs: {"status": "gate_b_failed"},
+    )
+    gate_b.run_architecture(
+        architecture=Architecture.BESS,
+        service_path=Path("service.json"),
+        d40_gate_a_manifest_path=Path("d40.json"),
+        d41_gate_a_manifest_path=Path("d41.json"),
+        heat_path=Path("heat.csv"),
+        vre_path=Path("vre.csv"),
+        price_basis_path=Path("prices"),
+        output_dir=tmp_path,
+    )
+
+    assert calls == ["r0"]
 
 
 def test_frozen_time_limits_match_contract() -> None:

@@ -34,3 +34,7 @@ R1 只保留时间不变的安装/端口拓扑二元。当前 TES 采用 D34 已
 三个架构的日志和 execution sidecar 也保留在本目录。`gate_a_compile.log` 为零字节，因为编译器成功时不向标准输出写文本；规范结果由 `gate_a_manifest.json` 与引用哈希确定。
 
 首次远程包装命令仅在所有规范文件生成后，因 Windows here-string 的 CRLF 使最后一条 `sha256sum` glob 带入 `\r` 而返回非零。随后使用独立命令完成远端逐文件哈希，并下载到本地复核；该包装错误未改变任何 JSON、代码、模型或判定。
+
+## 4. Gate B 接入拒绝记录
+
+`pre_adapter_rejection_period_count/` 保存首次 BESS Gate B 接入失败。R0/R1 都在服务审计阶段因错误访问 `E0CTimeSeries.periods` 被拒绝，`solver_invoked=false`，没有产生数值下界；原编排器错误继续 R1 的问题也已登记。修复改用真实 `period_count` 接口，并规定 R0 无合法下界时不再启动 R1。该子目录永久与后续正式结果隔离。

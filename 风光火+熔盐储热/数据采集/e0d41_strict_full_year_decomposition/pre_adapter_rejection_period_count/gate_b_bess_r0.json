@@ -1,0 +1,41 @@
+{
+  "architecture": "bess",
+  "build_runtime_seconds": 29.722164730541408,
+  "candidate_only": false,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "error_message": "'E0CTimeSeries' object has no attribute 'periods'",
+  "error_type": "AttributeError",
+  "formal_lower_bound_eligible": false,
+  "formal_project_tac_ready": false,
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_gate_b_lower_bound.py": "cd532a31d1712a2237e3fe46ccfd395443c16c97a1be6502f2a72861461f1e70",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    },
+    "heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree_sha256": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "relaxation_mode": "r0_all_continuous",
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_b_lower_bound.v1",
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solver": {
+    "dual_feasibility_tolerance": 1e-07,
+    "mip_feasibility_tolerance": 1e-07,
+    "name": "appsi_highs",
+    "parent_hard_wall_seconds": 720.0,
+    "primal_feasibility_tolerance": 1e-07,
+    "random_seed": 0,
+    "soft_time_limit_seconds": 600.0,
+    "threads": 12,
+    "warm_start_used": false
+  },
+  "solver_invoked": false,
+  "status": "build_failed"
+}
