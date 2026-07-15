@@ -89,10 +89,23 @@ def audit_highs_lp(lp: object) -> dict[str, Any]:
         raise ValueError("matrix starts are not monotone")
     if any(int(index) < 0 or int(index) >= num_row for index in indices):
         raise ValueError("matrix row index lies outside the LP")
+    if not math.isfinite(float(lp.offset_)):
+        raise ValueError("LP objective offset is not finite")
     if not all(math.isfinite(float(value)) for value in lp.col_cost_):
         raise ValueError("LP objective contains a non-finite coefficient")
     if not all(math.isfinite(float(value)) for value in values):
         raise ValueError("LP matrix contains a non-finite coefficient")
+    for label, lower_values, upper_values in (
+        ("column", lp.col_lower_, lp.col_upper_),
+        ("row", lp.row_lower_, lp.row_upper_),
+    ):
+        for lower_raw, upper_raw in zip(lower_values, upper_values):
+            lower = float(lower_raw)
+            upper = float(upper_raw)
+            if math.isnan(lower) or math.isnan(upper):
+                raise ValueError(f"LP {label} bound contains NaN")
+            if lower > upper:
+                raise ValueError(f"LP {label} lower bound exceeds upper bound")
     if lengths["integrality"] not in {0, num_col}:
         raise ValueError("integrality vector must be empty or have num_col entries")
     noncontinuous = sum(

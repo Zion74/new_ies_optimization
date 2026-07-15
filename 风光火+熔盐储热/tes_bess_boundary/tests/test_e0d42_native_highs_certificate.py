@@ -59,6 +59,27 @@ def test_lp_fingerprint_is_deterministic_and_numerically_complete() -> None:
     assert fingerprint_highs_lp(first) != fingerprint_highs_lp(second)
 
 
+def test_lp_audit_rejects_nan_and_reversed_bounds() -> None:
+    from tes_bess_boundary.e0d42_native_highs_certificate import audit_highs_lp
+
+    nan_bound = _cycle_lp(9)
+    column_lower = list(nan_bound.col_lower_)
+    column_lower[0] = float("nan")
+    nan_bound.col_lower_ = column_lower
+    with pytest.raises(ValueError, match="contains NaN"):
+        audit_highs_lp(nan_bound)
+
+    reversed_bound = _cycle_lp(9)
+    row_lower = list(reversed_bound.row_lower_)
+    row_upper = list(reversed_bound.row_upper_)
+    row_lower[0] = 2.0
+    row_upper[0] = 1.0
+    reversed_bound.row_lower_ = row_lower
+    reversed_bound.row_upper_ = row_upper
+    with pytest.raises(ValueError, match="lower bound exceeds"):
+        audit_highs_lp(reversed_bound)
+
+
 def test_lagrangian_certificate_matches_known_optimum_and_offset() -> None:
     from tes_bess_boundary.e0d42_native_highs_certificate import (
         certify_lagrangian_lower_bound,
