@@ -1,6 +1,6 @@
 # E0-D-43 冻结 HiGHS 快照离线对偶证书恢复合同
 
-状态：**第 1–10 节结果前合同已冻结；尚未实现或运行 D43**
+状态：**第 1–10 节结果前合同已冻结；Gate A 本地实现门通过，OpenBayes 同哈希回归待完成；尚未运行正式 D43**
 
 适用范围：D42 已保存 TES R0 原生 solution 快照、但 80 位拉格朗日证书未在父进程硬墙钟内落盘之后的只读恢复
 
@@ -111,3 +111,11 @@ TES R0 与 R1 的原始和 presolve LP 指纹已由 D42 Gate A 证明完全相�
 D43 禁止：重跑 D42 TES 求解、延长 D42 墙钟、修改 D42 证书公式、从日志摘录 objective、修补或平滑 dual、搜索缩放参数、恢复代表期、启动 Hybrid、生成容量或技术赢家。
 
 允许的最强表述只有：某个哈希锁定的 D42 TES R0 对偶快照，在同一冻结 presolve LP 上通过 80 位向外舍入拉格朗日审计，形成一个合法有限下界。若未通过，只能表述离线证书恢复失败。两种情况都不能推出 TES 物理不可行或 BESS 相对更优。
+
+## 11. Gate A 本地实现登记（不改写第 1–10 节）
+
+结果前提交候选已新增 `e0d43_offline_dual_certificate.py` 与 `test_e0d43_offline_dual_certificate.py`，SHA-256 分别为 `684385d5a33a531a9034f52ad755b7655adc2e58690ca689ad4e2f08eb889791` 与 `50c5e819f206e87aaba3f27254e401529140f4f6d6fa8660d5bc901afb691933`。D42 证书器和执行器没有修改；D43 正式入口会在启动 child 前重新核验其第 3 节锁定源码哈希。
+
+实现已覆盖：case/lp/phase execution、BESS reuse、structure manifest 与 solution 的完整哈希引用链；schema、LP 指纹、四数组集合与维度、`dual_valid` 和 finite row dual 准入；未修改的 80 位证书调用；两个 clean child 的固定并行编排；父进程硬墙钟、RSS、可用内存、5 s 心跳和停止优先级；Decimal 最大合法下界选择与 tie 时 IPX 优先；只读总 manifest/execution/README；非空输出拒绝。所有正式结果字段固定 `optimization_invoked=false`、`native_solver_invoked=false`、`technical_ranking_permitted=false`。
+
+本地新增测试 `15 passed in 1.03s`，D40–D43 定向回归 `80 passed in 5.81s`，完整回归 `534 passed in 62.51s`，Ruff 通过。测试只使用合成小 LP 和人工 solution 归档，没有读取 D42 正式 row dual，也没有调用 D43 正式入口。当前仍不得运行正式 D43；必须先提交本节源码/测试，再完成 OpenBayes 逐字节同哈希与定向/全包回归。
