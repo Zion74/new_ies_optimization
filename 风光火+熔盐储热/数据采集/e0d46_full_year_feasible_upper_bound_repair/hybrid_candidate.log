@@ -1,0 +1,92 @@
+MIP has 667662 rows; 685194 cols; 2582623 nonzeros; 96625 integer variables (96624 binary)
+Coefficient ranges:
+  Matrix  [7e-06, 2e+04]
+  Cost    [7e+02, 2e+03]
+  Bound   [1e+00, 6e+04]
+  RHS     [8e-02, 7e+05]
+Assessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-08
+WARNING: Row  43931 has         infeasibility of      0.1315 from [lower, value, upper] = [              0;      0.13153138;               0]
+WARNING: Row  43932 has         infeasibility of      0.4671 from [lower, value, upper] = [              0;      -0.4670567;               0]
+WARNING: Row 527053 has         infeasibility of        2926 from [lower, value, upper] = [           -inf;       2926.4317;               0]
+Solution has               num          max          sum
+Col     infeasibilities      0            0            0
+Integer infeasibilities      0            0            0
+Row     infeasibilities  48791         3305    5.193e+06
+Row     residuals            0            0            0
+Attempting to find feasible solution by solving LP for user-supplied values of discrete variables
+Presolving model
+Problem status detected on presolve: Infeasible
+Model status        : Infeasible
+Objective value     :  0.0000000000e+00
+HiGHS run time      :          0.91
+Presolving model
+518221 rows, 636596 cols, 2116325 nonzeros 1s
+430286 rows, 548714 cols, 1905461 nonzeros 3s
+412708 rows, 526846 cols, 1914369 nonzeros 7s
+Presolve reductions: rows 412708(-254954); columns 526846(-158348); nonzeros 1914366(-668257) 
+
+Solving MIP model with:
+   412708 rows
+   526846 cols (96572 binary, 0 integer, 0 implied int., 430274 continuous, 0 domain fixed)
+   1914366 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   844694832.974   inf                  inf        0      0      0         0    14.4s
+         0       0         0   0.00%   1186678269.236  inf                  inf        0      0      4    357858   108.3s
+         0       0         0   0.00%   1188811890.876  inf                  inf    56245   9895      8    388567   222.5s
+         0       0         0   0.00%   1190530961.863  inf                  inf    82987  17652     12    412252   334.1s
+         0       0         0   0.00%   1191789244.392  inf                  inf   100855  23712     16    429679   400.5s
+         0       0         0   0.00%   1192901746.343  inf                  inf   121225  28505     19    450461   512.2s
+         0       0         0   0.00%   1193856864.548  inf                  inf   149669  33384    110    465009   859.4s
+         0       0         0   0.00%   1194435966.617  inf                  inf   167003  37030    114    476550   917.6s
+         0       0         0   0.00%   1194765246.739  inf                  inf   180471  39774    117    485742   970.8s
+         0       0         0   0.00%   1195265376.53   inf                  inf   192638  47418    121    506971  1095.7s
+         0       0         0   0.00%   1195701198.395  inf                  inf   168081  54029    125    525852  1210.9s
+         0       0         0   0.00%   1195948439.784  inf                  inf   166003  59194    129    540448  1270.9s
+         0       0         0   0.00%   1196113526.215  inf                  inf   166174  63501    133    553309  1317.2s
+         0       0         0   0.00%   1196250815.088  inf                  inf   166673  67110    137    565058  1366.5s
+         0       0         0   0.00%   1196344063.17   inf                  inf   168036  70196    141    576962  1451.1s
+         0       0         0   0.00%   1196410912.187  inf                  inf   170582  72929    145    589141  1517.3s
+         0       0         0   0.00%   1196456215.121  inf                  inf   173150  65142    149    600581  1576.1s
+         0       0         0   0.00%   1196490198.235  inf                  inf   166505  67117    153    608563  1630.9s
+         0       0         0   0.00%   1196517695.644  inf                  inf   171044  68857    157    615420  1680.5s
+         0       0         0   0.00%   1196545254.681  inf                  inf   176512  70416    161    621923  1714.5s
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   1196545254.681  inf                  inf   182613  77693    165    637036  1817.4s
+         0       0         0   0.00%   1196545254.681  inf                  inf   182613  77693    165     2011k  3600.6s
+
+Solving report
+  Status            Time limit reached
+  Primal bound      inf
+  Dual bound        1196545254.68
+  Gap               inf
+  P-D integral      0
+  Solution status   -
+  Timing            3600.62
+                    21.10 (Presolve)
+                        MIP    time [calls] = 7.35 [1]
+                        subMIP time [calls] = 13.75 [10]
+                    3579.48 (Solve)
+                        MIP    time [calls] = 1810.55 [1]
+                        subMIP time [calls] = 1768.93 [7]
+                    0.00 (Postsolve)
+                        MIP    time [calls] = 0.00 [1]
+                        subMIP time [calls] = 0.00 [10]
+  Max sub-MIP depth 10
+  Nodes             0
+  Repair LPs        0
+  LP iterations     2011819
+                    0 (strong br.)
+                    279178 (separation)
+                    1374783 (heuristics)

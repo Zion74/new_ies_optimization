@@ -1,6 +1,6 @@
 # E0-D-46 三架构全年可行上界与固定二元修复合同
 
-状态：**第 1–11 节结果前合同已冻结；第 12 节源码/本地测试与第 13 节 OpenBayes Gate A 已完成，唯一正式 D46 尚未启动**
+状态：**第 1–11 节结果前合同已冻结；第 12 节源码/本地测试、第 13 节 OpenBayes Gate A 与第 14 节唯一正式总批次均已完成；三架构均无 candidate incumbent，D46 不得原样重跑**
 
 适用范围：D47 已恢复 Hybrid R0 严格下界、BESS/TES/Hybrid 三架构均已有至少一个全年严格下界之后，为同一 2024 年 8784 h 原始 MILP 恢复第一组可审计可行解、容量与受控成本上界
 
@@ -178,3 +178,17 @@ OpenBayes 使用 Python 3.10.18、Pyomo 6.10.1、highspy 1.15.1。最终 Gate A 
 - Gate A manifest/execution SHA-256 分别为 `098fc8bef7fe160cdad98d5d22675d82dcd9341e03e656792b357e7f29f1d176` / `2ca2f3cd22049ad75db51d8f07b4161a9a1414ab0bec01df1d51de31251c84df`，状态 `gate_a_passed`、`formal_run_permitted=true`；本地证据位于 `风光火+熔盐储热/数据采集/e0d46_gate_a/`。
 
 Gate A 不产生正式可行上界、容量、项目 TAC 或 gap，且保持 `formal_project_tac_ready=false`、`technical_ranking_permitted=false`。它只开放合同规定的唯一一次 BESS→TES→Hybrid 正式总批次。
+
+## 14. 唯一正式 8784 h 总批次记录（结果后登记，不改写第 1–11 节）
+
+唯一正式总批次已在 OpenBayes 按冻结的 BESS→TES→Hybrid 顺序完成。正式输出位于 `/root/e0-b-20260711-019f4f64/results/e0d46_full_year_feasible_upper_bound_repair/`，本地完整副本位于 `风光火+熔盐储热/数据采集/e0d46_full_year_feasible_upper_bound_repair/`。总 manifest SHA-256 为 `8693722ad362b2f604f08b3ebd2bfa2c45f085e42c2ece6cf334c097db80afa9`；32 个远端正式文件全部回传，manifest 声明的产物为 0 缺失、0 哈希不匹配。总运行时间为 `8820.16162651591 s`，结束后活动残留进程为 0。
+
+三个架构的 R0 guide 都达到最优并通过审计，但它们只用于构造 seed，不是原 MILP 可行上界：
+
+- BESS：`1,157,063,561.813816 CNY`；
+- TES：`386,559,421.67063665 CNY`；
+- Hybrid：`1,186,678,269.235802 CNY`。
+
+BESS 新 R0 seed 被 HiGHS 明确拒绝，合同允许的 D41 BESS guide 回退 seed 也没有产生 incumbent。TES 与 Hybrid 的结构化 seed 分别出现 `48,801` 与 `48,791` 条行不可行；固定离散值 LP 均被明确判为 infeasible，随后原始 MILP 各运行满 `3600 s`，Primal bound 仍为 `inf`，没有完整 incumbent。三个架构因此均为 `no_candidate_incumbent`，均未进入 Repair A/B，`repair_selection=null`。
+
+总状态为 `partial_or_no_upper_bound_recovery`，`successful_architecture_count=0`。本次正式批次没有形成可行容量、`audited_feasible_upper_bound_cny`、保守 gap、项目 TAC 或技术排序；`formal_project_tac_ready=false`、`technical_ranking_permitted=false`、`engineering_numerical_feasibility_only=true`。该结果只否定冻结容量锚点与预注册确定性 seed 在本合同墙钟内恢复 incumbent 的能力，不证明三种架构的原物理模型不可行，也不允许用 guide objective、MILP dual bound 或来源不同的严格下界排序技术。D46 不得按结果原样重跑；任何增强必须另立新的结果前合同。

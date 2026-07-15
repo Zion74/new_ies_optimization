@@ -1,0 +1,350 @@
+{
+  "architecture": {
+    "bess": {
+      "architecture": "bess",
+      "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+      "formal_project_tac_ready": false,
+      "repair_selection": null,
+      "runtime_seconds": 596.968363456428,
+      "schema_id": "tes_bess_boundary.e0d46_architecture_manifest.v1",
+      "stage_execution": {
+        "candidate": {
+          "active_residual_process_count": 0,
+          "architecture": "bess",
+          "available_memory_before_gib": 97.30128479003906,
+          "available_memory_sample_count": 601,
+          "declared_artifact_sha256": {
+            "bess_candidate.csv.gz": null,
+            "bess_candidate.json": "fac6f30f98b8fa2095262b649b9f45ac388fbd83e5b894f028b7c6c1c5ee573e",
+            "bess_d41_fallback_seed.csv.gz": "061cce6ec845e77d38f1d0bb44e32cb65641185673b14144f788725e6aa03eed"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "4e112a2989d45b03b0e7ac5c1334a99988b6dcd37b497f2c77308f1deda058d8",
+          "minimum_available_memory_gib": 93.15563201904297,
+          "peak_child_process_tree_rss_gib": 4.160556793212891,
+          "peak_parent_child_aggregate_rss_gib": 4.185855865478516,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 3720.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "fac6f30f98b8fa2095262b649b9f45ac388fbd83e5b894f028b7c6c1c5ee573e",
+          "return_code": 0,
+          "rss_sample_count": 601,
+          "runtime_seconds": 303.77192523051053,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "82ab73b4d78e132d8ad3aa312c68a4079a0010d8afd2f89f3747fa02c35bdb04",
+          "stage": "candidate",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        },
+        "guide": {
+          "active_residual_process_count": 0,
+          "architecture": "bess",
+          "available_memory_before_gib": 97.30145645141602,
+          "available_memory_sample_count": 581,
+          "declared_artifact_sha256": {
+            "bess_guide.csv.gz": "b69f4035deb5aa5f83a504e1e40347a23fa352b4104087bc017da6940c828b1f",
+            "bess_guide.json": "ec76c9b9aada251807552b921463cd8149407d61dd548d31e35bde579657d20d"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "4010da2b7d847995286e00cf848eaba2f6164873068cefeb283e137dedbc0e5b",
+          "minimum_available_memory_gib": 94.7082405090332,
+          "peak_child_process_tree_rss_gib": 2.6115379333496094,
+          "peak_parent_child_aggregate_rss_gib": 2.636219024658203,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 1020.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "ec76c9b9aada251807552b921463cd8149407d61dd548d31e35bde579657d20d",
+          "return_code": 0,
+          "rss_sample_count": 581,
+          "runtime_seconds": 293.183031543158,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "17b40dc731e6043b1548204b6875853bed5f753ac4f194000238b9bd5ba7e4fc",
+          "stage": "guide",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        }
+      },
+      "status": "no_candidate_incumbent",
+      "technical_ranking_permitted": false
+    },
+    "hybrid": {
+      "architecture": "hybrid",
+      "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+      "formal_project_tac_ready": false,
+      "repair_selection": null,
+      "runtime_seconds": 4111.280685589649,
+      "schema_id": "tes_bess_boundary.e0d46_architecture_manifest.v1",
+      "stage_execution": {
+        "candidate": {
+          "active_residual_process_count": 0,
+          "architecture": "hybrid",
+          "available_memory_before_gib": 97.30089569091797,
+          "available_memory_sample_count": 7363,
+          "declared_artifact_sha256": {
+            "hybrid_candidate.csv.gz": null,
+            "hybrid_candidate.json": "6598c8cbdad037f3bb3c022841b44b3a3918326185387448eb98db3ab87fa26a"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "901a73312e8fc379592a1b716bfdd0eec087b2bec59f0b0eec4ac3d3bb5355e4",
+          "minimum_available_memory_gib": 88.79552841186523,
+          "peak_child_process_tree_rss_gib": 8.508975982666016,
+          "peak_parent_child_aggregate_rss_gib": 8.534587860107422,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 3720.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "6598c8cbdad037f3bb3c022841b44b3a3918326185387448eb98db3ab87fa26a",
+          "return_code": 0,
+          "rss_sample_count": 7363,
+          "runtime_seconds": 3719.1691517708823,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "2866ec0951c57127a319bee41917def6afa47735c62b9c6ead7b1457357c69d5",
+          "stage": "candidate",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        },
+        "guide": {
+          "active_residual_process_count": 0,
+          "architecture": "hybrid",
+          "available_memory_before_gib": 97.30089950561523,
+          "available_memory_sample_count": 777,
+          "declared_artifact_sha256": {
+            "hybrid_guide.csv.gz": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+            "hybrid_guide.json": "b049841f53c282e19de5d2248d3d0429820b2271fdcf9ce80cf60d7f063b4777"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "92475b19be552779706802de053284d0fee751bc502a0544e75ca38ac0b4878e",
+          "minimum_available_memory_gib": 94.21959686279297,
+          "peak_child_process_tree_rss_gib": 3.0979347229003906,
+          "peak_parent_child_aggregate_rss_gib": 3.123455047607422,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 1020.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "b049841f53c282e19de5d2248d3d0429820b2271fdcf9ce80cf60d7f063b4777",
+          "return_code": 0,
+          "rss_sample_count": 777,
+          "runtime_seconds": 392.1016592355445,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "434501a50d18da3391ebc1732957fa80767406d0f98cd542b9d2b52d7cb55376",
+          "stage": "guide",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        }
+      },
+      "status": "no_candidate_incumbent",
+      "technical_ranking_permitted": false
+    },
+    "tes": {
+      "architecture": "tes",
+      "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+      "formal_project_tac_ready": false,
+      "repair_selection": null,
+      "runtime_seconds": 4111.900106816553,
+      "schema_id": "tes_bess_boundary.e0d46_architecture_manifest.v1",
+      "stage_execution": {
+        "candidate": {
+          "active_residual_process_count": 0,
+          "architecture": "tes",
+          "available_memory_before_gib": 97.30107879638672,
+          "available_memory_sample_count": 7349,
+          "declared_artifact_sha256": {
+            "tes_candidate.csv.gz": null,
+            "tes_candidate.json": "68099f90884d51b58297ab59c13dc557f964dd5a6af6409c0b49679eecec0906"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "3a29cc5a9186d5bc549791d6952dc78d639ce901defbec37342086d4bef79909",
+          "minimum_available_memory_gib": 90.70276260375977,
+          "peak_child_process_tree_rss_gib": 6.608638763427734,
+          "peak_parent_child_aggregate_rss_gib": 6.6341552734375,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 3720.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "68099f90884d51b58297ab59c13dc557f964dd5a6af6409c0b49679eecec0906",
+          "return_code": 0,
+          "rss_sample_count": 7349,
+          "runtime_seconds": 3710.7218051562086,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "5ae161fa8595742b9c741a38c61bc065c91610232e8d2284f19f97cb191cd7b2",
+          "stage": "candidate",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        },
+        "guide": {
+          "active_residual_process_count": 0,
+          "architecture": "tes",
+          "available_memory_before_gib": 97.30115127563477,
+          "available_memory_sample_count": 795,
+          "declared_artifact_sha256": {
+            "tes_guide.csv.gz": "d38004e6c3607cc2095c93def187de6d5300f5b9d9e97928872aaf6ce176e8e9",
+            "tes_guide.json": "9a1854c3e2863481c7294127cc6ef6e0dd95a121a125169358798ca40543eee4"
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "62248777495e470a26addb8bc7753962477ae21dc8f37dd18df325d6ea8862d8",
+          "minimum_available_memory_gib": 94.51502990722656,
+          "peak_child_process_tree_rss_gib": 2.8036537170410156,
+          "peak_parent_child_aggregate_rss_gib": 2.8290023803710938,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_limit_gib": 45.0,
+            "hard_wall_seconds": 1020.0,
+            "heartbeat_interval_seconds": 5.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_limit_gib": 35.0
+          },
+          "result_sha256": "9a1854c3e2863481c7294127cc6ef6e0dd95a121a125169358798ca40543eee4",
+          "return_code": 0,
+          "rss_sample_count": 795,
+          "runtime_seconds": 401.16588731482625,
+          "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+          "solver_log_sha256": "24ccfa27676c1c2c7a56d280cf81c911ba1bbbdb6959a939f781c4632947d4bb",
+          "stage": "guide",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        }
+      },
+      "status": "no_candidate_incumbent",
+      "technical_ranking_permitted": false
+    }
+  },
+  "architecture_order": [
+    "bess",
+    "tes",
+    "hybrid"
+  ],
+  "artifact_sha256": {
+    "bess_candidate.json": "fac6f30f98b8fa2095262b649b9f45ac388fbd83e5b894f028b7c6c1c5ee573e",
+    "bess_candidate.log": "82ab73b4d78e132d8ad3aa312c68a4079a0010d8afd2f89f3747fa02c35bdb04",
+    "bess_candidate_execution.json": "7ac0f36495dc7002dc158aba41e9f97ebcb3f09cdd20d99c127d39ad73e63853",
+    "bess_candidate_heartbeat.jsonl": "4e112a2989d45b03b0e7ac5c1334a99988b6dcd37b497f2c77308f1deda058d8",
+    "bess_d41_fallback_seed.csv.gz": "061cce6ec845e77d38f1d0bb44e32cb65641185673b14144f788725e6aa03eed",
+    "bess_guide.csv.gz": "b69f4035deb5aa5f83a504e1e40347a23fa352b4104087bc017da6940c828b1f",
+    "bess_guide.json": "ec76c9b9aada251807552b921463cd8149407d61dd548d31e35bde579657d20d",
+    "bess_guide.log": "17b40dc731e6043b1548204b6875853bed5f753ac4f194000238b9bd5ba7e4fc",
+    "bess_guide_execution.json": "430028b24a1182a2eb24b4183c4b0ea4427ef5f0a0aea0b32d300520e4dc3d4e",
+    "bess_guide_heartbeat.jsonl": "4010da2b7d847995286e00cf848eaba2f6164873068cefeb283e137dedbc0e5b",
+    "bess_manifest.json": "ae6cd14d7a63b3e47253994ac64487ffacd5fa7b7609bed807539995ce96e540",
+    "hybrid_candidate.json": "6598c8cbdad037f3bb3c022841b44b3a3918326185387448eb98db3ab87fa26a",
+    "hybrid_candidate.log": "2866ec0951c57127a319bee41917def6afa47735c62b9c6ead7b1457357c69d5",
+    "hybrid_candidate_execution.json": "7fb719aa048d1d0a409512e8b9410e52929e9192cd55d241fe89c8d666f93372",
+    "hybrid_candidate_heartbeat.jsonl": "901a73312e8fc379592a1b716bfdd0eec087b2bec59f0b0eec4ac3d3bb5355e4",
+    "hybrid_guide.csv.gz": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+    "hybrid_guide.json": "b049841f53c282e19de5d2248d3d0429820b2271fdcf9ce80cf60d7f063b4777",
+    "hybrid_guide.log": "434501a50d18da3391ebc1732957fa80767406d0f98cd542b9d2b52d7cb55376",
+    "hybrid_guide_execution.json": "de607baf31dd2da4fb8f5e1d6a5a7aa9a7b859b712edba15ffbd5091b44fe73e",
+    "hybrid_guide_heartbeat.jsonl": "92475b19be552779706802de053284d0fee751bc502a0544e75ca38ac0b4878e",
+    "hybrid_manifest.json": "725728310040a48544f6b5a6fa68614692879fb537e93ba02e9a393e842ef057",
+    "tes_candidate.json": "68099f90884d51b58297ab59c13dc557f964dd5a6af6409c0b49679eecec0906",
+    "tes_candidate.log": "5ae161fa8595742b9c741a38c61bc065c91610232e8d2284f19f97cb191cd7b2",
+    "tes_candidate_execution.json": "3cd6d8ace7daa3abdcabf64c2aa29f7a190ecdbecac5c46e6997f0f5f0ef6119",
+    "tes_candidate_heartbeat.jsonl": "3a29cc5a9186d5bc549791d6952dc78d639ce901defbec37342086d4bef79909",
+    "tes_guide.csv.gz": "d38004e6c3607cc2095c93def187de6d5300f5b9d9e97928872aaf6ce176e8e9",
+    "tes_guide.json": "9a1854c3e2863481c7294127cc6ef6e0dd95a121a125169358798ca40543eee4",
+    "tes_guide.log": "24ccfa27676c1c2c7a56d280cf81c911ba1bbbdb6959a939f781c4632947d4bb",
+    "tes_guide_execution.json": "e8695723c0083d2a89922d5a08a4065d68debe1310b7ebea60251e8d74497bcd",
+    "tes_guide_heartbeat.jsonl": "62248777495e470a26addb8bc7753962477ae21dc8f37dd18df325d6ea8862d8",
+    "tes_manifest.json": "8c66b28993d4e9b34c816f5b78cc6348a649ab97f75cf84af57d4178f7ad9b7a"
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d46_gate_a": {
+    "execution_sha256": "2ca2f3cd22049ad75db51d8f07b4161a9a1414ab0bec01df1d51de31251c84df",
+    "git_commit": "4a18f4232563a187652e6c6d509441834bce1e7a",
+    "manifest_sha256": "098fc8bef7fe160cdad98d5d22675d82dcd9341e03e656792b357e7f29f1d176",
+    "passed": true
+  },
+  "d47_permission": {
+    "d47_execution_status": "hybrid_r0_lower_bound_recovered",
+    "d47_status": "hybrid_r0_lower_bound_recovered",
+    "execution_sha256": "ed978c3607f080456576e35dede75c57e017150514e24160462a62566bf9c330",
+    "manifest_sha256": "8b74c4044854d18d5dffa6c2759bfe747455631e0347293d6a89c16d35276101",
+    "permission": true
+  },
+  "engineering_numerical_feasibility_only": true,
+  "formal_input_sha256": {
+    "d40_gate_a": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_bess_guide": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+    "d41_gate_a": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "formal_project_tac_ready": false,
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d46_monitored_executor.py": "121600f3bb8088802d117c7808b3af1bf65b69e3797bcf0dd7ea7b64e175a0a8",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "rational_exact_feasibility_certificate": false,
+  "resource_contract": {
+    "aggregate_rss_limit_gib": 45.0,
+    "architecture_hard_wall_seconds": 7200.0,
+    "batch_hard_wall_seconds": 21600.0,
+    "host_memory_reserve_gib": 30.0,
+    "process_tree_rss_limit_gib": 35.0,
+    "threads_per_stage": 12
+  },
+  "runtime_seconds": 8820.16162651591,
+  "schema_id": "tes_bess_boundary.e0d46_formal_manifest.v1",
+  "status": "partial_or_no_upper_bound_recovery",
+  "successful_architecture_count": 0,
+  "technical_ranking_permitted": false
+}

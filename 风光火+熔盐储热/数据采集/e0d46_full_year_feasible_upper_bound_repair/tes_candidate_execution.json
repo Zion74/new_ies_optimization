@@ -1,0 +1,37 @@
+{
+  "active_residual_process_count": 0,
+  "architecture": "tes",
+  "available_memory_before_gib": 97.30107879638672,
+  "available_memory_sample_count": 7349,
+  "declared_artifact_sha256": {
+    "tes_candidate.csv.gz": null,
+    "tes_candidate.json": "68099f90884d51b58297ab59c13dc557f964dd5a6af6409c0b49679eecec0906"
+  },
+  "hard_wall_enforced_by_parent": true,
+  "heartbeat_sha256": "3a29cc5a9186d5bc549791d6952dc78d639ce901defbec37342086d4bef79909",
+  "minimum_available_memory_gib": 90.70276260375977,
+  "peak_child_process_tree_rss_gib": 6.608638763427734,
+  "peak_parent_child_aggregate_rss_gib": 6.6341552734375,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "residual_termination_signal": null,
+  "resource_gate_passed": true,
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 45.0,
+    "hard_wall_seconds": 3720.0,
+    "heartbeat_interval_seconds": 5.0,
+    "host_memory_reserve_gib": 30.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_limit_gib": 35.0
+  },
+  "result_sha256": "68099f90884d51b58297ab59c13dc557f964dd5a6af6409c0b49679eecec0906",
+  "return_code": 0,
+  "rss_sample_count": 7349,
+  "runtime_seconds": 3710.7218051562086,
+  "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+  "solver_log_sha256": "5ae161fa8595742b9c741a38c61bc065c91610232e8d2284f19f97cb191cd7b2",
+  "stage": "candidate",
+  "status": "complete",
+  "stop_reason": null,
+  "termination_signal": null
+}

@@ -38,3 +38,8 @@
 **/e0d44_fork_parallel_lagrangian_certificate/*.log -text
 **/e0d44_fork_parallel_lagrangian_certificate/*.ndjson -text
 **/e0d44_fork_parallel_lagrangian_certificate/README.md -text
+
+# Preserve D46 formal evidence exactly as declared by formal_manifest.json.
+**/e0d46_full_year_feasible_upper_bound_repair/*.log -text whitespace=-blank-at-eol
+**/e0d46_full_year_feasible_upper_bound_repair/*.jsonl -text
+**/e0d46_full_year_feasible_upper_bound_repair/*.csv.gz -text

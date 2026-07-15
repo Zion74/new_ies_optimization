@@ -1,0 +1,207 @@
+{
+  "architecture": "hybrid",
+  "build_audit": {
+    "binary_inventory_audit": {
+      "actual": {
+        "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+        "all_binary_variable_count": 96625,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784,
+          "tes.ht_receiving_mode": 8784,
+          "tes.mt_direct_charge_mode": 8784
+        },
+        "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+        "operational_binary_variable_count": 96624,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "expected": {
+        "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+        "all_binary_variable_count": 96625,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784,
+          "tes.ht_receiving_mode": 8784,
+          "tes.mt_direct_charge_mode": 8784
+        },
+        "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+        "operational_binary_variable_count": 96624,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "mismatches": {},
+      "passed": true
+    },
+    "capacity_anchor_audit": {
+      "actual_values": {
+        "bess.charge_power_capacity_mw": 100.0,
+        "bess.discharge_power_capacity_mw": 100.0,
+        "bess.energy_capacity_mwh": 2400.0,
+        "bess.installed": 1.0,
+        "bess.pcs_power_capacity_mw": 100.0,
+        "tes.electric_charge_input_capacity_mw": 300.0,
+        "tes.electric_output_capacity_mw": 300.0,
+        "tes.heat_output_capacity_mw": 300.0,
+        "tes.ht_tank_capacity_t": 55654.86255374656,
+        "tes.lt_tank_capacity_t": 55654.86255374656,
+        "tes.mt_tank_capacity_t": 55654.86255374656,
+        "tes.steam_to_ht_input_capacity_mw": 300.0,
+        "tes.steam_to_mt_input_capacity_mw": 300.0
+      },
+      "anchor_values": {
+        "bess.charge_power_capacity_mw": 100.0,
+        "bess.discharge_power_capacity_mw": 100.0,
+        "bess.energy_capacity_mwh": 2400.0,
+        "bess.installed": 1.0,
+        "bess.pcs_power_capacity_mw": 100.0,
+        "tes.electric_charge_input_capacity_mw": 300.0,
+        "tes.electric_output_capacity_mw": 300.0,
+        "tes.heat_output_capacity_mw": 300.0,
+        "tes.ht_tank_capacity_t": 55654.86255374656,
+        "tes.lt_tank_capacity_t": 55654.86255374656,
+        "tes.mt_tank_capacity_t": 55654.86255374656,
+        "tes.steam_to_ht_input_capacity_mw": 300.0,
+        "tes.steam_to_mt_input_capacity_mw": 300.0
+      },
+      "architecture": "hybrid",
+      "external_design_variable_count": 13,
+      "fixed": {
+        "bess.charge_power_capacity_mw": true,
+        "bess.discharge_power_capacity_mw": true,
+        "bess.energy_capacity_mwh": true,
+        "bess.installed": true,
+        "bess.pcs_power_capacity_mw": true,
+        "tes.electric_charge_input_capacity_mw": true,
+        "tes.electric_output_capacity_mw": true,
+        "tes.heat_output_capacity_mw": true,
+        "tes.ht_tank_capacity_t": true,
+        "tes.lt_tank_capacity_t": true,
+        "tes.mt_tank_capacity_t": true,
+        "tes.steam_to_ht_input_capacity_mw": true,
+        "tes.steam_to_mt_input_capacity_mw": true
+      },
+      "passed": true,
+      "salt_mass_and_service_mass_left_free": true
+    },
+    "model_size": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "post_change_model_size": {
+      "active_binary_variable_count": 0,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "relaxation_audit": {
+      "binary_bounds_preserved": true,
+      "classification_complete": true,
+      "expected_remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "r0_all_continuous",
+      "passed": true,
+      "relaxed_binary_variable_count": 96625,
+      "remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "remaining_binary_variable_count": 0,
+      "variable_count_unchanged": true
+    }
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "formal_project_tac_ready": false,
+  "formal_upper_bound_eligible": false,
+  "independent_feasibility_audit": {
+    "absolute_tolerance": 1e-07,
+    "evaluated_constraint_count": 667662,
+    "evaluated_variable_count": 685194,
+    "max_constraint_violation": 7.8580342233181e-10,
+    "max_variable_bound_violation": 3.0425498333051253e-12,
+    "nonfinite_constraint_count": 0,
+    "nonfinite_variable_count": 0,
+    "passed": true,
+    "worst_constraint": "tes.lt_balance[8032]",
+    "worst_variable": "direct_heat[5277]"
+  },
+  "input_sha256": {
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d46_monitored_executor.py": "121600f3bb8088802d117c7808b3af1bf65b69e3797bcf0dd7ea7b64e175a0a8",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "r0_objective_is_upper_bound": false,
+  "representative_period_input_used": false,
+  "runtime_seconds": 325.130891693756,
+  "schema_id": "tes_bess_boundary.e0d46_feasible_upper_bound.v1",
+  "seed_artifact": {
+    "all_values_finite": true,
+    "binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+    "binary_variable_count": 96625,
+    "candidate_only": true,
+    "file_name": "hybrid_guide.csv.gz",
+    "file_sha256": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+    "formal_upper_bound_eligible": false,
+    "schema_id": "tes_bess_boundary.e0d46_deterministic_seed.v1",
+    "variable_names_sha256": "e91d73cc0b8ad6e5859de265b7cd39fd56030f6c1ecb72c992c7ac31e65c9627",
+    "variable_row_count": 685194
+  },
+  "service_audit": {
+    "annual_curtailment_mwh": 35032.16304463917,
+    "annual_pcc_export_mwh": 4035354.7385541024,
+    "curtailment_ceiling_mwh": 339569.90645758656,
+    "curtailment_ceiling_violation_mwh": 0.0,
+    "curtailment_tolerance_mwh": 1e-06,
+    "passed": true,
+    "pcc_export_average_power_residual_mw": -1.044345100177876e-11,
+    "pcc_export_residual_mwh": -9.173527359962463e-08,
+    "pcc_export_target_mwh": 4035354.738554194,
+    "pcc_export_tolerance_mw": 1e-08
+  },
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solution_loaded": true,
+  "solver_invoked": true,
+  "solver_primal_audit": {
+    "highs_objective_value_cny": 1186678269.235802,
+    "max_primal_infeasibility": 7.8580342233181e-10,
+    "num_primal_infeasibilities": 0,
+    "passed": true,
+    "tolerance": 1e-08
+  },
+  "stage": "guide",
+  "status": "continuous_guide_recovered",
+  "technical_ranking_permitted": false,
+  "termination_condition": "optimal"
+}
