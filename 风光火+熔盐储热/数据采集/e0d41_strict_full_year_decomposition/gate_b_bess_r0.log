@@ -1,0 +1,63 @@
+Running HiGHS 1.15.1 (git hash: 04024d7): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+LP has 527053 rows; 597318 cols; 2187237 nonzeros
+Coefficient ranges:
+  Matrix  [1e-04, 2e+03]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+483132 rows, 548857 cols, 1826795 nonzeros 1s
+390254 rows, 455823 cols, 1601416 nonzeros 2s
+Dependent equations search running on 91587 equations with time limit of 6.00s
+Dependent equations search removed 0 rows and 0 nonzeros in 0.01s (limit = 6.00s)
+390252 rows, 451527 cols, 1592820 nonzeros 4s
+Presolve reductions: rows 390252(-136801); columns 451527(-145791); nonzeros 1592820(-594417) 
+Solving the presolved LP
+Using dual simplex solver
+  Iteration        Objective     Infeasibilities num(sum)
+          0     0.0000000000e+00 Ph1: 0(0) 4.7s
+       8732    -2.1011560202e+08 Pr: 65604(1.40118e+06); Du: 0(1.07755e-06) 9.8s
+      11115    -2.1011560181e+08 Pr: 68319(1.53849e+06); Du: 0(2.90291e-06) 15.3s
+      13172    -2.1011560147e+08 Pr: 70646(1.66227e+06); Du: 0(4.51611e-07) 21.0s
+      15338    -1.2474437271e+08 Pr: 62727(1.30783e+06); Du: 0(2.78033e-07) 26.8s
+      51011     1.7320177363e+08 Pr: 58971(657043); Du: 0(1.72118e-06) 32.9s
+      54860     2.0091946685e+08 Pr: 54048(629268); Du: 0(1.72118e-06) 38.7s
+      58943     2.7193501604e+08 Pr: 55467(1.37575e+06); Du: 0(1.62022e-06) 44.6s
+      68527     4.0339098959e+08 Pr: 50441(794524); Du: 0(1.95057e-06) 49.7s
+      79261     4.1675889550e+08 Pr: 45538(755064); Du: 0(2.2325e-06) 55.0s
+      85834     5.3521899968e+08 Pr: 46920(614815); Du: 0(2.24015e-06) 60.4s
+      98498     5.9046666792e+08 Pr: 52264(760904); Du: 0(3.72204e-06) 65.4s
+     102668     5.9498590477e+08 Pr: 53467(806927); Du: 0(3.38249e-06) 71.2s
+     109545     6.1303705840e+08 Pr: 54086(817066); Du: 0(3.2544e-06) 76.5s
+     114024     6.1437276149e+08 Pr: 52597(890545); Du: 0(2.92349e-06) 82.2s
+     120736     6.1639986551e+08 Pr: 53329(836895); Du: 0(2.93493e-06) 87.8s
+     138279     6.5526497391e+08 Pr: 52846(659663); Du: 0(3.38512e-06) 92.9s
+     154306     6.5820152961e+08 Pr: 53776(674425); Du: 0(3.19521e-06) 98.2s
+     165852     6.6289182553e+08 Pr: 47923(628759); Du: 0(3.16071e-06) 103.3s
+     181516     6.9390220038e+08 Pr: 37709(658001); Du: 0(2.85611e-06) 108.5s
+     192946     7.8185423368e+08 Pr: 33273(377295); Du: 0(2.16224e-06) 114.3s
+     203934     1.0138822919e+09 Pr: 30127(432152); Du: 0(1.7314e-06) 120.1s
+     217071     1.1109189181e+09 Pr: 26247(227444); Du: 0(1.12528e-06) 125.2s
+     219650     1.1153523676e+09 Pr: 25915(263223); Du: 0(1.12528e-06) 131.7s
+     227425     1.1208761097e+09 Pr: 24579(252214); Du: 0(1.12528e-06) 136.8s
+     232360     1.1247832503e+09 Pr: 25288(527919); Du: 0(1.12528e-06) 142.3s
+     239005     1.1248815695e+09 Pr: 26534(748212); Du: 0(1.12528e-06) 148.2s
+     241216     1.1249912400e+09 Pr: 27914(600538); Du: 0(1.12528e-06) 153.5s
+     242687     1.1251300187e+09 Pr: 28325(568523); Du: 0(1.12528e-06) 159.1s
+     250046     1.1357416280e+09 Pr: 26296(347093); Du: 0(9.62188e-07) 164.4s
+     265882     1.1420628510e+09 Pr: 17989(67804.9); Du: 0(2.70228e-08) 169.7s
+     274665     1.1437821404e+09 Pr: 11191(17883.3) 175.2s
+     280164     1.1446097232e+09 Pr: 9219(10026.3) 181.0s
+     287287     1.1449554347e+09 Pr: 4943(1541.06) 186.1s
+     293772     1.1449506048e+09 Pr: 0(0); Du: 0(1.79843e-08) 189.0s
+
+Performed postsolve
+Solving the original LP from the solution after postsolve
+
+Model status        : Optimal
+Simplex   iterations: 293772
+Objective value     :  1.1449506048e+09
+P-D objective error :  4.1855198099e-13
+HiGHS run time      :        189.54
+{"architecture": "bess", "binary_inventory_audit": {"actual": {"all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92", "all_binary_variable_count": 79057, "classification_complete": true, "component_counts": {"bess.charge_mode": 8784, "bess.installed": 1, "chp[0].fuel_code_bit": 26352, "chp[0].online": 8784, "chp[1].fuel_code_bit": 26352, "chp[1].online": 8784}, "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21", "operational_binary_variable_count": 79056, "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e", "topology_binary_variable_count": 1, "topology_component_allowlist": ["bess.installed", "tes.installed", "tes.port_installed"]}, "expected": {"all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92", "all_binary_variable_count": 79057, "classification_complete": true, "component_counts": {"bess.charge_mode": 8784, "bess.installed": 1, "chp[0].fuel_code_bit": 26352, "chp[0].online": 8784, "chp[1].fuel_code_bit": 26352, "chp[1].online": 8784}, "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21", "operational_binary_variable_count": 79056, "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e", "topology_binary_variable_count": 1, "topology_component_allowlist": ["bess.installed", "tes.installed", "tes.port_installed"]}, "mismatches": {}, "passed": true}, "build_runtime_seconds": 30.25432508159429, "candidate_guide": null, "candidate_only": false, "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac", "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577", "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937", "dual_bound_audit": {"finite_lower_bound": true, "finite_upper_bound": true, "loaded_objective_matches_upper_bound": true, "minimization_bound_direction_correct": true, "objective_scale_consistent": true, "passed": true}, "formal_lower_bound_eligible": true, "formal_project_tac_ready": false, "global_original_milp_infeasibility_proven": false, "linearity_audit_passed": true, "loaded_objective_value_cny": 1144950604.8368773, "objective_audit": {"active_objective_count": 1, "expected_objective_name": "planning_cost", "expected_objective_sense": "minimize", "objective_name": "planning_cost", "objective_sense": "minimize", "passed": true}, "objective_lower_bound_cny": 1144950604.8368804, "objective_upper_bound_cny": 1144950604.8368804, "original_model_size": {"active_binary_variable_count": 79057, "active_constraint_count": 527053, "active_variable_count": 597318, "nonlinear_component_count": 0, "nonlinear_components": []}, "provenance": {"code_sha256": {"e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877", "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca", "e0d41_gate_b_lower_bound.py": "2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217", "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e", "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"}, "heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e", "price_basis_tree_sha256": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3", "vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"}, "relaxation_domain_audit": {"binary_bounds_preserved": true, "classification_complete": true, "expected_remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "mode": "r0_all_continuous", "passed": true, "relaxed_binary_variable_count": 79057, "remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "remaining_binary_variable_count": 0, "variable_count_unchanged": true}, "relaxation_mode": "r0_all_continuous", "relaxed_model_size": {"active_binary_variable_count": 0, "active_constraint_count": 527053, "active_variable_count": 597318, "nonlinear_component_count": 0, "nonlinear_components": []}, "representative_period_input_used": false, "schema_id": "tes_bess_boundary.e0d41_gate_b_lower_bound.v1", "service_audit": {"curtailment_constraint_active": true, "passed": true, "pcc_export_constraint_active": true, "period_count": 8784, "representative_period_input_used": false, "single_full_year_dispatch_block": true, "weighted_annual_hours": 8784.0}, "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95", "solution_loaded": true, "solver": {"dual_feasibility_tolerance": 1e-07, "mip_feasibility_tolerance": 1e-07, "name": "appsi_highs", "parent_hard_wall_seconds": 720.0, "primal_feasibility_tolerance": 1e-07, "random_seed": 0, "soft_time_limit_seconds": 600.0, "threads": 12, "warm_start_used": false}, "solver_invoked": true, "solver_runtime_seconds": 278.9655342530459, "status": "finite_strict_lower_bound", "termination_condition": "optimal"}

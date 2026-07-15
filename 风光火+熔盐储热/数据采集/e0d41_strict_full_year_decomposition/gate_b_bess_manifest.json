@@ -1,0 +1,31 @@
+{
+  "architecture": "bess",
+  "candidate_only": false,
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "gate_b_passed": true,
+  "global_original_milp_infeasibility_proven": false,
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_b_architecture.v1",
+  "selected_relaxation": "r0",
+  "stages": {
+    "r0": {
+      "candidate_guide_sha256": null,
+      "eligible": true,
+      "execution_sha256": "6fc78d344bb29ca0f9f83613509a0b70fed4fb74bac8458862aaba9483549346",
+      "lower_bound_cny": 1144950604.8368804,
+      "result_sha256": "8fd175ad47881d7abf4f5184150b86100e7350541924bef4e3a8096b7545ca01",
+      "status": "audited"
+    },
+    "r1": {
+      "candidate_guide_sha256": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+      "eligible": true,
+      "execution_sha256": "94910a357c58b763e98f26b600f63001c709591cdfc87207225d00338768ae6e",
+      "lower_bound_cny": 1144950604.8368769,
+      "result_sha256": "f0946af75264191c29024e93633dac15e1bc2cb7b0fbbcf212a7023a195f41bd",
+      "status": "audited"
+    }
+  },
+  "status": "gate_b_passed",
+  "strict_lower_bound_cny": 1144950604.8368804,
+  "technical_ranking_permitted": false
+}

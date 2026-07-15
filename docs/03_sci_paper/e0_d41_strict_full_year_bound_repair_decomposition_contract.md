@@ -1,6 +1,6 @@
 # E0-D-41 严格全年界—修复分解合同
 
-状态：**第 1–10 节结果前合同已冻结；Gate A 已通过；Gate B–D 尚未执行**
+状态：**第 1–10 节结果前合同已冻结；Gate A 已通过；Gate B 总判定为 `no_strict_certificate`；Gate C/D 已禁止且未执行**
 
 适用范围：D40 真实全年单体 MILP 路线失败后的严格证书路线
 
@@ -186,10 +186,30 @@ Gate A 因此登记为 `gate_a_passed`。该结果只关闭包含关系、二元
 
 失败产物永久隔离到 `pre_adapter_rejection_period_count/`。R0/R1/汇总 manifest/execution SHA-256 分别为 `993a4b8eb0dcb05c09e7bd83117012ae5599f1eaec0814106368817da683533f`、`fe58f26fe44a1fd6b672673afdca3d1568910b9de4153d1528977f169f1b4893`、`cad5e0e09709f5c06ba1a3168d10d6f714baf5f2e8454540d1463ed750340e2b` 与 `3e0c346d20f46c5834eefa097ccb9ba8dee282374ac47600d4fca15db361d460`。
 
-修复仅把服务小时数读取改为 `case.timeseries.period_count`，并在任一阶段没有 `formal_lower_bound_eligible=true` 时停止后续松弛；没有改动第 1–10 节科学输入、服务、模型、软/硬时限、资源门或判定阈值。修复后源码/测试 SHA-256 为 `2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217` 与 `053b490b4267d676acef50b1168b4d474ea23ac1513cdb357bfb37a55bf5f28a`；新增测试 `10 passed`、D40/D41 定向回归 `26 passed in 3.61s`、Windows 完整回归 `488 passed in 48.92s`，Ruff 通过。修复代码尚待服务器同哈希回归后才能重新启动 BESS。
+修复仅把服务小时数读取改为 `case.timeseries.period_count`，并在任一阶段没有 `formal_lower_bound_eligible=true` 时停止后续松弛；没有改动第 1–10 节科学输入、服务、模型、软/硬时限、资源门或判定阈值。修复后源码/测试 SHA-256 为 `2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217` 与 `053b490b4267d676acef50b1168b4d474ea23ac1513cdb357bfb37a55bf5f28a`；新增测试 `10 passed`、D40/D41 定向回归 `26 passed in 3.61s`、Windows 完整回归 `488 passed in 48.92s`，Ruff 通过。登记本节时修复代码尚待服务器同哈希回归；后续正式结果见第 17 节。
 
 ## 16. Gate B 总证据汇编器登记
 
 正式 Gate B 总判定继续逐字执行第 6、10 和 12 节已经冻结的规则：架构顺序固定为 BESS → TES → Hybrid；首个未通过架构之后不得再启动后续架构；只有三架构全部具有合法有限下界时才允许进入 Gate C。为避免人工摘录改变这些规则，新增只读后处理模块 `e0d41_gate_b_bundle.py`。该模块只读取 Gate A manifest 与逐架构 Gate B manifest，复核 schema、架构身份、Gate A 哈希、代表期禁用标志、技术排序禁用标志、下界数值资格和串行停止规则，并确定性写出 `gate_b_manifest.json` 与 `gate_b_execution.json`。
 
 汇编器不构造模型、不调用求解器、不修改任何已有架构产物，也不生成容量、上界、gap 或技术赢家。源码与测试 SHA-256 分别为 `77084f736eaceb1220198ed1f2043b24ba0be6604352ee383f6e8229f76c29c3` 与 `6bdae782a194d1f4fdefd5dc40121871cab59070bd2cd911d29d85282f9ff867`；新增 3 项测试覆盖“BESS 通过/TES 失败/Hybrid 停止”、失败后仍启动后续架构时拒绝，以及三架构全通过前不得开放 Gate C。D40/D41 合并定向回归为 `29 passed in 4.67s`，Windows 完整回归为 `491 passed in 87.37s`，Ruff 通过。截至本登记，汇编器尚未对正式 Gate B 证据运行；其正式输出只能在本登记形成独立提交后生成并追加记录。
+
+## 17. Gate B 正式结果与停止决定
+
+汇编器登记提交 `0fb9346` 形成后，同哈希源码/测试才同步到 OpenBayes。服务器 D40/D41 定向回归为 `37 passed in 0.58s`，完整回归为 `491 passed in 33.89s`。随后按 BESS → TES → Hybrid 串行执行第 6 节；没有修改服务、模型、时限、线程、容差或判定门。
+
+| 架构/阶段 | 求解状态 | 合法下界 / CNY | 父进程运行时间 / s | 峰值子进程树 RSS / GiB | 证据判定 |
+|---|---|---:|---:|---:|---|
+| BESS R0 | `optimal` | `1,144,950,604.8368804` | `312.283` | `2.489` | 全部服务、域、线性、目标、dual 方向和资源审计通过 |
+| BESS R1 | `optimal`，1 个拓扑二元 | `1,144,950,604.8368769` | `242.458` | `2.751` | 审计通过；597,318 行全变量轨迹仅为 `candidate_only` 引导 |
+| TES R0 | `hard_wall_clock_reached` | — | `720.462` | `2.389` | 无结果 JSON、无返回的有限 dual、无不可行证明，Gate B 失败 |
+| TES R1 | 未启动 | — | — | — | R0 无合法下界，按合同停止 |
+| Hybrid | 未启动 | — | — | — | TES 为首个未通过架构，按串行停止规则停止 |
+
+BESS 选择数值略高的 R0 作为严格下界，架构 manifest/execution SHA-256 分别为 `ed4fcf7d08ab236b678f787c777903d7905197b1262d820371c93f9aef76cfc7` 与 `b743baa1d87ce54fd5d110b844cb8f9933941ac091f10ad161c2217357aa456f`。R0/R1 result SHA-256 分别为 `8fd175ad47881d7abf4f5184150b86100e7350541924bef4e3a8096b7545ca01` 与 `f0946af75264191c29024e93633dac15e1bc2cb7b0fbbcf212a7023a195f41bd`；R1 引导文件 SHA-256 为 `2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614`。该数值只是冻结公开成本敏感性口径下原 BESS MILP 的合法下界，不是原 MILP 的可行上界、最优解、容量方案或正式项目 TAC。
+
+TES R0 已把 `606,163` 行、`650,052` 列、`2,521,170` 个非零元预求解为 `439,018` 行、`509,289` 列、`1,806,011` 个非零元并进入 dual simplex；日志在约 `580 s` 时仍显示原始不可行量未清除。父进程在 `720.462 s` 硬墙钟发送 `SIGTERM`，返回码 `-15`。最低可用内存仍有 `94.939 GiB`，父子合计峰值仅 `2.412 GiB`，所以失败不是内存耗尽；但中间 simplex 迭代值没有通过求解完成、finite bound 和方向审计，不能升级为下界。TES manifest/execution SHA-256 分别为 `c69bc1d46de78f3734441bea70302e9e823f5132db7570fb5e91b6d2ee4cba43` 与 `338fd155914ca85c92b834f32e9436fb2c14b6bc9e4def986151a033b1e34f02`，R0 execution/solver log/parent log SHA-256 分别为 `19081abf7dd1bd529b4ca0fe948b41fef096e7ee2a3429c87d85a0ad5f4f42ba`、`32a8c451f4ffd5033c69afd73a710bbb18c52b88da23963530549c491591fd60` 与 `43539f049c8b5ea303ea4fafd28ab793d6bfda5e42cf41c18470262859a01f8a`。
+
+只读总汇编器确认 `serial_stop_rule_followed=true`、`weakest_or_first_nonpass_architecture=tes`、`gate_c_permitted=false`、`gate_d_permitted=false`、`technical_ranking_permitted=false`，总状态为 `no_strict_certificate`。总 manifest/execution SHA-256 分别为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef` 与 `0b71fc77d7aa4faaad3b84f294faddd035dc8ea66df744df1ba27164c247af19`，且汇编阶段 `solver_invoked=false`。
+
+D41 因最弱案例失败而停止。该结果证明 BESS 全年松弛在冻结资源门内可形成严格下界，也定位了 TES 全年 LP 的收敛/终止及合法 dual 提取瓶颈；它不证明 TES 原问题不可行，不证明 BESS 优于 TES，也不允许报告三架构容量、成本 gap 或赢家。后续必须另立 D42 结果前合同，针对可中断的原生 HiGHS 矩阵/基解接口、数值缩放或具有严格主问题下界的分解方法；不得在 D41 名下延长墙钟、恢复代表期正式证据或启动 Gate C/D。

@@ -6,12 +6,12 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24/D25 仍为 `0/16` 与 `0/4`。D33–D37 已完成公开成本、完整容量、材料性、代表周和分块边界。D38 原高热状态物理失败；R1 baseline 发生代表期可行、真实 8784 h 不可行的反转。D39 Gate B 分类一致但弃电率误差 `5.1762` 个百分点，D39 已失败并终止 Gate C/D。D40 全年单体路线失败。D41 严格界—修复合同已结果前冻结，Gate A 三架构二元覆盖、R0/R1 域变换与完整固定审计已通过，服务器完整回归为 `478 passed`；Gate B–D 未执行。真实项目账户、严格全年分解证据、正式 TAC 和 336 h 外界闭合仍未完成 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D30 保留 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查；D24/D25 仍为 `0/16` 与 `0/4`。D38/R1/D39 和 D40 路线失败均已登记。D41 Gate A 通过；Gate B 的 BESS 下界为 `1,144,950,604.8368804 CNY`，TES R0 硬墙钟失败且无合法下界，Hybrid/Gate C/D 未启动，总状态 `no_strict_certificate`。该数值不是原 MILP 上界或项目 TAC，不能技术排序；真实项目账户、D42 三架构严格证书和正式 TAC 仍未完成 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36/D37 已冻结；D38/R1/D39 三次失败均已登记。D41 三架构严格证书通过前不能继续机制扫描；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照或候选生成 | 全年可计算性、严格 gap、分解证书、代表期误差 | 原 D38 高热失败且非漏周；R1 baseline 发生时间聚合反转；D39 八周修复分类但弃电率误差为 `5.1762` 个百分点，Gate B 失败。D40 Gate A 通过但正式 BESS 单体求解为 `monolithic_not_viable`。D41 Gate A 已证明 `R0/R1` 与完整固定接口在三个 8784 h 模型上无二元遗漏，下一步求严格下界；不得恢复代表期主证据或批量扫描；`_ch4_p3_typdays.py` 仅作旧原型 |
+| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照或候选生成 | 全年可计算性、严格 gap、分解证书、代表期误差 | D38/R1/D39 证明代表期主证据不合格，D40 单体路线失败。D41 BESS 全年松弛下界通过，但 TES R0 在 720 s 内无合法 dual，最弱案例失败；Gate C/D 禁止。下一步 D42 针对可中断终止、数值缩放/基解和严格分解下界；不得恢复代表期主证据或批量扫描；`_ch4_p3_typdays.py` 仅作旧原型 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -137,7 +137,7 @@
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | E0-D-18 新增精确对数段编码与可选连续启停包络；默认旧 formulation 保持兼容，二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | E0-D-18 新增路径特定流量上界、紧 Big-M 与零容量模式固定；正式成本和现场数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D41 Gate B 执行器回归 | E0 | OpenBayes 修复前完整回归 `486 passed in 34.12s`；Windows 修复后完整回归 `488 passed in 48.92s`，D40/D41 定向回归 `26 passed in 3.61s`；关闭 pytest cache；求解器仅 HiGHS |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D41 Gate B 执行与汇编回归 | E0 | Windows 完整回归 `491 passed in 87.37s`；OpenBayes 完整回归 `491 passed in 33.89s`、D40/D41 定向 `37 passed in 0.58s`；关闭 pytest cache；求解器仅 HiGHS |
 | `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计、逐时 PCC 只读轨迹与 TES 五路径运行审计 | E0-E6 | fixed-capacity 权威基座；D34 由 `planning_model.py` 复用其双机 CHP/PCC/年度服务并替换储能块。完整 TAC 与 336 h 数值闭合仍待补 |
 | `src/tes_bess_boundary/e0d36_representative_weeks.py` | 4 个 PAM medoid + 2 个强制极端周及年尾段 | E0/E3-E5 | D36 数据构造已实现；由 D37 适配器严格读取，不再直接进入旧单循环模型 |
 | `src/tes_bess_boundary/e0d37_block_horizon.py` | 默认 D36 哈希/结构校验，并接收调用方显式提供的完整替代块合同 | E0/E5 | D36 默认锁不变；D39 仅通过八周文件名、SHA、块顺序、权重和 1416 时段合同接入 |
@@ -153,10 +153,10 @@
 | `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`、`e0_d38r1_baseline_temporal_aggregation_failure.md` | 一次性 `H*=G*=0.70` 修订、文件隔离、执行后 baseline 失败 | E0/E5 | R1 静态检查通过但 baseline 时间聚合门失败；新修订必须另立结果前合同 |
 | `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md`、`e0_d39_gate_b_quantitative_fidelity_failure.md` | 原六周 + 第 49/16 周、D36 距离重分配、gate-first 验收及失败解释 | E0/E5 | Gate A 通过、Gate B 失败；Gate C/D 禁止启动 |
 | `docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md` | 真实 8784 h 全年优先的构造、资源、精度和停止合同 | E0/E5 | 结果前第 1–9 节已冻结；Gate A 已通过，正式 BESS 为 `monolithic_not_viable`，D40 单体路线失败且不生成技术赢家 |
-| `src/tes_bess_boundary/e0d41_strict_full_year_decomposition.py`、`tests/test_e0d41_strict_full_year_decomposition.py`、`数据采集/e0d41_strict_full_year_decomposition/` | 二元变量全覆盖分类、R0/R1 域变换、完整轨迹固定、三架构全年 Gate A 汇总 | E0/E5 | 9 项新增测试与 OpenBayes `478 passed`；三架构 Gate A 均通过，汇总 manifest SHA-256 `50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937`；未调用求解器 |
-| `src/tes_bess_boundary/e0d41_gate_b_lower_bound.py`、`tests/test_e0d41_gate_b_lower_bound.py` | R0/R1 全年 HiGHS dual、独立硬墙钟、5 s 心跳、进程树资源门、目标/方向审计、R1 候选轨迹与架构汇总 | E0/E5 | 首次接入因 `.periods` 接口错误在求解器前拒绝并隔离；修复后 10 项新增测试、Windows 全包 `488 passed`、Ruff 通过，待服务器复核后重启 BESS |
-| `src/tes_bess_boundary/e0d41_gate_b_bundle.py`、`tests/test_e0d41_gate_b_bundle.py` | 只读核验逐架构 manifest，执行 BESS→TES→Hybrid 串行停止与最弱案例规则，确定性生成总 manifest/execution | E0/E5 | 源码/测试哈希已登记；3 项新增测试、D40/D41 定向 `29 passed`、Windows 全包 `491 passed`；不调用求解器，尚未对正式证据运行 |
-| `docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md` | 全年合法松弛下界、候选离散轨迹、原始全年可行修复上界、父进程硬墙钟与 gap 分类 | E0/E5 | 第 1–10 节已结果前冻结；Gate A 已通过，Gate B 执行器已结果前登记，下一步服务器回归和正式串行执行 |
+| `src/tes_bess_boundary/e0d41_strict_full_year_decomposition.py`、`tests/test_e0d41_strict_full_year_decomposition.py`、`数据采集/e0d41_strict_full_year_decomposition/` | 二元变量全覆盖分类、R0/R1 域变换、完整轨迹固定、三架构全年 Gate A/B 证据 | E0/E5 | Gate A 三架构通过；Gate B BESS 下界通过、TES R0 硬墙钟失败、Hybrid 未启动；总 manifest SHA-256 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef` |
+| `src/tes_bess_boundary/e0d41_gate_b_lower_bound.py`、`tests/test_e0d41_gate_b_lower_bound.py` | R0/R1 全年 HiGHS dual、独立硬墙钟、5 s 心跳、进程树资源门、目标/方向审计、R1 候选轨迹与架构汇总 | E0/E5 | BESS R0/R1 均通过，严格下界 `1,144,950,604.8368804 CNY`；TES R0 在 `720.462 s` 无返回合法 dual，TES R1/Hybrid 停止；不能技术排序 |
+| `src/tes_bess_boundary/e0d41_gate_b_bundle.py`、`tests/test_e0d41_gate_b_bundle.py` | 只读核验逐架构 manifest，执行 BESS→TES→Hybrid 串行停止与最弱案例规则，确定性生成总 manifest/execution | E0/E5 | 提交 `0fb9346` 后正式汇编；总状态 `no_strict_certificate`，Gate C/D 权限为 false，execution SHA-256 `0b71fc77d7aa4faaad3b84f294faddd035dc8ea66df744df1ba27164c247af19` |
+| `docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md` | 全年合法松弛下界、候选离散轨迹、原始全年可行修复上界、父进程硬墙钟与 gap 分类 | E0/E5 | 第 1–10 节结果前冻结；第 17 节登记 Gate B 最弱案例失败。D41 已停止，下一步另立 D42，不在 D41 名下延时或启动 Gate C/D |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

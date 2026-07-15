@@ -1,0 +1,155 @@
+{
+  "architecture": "bess",
+  "binary_inventory_audit": {
+    "actual": {
+      "all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+      "all_binary_variable_count": 79057,
+      "classification_complete": true,
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784
+      },
+      "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21",
+      "operational_binary_variable_count": 79056,
+      "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "topology_binary_variable_count": 1,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    },
+    "expected": {
+      "all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+      "all_binary_variable_count": 79057,
+      "classification_complete": true,
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784
+      },
+      "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21",
+      "operational_binary_variable_count": 79056,
+      "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "topology_binary_variable_count": 1,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    },
+    "mismatches": {},
+    "passed": true
+  },
+  "build_runtime_seconds": 29.152812072075903,
+  "candidate_guide": {
+    "all_original_binary_values_included": true,
+    "all_values_finite": true,
+    "candidate_only": true,
+    "file_name": "gate_b_bess_r1_guide.csv.gz",
+    "file_sha256": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+    "formal_bound_eligible": false,
+    "schema_id": "tes_bess_boundary.e0d41_r1_candidate_guide.v1",
+    "variable_row_count": 597318
+  },
+  "candidate_only": false,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "dual_bound_audit": {
+    "finite_lower_bound": true,
+    "finite_upper_bound": true,
+    "loaded_objective_matches_upper_bound": true,
+    "minimization_bound_direction_correct": true,
+    "objective_scale_consistent": true,
+    "passed": true
+  },
+  "formal_lower_bound_eligible": true,
+  "formal_project_tac_ready": false,
+  "global_original_milp_infeasibility_proven": false,
+  "linearity_audit_passed": true,
+  "loaded_objective_value_cny": 1144950604.8368769,
+  "objective_audit": {
+    "active_objective_count": 1,
+    "expected_objective_name": "planning_cost",
+    "expected_objective_sense": "minimize",
+    "objective_name": "planning_cost",
+    "objective_sense": "minimize",
+    "passed": true
+  },
+  "objective_lower_bound_cny": 1144950604.8368769,
+  "objective_upper_bound_cny": 1144950604.8368769,
+  "original_model_size": {
+    "active_binary_variable_count": 79057,
+    "active_constraint_count": 527053,
+    "active_variable_count": 597318,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_gate_b_lower_bound.py": "2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    },
+    "heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree_sha256": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "relaxation_domain_audit": {
+    "binary_bounds_preserved": true,
+    "classification_complete": true,
+    "expected_remaining_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+    "mode": "r1_topology_integer",
+    "passed": true,
+    "relaxed_binary_variable_count": 79056,
+    "remaining_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+    "remaining_binary_variable_count": 1,
+    "variable_count_unchanged": true
+  },
+  "relaxation_mode": "r1_topology_integer",
+  "relaxed_model_size": {
+    "active_binary_variable_count": 1,
+    "active_constraint_count": 527053,
+    "active_variable_count": 597318,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_b_lower_bound.v1",
+  "service_audit": {
+    "curtailment_constraint_active": true,
+    "passed": true,
+    "pcc_export_constraint_active": true,
+    "period_count": 8784,
+    "representative_period_input_used": false,
+    "single_full_year_dispatch_block": true,
+    "weighted_annual_hours": 8784.0
+  },
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solution_loaded": true,
+  "solver": {
+    "dual_feasibility_tolerance": 1e-07,
+    "mip_feasibility_tolerance": 1e-07,
+    "name": "appsi_highs",
+    "parent_hard_wall_seconds": 1320.0,
+    "primal_feasibility_tolerance": 1e-07,
+    "random_seed": 0,
+    "soft_time_limit_seconds": 1200.0,
+    "threads": 12,
+    "warm_start_used": false
+  },
+  "solver_invoked": true,
+  "solver_runtime_seconds": 210.34535708930343,
+  "status": "finite_strict_lower_bound",
+  "termination_condition": "optimal"
+}
