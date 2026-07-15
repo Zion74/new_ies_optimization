@@ -17,10 +17,16 @@ def test_load_locked_structure_case_uses_downloaded_gate_a_hash_chain() -> None:
     from tes_bess_boundary.e0d42_gate_b_formal import load_locked_structure_case
 
     project_dir = Path(__file__).resolve().parents[1]
-    structure_dir = (
+    candidates = (
         project_dir.parent
         / "数据采集"
-        / "e0d42_native_highs_lagrangian_bound"
+        / "e0d42_native_highs_lagrangian_bound",
+        project_dir.parent
+        / "results"
+        / "e0d42_native_highs_lagrangian_bound",
+    )
+    structure_dir = next(
+        path for path in candidates if (path / "structure_manifest.json").is_file()
     )
     manifest, case = load_locked_structure_case(structure_dir, "tes_r0")
 
