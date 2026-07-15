@@ -1,0 +1,11 @@
+{
+  "architecture": "bess",
+  "available_memory_after_gib": 96.81421279907227,
+  "available_memory_before_gib": 97.31186294555664,
+  "manifest_sha256": "5d0609fad197977ab5c0dff4e355186c8452d34661036bd1c82a446bf02095e0",
+  "peak_process_rss_gib": 0.7589378356933594,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "runtime_seconds": 67.76151878107339,
+  "schema_id": "tes_bess_boundary.e0d41_gate_a_architecture.v1.execution"
+}

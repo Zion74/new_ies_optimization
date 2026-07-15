@@ -1,6 +1,6 @@
 # E0-D-41 严格全年界—修复分解合同
 
-状态：**第 1–10 节结果前合同已冻结；尚未产生 D41 代码、模型或数值结果**
+状态：**第 1–10 节结果前合同已冻结；Gate A 已通过；Gate B–D 尚未执行**
 
 适用范围：D40 真实全年单体 MILP 路线失败后的严格证书路线
 
@@ -153,3 +153,23 @@ D41 可作为硕士论文 Agentic 决策支持层的受限案例：agent 读取�
 - OpenBayes：`/root/e0-b-20260711-019f4f64/results/e0d41_strict_full_year_decomposition/`。
 
 首次实现顺序固定为 Gate A 包含关系与审计器 → Gate B 全年下界 → Gate C 候选生成 → Gate D 全年修复。任一前置 Gate 失败时，后续 Gate 不启动。
+
+## 13. Gate A 实现与结果登记
+
+结果前提交 `d7a1929` 之后才新增 `e0d41_strict_full_year_decomposition.py` 和 9 项测试。实现逐个枚举活动二元变量，用完整变量名锁定原 MILP 清单，并按父组件把 `bess.installed`、`tes.installed` 与 `tes.port_installed` 识别为时间不变拓扑二元；全部其余二元归入逐时运行类。R0 把锁定清单全部改为 `[0,1]`，R1 只放松运行类；域变换前后核验变量名、计数、边界与 SHA-256。离散轨迹接口拒绝缺键、额外键、非有限值和分数值，并要求原始二元全部固定后未固定计数为零。
+
+源码与测试 SHA-256 分别为 `c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e` 与 `cc5c7bee44eea158f8523a4f9d531e407f4004562c8d55735e4ae49d4fe84ddb`。Windows 新增测试为 `9 passed in 2.15s`，D40/D41 合并定向回归为 `24 passed in 3.02s`；OpenBayes 完整回归为 `478 passed in 34.20s`。
+
+正式 Gate A 在 OpenBayes 逐架构 clean process 中执行，未创建求解器：
+
+| 架构 | 活动变量 | 原始二元 | R0 剩余二元 | R1 拓扑二元 | 完整固定后未固定二元 | 运行时间 / s | 峰值 RSS / GiB | 架构 manifest SHA-256 |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| BESS | 597,318 | 79,057 | 0 | 1 | 0 | 67.762 | 0.759 | `5d0609fad197977ab5c0dff4e355186c8452d34661036bd1c82a446bf02095e0` |
+| TES | 650,052 | 87,840 | 0 | 0 | 0 | 76.311 | 0.865 | `0448e6441574960b9f88b248687f54c438023261ca891192f527c38b20c8e6a3` |
+| Hybrid | 685,194 | 96,625 | 0 | 1 | 0 | 81.217 | 0.907 | `59edc53cebd07d820e66a5910b2576589faa4b365a1095ad43e169cb099f9c61` |
+
+三个模型的加权小时均为 `8784`，服务约束与单全年循环均存在，非线性计数为零，`representative_period_input_used=false`、`solver_invoked=false`。TES 的 R1 拓扑二元为零是 D34 已冻结的连续零容量策略所致，不是审计遗漏；BESS 与 Hybrid 各保留一个 BESS 安装二元。完整 fixing audit 对三案均为零遗漏。
+
+Gate A 汇总 manifest SHA-256 为 `50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937`，execution SHA-256 为 `b2d9778e927d3925c7c247ee9816732ed299df3c204fc6a6d746fbe29451b88b`。服务器与本地副本逐文件同哈希，规范目录已固定。首次远程包装命令只在所有 JSON 生成之后，因 Windows here-string CRLF 使最后一条 `sha256sum` glob 带入回车而返回非零；独立验哈确认所有规范产物完整，该包装缺陷未改变代码、模型或判定。
+
+Gate A 因此登记为 `gate_a_passed`。该结果只关闭包含关系、二元覆盖与全年修复接口门，仍没有合法数值下界、可行上界、容量、成本、gap 或技术排序；下一步只允许实现第 6 节的 Gate B 全年严格下界与硬墙钟执行器。
