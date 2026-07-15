@@ -1,6 +1,6 @@
 # E0-D-45 Hybrid R0 原生双快照—fork 并行严格下界合同
 
-状态：**第 1–11 节结果前合同已冻结；D45 源码与测试已实现并通过本地候选回归，尚未通过 OpenBayes Gate A，尚未执行正式 Hybrid**
+状态：**第 1–11 节结果前合同已冻结；D45 源码与测试已提交并通过 OpenBayes 同哈希 Gate A，尚未执行正式 Hybrid**
 
 适用范围：D44 已从冻结 IPX dual 恢复 TES R0/R1 严格下界之后，为 Hybrid 架构恢复最弱但完整合法的全年严格下界
 
@@ -139,4 +139,12 @@ D45 禁止：重跑 D42/D43/D44；修改正式输入/模型/成本/服务；读�
 
 实现保持第 1–11 节不变：D42 prepare 只重建 Hybrid R0；IPX/simplex_1 由两个独立进程组并行生成 solution snapshot，solver child 不调用 Decimal 证书；证书 child 不调用 HiGHS `run()`，只复用 D43 快照门和 D44 24 块核。父进程强制阶段/总墙钟、RSS、主机内存、完整 artifact hash map、LP 指纹和残留进程组清理。
 
-Windows 候选检查为 D45 `25 passed + 2 Linux-only skipped`、D40–D45 `128 passed + 3 Linux-only skipped`、全包 `582 passed + 3 Linux-only skipped`；Ruff 与 py_compile 通过。OpenBayes 同哈希 Gate A 未执行，因此本节不授予正式 Hybrid 权限。
+Windows 候选检查为 D45 `25 passed + 2 Linux-only skipped`、D40–D45 `128 passed + 3 Linux-only skipped`、全包 `582 passed + 3 Linux-only skipped`；Ruff 与 py_compile 通过。
+
+## 13. Gate A 结果与正式运行权限
+
+D45 源码与测试已由提交 `270b04d6c8e65bd67a3953db722a0c082e058fc5` 固定，SHA-256 分别为 `cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d` 与 `8e6b598530a886073188cc60f3ecd6b4c8cbd2c9ffcd0e75c0b4b3595219fe33`。OpenBayes Linux 逐字节同哈希，D45、D40–D45 定向和全包回归分别为 `27/131/585 passed`，全部零失败、零跳过；Ruff 与 py_compile 通过。Linux fork、4-worker smoke、双快照归档、篡改拒绝、分块等价、Decimal 选择、身份门和进程树清理均已实际执行。
+
+Gate A manifest SHA-256 为 `570b801c4ea46a9b74668c4782f178261e8d49f235720b761b50e272996cc529`；远端与 `数据采集/e0d45_gate_a/` 本地副本的 9 个受清单约束文件逐文件同哈希。Gate A 明确记录 `optimization_invoked=false`、`native_solver_invoked=false` 和 `technical_ranking_permitted=false`。
+
+据此，唯一一次正式 D45 Hybrid R0 运行已获得权限；正式结果仍为空，不能提前声称 Hybrid 下界、容量、上界、gap、TAC 或技术排序。

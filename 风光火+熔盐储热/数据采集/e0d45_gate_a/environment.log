@@ -1,0 +1,10 @@
+gate_a_started_utc=2026-07-15T17:18:26Z
+Python 3.10.18
+Linux enginism-48g93reow9iz-main 5.15.0-47-generic #51-Ubuntu SMP Thu Aug 11 07:51:15 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+1
+               total        used        free      shared  buff/cache   available
+Mem:     104857600000   364408832 103012093952        4096  1481097216 104493191168
+cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d  src/tes_bess_boundary/e0d45_hybrid_r0_strict_lower_bound.py
+8e6b598530a886073188cc60f3ecd6b4c8cbd2c9ffcd0e75c0b4b3595219fe33  tests/test_e0d45_hybrid_r0_strict_lower_bound.py
+os_cpu_count=60
+getconf_nprocessors=60
