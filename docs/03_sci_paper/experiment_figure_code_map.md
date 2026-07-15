@@ -148,6 +148,7 @@
 | `src/tes_bess_boundary/e0d38_weekly_diagnostic.py` | 实际 52 周与冻结 D36 分配的零燃料最小弃电差异诊断 | E0/E5 | 已实现；第 49/16 周为最大两个单周低估，诊断不构成事后调参 |
 | `src/tes_bess_boundary/e0d39_service_aware_weeks.py`、`数据采集/e0d39_service_aware_representative_weeks/` | 锁定 D38 诊断选周、复用 D36 特征距离、重分配 52 周并生成八周分块数据 | E0/E5 | Gate A 已通过；最终权重 `1/2/9/2/13/19/4/2`，1416 个模型时段、8784 加权小时，规范三文件双端逐字节一致 |
 | `src/tes_bess_boundary/e0d40_full_year_compute_gate.py`、`tests/test_e0d40_full_year_compute_gate.py`、`数据采集/e0d40_full_year_compute_gate/` | 无代表期服务提取、四架构全年 build-only、线性/容量边界/单循环/资源门及确定性汇总 | E0/E5 | 8 项定向测试通过；服务器 Gate A 已通过，总 manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`；模块未创建求解器或技术排序 |
+| `src/tes_bess_boundary/e0d40_gate_b_solver.py`、`tests/test_e0d40_gate_b_solver.py` | Gate A/服务哈希锁、父子进程资源监控、HiGHS bounds/incumbent、服务/守恒审计、预注册 gap 分类和三案汇总 | E0/E5 | 本地 7 项测试通过；60 s BESS 预检与正式 BESS→TES→Hybrid 尚未启动，不接受代表期或 warm start |
 | `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`、`e0_d38_original_high_heat_state_failure.md` | 原三状态结果前合同及不覆盖合同的失败记录 | E0/E5 | 原合同不能关闭；不得删除失败状态后写成通过 |
 | `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`、`e0_d38r1_baseline_temporal_aggregation_failure.md` | 一次性 `H*=G*=0.70` 修订、文件隔离、执行后 baseline 失败 | E0/E5 | R1 静态检查通过但 baseline 时间聚合门失败；新修订必须另立结果前合同 |
 | `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md`、`e0_d39_gate_b_quantitative_fidelity_failure.md` | 原六周 + 第 49/16 周、D36 距离重分配、gate-first 验收及失败解释 | E0/E5 | Gate A 通过、Gate B 失败；Gate C/D 禁止启动 |

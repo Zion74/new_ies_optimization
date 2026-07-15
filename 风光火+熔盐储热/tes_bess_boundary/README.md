@@ -197,6 +197,44 @@ These commands do not create a solver. Platform-dependent runtime/RSS values are
 kept in execution sidecars, while service and structural manifests remain
 deterministic scientific artifacts.
 
+After the locked Gate A manifest passes, the separate Gate B adapter can run the
+single allowed 60-second BESS interface preflight, then the three formal cases in
+the preregistered sequence. Formal solver parameters are constants and have no CLI
+override:
+
+```bash
+python -m tes_bess_boundary.e0d40_gate_b_solver run-case \
+  --architecture bess --mode preflight \
+  --service-file /path/to/e0d40_full_year_compute_gate/e0d40_full_year_service.json \
+  --gate-a-manifest /path/to/e0d40_full_year_compute_gate/gate_a_manifest.json \
+  --heat-path /path/to/e0b_heat_hourly_2024.csv \
+  --vre-path /path/to/e0d17_legacy_vre_2024.csv \
+  --price-basis-path /path/to/e0d4_price_basis_2024 \
+  --output-dir /path/to/e0d40_full_year_compute_gate
+
+for architecture in bess tes hybrid; do
+  python -m tes_bess_boundary.e0d40_gate_b_solver run-case \
+    --architecture "$architecture" --mode formal \
+    --service-file /path/to/e0d40_full_year_compute_gate/e0d40_full_year_service.json \
+    --gate-a-manifest /path/to/e0d40_full_year_compute_gate/gate_a_manifest.json \
+    --heat-path /path/to/e0b_heat_hourly_2024.csv \
+    --vre-path /path/to/e0d17_legacy_vre_2024.csv \
+    --price-basis-path /path/to/e0d4_price_basis_2024 \
+    --output-dir /path/to/e0d40_full_year_compute_gate
+done
+
+python -m tes_bess_boundary.e0d40_gate_b_solver audit \
+  --service-file /path/to/e0d40_full_year_compute_gate/e0d40_full_year_service.json \
+  --gate-a-manifest /path/to/e0d40_full_year_compute_gate/gate_a_manifest.json \
+  --result-dir /path/to/e0d40_full_year_compute_gate \
+  --output-dir /path/to/e0d40_full_year_compute_gate
+```
+
+`run-case` creates a monitored child process and refuses to overwrite prior
+artifacts. The preflight files are permanently ineligible for the formal Gate B
+compiler. Formal cases use 12 HiGHS threads, a 3600-second limit, a 0.1% target
+gap, no warm start, and the locked RSS/host-memory stop rules.
+
 Build the formal E0-B artifacts without overwriting legacy CSV files:
 
 ```python

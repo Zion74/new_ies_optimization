@@ -1,6 +1,6 @@
 # E0-D-40 全年优先可计算性与证据门合同
 
-状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 尚未实现或启动**
+状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 接入器已本地实现，预检与正式求解均未启动**
 
 适用范围：D38-R1 与 D39 时间聚合连续失败后的全年直接求解路线判定
 
@@ -153,3 +153,5 @@ Gate B 使用独立模块 `e0d40_gate_b_solver.py`，不修改已经进入 Gate 
 上述审计失败时，即使 HiGHS 报告较小 gap，也只能记为 `monolithic_not_viable`。若 HiGHS 明确返回全局 `infeasible`，可按第 7 节直接记为 `qualified_full_year`，但必须没有伪造的 incumbent 或容量快照。
 
 正式运行前只允许一次 BESS `60 s` 接入预检，仍用 12 线程和同一模型/服务，但写入独立 `preflight_*` 文件并标记 `formal_gate_b_eligible=false`。预检只检查父子进程、日志、bounds、incumbent 载入和资源监测接口；其目标值、gap、容量或终止状态不得进入 D40 正式判定，不得据此修改正式时限、gap、容差、架构顺序或删除任何架构。若预检只暴露纯接入缺陷，可在不改变本节数值口径的前提下修复并重新运行预检；正式 Gate B 每个架构只运行一次。
+
+结果前提交 `03ad51a` 之后新增独立 Gate B 模块及 7 项测试。模块/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`；D40 Gate A/B 合并定向回归为 `15 passed`。当前只完成本地实现与静态/单元验证，尚未上传服务器、执行 60 s 预检或产生任何正式 Gate B 数值。
