@@ -1,6 +1,6 @@
 # E0-D-45 Hybrid R0 原生双快照—fork 并行严格下界合同
 
-状态：**第 1–11 节结果前合同已冻结；尚未实现 D45，尚未执行正式 Hybrid**
+状态：**第 1–11 节结果前合同已冻结；D45 源码与测试已实现并通过本地候选回归，尚未通过 OpenBayes Gate A，尚未执行正式 Hybrid**
 
 适用范围：D44 已从冻结 IPX dual 恢复 TES R0/R1 严格下界之后，为 Hybrid 架构恢复最弱但完整合法的全年严格下界
 
@@ -129,3 +129,14 @@ Agentic 仅负责：哈希准入、阶段依赖、资源监控、完整块资格
 D45 禁止：重跑 D42/D43/D44；修改正式输入/模型/成本/服务；读取 solver objective 代替证书；降低精度；只算部分列；忽略失败 worker；事后增加 simplex 段或 R1 分支；用 TES 下界替代 Hybrid 下界；启动可行上界、容量恢复、E2–E4 扫描或技术排序。
 
 只有 Gate A 已提交且 OpenBayes 同哈希、零跳过通过后，才允许唯一一次正式 D45。D45 输出下载、逐文件哈希核对、三层文档同步和本地提交前，不进入 D46。
+
+## 12. 实现后、正式运行前记录
+
+2026-07-15 已新增：
+
+- `src/tes_bess_boundary/e0d45_hybrid_r0_strict_lower_bound.py`，SHA-256 `cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d`；
+- `tests/test_e0d45_hybrid_r0_strict_lower_bound.py`，SHA-256 `8e6b598530a886073188cc60f3ecd6b4c8cbd2c9ffcd0e75c0b4b3595219fe33`。
+
+实现保持第 1–11 节不变：D42 prepare 只重建 Hybrid R0；IPX/simplex_1 由两个独立进程组并行生成 solution snapshot，solver child 不调用 Decimal 证书；证书 child 不调用 HiGHS `run()`，只复用 D43 快照门和 D44 24 块核。父进程强制阶段/总墙钟、RSS、主机内存、完整 artifact hash map、LP 指纹和残留进程组清理。
+
+Windows 候选检查为 D45 `25 passed + 2 Linux-only skipped`、D40–D45 `128 passed + 3 Linux-only skipped`、全包 `582 passed + 3 Linux-only skipped`；Ruff 与 py_compile 通过。OpenBayes 同哈希 Gate A 未执行，因此本节不授予正式 Hybrid 权限。

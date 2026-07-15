@@ -77,7 +77,7 @@
 - D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A、执行器实现门和 BESS R0 build-only 复核通过，严格下界 `1,144,950,604.8368804 CNY` 保留。正式 TES R0 的 IPX 与 simplex 第 1 段均在求解器软中断返回后的 80 位证书计算阶段触发父进程硬墙钟，没有落盘合法 certificate 或 basis；TES R0 为 `no_strict_certificate`。D42 已按合同停止，simplex 2–4、TES R1 与 Hybrid 均未启动。
 - D43 已按结果前合同完成唯一一次正式离线复算。两个 D42 solution 归档的完整 `439,018` 维 row dual 均通过哈希链与准入门；IPX/simplex 两个 clean child 均运行约 `1800.49 s` 后触发冻结硬墙钟，返回码 `-15`，没有 result/certificate。总 manifest SHA-256 为 `c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526`，状态 `no_strict_certificate`；TES/Hybrid 仍无合法可比下界。
 - `e0d44_fork_parallel_certificate.py`：保持 D42 LP/dual、行投影、80 位 Decimal 与向外舍入公式不变，把 `509,289` 列固定切为 24 个连续块；两个快照各 24 个 Linux fork worker 并行。Gate A 与唯一正式 Gate B 已完成：IPX 形成 TES R0/R1 严格下界 `254,860,566.6193158889 CNY`，simplex_1 因 `15,195` 个所需无穷端点不合格；不调用优化器，不生成可行上界、容量、项目 TAC 或技术排序。
-- D45 结果前合同：Hybrid 只以 R0 全连续松弛为当前必要目标；formal prepare 必须复现 D42 的原始/presolve 指纹，IPX/simplex_1 并行生成快照，再由 D44 24 块 fork 核认证。合同已冻结，代码与正式 Hybrid 尚未启动。
+- D45 Hybrid R0：结果前合同、源码与测试已实现；formal prepare 必须复现 D42 的原始/presolve 指纹，IPX/simplex_1 并行生成快照，再由 D44 24 块 fork 核认证。Windows D45 `25 passed + 2 Linux-only skipped`、D40–D45 `128 passed + 3 skipped`、全包 `582 passed + 3 skipped`，Ruff/py_compile 通过；OpenBayes 同哈希 Gate A 与正式 Hybrid 尚未启动。
 
 ## 2. 测试证据
 
@@ -231,7 +231,7 @@ D43 新增源码/测试 SHA-256 为 `684385d5a33a531a9034f52ad755b7655adc2e58690
 
 D44 源码/测试以提交 `b52c722` 和 SHA-256 `16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c` / `eca55183bb8cd4e7eed133409556cdc2ad84ef1fca42b169406f459aa4f62a2e` 结果前冻结。OpenBayes Gate A 为 D44 `24 passed`、D40–D44 `104 passed`、全包 `558 passed`，零失败、零跳过；Gate A manifest SHA-256 为 `49b81748508bd517afa9c8b43fac4b3400d6844a0b294838010c10adac89f289`。唯一正式 Gate B 的两个 phase 均完成 24/24 块；IPX 覆盖全部 `509,289` 列和 `1,806,011` 个非零元、非法端点为 0，80 位 lower/upper 为 `254860566.61931588889075258309724606578637338890918249419801438224278086471875331` / `2091080840.3627077923443033647707256993514499305815595432283723297221797777319790 CNY`。simplex_1 有 `15,195` 个所需无穷端点，按合同不合格。总 manifest SHA-256 为 `d6fe2f34a354e5986ad4775034135f090df2e74492e0c7abc8f95861cb89739f`，execution SHA-256 为 `673f4442d1f53d714f5eabd0c450c33373457cbd214a5ce0a85956d60f89946e`；运行 `819.732 s`，峰值聚合 RSS `15.434 GiB`，无停止原因。25 个 Gate A/正式远端文件与本地逐文件同哈希。D44 只恢复 TES 下界并开放另立 Hybrid 下界合同；它没有调用优化器或 HiGHS optimize，也不允许技术排序。
 
-D45 结果前合同现固定为最弱完整 Hybrid R0 路线：锁定原始 LP 指纹 `3534a0c9...` 与 presolved 指纹 `756014ec...`，并行运行 12-thread IPX/simplex_1 只生成完整 row dual，再以未修改 D44 核对每个合格快照执行 24 块/80 位 fork 认证。R0 下界按可行域包含关系覆盖 R1 与原 MILP；R1 0/1 分支不作为当前成功条件。D45 尚无源码、Gate A 或正式结果。
+D45 已按结果前合同实现最弱完整 Hybrid R0 路线：锁定原始 LP 指纹 `3534a0c9...` 与 presolved 指纹 `756014ec...`，并行运行 12-thread IPX/simplex_1 只生成完整 row dual，再以未修改 D44 核对每个合格快照执行 24 块/80 位 fork 认证。R0 下界按可行域包含关系覆盖 R1 与原 MILP；R1 0/1 分支不作为当前成功条件。源码/测试 SHA-256 为 `cf977561...` / `8e6b5985...`；Linux Gate A 与正式结果尚无。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -333,10 +333,10 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43 不得重跑；D44 已恢复 TES R0/R1 合法下界。下一步实现并验证 D45 Hybrid R0 双快照—fork 严格下界 Gate A；Gate A 同哈希提交前不得启动正式 Hybrid；
+3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43 不得重跑；D44 已恢复 TES R0/R1 合法下界。D45 实现已通过本地候选回归，下一步先提交并在 OpenBayes 验证同哈希 Gate A；Gate A 通过前不得启动正式 Hybrid；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 7. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44 已恢复 TES R0/R1 严格下界；D45 只为 Hybrid R0 恢复最弱合法下界，尚未实现。杨凌正式 E2 经济结论继续等待 D24/D25、Hybrid 严格下界与三架构可行上界路线；699 次边界扫描继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
+D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44 已恢复 TES R0/R1 严格下界；D45 只为 Hybrid R0 恢复最弱合法下界，代码已实现但尚无 Linux Gate A 或正式证书。杨凌正式 E2 经济结论继续等待 D24/D25、Hybrid 严格下界与三架构可行上界路线；699 次边界扫描继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
