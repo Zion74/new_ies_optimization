@@ -61,9 +61,10 @@
 43. 查看 D43 单核认证超时后的 24 块/快照、48-worker 数学等价并行证书合同、Gate A 与 TES 下界恢复终态时读 `docs/03_sci_paper/e0_d44_fork_parallel_lagrangian_certificate_contract.md`
 44. 在 TES 下界恢复后，为 Hybrid R0 分离原生双快照与 fork 严格证书、闭合三架构下界时读 `docs/03_sci_paper/e0_d45_hybrid_r0_strict_lower_bound_contract.md`
 45. 在 D45 双快照已有但 24 块证书触发墙钟后，以 56 个加权持久块只读恢复 Hybrid 严格下界时读 `docs/03_sci_paper/e0_d47_hybrid_weighted_persistent_certificate_contract.md`
-46. 对应层级的实验 / 图表 / 代码映射文档
-47. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-48. 需要做清理或迁移时，再读 `docs/90_governance/`
+46. 在三架构严格下界闭合后，以工程容量锚点、R0 seed、首 incumbent 和固定二元 Repair A/B 恢复首组原 MILP 可行上界时读 `docs/03_sci_paper/e0_d46_full_year_feasible_upper_bound_repair_contract.md`
+47. 对应层级的实验 / 图表 / 代码映射文档
+48. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+49. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

@@ -1,6 +1,6 @@
 # E0-D-46 三架构全年可行上界与固定二元修复合同
 
-状态：**第 1–11 节结果前合同已冻结；尚未实现，Gate A 与正式 D46 均未启动**
+状态：**第 1–11 节结果前合同已冻结；第 12 节源码/本地测试已完成，OpenBayes Gate A 与正式 D46 均未启动**
 
 适用范围：D47 已恢复 Hybrid R0 严格下界、BESS/TES/Hybrid 三架构均已有至少一个全年严格下界之后，为同一 2024 年 8784 h 原始 MILP 恢复第一组可审计可行解、容量与受控成本上界
 
@@ -152,3 +152,16 @@ D46 不得把首个 incumbent 称为最优解，不得用上界大小排序技�
 D46 禁止：修改 D40 服务或输入；重跑/覆盖 D41–D47；读取拉格朗日 upper interval 当作可行上界；使用代表期容量作为正式起点；事后新增容量锚点、seed 或 repair 阶段；只固定部分二元；忽略残差或 solver primal infeasibility；把 R0 objective、MIP dual bound 或无审计 incumbent 记为上界；因一个架构失败而把另一个架构宣布更优；在正式证据回传和三层文档提交前启动 gap 收缩、E2–E4 或技术排序。
 
 合同、源码/测试提交和 OpenBayes 同哈希 Gate A 全部完成前，不允许正式 D46。正式 D46 完成后不得按结果原样重跑；任何增强必须另立新的结果前合同。
+
+## 12. 实现与本地验证记录（结果后登记，不改写第 1–11 节）
+
+D46 源码与测试已在本地提交 `fe3b669250c8071b24f5b8fb75bf4d3634720bdc`：
+
+- `src/tes_bess_boundary/e0d46_full_year_feasible_upper_bound_repair.py`：实现工程容量锚点、R0 全列有限 seed、合法燃料段编码、BESS/TES 模式 tie-break、确定性压缩工件、HiGHS 首 incumbent callback、完整二元固定、Repair A/B、服务/容量/循环/全约束/目标/solver primal 审计和 10 位向上舍入工程数值上界；
+- `src/tes_bess_boundary/e0d46_monitored_executor.py`：实现 BESS→TES→Hybrid 顺序、12-thread HiGHS、阶段/架构/总硬墙钟、`35/45/30 GiB` 资源门、5 s heartbeat、进程组清理、D47/D41/D40/输入/Gate A 哈希准入、一次性结果目录和总 manifest；
+- BESS 新 R0 seed 被 HiGHS 日志明确拒绝时，执行器可立即中断该尝试，并且只允许读取哈希 `2d03ab0a...` 的 D41 BESS R1 guide 生成第二个合法 seed；TES/Hybrid 不存在第二 seed；
+- Repair A 必须固定全部原始二元与最大容量锚点；Repair B 只释放连续容量，失败或目标更高均保留 Repair A；任何 R0 objective、未审计 incumbent 或 solver bound 均不能进入上界字段；
+- 本地 D46 定向回归 `22 passed`，其中包含 24 h BESS/TES/Hybrid 原 planning model 重建—R0—首 incumbent—Repair A 集成、BESS 显式 seed 拒绝、D41 guide 哈希/重编码和资源门；
+- 本地 D40–D47/规划兼容回归 `199 passed + 5 Linux-only skipped`，全包回归 `639 passed + 5 Linux-only skipped`；Ruff 与 `py_compile` 通过。
+
+上述 24 h 结果仅为 Gate A toy upper bound，不是正式 8784 h D46 上界。当前仍为 `formal_project_tac_ready=false`、`technical_ranking_permitted=false`；在 OpenBayes 同提交 Gate A manifest 通过前，唯一正式 D46 总批次不得启动。
