@@ -53,9 +53,11 @@
 35. 运行三个预注册物理状态的代表周规划、8784 h 固定容量回代或全年容量重优化时读 `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`
 36. 解释原 `H*=0.80/G*=0.70` 状态为什么在时间聚合比较前失败时读 `docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md`
 37. 执行一次性 `H*=G*=0.70` 修订状态时读 `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`
-38. 对应层级的实验 / 图表 / 代码映射文档
-39. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-40. 需要做清理或迁移时，再读 `docs/90_governance/`
+38. 解释服务感知八周修订为何只修复分类、未修复定量保真时读 `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md` 与 `docs/03_sci_paper/e0_d39_gate_b_quantitative_fidelity_failure.md`
+39. 构造或求解真实 8784 h 全年优先模型、判断单体 HiGHS 路线能否成为正式证据时读 `docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md`
+40. 对应层级的实验 / 图表 / 代码映射文档
+41. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+42. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 
