@@ -1,0 +1,141 @@
+{
+  "architecture": "tes",
+  "constraint_count": 606163,
+  "diagnostic_only": true,
+  "formal_upper_bound_eligible": false,
+  "max_violation": 3304.507464128702,
+  "nonfinite_constraint_count": 0,
+  "runtime_seconds": 47.015716440975666,
+  "solver_invoked": false,
+  "sum_violation": 5184500.6698653335,
+  "technical_ranking_permitted": false,
+  "top_components_by_sum_violation": [
+    {
+      "component": "tes.ht_receiving_limit",
+      "count": 2360,
+      "max_violation": 3304.507464128702,
+      "sum_violation": 4665433.342121534,
+      "worst_constraint": "tes.ht_receiving_limit[10]"
+    },
+    {
+      "component": "tes.ht_sending_limit",
+      "count": 327,
+      "max_violation": 3251.9041417351796,
+      "sum_violation": 511464.78627024085,
+      "worst_constraint": "tes.ht_sending_limit[474]"
+    },
+    {
+      "component": "chp[1].fuel_code",
+      "count": 17769,
+      "max_violation": 0.5810355550549584,
+      "sum_violation": 3018.0272079868155,
+      "worst_constraint": "chp[1].fuel_code[2409,0]"
+    },
+    {
+      "component": "chp[1].fuel_segment_sum",
+      "count": 6269,
+      "max_violation": 0.4999805637426494,
+      "sum_violation": 1289.3687572373544,
+      "worst_constraint": "chp[1].fuel_segment_sum[7990]"
+    },
+    {
+      "component": "chp[1].weight_sum",
+      "count": 6269,
+      "max_violation": 0.4999805637426494,
+      "sum_violation": 1289.3687572373544,
+      "worst_constraint": "chp[1].weight_sum[7990]"
+    },
+    {
+      "component": "chp[1].commitment_transition",
+      "count": 6566,
+      "max_violation": 0.9924595601669306,
+      "sum_violation": 739.3165210660012,
+      "worst_constraint": "chp[1].commitment_transition[7991]"
+    },
+    {
+      "component": "chp[0].fuel_code",
+      "count": 1241,
+      "max_violation": 0.584071295692298,
+      "sum_violation": 332.70019024472094,
+      "worst_constraint": "chp[0].fuel_code[261,0]"
+    },
+    {
+      "component": "chp[0].fuel_segment_sum",
+      "count": 460,
+      "max_violation": 0.49918188736681957,
+      "sum_violation": 155.93161671095393,
+      "worst_constraint": "chp[0].fuel_segment_sum[7957]"
+    },
+    {
+      "component": "chp[0].weight_sum",
+      "count": 460,
+      "max_violation": 0.49918188736681957,
+      "sum_violation": 155.93161671095393,
+      "worst_constraint": "chp[0].weight_sum[7957]"
+    },
+    {
+      "component": "chp[1].startup_online_limit",
+      "count": 2091,
+      "max_violation": 0.4970275035830676,
+      "sum_violation": 154.3887664092229,
+      "worst_constraint": "chp[1].startup_online_limit[1056]"
+    },
+    {
+      "component": "chp[1].shutdown_previous_online_limit",
+      "count": 2060,
+      "max_violation": 0.4823729932272753,
+      "sum_violation": 149.898512496844,
+      "worst_constraint": "chp[1].shutdown_previous_online_limit[6646]"
+    },
+    {
+      "component": "chp[0].commitment_transition",
+      "count": 531,
+      "max_violation": 0.9937573989514634,
+      "sum_violation": 101.44095464278165,
+      "worst_constraint": "chp[0].commitment_transition[726]"
+    },
+    {
+      "component": "chp[1].startup_previous_offline_limit",
+      "count": 988,
+      "max_violation": 0.44029672131535214,
+      "sum_violation": 87.13384794441227,
+      "worst_constraint": "chp[1].startup_previous_offline_limit[869]"
+    },
+    {
+      "component": "chp[1].shutdown_offline_limit",
+      "count": 961,
+      "max_violation": 0.49005205467561785,
+      "sum_violation": 85.47064099620587,
+      "worst_constraint": "chp[1].shutdown_offline_limit[8586]"
+    },
+    {
+      "component": "chp[0].shutdown_previous_online_limit",
+      "count": 186,
+      "max_violation": 0.4894544948633814,
+      "sum_violation": 20.546523051038005,
+      "worst_constraint": "chp[0].shutdown_previous_online_limit[1507]"
+    },
+    {
+      "component": "chp[0].startup_online_limit",
+      "count": 160,
+      "max_violation": 0.4661777477459094,
+      "sum_violation": 18.393748790151054,
+      "worst_constraint": "chp[0].startup_online_limit[309]"
+    },
+    {
+      "component": "chp[0].startup_previous_offline_limit",
+      "count": 53,
+      "max_violation": 0.31838283937025913,
+      "sum_violation": 2.445780936074275,
+      "worst_constraint": "chp[0].startup_previous_offline_limit[728]"
+    },
+    {
+      "component": "chp[0].shutdown_offline_limit",
+      "count": 50,
+      "max_violation": 0.4346940539750198,
+      "sum_violation": 2.1780310947179675,
+      "worst_constraint": "chp[0].shutdown_offline_limit[742]"
+    }
+  ],
+  "violated_constraint_count_at_1e_7": 48801
+}

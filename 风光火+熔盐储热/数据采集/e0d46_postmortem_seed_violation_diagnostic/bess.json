@@ -1,0 +1,127 @@
+{
+  "architecture": "bess",
+  "constraint_count": 527053,
+  "diagnostic_only": true,
+  "formal_upper_bound_eligible": false,
+  "max_violation": 49.72252671001128,
+  "nonfinite_constraint_count": 0,
+  "runtime_seconds": 39.761744800023735,
+  "solver_invoked": false,
+  "sum_violation": 8924.557616617414,
+  "technical_ranking_permitted": false,
+  "top_components_by_sum_violation": [
+    {
+      "component": "chp[1].fuel_code",
+      "count": 22206,
+      "max_violation": 0.6079312205518603,
+      "sum_violation": 4019.2921582553754,
+      "worst_constraint": "chp[1].fuel_code[994,1]"
+    },
+    {
+      "component": "chp[1].fuel_segment_sum",
+      "count": 8101,
+      "max_violation": 0.49984884999154344,
+      "sum_violation": 1608.5005045322107,
+      "worst_constraint": "chp[1].fuel_segment_sum[1063]"
+    },
+    {
+      "component": "chp[1].weight_sum",
+      "count": 8101,
+      "max_violation": 0.49984884999154344,
+      "sum_violation": 1608.5005045322107,
+      "worst_constraint": "chp[1].weight_sum[1063]"
+    },
+    {
+      "component": "chp[1].commitment_transition",
+      "count": 8458,
+      "max_violation": 0.9945459157787923,
+      "sum_violation": 553.6636820620565,
+      "worst_constraint": "chp[1].commitment_transition[1063]"
+    },
+    {
+      "component": "bess.discharge_mode_limit",
+      "count": 12,
+      "max_violation": 49.72252671001128,
+      "sum_violation": 352.0517435446984,
+      "worst_constraint": "bess.discharge_mode_limit[8703]"
+    },
+    {
+      "component": "bess.charge_mode_limit",
+      "count": 17,
+      "max_violation": 38.98171246901498,
+      "sum_violation": 245.55438530902873,
+      "worst_constraint": "bess.charge_mode_limit[3453]"
+    },
+    {
+      "component": "chp[1].startup_online_limit",
+      "count": 2839,
+      "max_violation": 0.2437519327873205,
+      "sum_violation": 156.31639007926108,
+      "worst_constraint": "chp[1].startup_online_limit[2601]"
+    },
+    {
+      "component": "chp[1].shutdown_previous_online_limit",
+      "count": 2948,
+      "max_violation": 0.23624710081901945,
+      "sum_violation": 156.14083515790168,
+      "worst_constraint": "chp[1].shutdown_previous_online_limit[3426]"
+    },
+    {
+      "component": "chp[1].shutdown_offline_limit",
+      "count": 1352,
+      "max_violation": 0.48108193810248634,
+      "sum_violation": 111.70180525846042,
+      "worst_constraint": "chp[1].shutdown_offline_limit[1026]"
+    },
+    {
+      "component": "chp[1].startup_previous_offline_limit",
+      "count": 1299,
+      "max_violation": 0.479300904786064,
+      "sum_violation": 111.5179198622808,
+      "worst_constraint": "chp[1].startup_previous_offline_limit[1025]"
+    },
+    {
+      "component": "chp[0].fuel_code",
+      "count": 34,
+      "max_violation": 0.03559212751564377,
+      "sum_violation": 0.4451529317967622,
+      "worst_constraint": "chp[0].fuel_code[560,1]"
+    },
+    {
+      "component": "chp[0].commitment_transition",
+      "count": 17,
+      "max_violation": 0.03559212751564377,
+      "sum_violation": 0.22345679012345218,
+      "worst_constraint": "chp[0].commitment_transition[560]"
+    },
+    {
+      "component": "chp[0].weight_sum",
+      "count": 12,
+      "max_violation": 0.03559212751564377,
+      "sum_violation": 0.21281075596143847,
+      "worst_constraint": "chp[0].weight_sum[560]"
+    },
+    {
+      "component": "chp[0].fuel_segment_sum",
+      "count": 12,
+      "max_violation": 0.03559212751564377,
+      "sum_violation": 0.21281075596143845,
+      "worst_constraint": "chp[0].fuel_segment_sum[560]"
+    },
+    {
+      "component": "chp[0].startup_online_limit",
+      "count": 9,
+      "max_violation": 0.03559212751564377,
+      "sum_violation": 0.11172839506172608,
+      "worst_constraint": "chp[0].startup_online_limit[560]"
+    },
+    {
+      "component": "chp[0].shutdown_previous_online_limit",
+      "count": 8,
+      "max_violation": 0.0287354134956872,
+      "sum_violation": 0.11172839506172606,
+      "worst_constraint": "chp[0].shutdown_previous_online_limit[588]"
+    }
+  ],
+  "violated_constraint_count_at_1e_7": 55425
+}

@@ -34,6 +34,7 @@
 | Tab S-E0D30 | `tab:e0d30_physics_service_bound` | 静态 PCC 外包络宽度、年度服务传播、正反向符号宽度压缩、已知证人包含性、D29 参考区间、primal/轨迹重算/dual、数值钳制和严格残差 | E0 | 补充材料物理界紧化证书；24 h 保留精确点，336 h 上界收紧至 `777,141.368858 MWh/a`；不得写成闭合或实际结算 |
 | Tab S-E0D31 | `tab:e0d31_intertemporal_obbt_screen` | 双窗口 LP 数/最优计数/进程分配、D30→D31 正负宽度、证人包含、24 h 等价门、336 h 1% 停止门槛与 retained D30 interval | E0 | 补充材料负筛查证书；重点报告 24 h 明显收紧但 336 h 增量不足 `0.1%`，未启动 336 h global probe；不得画成新 global bound |
 | Tab S-E0D46 | `tab:e0d46_upper_bound_recovery` | 三架构 R0 guide、seed 行不可行数、候选墙钟、incumbent/Repair 状态、资源峰值与残留进程 | E0/E5 | 补充材料失败证据；必须明确三个 guide 都不是可行上界，三架构均为 `no_candidate_incumbent`、上界恢复数为 0，不能写成物理不可行或技术排序 |
+| Tab S-E0D48 | `tab:e0d48_primal_recovery` | 三架构完整二元数、Hamming seed 身份、首 incumbent/工程 infeasible/未闭合状态、固定二元原成本 repair、残差、容量和上界资格 | E0/E5 | 预注册补充表；D48 正式批次完成前只保留表位。Hamming objective 不是成本，postmortem 不是上界；仅审计 repair 可进入工程数值上界列 |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |
@@ -60,7 +61,7 @@
 4. Fig 5：形成物理适用域；
 5. Fig 6：形成经济适用域；
 6. Fig 7 + Tab 5：通过全年验证；
-7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26、Tab S-E0D27、Tab S-E0D28、Tab S-E0D29、Tab S-E0D30、Tab S-E0D31、Tab S-E0D46 与 Tab S1。
+7. 最后补充 Fig S1-S3、Tab S-E0D18、Tab S-E0D23、Tab S-E0D26、Tab S-E0D27、Tab S-E0D28、Tab S-E0D29、Tab S-E0D30、Tab S-E0D31、Tab S-E0D46、Tab S-E0D48 与 Tab S1。
 
 在 E0、E1 未通过前，不允许先跑大规模边界图。
 
