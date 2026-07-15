@@ -1,0 +1,28 @@
+{
+  "artifact_sha256": {
+    "archive": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "heartbeat": "65b8bf9f049d8dd27eb594a4cde6958fe0ab7b8d4cc037d26d4790df7e763ba9",
+    "log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "progress": "894838423b408570ee8259b023f122e44e3bc61c82caeef95eeef198ec99456e",
+    "result": "220304304ac2ae7427055ba99e71c43bd3ca2c8bde4f0386d7ed235c0f79b4ba"
+  },
+  "available_memory_sample_count": 312,
+  "hard_wall_enforced_by_parent": true,
+  "lp_sha256": null,
+  "minimum_available_memory_gib": 95.04043960571289,
+  "peak_phase_process_tree_rss_gib": 2.282146453857422,
+  "peak_stage_aggregate_rss_gib": 2.3064918518066406,
+  "phase": "prepare",
+  "phase_runtime_seconds": 157.59956960659474,
+  "residual_process_group_detected": false,
+  "resource_gate_passed": true,
+  "return_code": 0,
+  "rss_sample_count": 312,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.prepare.execution",
+  "stage": "prepare",
+  "stage_runtime_seconds": 157.6005799556151,
+  "status": "complete",
+  "stop_reason": null,
+  "technical_ranking_permitted": false,
+  "termination_signal": null
+}

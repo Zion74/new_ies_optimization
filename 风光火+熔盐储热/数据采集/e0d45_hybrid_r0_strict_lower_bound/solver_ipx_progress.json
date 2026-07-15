@@ -1,0 +1,11 @@
+{
+  "callback_count": 236597,
+  "elapsed_seconds": 901.0492922673002,
+  "ipm_iteration_count": 38,
+  "phase": "ipx",
+  "pid": 158517,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.solver_snapshot.execution",
+  "simplex_iteration_count": 0,
+  "soft_interrupt_requested": true,
+  "state": "snapshot_artifacts_complete"
+}

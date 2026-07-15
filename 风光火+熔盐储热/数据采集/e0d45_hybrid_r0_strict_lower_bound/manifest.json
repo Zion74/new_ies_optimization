@@ -1,0 +1,102 @@
+{
+  "architecture": "hybrid",
+  "bess_strict_lower_bound_cny": "1144950604.8368804",
+  "chunk_count_per_phase": 24,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d46_feasible_upper_bound_contract_permitted": false,
+  "formal_lower_bound_decimal": null,
+  "formal_lower_bound_eligible": false,
+  "formal_lower_bound_float": null,
+  "formal_project_tac_ready": false,
+  "gate_a_audit": {
+    "git_commit": "270b04d6c8e65bd67a3953db722a0c082e058fc5",
+    "manifest_sha256": "570b801c4ea46a9b74668c4782f178261e8d49f235720b761b50e272996cc529",
+    "source_sha256": "cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d",
+    "test_passed_count": 27,
+    "test_sha256": "8e6b598530a886073188cc60f3ecd6b4c8cbd2c9ffcd0e75c0b4b3595219fe33"
+  },
+  "hybrid_r0_certificate_covers_r1_and_original_milp": false,
+  "input_sha256": {
+    "d40_gate_a_manifest": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_gate_a_manifest": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "d44_formal_execution": "673f4442d1f53d714f5eabd0c450c33373457cbd214a5ce0a85956d60f89946e",
+    "d44_formal_manifest": "d6fe2f34a354e5986ad4775034135f090df2e74492e0c7abc8f95861cb89739f",
+    "d45_gate_a_manifest": "570b801c4ea46a9b74668c4782f178261e8d49f235720b761b50e272996cc529",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "hybrid_r0_structure_case": "0923ae65d123e29691ff794828dfa9f2228ea81fbc93608bde0ccd914c23315b",
+    "lp_archive": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "prepare_execution": "6cd193c89a6d071f54f61e53d305c5f11c15dc9047688adf63dc194b85fa608b",
+    "prepare_result": "220304304ac2ae7427055ba99e71c43bd3ca2c8bde4f0386d7ed235c0f79b4ba",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "structure_manifest": "2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "native_solver_invoked": true,
+  "optimization_invoked": true,
+  "partition_rule": "floor(k*num_col/24):floor((k+1)*num_col/24)",
+  "phase_audits": {
+    "ipx": {
+      "certificate_execution_sha256": "c85de258ea1374555d1e1c92fb731a0499761843897436785845ea2236531977",
+      "certificate_result_sha256": null,
+      "certificate_sha256": null,
+      "chunks_sha256": null,
+      "formal_lower_bound_eligible": false,
+      "lower_bound_decimal": null,
+      "solution_sha256": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80",
+      "solver_execution_sha256": "39b547a06bea1fdbd7924651e8e57b8be06322a2b6da7d205640fabfa2eed6f1",
+      "solver_result_sha256": "6a1c362e2ebce81f230246f1ea79fdbc0e752fcd72fa3c1dd1e9cd6ab48d0275",
+      "status": "certificate_child_failed"
+    },
+    "simplex_1": {
+      "certificate_execution_sha256": "9ae2b24bab8164ab1954a8e41c23abeb8c283d7ce0758e23615cb1096ce82694",
+      "certificate_result_sha256": null,
+      "certificate_sha256": null,
+      "chunks_sha256": null,
+      "formal_lower_bound_eligible": false,
+      "lower_bound_decimal": null,
+      "solution_sha256": "6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c",
+      "solver_execution_sha256": "8bf887665d6271d27963e8d90aa53822cc90eb037d8c0b56ddc539feeb0f1167",
+      "solver_result_sha256": "f8a03dad990c542aeceadc1b08a1bf356202ee1a13b016f7718b8baf5585a75c",
+      "status": "certificate_child_failed"
+    }
+  },
+  "prepare_identity_audit": {
+    "checks": {
+      "architecture": true,
+      "audit": true,
+      "binary_count": true,
+      "case": true,
+      "optimization_not_invoked": true,
+      "original_lp": true,
+      "presolved_lp": true,
+      "relaxation": true,
+      "schema": true,
+      "single_build": true,
+      "single_presolve": true,
+      "status": true,
+      "structure_case": true,
+      "structure_manifest": true,
+      "structure_original_equal": true,
+      "structure_presolved_equal": true,
+      "topology": true
+    },
+    "passed": true
+  },
+  "relaxation_mode": "r0_all_continuous",
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.manifest",
+  "selected_phase": null,
+  "source_sha256": {
+    "e0d42_gate_b_executor.py": "c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51",
+    "e0d42_gate_b_formal.py": "a2ba832e51a227b3ad9e3c3484ffe958ca1df39442555dfd397a4330666ca53e",
+    "e0d42_native_highs_certificate.py": "3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298",
+    "e0d44_fork_parallel_certificate.py": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "e0d45_hybrid_r0_strict_lower_bound.py": "cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d",
+    "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2",
+    "test_e0d45_hybrid_r0_strict_lower_bound.py": "8e6b598530a886073188cc60f3ecd6b4c8cbd2c9ffcd0e75c0b4b3595219fe33"
+  },
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false,
+  "tes_strict_lower_bound_cny": "254860566.61931588889075258309724606578637338890918249419801438224278086471875331",
+  "workers_per_phase": 24
+}

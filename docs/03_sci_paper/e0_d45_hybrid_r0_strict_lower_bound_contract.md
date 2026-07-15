@@ -1,6 +1,6 @@
 # E0-D-45 Hybrid R0 原生双快照—fork 并行严格下界合同
 
-状态：**第 1–11 节结果前合同已冻结；D45 源码与测试已提交并通过 OpenBayes 同哈希 Gate A，尚未执行正式 Hybrid**
+状态：**第 1–11 节结果前合同保持冻结；Gate A 已通过，唯一正式 D45 已结束，终态 `no_strict_certificate`，不得重跑**
 
 适用范围：D44 已从冻结 IPX dual 恢复 TES R0/R1 严格下界之后，为 Hybrid 架构恢复最弱但完整合法的全年严格下界
 
@@ -147,4 +147,27 @@ D45 源码与测试已由提交 `270b04d6c8e65bd67a3953db722a0c082e058fc5` 固�
 
 Gate A manifest SHA-256 为 `570b801c4ea46a9b74668c4782f178261e8d49f235720b761b50e272996cc529`；远端与 `数据采集/e0d45_gate_a/` 本地副本的 9 个受清单约束文件逐文件同哈希。Gate A 明确记录 `optimization_invoked=false`、`native_solver_invoked=false` 和 `technical_ranking_permitted=false`。
 
-据此，唯一一次正式 D45 Hybrid R0 运行已获得权限；正式结果仍为空，不能提前声称 Hybrid 下界、容量、上界、gap、TAC 或技术排序。
+Gate A 当时据此开放唯一一次正式 D45 Hybrid R0 权限；本节只记录运行前状态，后续唯一正式终态见第 14 节。
+
+## 14. 唯一正式运行结果与终态
+
+2026-07-15 在 OpenBayes 固定目录执行唯一一次正式 D45。prepare 的 16 项身份检查全部通过，原始/presolved 规模和指纹逐项复现；presolved LP 归档 SHA-256 为 `e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12`。prepare 未调用优化器，随后两个 12-thread HiGHS phase 按冻结软墙钟并行运行并分别落盘完整 row-dual solution snapshot：
+
+- IPX solution SHA-256：`eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80`；
+- simplex_1 solution SHA-256：`6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c`。
+
+两个合格快照随后各启用 24 个 Linux fork worker，并行执行未修改 D44 证书核。冻结 `900 s` phase 硬墙钟触发前，IPX 完成 `20/24` 块，simplex_1 完成 `16/24` 块；两 phase 均没有完整 chunks、certificate 或 result，分别以 `phase_hard_wall_reached:ipx`、`phase_hard_wall_reached:simplex_1` 和 `SIGTERM` 收口。对应 certificate execution SHA-256 为 `c85de258ea1374555d1e1c92fb731a0499761843897436785845ea2236531977` 与 `9ae2b24bab8164ab1954a8e41c23abeb8c283d7ce0758e23615cb1096ce82694`。
+
+资源审计表明：certificate stage 峰值聚合 RSS `16.827327728271484 GiB`，两个 phase 峰值进程树 RSS 分别为 `8.429241180419922/8.414146423339844 GiB`，最低主机可用内存 `87.73542022705078 GiB`；因此失败原因为证书墙钟耗尽，不是 CPU/RAM 配额耗尽。IPX execution 在终止瞬间记录过待清理进程组，父编排器随后完成整组终止；运行结束后的独立审计为 D45 残留进程 `0`。
+
+总运行时间 `1969.9582074005157 s`。总 manifest/execution SHA-256 分别为 `668fb0ea4c9293f789781298ca54f56da2bdcb55a3a7806d5bf8171d6e24cc55` / `60af4ee5b16f9aed6ec1a048b87cd57cbaf58b9b90141001ad667bdc71dcbca0`，终态字段为：
+
+- `status=no_strict_certificate`；
+- `formal_lower_bound_eligible=false`、`formal_lower_bound_decimal=null`、`selected_phase=null`；
+- `hybrid_r0_certificate_covers_r1_and_original_milp=false`；
+- `d46_feasible_upper_bound_contract_permitted=false`；
+- `technical_ranking_permitted=false`。
+
+远端 29 个正式文件已由 `artifact_sha256.txt` 逐文件校验，清单自身 SHA-256 为 `ef53178bcfdab3cad719d94994c41f8e35906b1593ee95e55e679182303058e9`；本地副本连同清单和 launcher 共 31 个文件，全部复核通过。`README.md` 中“Strict lower bound: None”与 manifest 一致；其后通用成功说明句不构成数值证书，不能覆盖 manifest 的 `null/false` 字段。
+
+据第 8、9、11 节，D45 不得重跑，也不开放 D46 可行上界/修复、容量恢复、TAC、gap、E2–E4 或技术排序。任何继续计算必须先另立并在结果前冻结缩放、对偶修复、R1 分支或严格分解型 Hybrid 下界恢复合同；D45 已完成的部分块不得被拼接成下界。

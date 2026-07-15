@@ -1,0 +1,8 @@
+{
+  "case_key": "hybrid_r0",
+  "elapsed_seconds": 155.37805382721126,
+  "pid": 158390,
+  "result_sha256": "220304304ac2ae7427055ba99e71c43bd3ca2c8bde4f0386d7ed235c0f79b4ba",
+  "schema_id": "tes_bess_boundary.e0d42_formal_lp_prepare.v1.execution",
+  "state": "formal_lp_archive_complete"
+}
