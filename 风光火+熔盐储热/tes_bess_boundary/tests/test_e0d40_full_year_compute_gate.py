@@ -197,6 +197,62 @@ def test_capacity_bound_audit_requires_finite_bounds_and_installation_links() ->
     )
 
 
+def test_capacity_bound_audit_accepts_continuous_zero_capacity_tes_policy() -> None:
+    from pyomo.environ import Block, ConcreteModel, Constraint, Var
+
+    from tes_bess_boundary.e0d40_full_year_compute_gate import (
+        _capacity_bound_audit,
+    )
+    from tes_bess_boundary.model import Architecture
+
+    model = ConcreteModel()
+    model.tes = Block()
+    block = model.tes
+    capacity_names = (
+        "salt_mass_t",
+        "ht_tank_capacity_t",
+        "mt_tank_capacity_t",
+        "lt_tank_capacity_t",
+        "ht_service_salt_mass_t",
+        "mt_service_salt_mass_t",
+        "electric_charge_input_capacity_mw",
+        "steam_to_ht_input_capacity_mw",
+        "steam_to_mt_input_capacity_mw",
+        "electric_output_capacity_mw",
+        "heat_output_capacity_mw",
+    )
+    for name in capacity_names:
+        setattr(block, name, Var(bounds=(0.0, 100.0)))
+    link_names = (
+        "ht_state_capacity",
+        "mt_state_capacity",
+        "lt_state_capacity",
+        "ht_full_inventory_capacity",
+        "mt_full_inventory_capacity",
+        "lt_full_inventory_capacity",
+        "electric_charge_capacity_limit",
+        "steam_to_ht_capacity_limit",
+        "steam_to_mt_capacity_limit",
+        "electric_output_capacity_limit",
+        "heat_output_capacity_limit",
+        "ht_service_mass_limit",
+        "mt_service_mass_limit",
+    )
+    for index, name in enumerate(link_names):
+        setattr(
+            block,
+            name,
+            Constraint(expr=block.salt_mass_t <= 100.0 + index),
+        )
+
+    audit = _capacity_bound_audit(model, Architecture.TES)
+
+    assert audit["tes_capacity_policy"] == "continuous_zero_capacity_allowed"
+    assert audit["all_capacity_bounds_finite_nonnegative"] is True
+    assert audit["all_installation_links_present"] is True
+    assert audit["passed"] is True
+
+
 def test_linearity_audit_detects_nonlinear_constraint() -> None:
     from pyomo.environ import ConcreteModel, Constraint, Objective, Var
 
@@ -213,6 +269,42 @@ def test_linearity_audit_detects_nonlinear_constraint() -> None:
     audit = _linearity_audit(model)
     assert audit["nonlinear_component_count"] == 1
     assert audit["nonlinear_components"] == ["nonlinear"]
+
+
+def test_failed_build_audit_is_written_before_raising(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import tes_bess_boundary.e0d40_full_year_compute_gate as d40
+
+    failed = {
+        "schema_id": d40.BUILD_SCHEMA_ID,
+        "architecture": "no_storage",
+        "audit": {"passed": False},
+    }
+    monkeypatch.setattr(d40, "build_architecture_manifest", lambda *_args: failed)
+    monkeypatch.setattr(d40, "_available_memory_gib", lambda: 90.0)
+    monkeypatch.setattr(d40, "_peak_rss_gib", lambda: 1.0)
+
+    with pytest.raises(RuntimeError, match="build audit failed"):
+        d40.write_architecture_audit(
+            d40.Architecture.NO_STORAGE,
+            tmp_path / "service.json",
+            tmp_path / "heat.csv",
+            tmp_path / "vre.csv",
+            tmp_path / "prices",
+            tmp_path,
+        )
+
+    assert json.loads(
+        (tmp_path / "build_no_storage.json").read_text(encoding="utf-8")
+    ) == failed
+    execution = json.loads(
+        (tmp_path / "build_no_storage_execution.json").read_text(encoding="utf-8")
+    )
+    assert execution["manifest_sha256"] == _sha(
+        tmp_path / "build_no_storage.json"
+    )
 
 
 def test_gate_a_compiler_enforces_resource_thresholds(

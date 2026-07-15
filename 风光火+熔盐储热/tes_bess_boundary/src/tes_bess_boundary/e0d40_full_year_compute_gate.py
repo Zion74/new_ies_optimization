@@ -412,19 +412,38 @@ def _capacity_bound_audit(model: object, architecture: Architecture) -> dict[str
             {
                 f"tes.{name}": hasattr(model.tes, name)
                 for name in (
-                    "installed",
-                    "port_installed",
-                    "material_salt_upper",
-                    "material_ht_tank_upper",
-                    "material_mt_tank_upper",
-                    "material_lt_tank_upper",
-                    "material_port_upper",
-                    "material_port_requires_tes",
+                    "ht_state_capacity",
+                    "mt_state_capacity",
+                    "lt_state_capacity",
+                    "ht_full_inventory_capacity",
+                    "mt_full_inventory_capacity",
+                    "lt_full_inventory_capacity",
+                    "electric_charge_capacity_limit",
+                    "steam_to_ht_capacity_limit",
+                    "steam_to_mt_capacity_limit",
+                    "electric_output_capacity_limit",
+                    "heat_output_capacity_limit",
                     "ht_service_mass_limit",
                     "mt_service_mass_limit",
                 )
             }
         )
+        if hasattr(model.tes, "installed"):
+            link_components.update(
+                {
+                    f"tes.{name}": hasattr(model.tes, name)
+                    for name in (
+                        "installed",
+                        "port_installed",
+                        "material_salt_upper",
+                        "material_ht_tank_upper",
+                        "material_mt_tank_upper",
+                        "material_lt_tank_upper",
+                        "material_port_upper",
+                        "material_port_requires_tes",
+                    )
+                }
+            )
     bounds: dict[str, dict[str, float | None]] = {}
     for name, variable in required:
         lower = None if variable.lb is None else float(variable.lb)
@@ -442,6 +461,15 @@ def _capacity_bound_audit(model: object, architecture: Architecture) -> dict[str
     return {
         "capacity_variable_count": len(bounds),
         "capacity_variable_bounds": bounds,
+        "tes_capacity_policy": (
+            "not_applicable"
+            if architecture not in (Architecture.TES, Architecture.HYBRID)
+            else (
+                "semicontinuous_with_installation_binary"
+                if hasattr(model.tes, "installed")
+                else "continuous_zero_capacity_allowed"
+            )
+        ),
         "installation_link_components": link_components,
         "all_capacity_bounds_finite_nonnegative": finite_nonnegative_bounds,
         "all_installation_links_present": all(link_components.values()),
@@ -635,8 +663,6 @@ def build_architecture_manifest(
         "linearity_audit": linearity,
         "audit": {"passed": passed},
     }
-    if not passed:
-        raise RuntimeError(f"D40 {architecture.value} build audit failed")
     return manifest
 
 
@@ -725,6 +751,8 @@ def write_architecture_audit(
         "manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
     }
     _write_json(output_dir / f"build_{architecture.value}_execution.json", execution)
+    if manifest["audit"]["passed"] is not True:
+        raise RuntimeError(f"D40 {architecture.value} build audit failed")
     return manifest
 
 
