@@ -173,3 +173,9 @@ D41 可作为硕士论文 Agentic 决策支持层的受限案例：agent 读取�
 Gate A 汇总 manifest SHA-256 为 `50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937`，execution SHA-256 为 `b2d9778e927d3925c7c247ee9816732ed299df3c204fc6a6d746fbe29451b88b`。服务器与本地副本逐文件同哈希，规范目录已固定。首次远程包装命令只在所有 JSON 生成之后，因 Windows here-string CRLF 使最后一条 `sha256sum` glob 带入回车而返回非零；独立验哈确认所有规范产物完整，该包装缺陷未改变代码、模型或判定。
 
 Gate A 因此登记为 `gate_a_passed`。该结果只关闭包含关系、二元覆盖与全年修复接口门，仍没有合法数值下界、可行上界、容量、成本、gap 或技术排序；下一步只允许实现第 6 节的 Gate B 全年严格下界与硬墙钟执行器。
+
+## 14. Gate B 结果前执行器登记
+
+在任何 D41 Gate B 全年求解启动前，已新增 `e0d41_gate_b_lower_bound.py` 与 8 项测试。执行器逐架构串行执行 `R0→R1`，把 HiGHS 软时限与父进程硬墙钟分离，使用独立进程组、`5 s` 非缓冲心跳、进程树/父子合计 RSS 和主机可用内存监控；达到硬墙钟后先发 `SIGTERM`，最多等待 `30 s` 后再发 `SIGKILL`。只有完整通过 Gate A 哈希锁、域审计、8784 h 服务审计、线性审计、最小化目标身份和 finite dual 方向审计的数值才标记为 `formal_lower_bound_eligible=true`。R1 可加载 primal 时把全部变量写入确定性 `csv.gz`，但永久标记 `candidate_only=true`、`formal_bound_eligible=false`。
+
+源码与测试 SHA-256 分别为 `cd532a31d1712a2237e3fe46ccfd395443c16c97a1be6502f2a72861461f1e70` 与 `5ce44ef3c895eb909f23882938b7b737d52145abbcf317ef8ca0ad8abc1aacd3`。新增测试 `8 passed in 2.39s`，D40/D41 定向回归 `24 passed in 2.46s`，Windows 完整回归 `486 passed in 68.78s`，Ruff 检查通过。上述均为小模型和回归测试；尚未启动正式 8784 h Gate B，因而没有合法数值下界、容量、成本、gap 或技术排序。
