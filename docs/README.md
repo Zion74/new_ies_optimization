@@ -52,9 +52,10 @@
 34. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
 35. 运行三个预注册物理状态的代表周规划、8784 h 固定容量回代或全年容量重优化时读 `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`
 36. 解释原 `H*=0.80/G*=0.70` 状态为什么在时间聚合比较前失败时读 `docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md`
-37. 对应层级的实验 / 图表 / 代码映射文档
-38. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-39. 需要做清理或迁移时，再读 `docs/90_governance/`
+37. 执行一次性 `H*=G*=0.70` 修订状态时读 `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`
+38. 对应层级的实验 / 图表 / 代码映射文档
+39. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+40. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

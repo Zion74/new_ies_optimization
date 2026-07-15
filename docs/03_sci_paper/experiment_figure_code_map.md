@@ -145,6 +145,7 @@
 | `src/tes_bess_boundary/e0d38_prevalidation.py`、`planning_model.py` | 同服务参考、完整容量快照、代表期/全年可续跑任务和固定容量回放 | E0/E5 | 已实现；本地完整回归 `437 passed`，原高热状态在参考门失败 |
 | `src/tes_bess_boundary/e0d38_static_feasibility.py` | PCC—CHP 静态最大供热必要条件与逐时违规定位 | E0/E5 | 已实现；490 MW 下 `766.077 MWth`，36 h 超限且全在代表周 4 |
 | `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`、`e0_d38_original_high_heat_state_failure.md` | 原三状态结果前合同及不覆盖合同的失败记录 | E0/E5 | 原合同不能关闭；不得删除失败状态后写成通过 |
+| `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md` | 一次性 `H*=G*=0.70` 修订、文件隔离与不再调参规则 | E0/E5 | 已在 R1 结果前冻结；尚未求解 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

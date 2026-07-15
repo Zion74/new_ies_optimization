@@ -101,6 +101,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D36 代表周数据门**：以热负荷、风电 CF、光伏 CF 和气温组成 672 维周曲线，确定性 PAM 加热峰/高可再生压力强制极端周后冻结第 `4/5/8/29/39/48` 周和 `1/3/10/13/21/4` 权重；加入年尾实际 24 h warm-up 与 48 h 计分段后共 1080 行、8784 加权小时。三个规范文件跨平台逐字节一致。热量 `+5.35%` 和风电 `-8.98%` 等聚合偏差保留给 D38 验证，不事后改周；D36 没有运行单循环优化模型；
 - **D37 分块状态边界门**：新增显式 `BlockAnnualHorizonSpec` 和 D36 严格适配器；六个 168 h 周与一个 72 h 年尾块共享容量，但分别闭合 BESS SOC、HT/MT/LT 库存和两台 CHP 首尾启停/出力/爬坡。年尾 24 h warm-up 权重为零、48 h 计分权重为一；完整 Hybrid 结构审计为 1087 个 BESS/TES 状态节点、每台 CHP 各 1080 条转移及双向爬坡约束、零非线性组件，且未调用求解器。规范 manifest 双端哈希为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6`；
 - **D38 三状态预验证**：结果前合同冻结了 `baseline`、`H*=0.80/G*=0.70` 高热紧 PCC 与基准物理下 24 h 长时边界，以及实际全年无储能两阶段 PCC 目标、10% 弃电帽、代表期规划、固定容量回代和全年重优化。首次执行已在原高热状态的真实 8784 h 无储能最小弃电阶段返回 `infeasible`；静态必要条件表明 490 MW PCC 下最大供热为 `766.077 MWth`，冻结高热序列 36 h 超限且全部已在代表周 4。故原 D38 不能关闭，该失败不是代表周漏选；
+- **D38-R1 一次性修订**：在任何 R1 储能结果产生前另行冻结 `H*=G*=0.70`，热量尺度 `1.5962316499799991`、峰值 `724.034 MWth`，相对 490 MW PCC 静态供热上限保留 `42.043 MWth` 余量。只修订高热尺度，其余服务、成本、代表周、求解与验收规则不变；不得再次搜索参数；
 - **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 双窗口、D24 证据路线、D25 项目取证合同、D26–D32 数值证书与筛查，以及 D33–D37 定向、全回归、材料性网格、代表周构造和分块结构审计均在远端执行；当前双端全回归为 `427 passed`，正式求解仅使用 HiGHS；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
@@ -126,6 +127,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-37 分块循环状态边界：`docs/03_sci_paper/e0_d37_block_cyclic_state_boundary_contract.md`
 - E0-D-38 三状态代表周—全年预验证：`docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`
 - E0-D-38 原高热状态失败记录：`docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md`
+- E0-D-38-R1 一次性高热状态修订：`docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
