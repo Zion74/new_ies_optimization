@@ -1,0 +1,13 @@
+{
+  "manifest_sha256": "8b74c4044854d18d5dffa6c2759bfe747455631e0347293d6a89c16d35276101",
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "phase_execution_sha256": {
+    "ipx": "9020d15db2e869081364d5c45b2c5697a4e090f96c0c4ff510b57b29a7b724f5"
+  },
+  "runtime_seconds": 539.0500511415303,
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.manifest.execution",
+  "status": "hybrid_r0_lower_bound_recovered",
+  "technical_ranking_permitted": false,
+  "total_hard_wall_seconds": 3900.0
+}

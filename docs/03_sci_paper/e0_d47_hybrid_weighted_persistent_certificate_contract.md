@@ -1,6 +1,6 @@
 # E0-D-47 Hybrid 加权持久化 fork 严格证书恢复合同
 
-状态：**第 1–11 节结果前合同保持冻结；源码/测试与 OpenBayes 同哈希 Gate A 已通过，唯一正式 D47 尚未启动**
+状态：**第 1–11 节结果前合同保持冻结；源码/测试、OpenBayes 同哈希 Gate A 与唯一正式 D47 均已完成；终态 `hybrid_r0_lower_bound_recovered`，不得重跑**
 
 适用范围：D45 唯一正式 Hybrid R0 双快照—24 块证书以 `no_strict_certificate` 结束后，只读复用其冻结 LP 与 row dual，以新的严格分解合同恢复最弱合法 Hybrid 全年下界
 
@@ -160,3 +160,32 @@ D47 生产模块与测试先后由提交 `6d584ee` 和进程组清理加固提�
 最终 OpenBayes Gate A 结果为 D47 `37 passed`、D40–D47 `168 passed`、全包 `622 passed`，全部零失败、零跳过；Ruff 0.15.10 与 py_compile 通过。对冻结正式 LP 的只读结构复核得到 `56` 块、总工作权重 `2,525,502`、块权重最小/最大 `43,901/46,293`、比值 `1.054486230381996`，partition content SHA-256 为 `6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677`。Gate A 未读取正式 dual 进行证书计算，`optimization_invoked=false`。
 
 Gate A manifest SHA-256 为 `80591c66ef15a1d01c02513283eb86d5f5bca2edacdcf0041791c87e349cb22d`；本地证据共 23 个文件，checksum 清单覆盖其余 22 个文件并逐文件与远端一致，清单 SHA-256 为 `7de18630e2c46a514b3bb88433e7a96ece88b55b35d02997729a3f6a67c916eb`。本节只开放一次正式 D47 的执行资格，不代表 Hybrid 已有下界、可行容量、项目 TAC、gap、协同价值或技术排序。
+
+## 13. 唯一正式运行终态
+
+唯一正式 D47 已在 OpenBayes 的冻结 60 核环境完成。IPX phase 的 56/56 个确定性加权连续块全部合格，覆盖 `539,546` 列；没有缺块、重复块、内容哈希冲突或非法端点。按预注册的“IPX 成功即停止”规则，`simplex_1` 未启动。最终状态为 `hybrid_r0_lower_bound_recovered`，`formal_lower_bound_eligible=true`，且没有调用优化器或原生求解器：`optimization_invoked=false`、`native_solver_invoked=false`。
+
+80 位向外舍入得到 Hybrid R0 严格下界：
+
+`232011577.83593156905560264049764989154935073609620115224488377919660126326832988 CNY`
+
+对应的严格包络上端点为：
+
+`3391819174.0195139161100476321219415875005205920146107618296368626924607177507169 CNY`
+
+区间宽度为 `3159807596.1835823470544449916242916959511698559184096095847530834958594544823871 CNY`。这里的“上端点”只是同一拉格朗日表达式的定向舍入包络端点，**不是**原 MILP 的可行上界、可行方案目标值或项目 TAC；不得用它计算优化 gap、容量方案或技术排序。由既有可行域包含关系，Hybrid R0 下界同时是 Hybrid R1 与原始 Hybrid MILP 的合法下界，但不证明任何 Hybrid 可行解存在。
+
+正式 phase 在约 `532.387 s` 完成全部块计算，phase 运行 `539.041 s`，总运行 `539.050 s`。峰值 phase 进程树 RSS 为 `18.812 GiB`，峰值聚合 RSS 为 `18.838 GiB`，最低可用内存 `86.714 GiB`；资源门通过，非法端点为 0，结束后活动残留进程为 0。
+
+正式总 manifest、execution、phase execution、result、certificate 与 artifact-list SHA-256 分别为：
+
+- `8b74c4044854d18d5dffa6c2759bfe747455631e0347293d6a89c16d35276101`
+- `ed978c3607f080456576e35dede75c57e017150514e24160462a62566bf9c330`
+- `9020d15db2e869081364d5c45b2c5697a4e090f96c0c4ff510b57b29a7b724f5`
+- `f8c33ca2fab2882e0a444b24351de45301592c18a147fc0b70b0ae17ad54b725`
+- `1caa1b6bd051d682e3fb001e64c39c94fcf28f62cd95256634ff269da22b1c05`
+- `9a766aab5c1e07ef94e7c76d164403c3fc9eab9a44437f5cdd4fc5f092b42c76`
+
+正式 partition 文件 SHA-256 为 `840cd949626b44f4c891a96117b545aa0d681f4196cb26027a28334c4fc2ba23`，partition content SHA-256 与 Gate A 一致，仍为 `6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677`；56 个 chunk 的树哈希为 `999f3a6b62765f81524163e31fb2bc30e37184db92989998b9a39dc85122f664`。本地正式证据共 72 个文件，checksum 清单覆盖其余 71 个文件，全部与远端逐文件同哈希。
+
+D47 成功后，BESS、TES、Hybrid 三种架构都已有至少一个严格全年下界，因此 manifest 中 `d46_feasible_upper_bound_contract_permitted=true`。这只允许另立并冻结 D46 可行上界/修复合同；它不授权立即求解 D46，更不开放容量恢复、TAC、相对 gap、E2–E4 批量扫描或技术排序。唯一正式 D47 已用尽，今后不得因上端点过宽或希望获得更大下界而重跑。
