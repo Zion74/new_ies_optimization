@@ -7,28 +7,6 @@ from pathlib import Path
 import pytest
 
 
-def _research_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
-def _source_service() -> Path:
-    return (
-        _research_root()
-        / "数据采集"
-        / "e0d38_prevalidation"
-        / "service_baseline.json"
-    )
-
-
-def _d39_gate_b() -> Path:
-    return (
-        _research_root()
-        / "数据采集"
-        / "e0d39_service_aware_representative_weeks"
-        / "gate_b_baseline_minimum_curtailment.json"
-    )
-
-
 def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -61,10 +39,26 @@ def _synthetic_service_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(d40, "LEGACY_VRE_SHA256", vre_sha)
     monkeypatch.setattr(d40, "PRICE_BASIS_TREE_SHA256", price_sha)
 
-    source_payload = json.loads(_source_service().read_text(encoding="utf-8"))
-    source_payload["provenance"]["actual_heat_file_sha256"] = heat_sha
-    source_payload["provenance"]["actual_vre_file_sha256"] = vre_sha
-    source_payload["provenance"]["price_basis_tree_sha256"] = price_sha
+    source_payload = {
+        "schema_id": "tes_bess_boundary.e0d38_service_contract.v1",
+        "status": "complete",
+        "formal_project_tac_ready": False,
+        "state": {
+            "state_id": "baseline",
+            "heat_scale": 1.0,
+            "pcc_export_capacity_mw": 700.0,
+        },
+        "actual_renewable_available_mwh": d40.ACTUAL_RENEWABLE_AVAILABLE_MWH,
+        "epsilon_curtailment_ceiling_mwh": (
+            d40.EPSILON_CURTAILMENT_CEILING_MWH
+        ),
+        "pcc_export_target_mwh": d40.PCC_EXPORT_TARGET_MWH,
+        "provenance": {
+            "actual_heat_file_sha256": heat_sha,
+            "actual_vre_file_sha256": vre_sha,
+            "price_basis_tree_sha256": price_sha,
+        },
+    }
     source = tmp_path / "source_service.json"
     source.write_text(
         json.dumps(source_payload, ensure_ascii=False, indent=2, sort_keys=True)
@@ -72,9 +66,19 @@ def _synthetic_service_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         encoding="utf-8",
     )
 
-    d39_payload = json.loads(_d39_gate_b().read_text(encoding="utf-8"))
-    d39_payload["provenance"]["heat_file_sha256"] = heat_sha
-    d39_payload["provenance"]["vre_file_sha256"] = vre_sha
+    d39_payload = {
+        "status": "complete",
+        "actual_minimum_curtailment_mwh": d40.ACTUAL_MINIMUM_CURTAILMENT_MWH,
+        "actual_renewable_available_mwh": d40.ACTUAL_RENEWABLE_AVAILABLE_MWH,
+        "epsilon_10_percent_ceiling_mwh": (
+            d40.EPSILON_CURTAILMENT_CEILING_MWH
+        ),
+        "minimum_curtailment_prevalidation_gate": {"passed": False},
+        "provenance": {
+            "heat_file_sha256": heat_sha,
+            "vre_file_sha256": vre_sha,
+        },
+    }
     d39 = tmp_path / "d39_gate_b.json"
     d39.write_text(
         json.dumps(d39_payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
