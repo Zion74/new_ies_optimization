@@ -56,8 +56,9 @@
 38. 解释服务感知八周修订为何只修复分类、未修复定量保真时读 `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md` 与 `docs/03_sci_paper/e0_d39_gate_b_quantitative_fidelity_failure.md`
 39. 构造或求解真实 8784 h 全年优先模型、判断单体 HiGHS 路线能否成为正式证据时读 `docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md`
 40. 在 D40 单体路线失败后实现合法全年下界、候选离散轨迹、原始全年可行修复与硬墙钟证书时读 `docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md`
-41. 对应层级的实验 / 图表 / 代码映射文档
-42. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+41. 在 D41 TES R0 无法返回合法下界后实现原生 HiGHS 可中断求解、基解检查点与独立拉格朗日下界时读 `docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md`
+42. 对应层级的实验 / 图表 / 代码映射文档
+43. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
 42. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工

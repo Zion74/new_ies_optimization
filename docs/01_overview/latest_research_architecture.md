@@ -105,7 +105,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D39 服务感知增量修订与失败**：结果前冻结原六周加第 `49/16` 周，Gate A 八周数据双端复现通过。Gate B 将真实全年和八周代表期的 10% 服务分类统一为不可行，但自然最小弃电率仍为 `16.6657%` 与 `11.4895%`，误差 `5.1762` 个百分点，超过 1 个百分点门。D39 因此失败，Gate C/D 不启动，也不得继续加周或放宽阈值；
 - **D40 全年优先计算门与失败**：已在任何 D40 构造或求解结果产生前冻结真实 8784 h 单块、baseline 同服务、三种储能架构、HiGHS `0.1%` 正式 gap、3600 s/案例和内存停止规则。代表期不再进入正式容量规划。OpenBayes Gate A 已通过：四架构均为线性单全年循环，Hybrid 含 `685,194` 个活动变量、`96,625` 个二元变量和 `667,662` 条活动约束；峰值 RSS `0.645 GiB`、构造后可用内存 `96.705 GiB`，总 manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`。唯一一次 BESS 60 s 预检只确认接入与资源。正式 BESS 因父进程缺少硬墙钟，在总运行 `4527.395 s` 后仍无结果 JSON、有限 incumbent/dual 或不可行证明；滞后终止后分类为 `monolithic_not_viable`，资源门通过且峰值 RSS 仅 `2.916 GiB`。因此失败来自当前单体执行路线而非内存或 BESS 物理不可行，D40 已不能通过；TES/Hybrid 未在失效执行器下继续；
 - **D41 严格全年界—修复分解（Gate B 最弱案例失败）**：Gate A 的 BESS/TES/Hybrid 原始二元为 `79,057/87,840/96,625`，R0 均剩 0，R1 只剩 `1/0/1` 个拓扑二元，完整固定后均无遗漏。修复接入后正式 Gate B 中，BESS R0/R1 均达到最优并通过审计，严格下界为 `1,144,950,604.8368804 CNY`；它只是受控公开成本敏感性下界，不是原 MILP 上界或项目 TAC。TES R0 已进入 dual simplex，但在 `720.462 s` 硬墙钟内没有返回结果 JSON、有限合法 dual 或不可行证明；峰值子进程树 RSS 仅 `2.389 GiB`，不是内存耗尽。按 BESS→TES→Hybrid 串行停止规则，TES R1 与 Hybrid 未启动，Gate C/D 禁止。总 manifest SHA-256 为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef`，状态 `no_strict_certificate`；不能推出 TES 不可行、BESS 优于 TES、容量方案或技术排序；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，正式求解仅使用 HiGHS。当前同哈希完整回归为 `491 passed in 33.89s`，Windows 完整回归为 `491 passed in 87.37s`。D41 正式 Gate B 已按冻结硬墙钟停止；下一步必须另立 D42，处理 TES 全年 LP 的收敛、可中断终止和合法 dual 提取，不在 D41 名下延时或启动后续 Gate；
+- **D42 原生 HiGHS 可中断拉格朗日下界（结果前合同已冻结）**：保持 D40/D41 的 8784 h 模型、服务与成本口径不变，先用显式预求解矩阵和 IPX 争取快速最优，再用可恢复 dual simplex 检查点提高下界。正式资格不依赖日志 objective 或 Appsi 返回值，而由冻结 LP 的矩阵、行乘子和上下界通过不少于 80 位定向舍入独立复算拉格朗日下界。PDLP、代表期、临时缩放搜索与延长 D41 墙钟均排除。当前只冻结方法和停止规则，尚未实现 D42 代码或启动正式全年求解；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通，正式求解仅使用 HiGHS。当前同哈希完整回归为 `491 passed in 33.89s`，Windows 完整回归为 `491 passed in 87.37s`。下一步只允许实现 D42 Gate A 的原生矩阵指纹、callback、basis 恢复和证书器；其代码/测试另行提交后，才允许正式 Gate B；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -135,6 +136,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-39 服务感知代表周一次性修订：`docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md`
 - E0-D-40 全年优先可计算性与证据门：`docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md`
 - E0-D-41 严格全年界—修复分解合同：`docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md`
+- E0-D-42 原生 HiGHS 可中断拉格朗日下界合同：`docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
