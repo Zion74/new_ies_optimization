@@ -75,16 +75,16 @@
 - D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计。正式 BESS 随后因墙钟执行链超限且无可审计结果被分类为 `monolithic_not_viable`；仍没有任何 D40 容量、成本、gap 或技术排序结果。
 - D41 已在结果前冻结严格全年界—修复分解合同并完成 Gate A/B。BESS R0/R1 均形成合法有限下界，取 `1,144,950,604.8368804 CNY`；TES R0 进入 dual simplex 后在 `720.462 s` 硬墙钟内没有返回合法 dual 或不可行证明，TES R1/Hybrid/Gate C/D 按停止规则未启动。总状态 `no_strict_certificate`。BESS 数值只是受控公开成本敏感性下界，不是可行方案、正式 TAC 或技术赢家；当前仍没有三架构可比的容量、成本、上界或 gap。
 - D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A、执行器实现门和 BESS R0 build-only 复核通过，严格下界 `1,144,950,604.8368804 CNY` 保留。正式 TES R0 的 IPX 与 simplex 第 1 段均在求解器软中断返回后的 80 位证书计算阶段触发父进程硬墙钟，没有落盘合法 certificate 或 basis；TES R0 为 `no_strict_certificate`。D42 已按合同停止，simplex 2–4、TES R1 与 Hybrid 均未启动。
-- D43 已在任何新增代码或正式离线复算前冻结“冻结快照离线对偶证书恢复”合同。两个 D42 solution 归档都含完整 `439,018` 维 row dual，header 为 `dual_valid=true` 且 LP 指纹相同。只读编排器与 15 项测试已实现，本地实现门通过；尚未上传 OpenBayes 或读取正式 row dual，仍无 TES/Hybrid 合法下界。
+- D43 已在任何新增代码或正式离线复算前冻结“冻结快照离线对偶证书恢复”合同。两个 D42 solution 归档都含完整 `439,018` 维 row dual，header 为 `dual_valid=true` 且 LP 指纹相同。只读编排器与 15 项测试已实现并提交，本地/OpenBayes 同哈希实现门通过；正式 row dual 仍未读取，尚无 TES/Hybrid 合法下界。
 
 ## 2. 测试证据
 
 | 环境 | 范围 | 结果 |
 |---|---|---|
 | Windows `.venv-e0` | 全包；含 E0-D-17–D43 只读离线证书编排器 | `534 passed in 62.51s`（关闭 pytest cache；D40–D43 定向 `80 passed in 5.81s`） |
-| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、D41 证据汇编与 D42 Gate B 执行回归 | `519 passed in 34.55s`（关闭 pytest cache；D40–D42 定向 `58 passed in 0.74s`） |
+| OpenBayes Python 3.10.18 隔离环境 | 全包；含正式数据、D41/D42 证据链与 D43 只读离线证书编排器 | `534 passed in 34.18s`（关闭 pytest cache；D40–D43 定向 `80 passed in 0.75s`） |
 
-D26–D42 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，正式求解器仅为 HiGHS；D37 结构审计本身不调用求解器。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针与负筛查证书位于 `e0d32_joint_block_envelope/`；D36 正式构造位于 `/root/e0-b-20260711-019f4f64/e0d36_representative_weeks/`；D37 结构审计位于 `/root/e0-b-20260711-019f4f64/e0d37_block_cyclic_boundaries/`。本轮只上传 D42 新增源码与测试，未上传本地受限资料。
+D26–D43 使用 `Pyomo 6.10.1`、`highspy 1.15.1`，正式求解器仅为 HiGHS；D37 结构审计和 D43 离线证书编排本身不调用求解器。OpenBayes 包路径为 `/root/e0-b-20260711-019f4f64/tes_bess_boundary`，正式数据合同仍为 `TES_BESS_E0B_FORMAL_DIR=/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024`。D27、D28、D29 的规范汇总位于 `/root/e0-b-20260711-019f4f64/数据采集/` 下同名目录；D30 bounds-only/全局原始探针与规范汇总位于 `e0d30_physics_service_bound_tightening/`；D31 双窗口 OBBT、24 h 等价探针与负筛查证书位于 `e0d31_intertemporal_obbt/`；D32 双窗口分块屏幕、24 h reopened 等价探针位于 `e0d32_joint_block_envelope/`；D36 正式构造位于 `/root/e0-b-20260711-019f4f64/e0d36_representative_weeks/`；D37 结构审计位于 `/root/e0-b-20260711-019f4f64/e0d37_block_cyclic_boundaries/`。本轮只上传已提交的 D43 编排器与测试，未上传本地受限资料。
 
 E0-D-1 历史同步快照的本地/远端 SHA-256 为：
 
@@ -225,7 +225,7 @@ BESS R0 build-only 已通过：原始/presolve LP 指纹为 `ccd2600e8050e7b702a
 
 正式 TES R0 的原始/presolve LP 指纹与 Gate A 一致，压缩 LP 归档 SHA-256 为 `dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776`。IPX 在 31 次 IPM 迭代后软中断，simplex 第 1 段在 `315,298` 次迭代后软中断；两者均已返回 HiGHS，随后证书复算分别在 `1020.418/720.313 s` 父进程硬墙钟终止。没有 result、certificate 或 basis，故 simplex 2–4 未启动。准备/IPX/simplex 的峰值进程树 RSS 为 `2.167/0.706/0.914 GiB`，最低可用内存均超过 `95 GiB`，不是内存耗尽。case manifest/execution SHA-256 为 `cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944` / `49e2e21445c67a233ed2bc205a8266351ae800b566d0f89cbfa7883a059efc51`；远端 20 个产物与本地逐文件同哈希。TES R0 为 `no_strict_certificate`，D42 停止且 Hybrid 未启动；这不证明 TES 不可行或 BESS 更优。
 
-D43 新增源码/测试 SHA-256 为 `684385d5a33a531a9034f52ad755b7655adc2e58690ca689ad4e2f08eb889791` / `50c5e819f206e87aaba3f27254e401529140f4f6d6fa8660d5bc901afb691933`。实现固定 case/lp/phase execution、BESS reuse、structure manifest 与 solution 完整哈希链，执行 LP/数组/finite dual 准入、未修改 80 位证书器、双 clean child、父进程资源门、Decimal 选择和只读 README；正式字段永久禁止优化器与技术排序。本地新增 `15 passed`、D40–D43 `80 passed`、全包 `534 passed`，Ruff 通过。测试只使用合成 LP/solution；正式 D42 row dual 尚未读取，OpenBayes 同哈希回归待提交后执行。
+D43 新增源码/测试 SHA-256 为 `684385d5a33a531a9034f52ad755b7655adc2e58690ca689ad4e2f08eb889791` / `50c5e819f206e87aaba3f27254e401529140f4f6d6fa8660d5bc901afb691933`，已结果前提交为 `78e30ee`，OpenBayes 逐字节同哈希。实现固定 case/lp/phase execution、BESS reuse、structure manifest 与 solution 完整哈希链，执行 LP/数组/finite dual 准入、未修改 80 位证书器、双 clean child、父进程资源门、Decimal 选择和只读 README；正式字段永久禁止优化器与技术排序。本地新增 `15 passed`、D40–D43 `80 passed`、全包 `534 passed`，Ruff 通过；OpenBayes `py_compile`、D40–D43 `80 passed in 0.75s`、全包 `534 passed in 34.18s`。测试只使用合成 LP/solution；正式 D42 row dual 尚未读取，正式输出目录仍不存在。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -327,7 +327,7 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败和 D42 TES R0 证书失败均已登记。D43 本地实现门已通过；下一步先提交源码/测试，再完成 OpenBayes 同哈希定向与全包回归，通过后执行唯一一次正式离线复算。Hybrid 与全年可行上界修复继续禁止；
+3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败和 D42 TES R0 证书失败均已登记。D43 本地/OpenBayes 同哈希实现门已通过；本状态提交后执行唯一一次正式离线复算。Hybrid 与全年可行上界修复继续禁止；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；

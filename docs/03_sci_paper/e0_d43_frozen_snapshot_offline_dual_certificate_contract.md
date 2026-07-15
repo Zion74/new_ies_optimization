@@ -1,6 +1,6 @@
 # E0-D-43 冻结 HiGHS 快照离线对偶证书恢复合同
 
-状态：**第 1–10 节结果前合同已冻结；Gate A 本地实现门通过，OpenBayes 同哈希回归待完成；尚未运行正式 D43**
+状态：**第 1–10 节结果前合同已冻结；Gate A 本地/OpenBayes 双端实现门通过；尚未运行正式 D43**
 
 适用范围：D42 已保存 TES R0 原生 solution 快照、但 80 位拉格朗日证书未在父进程硬墙钟内落盘之后的只读恢复
 
@@ -118,4 +118,4 @@ D43 禁止：重跑 D42 TES 求解、延长 D42 墙钟、修改 D42 证书公式
 
 实现已覆盖：case/lp/phase execution、BESS reuse、structure manifest 与 solution 的完整哈希引用链；schema、LP 指纹、四数组集合与维度、`dual_valid` 和 finite row dual 准入；未修改的 80 位证书调用；两个 clean child 的固定并行编排；父进程硬墙钟、RSS、可用内存、5 s 心跳和停止优先级；Decimal 最大合法下界选择与 tie 时 IPX 优先；只读总 manifest/execution/README；非空输出拒绝。所有正式结果字段固定 `optimization_invoked=false`、`native_solver_invoked=false`、`technical_ranking_permitted=false`。
 
-本地新增测试 `15 passed in 1.03s`，D40–D43 定向回归 `80 passed in 5.81s`，完整回归 `534 passed in 62.51s`，Ruff 通过。测试只使用合成小 LP 和人工 solution 归档，没有读取 D42 正式 row dual，也没有调用 D43 正式入口。当前仍不得运行正式 D43；必须先提交本节源码/测试，再完成 OpenBayes 逐字节同哈希与定向/全包回归。
+本地新增测试 `15 passed in 1.03s`，D40–D43 定向回归 `80 passed in 5.81s`，完整回归 `534 passed in 62.51s`，Ruff 通过。结果前实现已提交为 `78e30ee`。OpenBayes 上源码/测试与本地逐字节同哈希，`py_compile`、D40–D43 定向 `80 passed in 0.75s`、完整回归 `534 passed in 34.18s`；正式输出目录仍不存在。两端测试都只使用合成小 LP 和人工 solution 归档，没有读取 D42 正式 row dual，也没有调用 D43 正式入口。Gate A 至此关闭；本节状态提交后才允许执行唯一一次正式 D43。
