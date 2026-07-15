@@ -733,3 +733,6 @@ def test_linux_phase_hard_wall_cleans_process_group(
     assert execution["status"] == "interrupted_or_failed"
     assert execution["stop_reason"] == "phase_hard_wall_reached:ipx"
     assert execution["residual_process_group_detected"] is False
+    assert (
+        execution["process_group_cleanup_audit"]["active_members_after_cleanup"] == []
+    )

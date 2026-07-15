@@ -16,6 +16,7 @@ import json
 import math
 import multiprocessing
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -875,6 +876,75 @@ def validate_phase_execution(
     return actual
 
 
+def _process_group_members(process_group_id: int) -> dict[int, str]:
+    """Return Linux process-group members and their kernel state codes."""
+
+    if os.name == "nt":
+        return {}
+    members: dict[int, str] = {}
+    proc = Path("/proc")
+    if not proc.is_dir():
+        return members
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            stat = (entry / "stat").read_text(encoding="ascii")
+            right = stat.rfind(")")
+            fields = stat[right + 2 :].split()
+            state = fields[0]
+            process_group = int(fields[2])
+            if process_group == process_group_id:
+                members[int(entry.name)] = state
+        except (FileNotFoundError, IndexError, OSError, ValueError):
+            continue
+    return members
+
+
+def _cleanup_process_group(process_group_id: int) -> dict[str, Any]:
+    """Terminate active group members and distinguish inert zombie entries."""
+
+    before = _process_group_members(process_group_id)
+    active_before = sorted(pid for pid, state in before.items() if state != "Z")
+    signal_sequence: list[str] = []
+    if active_before:
+        try:
+            os.killpg(process_group_id, signal.SIGTERM)
+            signal_sequence.append("SIGTERM")
+        except ProcessLookupError:
+            pass
+    deadline = perf_counter() + d45_module.TERMINATION_GRACE_SECONDS
+    active_after = active_before
+    while active_after and perf_counter() < deadline:
+        time.sleep(0.1)
+        current = _process_group_members(process_group_id)
+        active_after = sorted(pid for pid, state in current.items() if state != "Z")
+    if active_after:
+        try:
+            os.killpg(process_group_id, signal.SIGKILL)
+            signal_sequence.append("SIGKILL")
+        except ProcessLookupError:
+            pass
+        deadline = perf_counter() + d45_module.TERMINATION_GRACE_SECONDS
+        while active_after and perf_counter() < deadline:
+            time.sleep(0.1)
+            current = _process_group_members(process_group_id)
+            active_after = sorted(pid for pid, state in current.items() if state != "Z")
+    after = _process_group_members(process_group_id)
+    active_after = sorted(pid for pid, state in after.items() if state != "Z")
+    zombies_after = sorted(pid for pid, state in after.items() if state == "Z")
+    return {
+        "process_group_id": process_group_id,
+        "members_before_cleanup": {str(pid): state for pid, state in before.items()},
+        "active_members_before_cleanup": active_before,
+        "signal_sequence": signal_sequence,
+        "members_after_cleanup": {str(pid): state for pid, state in after.items()},
+        "active_members_after_cleanup": active_after,
+        "zombie_members_after_cleanup": zombies_after,
+        "active_residual_detected": bool(active_after),
+    }
+
+
 def run_monitored_phase(
     *,
     d45_formal_dir: Path,
@@ -980,7 +1050,8 @@ def run_monitored_phase(
                 termination_signal = d42_executor._terminate_process_group(child)
             time.sleep(MONITOR_INTERVAL_SECONDS)
         return_code = child.wait()
-        residual = d45_module._cleanup_residual_process_group(child.pid)
+        cleanup_audit = _cleanup_process_group(child.pid)
+        residual = cleanup_audit["active_residual_detected"]
     result = _load_json(paths["result"]) if paths["result"].is_file() else None
     resource_gate_passed = all(
         (
@@ -1005,6 +1076,7 @@ def run_monitored_phase(
         "stop_reason": stop_reason,
         "termination_signal": termination_signal,
         "residual_process_group_detected": residual,
+        "process_group_cleanup_audit": cleanup_audit,
         "resource_gate_passed": resource_gate_passed,
         "peak_phase_process_tree_rss_gib": peak_tree,
         "peak_aggregate_rss_gib": peak_aggregate,
