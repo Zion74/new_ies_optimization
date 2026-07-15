@@ -1,0 +1,33 @@
+{
+  "available_memory_before_gib": 97.3055648803711,
+  "available_memory_sample_count": 289,
+  "hard_wall_enforced_by_parent": true,
+  "heartbeat_sha256": "8d3dad0dbfd3cd71fdc6fa1364b45abbd44c215a3bae739bbeb872c344a4663d",
+  "log_sha256": "1a65086ee753b65530f81231975d0937893a8a8eb93387efd0daa85f3faa400e",
+  "minimum_available_memory_gib": 95.15657806396484,
+  "peak_child_process_tree_rss_gib": 2.167163848876953,
+  "peak_parent_child_aggregate_rss_gib": 2.189666748046875,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "progress_sha256": "7fa63bd1f1123caf8dbb67148296b1265f3cf3e04dac4eb1cfdb72e5af761db6",
+  "python_version": "3.10.18",
+  "resource_gate_passed": true,
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 75.0,
+    "heartbeat_interval_seconds": 5.0,
+    "host_memory_reserve_gib": 15.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_limit_gib": 35.0,
+    "termination_grace_seconds": 30.0,
+    "total_lp_parent_wall_seconds": 4500.0
+  },
+  "result_sha256": "387f32ac3cff2ead6c5296073d5d51ee409e955093ba52717f5451cc0ceebe43",
+  "return_code": 0,
+  "rss_sample_count": 289,
+  "runtime_seconds": 146.30713503900915,
+  "schema_id": "tes_bess_boundary.e0d42_formal_lp_prepare.v1.execution",
+  "stage": "prepare_tes_r0",
+  "status": "complete",
+  "stop_reason": null,
+  "termination_signal": null,
+  "total_elapsed_seconds_after": 146.31688262708485
+}

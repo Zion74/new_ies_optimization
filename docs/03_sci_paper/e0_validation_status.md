@@ -74,7 +74,7 @@
 - D38-R1 静态诊断为 0 h 超限，但正式 baseline 链确认 D36/D37 代表期无储能在 10% 帽内 `complete`、真实 8784 h 同服务回放 `infeasible`。真实全年与代表期零燃料自然最小弃电分别为 `565,916.122/338,704.669 MWh`，低估 `227,211.453 MWh`；R1 三状态合同据此失败。
 - D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计。正式 BESS 随后因墙钟执行链超限且无可审计结果被分类为 `monolithic_not_viable`；仍没有任何 D40 容量、成本、gap 或技术排序结果。
 - D41 已在结果前冻结严格全年界—修复分解合同并完成 Gate A/B。BESS R0/R1 均形成合法有限下界，取 `1,144,950,604.8368804 CNY`；TES R0 进入 dual simplex 后在 `720.462 s` 硬墙钟内没有返回合法 dual 或不可行证明，TES R1/Hybrid/Gate C/D 按停止规则未启动。总状态 `no_strict_certificate`。BESS 数值只是受控公开成本敏感性下界，不是可行方案、正式 TAC 或技术赢家；当前仍没有三架构可比的容量、成本、上界或 gap。
-- D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A 与执行器实现门通过后，BESS R0 build-only 已完成：D41 manifest 独立重汇编相等，严格下界 `1,144,950,604.8368804 CNY` 可复用，且 `optimization_invoked=false`。下一步只开放 TES R0，Hybrid 继续阻断。
+- D42 已在任何实现和正式全年求解前冻结原生 HiGHS 可中断拉格朗日下界合同。Gate A、执行器实现门和 BESS R0 build-only 复核通过，严格下界 `1,144,950,604.8368804 CNY` 保留。正式 TES R0 的 IPX 与 simplex 第 1 段均在求解器软中断返回后的 80 位证书计算阶段触发父进程硬墙钟，没有落盘合法 certificate 或 basis；TES R0 为 `no_strict_certificate`。D42 已按合同停止，simplex 2–4、TES R1 与 Hybrid 均未启动。
 
 ## 2. 测试证据
 
@@ -214,13 +214,15 @@ Gate B 总证据汇编器在提交 `0fb9346` 中先于正式汇编固定；源�
 
 Gate B 总 manifest/execution SHA-256 为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef` 与 `0b71fc77d7aa4faaad3b84f294faddd035dc8ea66df744df1ba27164c247af19`；`gate_c_permitted=false`、`gate_d_permitted=false`、`technical_ranking_permitted=false`。该失败定位的是 TES 全年 LP 收敛/终止与合法 dual 提取瓶颈，不是 TES 原问题物理不可行性证明。
 
-E0-D-42 原生证书/结构审计源码及两份测试 SHA-256 为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `f0ed8ad3c148a3098e348f4d5954439098df318d8458189d0559feb006388ff1`，本地/远端逐字节一致。实现覆盖完整 `HighsLp` 指纹、边界审计、Pyomo→原生模型翻译、显式 presolve、IPX/simplex callback、同/异指纹 basis 规则、80 位拉格朗日证书，以及五案例 D41 结构锁、价格目录树哈希和分支汇编。Windows D42 定向 `17 passed`、D40–D42 定向 `54 passed`、全包 `508 passed in 66.17s`，Ruff 通过；OpenBayes 定向 `54 passed in 0.65s`、全包 `508 passed in 34.22s`。这些回归只验证实现，正式 8784 h Gate A 指纹证据与当前准入状态见下段；尚无 D42 有限下界。
+E0-D-42 原生证书/结构审计源码及两份测试 SHA-256 为 `3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298`、`6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718`、`b56cd5a3c524d18c4bdea2c59fea5209e3b39cb0eca22aeb8ed63e13ab2c9a8c` 与 `f0ed8ad3c148a3098e348f4d5954439098df318d8458189d0559feb006388ff1`，本地/远端逐字节一致。实现覆盖完整 `HighsLp` 指纹、边界审计、Pyomo→原生模型翻译、显式 presolve、IPX/simplex callback、同/异指纹 basis 规则、80 位拉格朗日证书，以及五案例 D41 结构锁、价格目录树哈希和分支汇编。Windows D42 定向 `17 passed`、D40–D42 定向 `54 passed`、全包 `508 passed in 66.17s`，Ruff 通过；OpenBayes 定向 `54 passed in 0.65s`、全包 `508 passed in 34.22s`。这些回归只验证实现，不是有限下界；正式执行的终态见后文。
 
 正式 Gate A 五案全部通过。TES R0/R1 原始 LP 指纹均为 `c479a3bc96e4431534ada769e1aef209573f1e83192e07f24a38858efcce3a17`，presolve 指纹均为 `c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5`；Hybrid R1 唯一拓扑变量 `bess.installed` 的 0/1 两支均完整连续化。结构 manifest/execution SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1` / `694c794a7a6fa1bb3228d5ee8714120efc7ef0aa6ff74a48eefe197161eef6ab`，本地/远端逐文件一致，本地只读重汇编完全相等。五案峰值 RSS 为 `2.288–2.407 GiB`，`optimization_invoked=false`。该结果只开放 Gate B 执行器实现权限，不是有限下界或技术排序。
 
-Gate B 执行器/正式驱动器及两份测试 SHA-256 为 `c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51`、`a2ba832e51a227b3ad9e3c3484ffe958ca1df39442555dfd397a4330666ca53e`、`6e745b9965b8aa9c3cac9b2fa65da92a53af1eecb6595521d4e0314361b483de` 与 `804685d3907fc51151eff7ac1a2a098fa75544dd39c69bffe11cc198468254bd`，本地/OpenBayes 逐字节一致。实现固定单份 presolved LP 压缩归档、IPX→四段 simplex、同指纹 basis、80 位证书、父进程硬墙钟/5 s 心跳/资源门/哈希链，以及 BESS→TES→Hybrid 的准入和分支汇编。Windows/OpenBayes 全包均为 `519 passed`，Ruff 通过。该实现门只开放 BESS R0 build-only 复核；正式 TES/Hybrid 尚无 D42 数值。
+Gate B 执行器/正式驱动器及两份测试 SHA-256 为 `c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51`、`a2ba832e51a227b3ad9e3c3484ffe958ca1df39442555dfd397a4330666ca53e`、`6e745b9965b8aa9c3cac9b2fa65da92a53af1eecb6595521d4e0314361b483de` 与 `804685d3907fc51151eff7ac1a2a098fa75544dd39c69bffe11cc198468254bd`，本地/OpenBayes 逐字节一致。实现固定单份 presolved LP 压缩归档、IPX→四段 simplex、同指纹 basis、80 位证书、父进程硬墙钟/5 s 心跳/资源门/哈希链，以及 BESS→TES→Hybrid 的准入和分支汇编。Windows/OpenBayes 全包均为 `519 passed`，Ruff 通过。该实现门当时只开放 BESS R0 build-only 复核；它本身不生成正式下界。
 
-BESS R0 build-only 已通过：原始/presolve LP 指纹为 `ccd2600e8050e7b702a9badb610de64f37420620161411d486913d8d3346a9f0` / `ea9e0d34f4b7c1c0aa49c4dcd5b86f89b26a95542b589220f0783d4d70191286`，79,057 个原始二元在 R0 后剩余 0。D41 BESS manifest 独立重汇编相等，复用下界 `1,144,950,604.8368804 CNY`。result/execution SHA-256 为 `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` / `280f9b4ed194af82029b2e43c1a3f7d96f96428efe29a9f18fa836cba739a3b4`；本地/远端五个原始产物同哈希，父进程前置证据重审通过。该阶段不调用优化器，只开放 TES R0。
+BESS R0 build-only 已通过：原始/presolve LP 指纹为 `ccd2600e8050e7b702a9badb610de64f37420620161411d486913d8d3346a9f0` / `ea9e0d34f4b7c1c0aa49c4dcd5b86f89b26a95542b589220f0783d4d70191286`，79,057 个原始二元在 R0 后剩余 0。D41 BESS manifest 独立重汇编相等，复用下界 `1,144,950,604.8368804 CNY`。result/execution SHA-256 为 `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` / `280f9b4ed194af82029b2e43c1a3f7d96f96428efe29a9f18fa836cba739a3b4`；本地/远端五个原始产物同哈希，父进程前置证据重审通过。该阶段不调用优化器，并在当时开放了 TES R0。
+
+正式 TES R0 的原始/presolve LP 指纹与 Gate A 一致，压缩 LP 归档 SHA-256 为 `dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776`。IPX 在 31 次 IPM 迭代后软中断，simplex 第 1 段在 `315,298` 次迭代后软中断；两者均已返回 HiGHS，随后证书复算分别在 `1020.418/720.313 s` 父进程硬墙钟终止。没有 result、certificate 或 basis，故 simplex 2–4 未启动。准备/IPX/simplex 的峰值进程树 RSS 为 `2.167/0.706/0.914 GiB`，最低可用内存均超过 `95 GiB`，不是内存耗尽。case manifest/execution SHA-256 为 `cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944` / `49e2e21445c67a233ed2bc205a8266351ae800b566d0f89cbfa7883a059efc51`；远端 20 个产物与本地逐文件同哈希。TES R0 为 `no_strict_certificate`，D42 停止且 Hybrid 未启动；这不证明 TES 不可行或 BESS 更优。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
@@ -322,10 +324,10 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 代表期定量保真失败、D40 单体路线失败和 D41 Gate B 最弱案例失败均已登记。D42 Gate A、执行器实现门与 BESS R0 前置复核已经通过；下一步只启动 TES R0 的固定 IPX/simplex。TES 无有限合法证书则 D42 停止，不启动 Hybrid；
+3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败和 D42 TES R0 证书失败均已登记。D42 已停止，Hybrid 未启动；下一步只能另立结果前的数值缩放、对偶修复或严格主问题分解合同，不能在 D42 名下延时，也不能启动全年可行上界修复；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 7. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。杨凌正式 E2 经济结论继续等待 D24/D25 与 D42 三架构严格全年证书。D42 已复核 BESS 下界，但 TES/Hybrid 尚无证书，699 次边界扫描继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
+D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。杨凌正式 E2 经济结论继续等待 D24/D25 与新的三架构严格全年证书路线。D42 已复核 BESS 下界，但 TES/Hybrid 尚无证书且 D42 已停止，699 次边界扫描继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。

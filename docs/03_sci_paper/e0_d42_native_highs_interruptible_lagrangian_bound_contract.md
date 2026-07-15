@@ -1,6 +1,6 @@
 # E0-D-42 原生 HiGHS 可中断全年 LP 与拉格朗日下界证书合同
 
-状态：**第 1–11 节结果前合同已冻结；Gate A、Gate B 执行器实现门和 BESS R0 build-only 复核均已通过，TES R0 尚未启动**
+状态：**第 1–11 节结果前合同已冻结；Gate A、执行器实现门和 BESS R0 复核通过，但 TES R0 未生成合法证书，D42 已按合同失败并停止，Hybrid 未启动**
 
 适用范围：D41 Gate B 的 TES R0 收敛、终止与合法下界提取失败之后的严格下界恢复
 
@@ -252,7 +252,7 @@ Gate A 总状态为 `gate_a_structure_passed`，`formal_gate_b_permitted=true`�
 
 四个文件本地/OpenBayes 逐字节一致。执行器现已固定：确定性压缩 LP/solution 归档、IPX 加四段 simplex 计划、12 线程与全部 `1e-7` 容差、80 位证书、同指纹 basis、5 s 心跳、父进程硬墙钟、30 s 终止宽限、进程树/聚合 RSS 与主机内存门、单 LP 4500 s 总墙钟、逐产物哈希复审及最强合法证书选择。正式驱动器固定 BESS R0 build-only 复核、TES R0、Hybrid R0、Hybrid R1 `bess.installed=0/1` 的准入顺序，并按“分支取最小、R0/R1 取最大”汇编 Hybrid 下界。
 
-Windows D40–D42 定向回归为 `58 passed in 5.48s`，全包为 `519 passed in 92.69s`；OpenBayes 定向回归为 `58 passed in 0.74s`，全包为 `519 passed in 34.55s`，Ruff 通过。上述结果只证明执行基础设施与准入逻辑，不是正式全年数值结果。当前仍没有 D42 有限下界、容量、成本、gap 或技术排序；下一步只允许先执行 BESS R0 build-only 与 D41 下界复核，通过后才可启动 TES R0 的 B1/B2。
+Windows D40–D42 定向回归为 `58 passed in 5.48s`，全包为 `519 passed in 92.69s`；OpenBayes 定向回归为 `58 passed in 0.74s`，全包为 `519 passed in 34.55s`，Ruff 通过。上述结果只证明执行基础设施与准入逻辑，不是正式全年数值结果。执行器实现门通过时仍没有 D42 有限下界、容量、成本、gap 或技术排序；因此当时只开放 BESS R0 build-only 与 D41 下界复核，通过后才开放 TES R0 的 B1/B2。
 
 ## 15. Gate B BESS R0 build-only 与下界复核
 
@@ -260,4 +260,16 @@ OpenBayes 在独立子进程中重建 BESS R0，复核 D40/D41 输入、`597,318
 
 D41 BESS manifest 独立重汇编与规范文件完全相等，SHA-256 为 `ed4fcf7d08ab236b678f787c777903d7905197b1262d820371c93f9aef76cfc7`，因此按第 8 节复用严格下界 `1,144,950,604.8368804 CNY`。本阶段 `optimization_invoked=false`；父进程运行 `121.434 s`，峰值子进程树/父子合计 RSS 为 `1.917/1.939 GiB`，最低可用内存 `95.405 GiB`。
 
-规范 result/execution SHA-256 为 `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` / `280f9b4ed194af82029b2e43c1a3f7d96f96428efe29a9f18fa836cba739a3b4`，本地/远端逐文件同哈希，本地父进程前置证据重审通过。该结果只关闭 BESS 前置复核，不产生容量、可行上界、项目 TAC、gap 或技术排序；下一步只允许启动 TES R0，TES 没有有限合法证书时不得启动 Hybrid。
+规范 result/execution SHA-256 为 `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` / `280f9b4ed194af82029b2e43c1a3f7d96f96428efe29a9f18fa836cba739a3b4`，本地/远端逐文件同哈希，本地父进程前置证据重审通过。该结果只关闭 BESS 前置复核，不产生容量、可行上界、项目 TAC、gap 或技术排序；它当时只开放 TES R0，仍禁止 Hybrid。
+
+## 16. Gate B TES R0 正式失败与 D42 停止
+
+OpenBayes 按第 3–9 节冻结口径执行了唯一一次正式 TES R0。准备阶段重新构造同一 `606,163 × 650,052`、`2,521,170` 非零元原始 LP，指纹 `c479a3bc96e4431534ada769e1aef209573f1e83192e07f24a38858efcce3a17`；显式 presolve 后为 `439,018 × 509,289`、`1,806,011` 非零元，指纹 `c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5`，与 Gate A 完全一致。R0 放松全部 `87,840` 个原始二元，剩余非连续列为 0。压缩 LP 归档 SHA-256 为 `dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776`；准备阶段运行 `146.307 s`，峰值子进程树/父子合计 RSS 为 `2.167/2.190 GiB`，最低可用内存 `95.157 GiB`，资源门通过。
+
+固定 IPX 阶段在约 `900.143 s` 触发软中断，HiGHS 记录 31 次 IPM 迭代并以 user interrupt 返回；随后进入不少于 80 位的独立拉格朗日证书计算，但父进程在 `1020.418 s` 硬墙钟终止子进程。该阶段没有落盘 result、certificate 或 basis，仅保留通过哈希审计的 solution 快照。固定 dual simplex 第 1 段在约 `600.120 s` 触发软中断，完成 `315,298` 次迭代；求解器返回后同样进入证书计算，并在 `720.313 s` 父进程硬墙钟被终止，没有落盘 result、certificate 或 basis。由于第 1 段 basis 缺失，simplex 2–4 按合同未启动。
+
+IPX/simplex 第 1 段的峰值子进程树 RSS 分别为 `0.706/0.914 GiB`，最低可用内存分别为 `96.596/96.390 GiB`，没有触发 RSS 或主机内存阈值。两阶段的 `resource_gate_passed=false` 来自父进程硬墙钟失败状态，不表示资源阈值被突破。失败点因此被限定为：合法证书没有在冻结的求解加证书父进程墙钟内落盘，而不是 TES LP 被证明不可行或服务器内存不足。
+
+案例总运行 `1894.218 s`，`case_manifest.json` / `case_execution.json` SHA-256 为 `cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944` / `49e2e21445c67a233ed2bc205a8266351ae800b566d0f89cbfa7883a059efc51`；`lp_manifest.json` / `lp_execution.json` SHA-256 为 `23b10bd00abde649924f8f80901292188c60bf3a54d5dd2547ed60a44209fd84` / `621bc909b9fe6d7af759c96e4e83ea92c4a4f67ffd6a4255825ea8ace08c2fe7`。远端 20 个原始证据文件已全部下载到 `风光火+熔盐储热/数据采集/e0d42_native_highs_lagrangian_bound/gate_b_tes_r0/`，逐文件 SHA-256 完全一致。
+
+TES R0 最终为 `no_strict_certificate`、`formal_lower_bound_eligible=false`。因此 D42 总路线按第 9 节在 TES 处失败并停止，TES R1 与 Hybrid 均未启动；BESS 的既有严格下界仍可保留，但当前没有 TES/Hybrid 有限合法下界，没有三架构可比的容量、成本、gap 或技术排序。本结果不证明 TES 不可行，也不证明 BESS 优于 TES。任何后续恢复必须另立结果前的数值缩放、对偶修复或具有严格主问题下界的分解合同；不得在 D42 名下延长墙钟或事后改变规则，也不得启动全年可行上界合同。

@@ -1,0 +1,9 @@
+{
+  "case_key": "tes_r0",
+  "case_manifest_sha256": "cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944",
+  "runtime_seconds": 1894.218057828024,
+  "schema_id": "tes_bess_boundary.e0d42_formal_case_manifest.v1.execution",
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false,
+  "total_parent_wall_seconds": 4500.0
+}

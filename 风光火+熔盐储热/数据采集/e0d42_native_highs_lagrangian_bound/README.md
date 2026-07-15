@@ -1,6 +1,6 @@
 # E0-D-42 Gate A 全年 LP 结构证据
 
-状态：`gate_a_structure_passed`
+状态：`no_strict_certificate`（Gate A 通过；Gate B 在 TES R0 停止）
 
 日期：2026-07-15
 
@@ -15,7 +15,9 @@
 - `structure_manifest.json` SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1`；
 - 本地下载件与 OpenBayes 逐文件同哈希，本地只读重新汇编与规范 manifest 完全相等。
 
-因此 `formal_gate_b_permitted=true`，但 `technical_ranking_permitted=false`。固定执行器与正式驱动器已双端达到同哈希 `519 passed`。`gate_b_bess_reuse/` 又完成 BESS R0 build-only 并复用 D41 严格下界；本目录仍没有 TES/Hybrid 下界、MILP 可行上界、容量方案、项目 TAC、gap 或技术赢家。下一步只启动 TES R0；TES 无有限合法证书时不得启动 Hybrid。
+Gate A 因此曾以 `formal_gate_b_permitted=true` 开放固定 Gate B，但始终 `technical_ranking_permitted=false`。固定执行器与正式驱动器双端达到同哈希 `519 passed`；`gate_b_bess_reuse/` 完成 BESS R0 build-only 并复用 D41 严格下界。随后 `gate_b_tes_r0/` 完成唯一一次正式 TES R0：IPX 和 simplex 第 1 段均在求解器软中断返回后进入 80 位证书计算，但分别在 `1020.418 s` 和 `720.313 s` 父进程硬墙钟内未落盘合法证书或 basis。TES R0 最终为 `no_strict_certificate`，因此 D42 停止，Hybrid 未启动。
+
+本目录仍没有 TES/Hybrid 下界、MILP 可行上界、容量方案、项目 TAC、gap 或技术赢家。这不证明 TES 不可行或 BESS 更优。后续只能另立结果前的证书恢复合同，不能在 D42 名下延长墙钟或启动全年上界修复。
 
 ## 文件 SHA-256
 
