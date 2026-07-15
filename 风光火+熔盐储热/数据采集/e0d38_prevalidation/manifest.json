@@ -1,31 +1,103 @@
 {
-  "schema_id": "tes_bess_boundary.e0d38_prevalidation_manifest.v1",
-  "generated_at": "2026-07-15T12:20:00+08:00",
-  "status": "original_contract_failed_before_temporal_aggregation",
+  "schema_id": "tes_bess_boundary.e0d38_prevalidation_manifest.v2",
+  "generated_at": "2026-07-15T14:30:00+08:00",
+  "status": "r1_contract_failed_at_baseline_temporal_aggregation",
   "formal_project_tac_ready": false,
-  "claim_scope": "negative_prevalidation_result_not_formal_project_tac",
-  "contract": "docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md",
-  "failure_record": "docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md",
-  "commits": {
-    "preregistration": "f24b301",
-    "runner": "9c55a4b",
-    "failure_capture": "c46ecde",
-    "static_diagnostic": "d4b37ac",
-    "zero_fuel_projection": "86ae1b1"
+  "claim_scope": "negative_temporal_aggregation_prevalidation_not_formal_project_tac",
+  "contracts": {
+    "original": "docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md",
+    "r1": "docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md"
   },
+  "failure_records": {
+    "original_high_heat": "docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md",
+    "r1_baseline_temporal_aggregation": "docs/03_sci_paper/e0_d38r1_baseline_temporal_aggregation_failure.md"
+  },
+  "commits": {
+    "original_preregistration": "f24b301",
+    "runner": "9c55a4b",
+    "original_failure_capture": "c46ecde",
+    "static_diagnostic": "d4b37ac",
+    "zero_fuel_projection": "86ae1b1",
+    "r1_preregistration": "2e8457e",
+    "r1_implementation": "b752583",
+    "bundle_auditor": "0c60a8f",
+    "provenance_and_weekly_diagnostic": "64c731f"
+  },
+  "formal_baseline_chain": {
+    "service_code_sha256": "384936d556abc7e9ebda16b2d7776457f619ae7f1cb4f152329066b061f93f54",
+    "service_contract_sha256": "93f3d7b5c50312d08ea3dd78b1af70661facf880fcc882b1bb1ac32a783977b3",
+    "representative_status": "complete",
+    "full_year_fixed_status": "infeasible",
+    "feasibility_reversal": true
+  },
+  "excluded_artifacts": [
+    {
+      "server_path": "/root/e0-b-20260711-019f4f64/results/e0d38_prevalidation/stale_pre_r1_code/",
+      "reason": "baseline service and case artifacts used different e0d38_prevalidation.py SHA-256 values",
+      "formal_evidence": false
+    }
+  ],
   "files": [
     {
       "path": "service_high_heat_tight_pcc.json",
       "sha256": "c96e5eaf3833c31596dfe6792a3b3ac4810438ac24d36ef78bd23878fa2baa2d",
       "status": "infeasible",
-      "failed_stage": "minimum_curtailment_search"
+      "failed_stage": "minimum_curtailment_search",
+      "role": "original_d38_negative_result"
     },
     {
       "path": "high_heat_static_pcc_diagnostic.json",
       "sha256": "566bdd5666bce4b63a302585b285bd5682f4ad2dd4af043151365f7856a3c7b2",
       "violating_hour_count": 36,
       "violating_week_numbers": [4],
-      "all_violating_hours_covered_by_d36": true
+      "role": "original_d38_static_failure_diagnostic"
+    },
+    {
+      "path": "high_heat_r1_static_pcc_diagnostic.json",
+      "sha256": "aead0da93a5212cb57eebb5282f8e8cb26fdfeb6f8feaea8f267eeb5755b37ca",
+      "violating_hour_count": 0,
+      "maximum_scaled_heat_demand_mw": 724.03367951984,
+      "maximum_static_useful_heat_mw": 766.0767880248933,
+      "role": "r1_static_necessary_condition_pass"
+    },
+    {
+      "path": "service_baseline.json",
+      "sha256": "93f3d7b5c50312d08ea3dd78b1af70661facf880fcc882b1bb1ac32a783977b3",
+      "status": "complete",
+      "natural_minimum_curtailment_mwh": 565916.1220067485,
+      "epsilon_curtailment_ceiling_mwh": 339569.90645758656,
+      "pcc_export_target_mwh": 4035354.738554194,
+      "role": "current_code_formal_baseline_service"
+    },
+    {
+      "path": "case_baseline_representative_planning_no_storage.json",
+      "sha256": "f8dcae636c35b7d7b9e476c3c974b6cffb0da403de13e6807808011212068fe5",
+      "status": "complete",
+      "weighted_curtailment_mwh": 338777.02676439774,
+      "curtailment_rate_on_actual_availability": 0.09976650472314813,
+      "pcc_export_residual_mwh": 4.190951585769653e-9,
+      "relative_mip_gap": 0.00015387772951343953,
+      "role": "current_code_formal_representative_baseline"
+    },
+    {
+      "path": "case_baseline_full_year_fixed_no_storage.json",
+      "sha256": "ea266a9ab37922368e08a85c72be41a2c25e418953cff230e3577c2451ed5b49",
+      "status": "infeasible",
+      "runtime_seconds": 76.75220856163651,
+      "role": "current_code_formal_full_year_baseline_failure"
+    },
+    {
+      "path": "baseline_weekly_failure_diagnostic.json",
+      "sha256": "3ea98ef46b72705617a3dc436c57b158f7819aa8e358c8d85448e66f5bc46329",
+      "status": "complete",
+      "aggregate_curtailment_underrepresentation_mwh": 227211.4531313089,
+      "largest_underrepresented_actual_week": 49,
+      "role": "post_failure_diagnostic_not_retuning_result"
+    },
+    {
+      "path": "formal_baseline_chain.log",
+      "sha256": "52f8d1bda0abfdf0bbdd2b8f6fca57efe4cb82ea141e96ef645d85eb7eddc838",
+      "role": "integrity_guard_execution_log"
     }
   ]
 }

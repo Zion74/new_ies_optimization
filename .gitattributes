@@ -8,6 +8,7 @@
 *.py       text eol=lf
 *.csv      text eol=lf
 *.json     text eol=lf
+风光火+熔盐储热/数据采集/e0d38_prevalidation/formal_baseline_chain.log -text
 
 # Other text assets: normalize in the repository and use the platform checkout.
 *.md       text

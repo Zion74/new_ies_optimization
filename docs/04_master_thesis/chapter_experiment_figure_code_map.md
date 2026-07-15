@@ -2,7 +2,7 @@
 
 更新时间：2026-07-15
 
-除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-37 已闭合 BESS/TES 账本、证据门、同服务边界、数值证书、公开成本、内生容量、材料性、代表周和分块循环边界。D38 执行器已实现，本地完整回归为 `437 passed`；原高热紧 PCC 状态在真实全年无储能参考阶段物理不可行，36 个超限小时全部位于代表周 4，因此原合同不能关闭。严格证据路线仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC、有效全年预验证与 E2-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-37 已闭合 BESS/TES 账本、证据门、同服务边界、数值证书、公开成本、内生容量、材料性、代表周和分块循环边界。D38 执行器、bundle 审计和周级诊断已实现，双端完整回归为 `445 passed`；原高热紧 PCC 状态物理不可行且非漏周，R1 baseline 又发生代表期可行、真实 8784 h 不可行的反转。严格证据路线仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC、新的有效全年预验证与 E2-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -31,11 +31,11 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35–D37 结论已冻结；原 D38 高热状态物理失败，R1 已结果前冻结 `H*=G*=0.70`。下一步只按 R1 执行，不得写成杨凌正式 TAC 或技术赢家 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35–D37 结论已冻结；原 D38 高热失败和 R1 baseline 时间聚合失败均已登记。下一步先冻结新的代表期修订合同，不得写成杨凌正式 TAC 或技术赢家 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
-| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | `e0d36_representative_weeks.py`、`e0d37_block_horizon.py`、D38 执行/诊断模块、原合同/失败记录/R1 合同 | 原 `0.80/0.70` 状态物理失败且非漏周；R1 已结果前一次性冻结 `H*=G*=0.70`，尚未求解。正式 E5 待 R1 三状态通过后继续 |
+| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | `e0d36_representative_weeks.py`、`e0d37_block_horizon.py`、`e0d38_prevalidation.py`、`e0d38_audit.py`、`e0d38_weekly_diagnostic.py`、原合同与两份失败记录 | 原 `0.80/0.70` 状态物理失败且非漏周；R1 baseline 在代表期满足 10% 帽但真实全年不可行。正式 E5 只能由新的结果前代表期修订合同重启 |
 | T4-6 / E6 | 确定性稳健性 | 检查边界移动 | `run_sweep.py` | 待实现 |
 
 建议图表与 SCI 相同：价值分解、ε 前沿、物理主地图、经济主地图、全年验证和边界敏感性。
