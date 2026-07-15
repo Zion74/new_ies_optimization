@@ -1,6 +1,6 @@
 # E0-D-42 原生 HiGHS 可中断全年 LP 与拉格朗日下界证书合同
 
-状态：**第 1–11 节结果前合同已冻结；正式 8784 h build-only Gate A 结构门与 Gate B 执行器实现门均已通过，正式 BESS 复核和 LP 求解尚未启动**
+状态：**第 1–11 节结果前合同已冻结；Gate A、Gate B 执行器实现门和 BESS R0 build-only 复核均已通过，TES R0 尚未启动**
 
 适用范围：D41 Gate B 的 TES R0 收敛、终止与合法下界提取失败之后的严格下界恢复
 
@@ -253,3 +253,11 @@ Gate A 总状态为 `gate_a_structure_passed`，`formal_gate_b_permitted=true`�
 四个文件本地/OpenBayes 逐字节一致。执行器现已固定：确定性压缩 LP/solution 归档、IPX 加四段 simplex 计划、12 线程与全部 `1e-7` 容差、80 位证书、同指纹 basis、5 s 心跳、父进程硬墙钟、30 s 终止宽限、进程树/聚合 RSS 与主机内存门、单 LP 4500 s 总墙钟、逐产物哈希复审及最强合法证书选择。正式驱动器固定 BESS R0 build-only 复核、TES R0、Hybrid R0、Hybrid R1 `bess.installed=0/1` 的准入顺序，并按“分支取最小、R0/R1 取最大”汇编 Hybrid 下界。
 
 Windows D40–D42 定向回归为 `58 passed in 5.48s`，全包为 `519 passed in 92.69s`；OpenBayes 定向回归为 `58 passed in 0.74s`，全包为 `519 passed in 34.55s`，Ruff 通过。上述结果只证明执行基础设施与准入逻辑，不是正式全年数值结果。当前仍没有 D42 有限下界、容量、成本、gap 或技术排序；下一步只允许先执行 BESS R0 build-only 与 D41 下界复核，通过后才可启动 TES R0 的 B1/B2。
+
+## 15. Gate B BESS R0 build-only 与下界复核
+
+OpenBayes 在独立子进程中重建 BESS R0，复核 D40/D41 输入、`597,318` 个活动变量、`527,053` 条约束和 `79,057` 个原始二元；R0 后剩余二元为 0。原始 LP 为 `527,053 × 597,318`、`2,187,237` 非零元，指纹 `ccd2600e8050e7b702a9badb610de64f37420620161411d486913d8d3346a9f0`；presolve LP 为 `390,252 × 451,527`、`1,592,820` 非零元，指纹 `ea9e0d34f4b7c1c0aa49c4dcd5b86f89b26a95542b589220f0783d4d70191286`。
+
+D41 BESS manifest 独立重汇编与规范文件完全相等，SHA-256 为 `ed4fcf7d08ab236b678f787c777903d7905197b1262d820371c93f9aef76cfc7`，因此按第 8 节复用严格下界 `1,144,950,604.8368804 CNY`。本阶段 `optimization_invoked=false`；父进程运行 `121.434 s`，峰值子进程树/父子合计 RSS 为 `1.917/1.939 GiB`，最低可用内存 `95.405 GiB`。
+
+规范 result/execution SHA-256 为 `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` / `280f9b4ed194af82029b2e43c1a3f7d96f96428efe29a9f18fa836cba739a3b4`，本地/远端逐文件同哈希，本地父进程前置证据重审通过。该结果只关闭 BESS 前置复核，不产生容量、可行上界、项目 TAC、gap 或技术排序；下一步只允许启动 TES R0，TES 没有有限合法证书时不得启动 Hybrid。
