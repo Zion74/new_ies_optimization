@@ -1,6 +1,6 @@
 # E0-D-46 三架构全年可行上界与固定二元修复合同
 
-状态：**第 1–11 节结果前合同已冻结；第 12 节源码/本地测试已完成，OpenBayes Gate A 与正式 D46 均未启动**
+状态：**第 1–11 节结果前合同已冻结；第 12 节源码/本地测试与第 13 节 OpenBayes Gate A 已完成，唯一正式 D46 尚未启动**
 
 适用范围：D47 已恢复 Hybrid R0 严格下界、BESS/TES/Hybrid 三架构均已有至少一个全年严格下界之后，为同一 2024 年 8784 h 原始 MILP 恢复第一组可审计可行解、容量与受控成本上界
 
@@ -165,3 +165,16 @@ D46 源码与测试已在本地提交 `fe3b669250c8071b24f5b8fb75bf4d3634720bdc`
 - 本地 D40–D47/规划兼容回归 `199 passed + 5 Linux-only skipped`，全包回归 `639 passed + 5 Linux-only skipped`；Ruff 与 `py_compile` 通过。
 
 上述 24 h 结果仅为 Gate A toy upper bound，不是正式 8784 h D46 上界。当前仍为 `formal_project_tac_ready=false`、`technical_ranking_permitted=false`；在 OpenBayes 同提交 Gate A manifest 通过前，唯一正式 D46 总批次不得启动。
+
+## 13. OpenBayes Gate A 记录（结果后登记，不改写第 1–11 节）
+
+首次 8784 h BESS build-only 在求解器调用前由模型规模锁拒绝。审计确认 D40 三组变量/约束/二元计数没有漂移，原因是 D46 的 `EXPECTED_MODEL_SIZE` 漏写 `_linearity_audit()` 合法返回的 `nonlinear_component_count=0` 与空 `nonlinear_components` 两个字段，导致整字典比较必然失败。修复只补齐这两个已冻结零字段并将断言写入既有三架构 24 h Gate A 测试，不改变任何模型、服务、容量、seed、残差、求解器或资源合同；最终同哈希源码提交为 `4a18f4232563a187652e6c6d509441834bce1e7a`。
+
+OpenBayes 使用 Python 3.10.18、Pyomo 6.10.1、highspy 1.15.1。最终 Gate A 结果为：
+
+- D46 定向 `22 passed`；D40–D47 + planning/HiGHS 兼容集 `204 passed`；全包 `644 passed`；三者均为零失败、零错误、零跳过；Ruff 与 `py_compile` 通过；
+- BESS 原模型 `597,318` 个活动变量、`527,053` 条活动约束、`79,057` 个活动二元；TES 为 `650,052 / 606,163 / 87,840`；Hybrid 为 `685,194 / 667,662 / 96,625`；三架构非线性计数均为 0，R0 后活动二元计数均为 0；
+- 三个 build-only 工件均为 `gate_a_build_passed`、`solver_invoked=false`、`formal_optimization_invoked=false`；
+- Gate A manifest/execution SHA-256 分别为 `098fc8bef7fe160cdad98d5d22675d82dcd9341e03e656792b357e7f29f1d176` / `2ca2f3cd22049ad75db51d8f07b4161a9a1414ab0bec01df1d51de31251c84df`，状态 `gate_a_passed`、`formal_run_permitted=true`；本地证据位于 `风光火+熔盐储热/数据采集/e0d46_gate_a/`。
+
+Gate A 不产生正式可行上界、容量、项目 TAC 或 gap，且保持 `formal_project_tac_ready=false`、`technical_ranking_permitted=false`。它只开放合同规定的唯一一次 BESS→TES→Hybrid 正式总批次。
