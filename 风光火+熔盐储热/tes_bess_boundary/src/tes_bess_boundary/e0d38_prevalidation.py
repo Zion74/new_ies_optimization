@@ -371,6 +371,27 @@ def run_service_reference(args: argparse.Namespace) -> dict:
     horizon_input = load_full_year_input(args.heat_path, args.vre_path, state)
     planning_inputs = planning_inputs_for_state(args.price_basis_path, state)
     solver = _solver_from_args(args)
+    base_payload = {
+        "schema_id": SERVICE_SCHEMA_ID,
+        "generated_at": datetime.now().astimezone().isoformat(),
+        "claim_scope": "temporal_aggregation_prevalidation_not_formal_project_tac",
+        "formal_project_tac_ready": False,
+        "state": _state_payload(state),
+        "physical_service_key": state.physical_service_key,
+        "actual_renewable_available_mwh": horizon_input.renewable_available_mwh,
+        "epsilon_curtailment_fraction": CURTAILMENT_FRACTION,
+        "epsilon_curtailment_ceiling_mwh": (
+            CURTAILMENT_FRACTION * horizon_input.renewable_available_mwh
+        ),
+        "solver": {
+            "name": "appsi_highs",
+            "threads": args.solver_threads,
+            "random_seed": 0,
+            "mip_rel_gap": args.mip_rel_gap,
+            "time_limit_seconds": args.time_limit_seconds,
+        },
+        "provenance": _common_provenance(args),
+    }
     min_curtailment_case = build_d38_case(
         state=state,
         architecture=Architecture.NO_STORAGE,
@@ -384,11 +405,21 @@ def run_service_reference(args: argparse.Namespace) -> dict:
         pcc_export_service=None,
     )
     started = perf_counter()
-    min_curtailment = solve_endogenous_capacity(
-        min_curtailment_case,
-        solver=solver,
-        maximum_accepted_relative_gap=args.mip_rel_gap,
-    )
+    try:
+        min_curtailment = solve_endogenous_capacity(
+            min_curtailment_case,
+            solver=solver,
+            maximum_accepted_relative_gap=args.mip_rel_gap,
+        )
+    except Exception as error:  # noqa: BLE001 - retain the formal failure artifact
+        return {
+            **base_payload,
+            "status": _failure_status(error),
+            "failed_stage": "minimum_curtailment_search",
+            "runtime_seconds": perf_counter() - started,
+            "error_type": type(error).__name__,
+            "error_message": str(error),
+        }
     min_curtailment_runtime = perf_counter() - started
     natural_curtailment_ceiling = (
         min_curtailment.weighted_curtailment_mwh + SERVICE_TOLERANCE_MWH
@@ -409,24 +440,35 @@ def run_service_reference(args: argparse.Namespace) -> dict:
         pcc_export_service=None,
     )
     started = perf_counter()
-    economic_reference = solve_endogenous_capacity(
-        economic_reference_case,
-        solver=solver,
-        maximum_accepted_relative_gap=args.mip_rel_gap,
-    )
+    try:
+        economic_reference = solve_endogenous_capacity(
+            economic_reference_case,
+            solver=solver,
+            maximum_accepted_relative_gap=args.mip_rel_gap,
+        )
+    except Exception as error:  # noqa: BLE001 - retain the formal failure artifact
+        return {
+            **base_payload,
+            "status": _failure_status(error),
+            "failed_stage": "economic_pcc_reference_search",
+            "runtime_seconds": perf_counter() - started,
+            "minimum_curtailment_search": _result_payload(
+                min_curtailment,
+                min_curtailment_runtime,
+            ),
+            "natural_minimum_curtailment_mwh": (
+                min_curtailment.weighted_curtailment_mwh
+            ),
+            "natural_reference_curtailment_ceiling_mwh": (
+                natural_curtailment_ceiling
+            ),
+            "error_type": type(error).__name__,
+            "error_message": str(error),
+        }
     economic_reference_runtime = perf_counter() - started
-    epsilon_ceiling = CURTAILMENT_FRACTION * horizon_input.renewable_available_mwh
     return {
-        "schema_id": SERVICE_SCHEMA_ID,
-        "generated_at": datetime.now().astimezone().isoformat(),
+        **base_payload,
         "status": "complete",
-        "claim_scope": "temporal_aggregation_prevalidation_not_formal_project_tac",
-        "formal_project_tac_ready": False,
-        "state": _state_payload(state),
-        "physical_service_key": state.physical_service_key,
-        "actual_renewable_available_mwh": horizon_input.renewable_available_mwh,
-        "epsilon_curtailment_fraction": CURTAILMENT_FRACTION,
-        "epsilon_curtailment_ceiling_mwh": epsilon_ceiling,
         "natural_minimum_curtailment_mwh": (
             min_curtailment.weighted_curtailment_mwh
         ),
@@ -440,14 +482,6 @@ def run_service_reference(args: argparse.Namespace) -> dict:
             economic_reference,
             economic_reference_runtime,
         ),
-        "solver": {
-            "name": "appsi_highs",
-            "threads": args.solver_threads,
-            "random_seed": 0,
-            "mip_rel_gap": args.mip_rel_gap,
-            "time_limit_seconds": args.time_limit_seconds,
-        },
-        "provenance": _common_provenance(args),
     }
 
 
