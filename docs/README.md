@@ -1,6 +1,6 @@
 ﻿# 文档中心
 
-更新时间：2026-07-14
+更新时间：2026-07-15
 
 `docs/` 是本仓库研究架构、论文逻辑、实验映射与文档治理的唯一权威入口。凡是涉及会议论文、SCI 论文、硕士论文的主线、章节、实验、图表、代码映射与归档判断，先看这里，而不是回到散落旧笔记中重新猜。
 
@@ -55,8 +55,9 @@
 37. 执行一次性 `H*=G*=0.70` 修订状态时读 `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`
 38. 解释服务感知八周修订为何只修复分类、未修复定量保真时读 `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md` 与 `docs/03_sci_paper/e0_d39_gate_b_quantitative_fidelity_failure.md`
 39. 构造或求解真实 8784 h 全年优先模型、判断单体 HiGHS 路线能否成为正式证据时读 `docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md`
-40. 对应层级的实验 / 图表 / 代码映射文档
-41. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+40. 在 D40 单体路线失败后实现合法全年下界、候选离散轨迹、原始全年可行修复与硬墙钟证书时读 `docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md`
+41. 对应层级的实验 / 图表 / 代码映射文档
+42. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
 42. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工

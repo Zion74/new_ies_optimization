@@ -103,7 +103,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D38 三状态预验证**：结果前合同冻结了 `baseline`、`H*=0.80/G*=0.70` 高热紧 PCC 与基准物理下 24 h 长时边界，以及实际全年无储能两阶段 PCC 目标、10% 弃电帽、代表期规划、固定容量回代和全年重优化。首次执行已在原高热状态的真实 8784 h 无储能最小弃电阶段返回 `infeasible`；静态必要条件表明 490 MW PCC 下最大供热为 `766.077 MWth`，冻结高热序列 36 h 超限且全部已在代表周 4。故原 D38 不能关闭，该失败不是代表周漏选；
 - **D38-R1 一次性修订与失败**：在任何 R1 储能结果产生前另行冻结 `H*=G*=0.70`，静态诊断峰值 `724.034 MWth`、0 h 超限；但当前代码/同一服务哈希下，baseline 无储能代表期以 `338,777.027 MWh` 弃电满足 10% 帽，真实 8784 h 回放却 `infeasible`。零燃料自然最小弃电由代表期的 `338,704.669 MWh` 上升到真实全年的 `565,916.122 MWh`，低估 `227,211.453 MWh`。因此 R1 三状态合同已失败，不得继续 E2/E3/E4；
 - **D39 服务感知增量修订与失败**：结果前冻结原六周加第 `49/16` 周，Gate A 八周数据双端复现通过。Gate B 将真实全年和八周代表期的 10% 服务分类统一为不可行，但自然最小弃电率仍为 `16.6657%` 与 `11.4895%`，误差 `5.1762` 个百分点，超过 1 个百分点门。D39 因此失败，Gate C/D 不启动，也不得继续加周或放宽阈值；
-- **D40 全年优先计算门与失败**：已在任何 D40 构造或求解结果产生前冻结真实 8784 h 单块、baseline 同服务、三种储能架构、HiGHS `0.1%` 正式 gap、3600 s/案例和内存停止规则。代表期不再进入正式容量规划。OpenBayes Gate A 已通过：四架构均为线性单全年循环，Hybrid 含 `685,194` 个活动变量、`96,625` 个二元变量和 `667,662` 条活动约束；峰值 RSS `0.645 GiB`、构造后可用内存 `96.705 GiB`，总 manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`。唯一一次 BESS 60 s 预检只确认接入与资源。正式 BESS 因父进程缺少硬墙钟，在总运行 `4527.395 s` 后仍无结果 JSON、有限 incumbent/dual 或不可行证明；滞后终止后分类为 `monolithic_not_viable`，资源门通过且峰值 RSS 仅 `2.916 GiB`。因此失败来自当前单体执行路线而非内存或 BESS 物理不可行，D40 已不能通过；TES/Hybrid 未在失效执行器下继续，下一步必须另立严格求解强化/分解合同；
+- **D40 全年优先计算门与失败**：已在任何 D40 构造或求解结果产生前冻结真实 8784 h 单块、baseline 同服务、三种储能架构、HiGHS `0.1%` 正式 gap、3600 s/案例和内存停止规则。代表期不再进入正式容量规划。OpenBayes Gate A 已通过：四架构均为线性单全年循环，Hybrid 含 `685,194` 个活动变量、`96,625` 个二元变量和 `667,662` 条活动约束；峰值 RSS `0.645 GiB`、构造后可用内存 `96.705 GiB`，总 manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`。唯一一次 BESS 60 s 预检只确认接入与资源。正式 BESS 因父进程缺少硬墙钟，在总运行 `4527.395 s` 后仍无结果 JSON、有限 incumbent/dual 或不可行证明；滞后终止后分类为 `monolithic_not_viable`，资源门通过且峰值 RSS 仅 `2.916 GiB`。因此失败来自当前单体执行路线而非内存或 BESS 物理不可行，D40 已不能通过；TES/Hybrid 未在失效执行器下继续；
+- **D41 严格全年界—修复分解（结果前冻结）**：已在任何 D41 代码、模型或数值产生前冻结 `R0` 全连续松弛、`R1` 拓扑整数松弛、168 h 提交/336 h 前视的候选轨迹和原始 8784 h 固定离散轨迹可行修复。正式下界只能来自可行域包含原 MILP 的全年松弛 dual，正式上界只能来自保留全部真实小时、年度服务和单全年循环的原模型可行解；候选分块永久标记 `candidate_only`。每阶段具有独立父进程硬墙钟，正式 gap 门仍为 `0.1%`，`0.5%` 以上或缺任一界均不得进入 E2；当前尚无 D41 代码或结果；
 - **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 双窗口、D24 证据路线、D25 项目取证合同、D26–D32 数值证书与筛查，以及 D33–D40 Gate A/预检均在远端执行。当前服务器完整回归为 `469 passed in 33.93s`；Windows 最近完整回归为新增 Gate B 测试前 `460 passed`，D40 Gate A/B 合并定向回归 `15 passed`。正式求解仅使用 HiGHS；D40 首轮审计误拒绝产物已隔离，不进入正式 Gate A 证据；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
@@ -133,6 +134,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-38-R1 baseline 时间聚合失败：`docs/03_sci_paper/e0_d38r1_baseline_temporal_aggregation_failure.md`
 - E0-D-39 服务感知代表周一次性修订：`docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md`
 - E0-D-40 全年优先可计算性与证据门：`docs/03_sci_paper/e0_d40_full_year_first_compute_evidence_gate_contract.md`
+- E0-D-41 严格全年界—修复分解合同：`docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
