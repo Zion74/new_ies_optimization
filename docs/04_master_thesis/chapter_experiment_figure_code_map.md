@@ -31,11 +31,11 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35–D37 结论已冻结；原 D38 高热失败和 R1 baseline 时间聚合失败均已登记。下一步先冻结新的代表期修订合同，不得写成杨凌正式 TAC 或技术赢家 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35–D37 结论已冻结；原 D38 和 R1 失败均已登记，D39 已结果前冻结服务感知八周修订。D39 通过前不得恢复机制扫描或写成技术赢家 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
-| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | `e0d36_representative_weeks.py`、`e0d37_block_horizon.py`、`e0d38_prevalidation.py`、`e0d38_audit.py`、`e0d38_weekly_diagnostic.py`、原合同与两份失败记录 | 原 `0.80/0.70` 状态物理失败且非漏周；R1 baseline 在代表期满足 10% 帽但真实全年不可行。正式 E5 只能由新的结果前代表期修订合同重启 |
+| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | D36/D37、D38 执行/审计/诊断模块、D39 合同与待建实现 | 原 D38 高热失败且非漏周；R1 baseline 时间聚合失败。D39 冻结原六周 + 第 49/16 周及 gate-first 验收；尚无 D39 数据或结果 |
 | T4-6 / E6 | 确定性稳健性 | 检查边界移动 | `run_sweep.py` | 待实现 |
 
 建议图表与 SCI 相同：价值分解、ε 前沿、物理主地图、经济主地图、全年验证和边界敏感性。

@@ -11,7 +11,7 @@
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 验证代表周与真实点 | 6 个代表周 + 年末 48 h；三状态预验证；固定容量 8784 h；全年重优化 | 代表周误差、后悔值、全年赢家 | 原 `H*=0.80/G*=0.70` 状态在同服务参考前物理失败且非漏周；R1 静态必要条件通过，但 baseline 的代表期弃电 `338,777.027 MWh`、真实全年回放 `infeasible`，时间聚合门失败。周级诊断定位第 49/16 周及代表周 39/8/29 簇的弃电低估；正式 E5 只能在新结果前合同下重启；`_ch4_p3_typdays.py` 仅作旧原型 |
+| E5 | 验证代表周与真实点 | 原 6 周；D39 一次性增至 8 周；年末 48 h；三状态预验证；固定容量 8784 h；全年重优化 | 代表周误差、后悔值、全年赢家 | 原 D38 高热失败且非漏周；R1 baseline 发生时间聚合反转。D39 已结果前冻结原六周加第 49/16 周、重建全部权重及 baseline gate-first 的分类/1 个百分点门；尚无 D39 数据或结果；`_ch4_p3_typdays.py` 仅作旧原型 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -148,6 +148,7 @@
 | `src/tes_bess_boundary/e0d38_weekly_diagnostic.py` | 实际 52 周与冻结 D36 分配的零燃料最小弃电差异诊断 | E0/E5 | 已实现；第 49/16 周为最大两个单周低估，诊断不构成事后调参 |
 | `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`、`e0_d38_original_high_heat_state_failure.md` | 原三状态结果前合同及不覆盖合同的失败记录 | E0/E5 | 原合同不能关闭；不得删除失败状态后写成通过 |
 | `docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`、`e0_d38r1_baseline_temporal_aggregation_failure.md` | 一次性 `H*=G*=0.70` 修订、文件隔离、执行后 baseline 失败 | E0/E5 | R1 静态检查通过但 baseline 时间聚合门失败；新修订必须另立结果前合同 |
+| `docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md` | 原六周 + 第 49/16 周、D36 距离重分配、独立文件和 gate-first 验收 | E0/E5 | 结果前合同已冻结；尚未生成 D39 数据或求解结果 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

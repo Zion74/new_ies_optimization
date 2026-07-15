@@ -102,6 +102,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D37 分块状态边界门**：新增显式 `BlockAnnualHorizonSpec` 和 D36 严格适配器；六个 168 h 周与一个 72 h 年尾块共享容量，但分别闭合 BESS SOC、HT/MT/LT 库存和两台 CHP 首尾启停/出力/爬坡。年尾 24 h warm-up 权重为零、48 h 计分权重为一；完整 Hybrid 结构审计为 1087 个 BESS/TES 状态节点、每台 CHP 各 1080 条转移及双向爬坡约束、零非线性组件，且未调用求解器。规范 manifest 双端哈希为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6`；
 - **D38 三状态预验证**：结果前合同冻结了 `baseline`、`H*=0.80/G*=0.70` 高热紧 PCC 与基准物理下 24 h 长时边界，以及实际全年无储能两阶段 PCC 目标、10% 弃电帽、代表期规划、固定容量回代和全年重优化。首次执行已在原高热状态的真实 8784 h 无储能最小弃电阶段返回 `infeasible`；静态必要条件表明 490 MW PCC 下最大供热为 `766.077 MWth`，冻结高热序列 36 h 超限且全部已在代表周 4。故原 D38 不能关闭，该失败不是代表周漏选；
 - **D38-R1 一次性修订与失败**：在任何 R1 储能结果产生前另行冻结 `H*=G*=0.70`，静态诊断峰值 `724.034 MWth`、0 h 超限；但当前代码/同一服务哈希下，baseline 无储能代表期以 `338,777.027 MWh` 弃电满足 10% 帽，真实 8784 h 回放却 `infeasible`。零燃料自然最小弃电由代表期的 `338,704.669 MWh` 上升到真实全年的 `565,916.122 MWh`，低估 `227,211.453 MWh`。因此 R1 三状态合同已失败，不得继续 E2/E3/E4；
+- **D39 服务感知增量修订**：在任何 D39 数据或结果产生前冻结原六周加第 `49/16` 周的八周集合；新增周严格来自 D38 baseline 周级低估排名前二。全部 52 周沿用 D36 的 672 维距离重新分配，年尾段和所有物理/服务/成本阈值不变。先以自然最小弃电的可行性分类一致和 1 个百分点误差为 gate-first 门；失败不得继续加周或放宽阈值；
 - **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 双窗口、D24 证据路线、D25 项目取证合同、D26–D32 数值证书与筛查，以及 D33–D38-R1 定向、全回归和预验证均在远端执行；当前本地/服务器完整回归均为 `445 passed`，正式求解仅使用 HiGHS；首轮混合代码哈希产物已隔离，不进入证据；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
@@ -129,6 +130,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-38 原高热状态失败记录：`docs/03_sci_paper/e0_d38_original_high_heat_state_failure.md`
 - E0-D-38-R1 一次性高热状态修订：`docs/03_sci_paper/e0_d38r1_revised_high_heat_prevalidation_contract.md`
 - E0-D-38-R1 baseline 时间聚合失败：`docs/03_sci_paper/e0_d38r1_baseline_temporal_aggregation_failure.md`
+- E0-D-39 服务感知代表周一次性修订：`docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
