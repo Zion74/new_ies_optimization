@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d38_weekly_diagnostic.py", line 507, in <module>
+    main()
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d38_weekly_diagnostic.py", line 495, in main
+    payload = run_diagnostic(args)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d38_weekly_diagnostic.py", line 323, in run_diagnostic
+    representative_input = load_representative_input(args.periods_path, state)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d38_prevalidation.py", line 226, in load_representative_input
+    representative = load_e0d37_block_horizon(periods_path)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d37_block_horizon.py", line 113, in load_e0d37_block_horizon
+    raise ValueError(
+ValueError: D36 representative-period SHA-256 mismatch: expected 02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9, received fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac
