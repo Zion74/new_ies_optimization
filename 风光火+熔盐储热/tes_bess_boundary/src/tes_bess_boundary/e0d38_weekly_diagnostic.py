@@ -42,6 +42,8 @@ SCHEMA_ID = "tes_bess_boundary.e0d38_weekly_failure_diagnostic.v1"
 FULL_WEEK_HOURS = 168
 FULL_WEEK_COUNT = 52
 FULL_WEEK_SCORING_HOURS = FULL_WEEK_HOURS * FULL_WEEK_COUNT
+SERVICE_CLASSIFICATION_TOLERANCE_MWH = 1e-3
+MAXIMUM_NATURAL_CURTAILMENT_RATE_ERROR_PP = 1.0
 
 
 def _sha256(path: Path) -> str:
@@ -262,6 +264,58 @@ def summarize_assignment_error(
     return weekly, cluster_rows
 
 
+def evaluate_minimum_curtailment_gate(
+    *,
+    actual_minimum_curtailment_mwh: float,
+    representative_minimum_curtailment_mwh: float,
+    actual_renewable_available_mwh: float,
+    epsilon_ceiling_mwh: float,
+    service_tolerance_mwh: float = SERVICE_CLASSIFICATION_TOLERANCE_MWH,
+    maximum_rate_error_pp: float = MAXIMUM_NATURAL_CURTAILMENT_RATE_ERROR_PP,
+) -> dict[str, Any]:
+    """Evaluate the pre-registered D39 baseline classification and 1 pp gate."""
+
+    if actual_renewable_available_mwh <= 0.0:
+        raise ValueError("actual renewable availability must be positive")
+    if service_tolerance_mwh < 0.0 or maximum_rate_error_pp < 0.0:
+        raise ValueError("D39 gate tolerances must be non-negative")
+    actual_rate = actual_minimum_curtailment_mwh / actual_renewable_available_mwh
+    representative_rate = (
+        representative_minimum_curtailment_mwh
+        / actual_renewable_available_mwh
+    )
+    rate_error_pp = 100.0 * abs(actual_rate - representative_rate)
+    actual_above = (
+        actual_minimum_curtailment_mwh - epsilon_ceiling_mwh
+        >= service_tolerance_mwh
+    )
+    representative_above = (
+        representative_minimum_curtailment_mwh - epsilon_ceiling_mwh
+        >= service_tolerance_mwh
+    )
+    classification_consistent = actual_above == representative_above
+    return {
+        "actual_natural_curtailment_rate_on_actual_availability": actual_rate,
+        "representative_natural_curtailment_rate_on_actual_availability": (
+            representative_rate
+        ),
+        "absolute_natural_curtailment_rate_error_percentage_points": (
+            rate_error_pp
+        ),
+        "actual_above_epsilon_by_tolerance": actual_above,
+        "representative_above_epsilon_by_tolerance": representative_above,
+        "feasibility_classification_consistent": classification_consistent,
+        "service_classification_tolerance_mwh": service_tolerance_mwh,
+        "maximum_rate_error_percentage_points": maximum_rate_error_pp,
+        "passed": (
+            actual_above
+            and representative_above
+            and classification_consistent
+            and rate_error_pp <= maximum_rate_error_pp + 1e-12
+        ),
+    }
+
+
 def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
     state = state_spec(args.state)
     planning_inputs = planning_inputs_for_state(args.price_basis_path, state)
@@ -307,6 +361,13 @@ def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
     ]
     period_rows = _read_csv(args.periods_path)
     assignments = _read_csv(args.assignments_path)
+    representative_week_count = len(
+        {
+            int(row["source_week_index"])
+            for row in period_rows
+            if row["source_role"] == "representative_scored"
+        }
+    )
     actual_weeks, actual_tail = group_actual_weeks(
         actual_curtailment,
         actual_renewable,
@@ -326,6 +387,12 @@ def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
         "weighted_minimum_curtailment_mwh"
     ]
     epsilon_ceiling = CURTAILMENT_FRACTION * actual_input.renewable_available_mwh
+    minimum_curtailment_gate = evaluate_minimum_curtailment_gate(
+        actual_minimum_curtailment_mwh=actual_total,
+        representative_minimum_curtailment_mwh=representative_total,
+        actual_renewable_available_mwh=actual_input.renewable_available_mwh,
+        epsilon_ceiling_mwh=epsilon_ceiling,
+    )
     return {
         "schema_id": SCHEMA_ID,
         "generated_at": datetime.now().astimezone().isoformat(),
@@ -339,10 +406,14 @@ def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
         },
         "method": {
             "actual_horizon": "single_8784h_cyclic_block",
-            "representative_horizon": "frozen_d36_seven_cyclic_blocks",
+            "representative_horizon": (
+                f"{representative_week_count}_representative_weeks_plus_"
+                "year_end_tail_independent_cyclic_blocks"
+            ),
+            "representative_week_count": representative_week_count,
             "objective": "zero_fuel_minimum_renewable_curtailment",
             "fuel_segment_code": "continuous_exact_zero_fuel_objective_projection",
-            "assignments": "frozen_d36_week_assignments",
+            "assignments": args.assignments_path.name,
         },
         "solver": {
             "name": "appsi_highs",
@@ -364,6 +435,7 @@ def run_diagnostic(args: argparse.Namespace) -> dict[str, Any]:
         "representative_service_margin_below_epsilon_mwh": (
             epsilon_ceiling - representative_total
         ),
+        "minimum_curtailment_prevalidation_gate": minimum_curtailment_gate,
         "largest_underrepresented_actual_week": weekly[0],
         "top_10_underrepresented_actual_weeks": weekly[:10],
         "cluster_assignment_diagnostics": clusters,

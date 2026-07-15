@@ -3,10 +3,43 @@ from __future__ import annotations
 import pytest
 
 from tes_bess_boundary.e0d38_weekly_diagnostic import (
+    evaluate_minimum_curtailment_gate,
     group_actual_weeks,
     group_representative_weeks,
     summarize_assignment_error,
 )
+
+
+def test_minimum_curtailment_gate_requires_classification_and_one_pp() -> None:
+    gate = evaluate_minimum_curtailment_gate(
+        actual_minimum_curtailment_mwh=560.0,
+        representative_minimum_curtailment_mwh=530.0,
+        actual_renewable_available_mwh=3_000.0,
+        epsilon_ceiling_mwh=300.0,
+    )
+
+    assert gate["feasibility_classification_consistent"] is True
+    assert gate["absolute_natural_curtailment_rate_error_percentage_points"] == (
+        pytest.approx(1.0)
+    )
+    assert gate["passed"] is True
+
+    classification_failure = evaluate_minimum_curtailment_gate(
+        actual_minimum_curtailment_mwh=560.0,
+        representative_minimum_curtailment_mwh=299.0,
+        actual_renewable_available_mwh=3_000.0,
+        epsilon_ceiling_mwh=300.0,
+    )
+    assert classification_failure["passed"] is False
+
+    quantitative_failure = evaluate_minimum_curtailment_gate(
+        actual_minimum_curtailment_mwh=560.0,
+        representative_minimum_curtailment_mwh=500.0,
+        actual_renewable_available_mwh=3_000.0,
+        epsilon_ceiling_mwh=300.0,
+    )
+    assert quantitative_failure["feasibility_classification_consistent"] is True
+    assert quantitative_failure["passed"] is False
 
 
 def test_group_actual_weeks_retains_52_weeks_and_tail() -> None:

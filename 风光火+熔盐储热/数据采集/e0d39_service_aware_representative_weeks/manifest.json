@@ -1,0 +1,208 @@
+{
+  "aggregate_reconstruction_diagnostics": {
+    "acceptance_role": "descriptive_only_not_post_result_tuning_target",
+    "ambient_temperature_c": {
+      "actual_mean": 13.656834016393443,
+      "mean_bias_c": 0.9441757741347914,
+      "reconstructed_mean": 14.601009790528234
+    },
+    "heat_demand_mwh": {
+      "actual": 1395670.599074074,
+      "reconstructed": 1463377.5453703704,
+      "relative_error_percent": 4.851212481026321
+    },
+    "pv_available_mwh": {
+      "actual": 269549.81457586423,
+      "reconstructed": 276618.04165342345,
+      "relative_error_percent": 2.6222340715318433
+    },
+    "wind_available_mwh": {
+      "actual": 3126149.25,
+      "reconstructed": 2944618.95,
+      "relative_error_percent": -5.806834078699212
+    }
+  },
+  "audit": {
+    "all_52_weeks_assigned_once": true,
+    "canonical_line_endings": "LF",
+    "d36_tail_fields_unchanged": true,
+    "each_representative_weight_at_least_one": true,
+    "passed": true,
+    "representative_weights_sum": 52
+  },
+  "boundary_handoff": {
+    "cross_block_chronological_state_transfer_allowed": false,
+    "optimization_run_in_d39_gate_a": false,
+    "representative_weeks_are_independent_cyclic_blocks": true,
+    "tail_has_24h_unscored_warmup_and_48h_scored_segment": true
+  },
+  "calendar_contract": {
+    "complete_week_count": 52,
+    "model_period_count": 1416,
+    "representative_week_count": 8,
+    "scored_source_row_count": 1392,
+    "tail_scored_hours": 48,
+    "tail_warmup_hours": 24,
+    "weighted_scored_hours": 8784.0
+  },
+  "canonical_files": {
+    "e0d39_representative_periods.csv": "fb7aa1e9d8815a2a22eee68b61af12b44c4485ba3ca464d21652480d9b75c2ac",
+    "e0d39_week_assignments.csv": "7949d6f58d86787cf9ea8129dae3adc85ec20ffba8a157ad7e121395f2f5052e"
+  },
+  "claim_scope": "service_aware_representative_week_refinement_not_technology_comparison_not_formal_project_tac",
+  "contract": "docs/03_sci_paper/e0_d39_service_aware_representative_week_refinement_contract.md",
+  "feature_contract": {
+    "assignment_tie_break": "lowest_representative_week_index",
+    "channels_in_concatenation_order": [
+      "heat_demand_mw",
+      "wind_cf",
+      "pv_cf",
+      "ambient_temperature_c"
+    ],
+    "dimension": 672,
+    "distance": "squared_euclidean_on_channelwise_z_scores",
+    "hours_per_channel": 168,
+    "scales": [
+      {
+        "channel": "heat_demand_mw",
+        "mean": 157.6702365583876,
+        "population_std": 132.89806771523388
+      },
+      {
+        "channel": "wind_cf",
+        "mean": 0.33839732142857143,
+        "population_std": 0.2812878749217429
+      },
+      {
+        "channel": "pv_cf",
+        "mean": 0.1534205247051477,
+        "population_std": 0.22511720752491957
+      },
+      {
+        "channel": "ambient_temperature_c",
+        "mean": 13.730828754578756,
+        "population_std": 9.211835401794762
+      }
+    ],
+    "scaling_population": "first_8736_hours"
+  },
+  "formal_project_tac_ready": false,
+  "representatives": [
+    {
+      "end": "2024-01-28T23:00:00",
+      "roles": [
+        "peak_heat_low_wind_extreme"
+      ],
+      "start": "2024-01-22T00:00:00",
+      "week_index": 4,
+      "weight_weeks": 1
+    },
+    {
+      "end": "2024-02-04T23:00:00",
+      "roles": [
+        "high_vre_low_absorption_extreme"
+      ],
+      "start": "2024-01-29T00:00:00",
+      "week_index": 5,
+      "weight_weeks": 2
+    },
+    {
+      "end": "2024-02-25T23:00:00",
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-02-19T00:00:00",
+      "week_index": 8,
+      "weight_weeks": 9
+    },
+    {
+      "end": "2024-04-21T23:00:00",
+      "roles": [
+        "d38_baseline_top2_curtailment_underrepresentation"
+      ],
+      "start": "2024-04-15T00:00:00",
+      "week_index": 16,
+      "weight_weeks": 2
+    },
+    {
+      "end": "2024-07-21T23:00:00",
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-07-15T00:00:00",
+      "week_index": 29,
+      "weight_weeks": 13
+    },
+    {
+      "end": "2024-09-29T23:00:00",
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-09-23T00:00:00",
+      "week_index": 39,
+      "weight_weeks": 19
+    },
+    {
+      "end": "2024-12-01T23:00:00",
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-11-25T00:00:00",
+      "week_index": 48,
+      "weight_weeks": 4
+    },
+    {
+      "end": "2024-12-08T23:00:00",
+      "roles": [
+        "d38_baseline_top2_curtailment_underrepresentation"
+      ],
+      "start": "2024-12-02T00:00:00",
+      "week_index": 49,
+      "weight_weeks": 2
+    }
+  ],
+  "schema_id": "tes_bess_boundary.e0d39_service_aware_representative_weeks.v1",
+  "selection_contract": {
+    "added_week_indices_ranked": [
+      49,
+      16
+    ],
+    "algorithm": "retain_d36_plus_d38_baseline_top2_underrepresentation",
+    "all_52_weeks_reassigned": true,
+    "distance_tolerance": 1e-12,
+    "final_feature_distance_objective": 15972.457723900467,
+    "final_week_indices_sorted": [
+      4,
+      5,
+      8,
+      16,
+      29,
+      39,
+      48,
+      49
+    ],
+    "original_d36_week_indices": [
+      4,
+      5,
+      8,
+      29,
+      39,
+      48
+    ]
+  },
+  "source_data": {
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "hour_count": 8784,
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+    "scope": "formal_2024_heat_plus_legacy_2019_vre_shapes",
+    "source_artifacts": {
+      "d36_assignments_sha256": "31c7daae3faa5ffa91f3e5b31ad75fc666cf9f3952bac399352ec832607488a3",
+      "d36_code_sha256": "17c3b0f9698b53fbc51a71ac3a4675738696ed587b0474370e1c58a61b71aee9",
+      "d36_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9",
+      "d38_failure_diagnostic_sha256": "3ea98ef46b72705617a3dc436c57b158f7819aa8e358c8d85448e66f5bc46329",
+      "d39_code_sha256": "89c7d9cee17f0c44bd950454379c455d21c1f57f08af34b6d65362b1bd5bb249",
+      "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+      "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+    }
+  }
+}
