@@ -186,7 +186,11 @@ def run_diagnostic(args: argparse.Namespace) -> dict:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--state", choices=("high_heat_tight_pcc",), required=True)
+    parser.add_argument(
+        "--state",
+        choices=("high_heat_tight_pcc", "high_heat_tight_pcc_r1"),
+        required=True,
+    )
     parser.add_argument("--heat-path", type=Path, required=True)
     parser.add_argument("--periods-path", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)

@@ -28,16 +28,24 @@ def _formal_heat_csv() -> Path:
 
 
 def test_preregistered_state_values_and_service_reuse_are_frozen() -> None:
-    from tes_bess_boundary.e0d38_prevalidation import HIGH_HEAT_SCALE, state_spec
+    from tes_bess_boundary.e0d38_prevalidation import (
+        HIGH_HEAT_SCALE,
+        R1_HIGH_HEAT_SCALE,
+        state_spec,
+    )
 
     baseline = state_spec("baseline")
     high = state_spec("high_heat_tight_pcc")
+    high_r1 = state_spec("high_heat_tight_pcc_r1")
     long_duration = state_spec("long_duration_24h")
 
     assert baseline.heat_scale == 1.0
     assert baseline.pcc_export_capacity_mw == 700.0
     assert high.heat_scale == HIGH_HEAT_SCALE
     assert high.pcc_export_capacity_mw == 490.0
+    assert high_r1.heat_scale == R1_HIGH_HEAT_SCALE
+    assert high_r1.pcc_export_capacity_mw == 490.0
+    assert high_r1.physical_service_key != high.physical_service_key
     assert long_duration.storage_duration_hours == 24.0
     assert long_duration.physical_service_key == baseline.physical_service_key
 
@@ -192,3 +200,27 @@ def test_high_heat_static_pcc_diagnostic_identifies_frozen_week04_failure() -> N
     assert diagnostic["violating_hour_count"] == 36
     assert diagnostic["violating_week_numbers"] == [4]
     assert diagnostic["all_violating_hours_covered_by_d36"] is True
+
+
+@pytest.mark.solver
+def test_r1_high_heat_state_passes_static_pcc_necessary_condition() -> None:
+    from argparse import Namespace
+
+    from tes_bess_boundary.e0d38_static_feasibility import run_diagnostic
+
+    diagnostic = run_diagnostic(
+        Namespace(
+            state="high_heat_tight_pcc_r1",
+            heat_path=_formal_heat_csv(),
+            periods_path=_canonical_periods_csv(),
+            tolerance_mw=1e-7,
+        )
+    )
+
+    assert diagnostic["violating_hour_count"] == 0
+    assert diagnostic["maximum_scaled_heat_demand_mw"] == pytest.approx(
+        724.03367951984
+    )
+    assert diagnostic["static_limit"]["maximum_static_useful_heat_mw"] == pytest.approx(
+        766.0767880248932
+    )

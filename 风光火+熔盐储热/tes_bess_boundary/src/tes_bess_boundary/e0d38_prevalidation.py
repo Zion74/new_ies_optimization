@@ -95,6 +95,7 @@ class E0D38StateSpec:
 
 
 HIGH_HEAT_SCALE = 1.824264742834285
+R1_HIGH_HEAT_SCALE = 1.5962316499799991
 STATES = {
     "baseline": E0D38StateSpec(
         state_id="baseline",
@@ -107,6 +108,13 @@ STATES = {
         state_id="high_heat_tight_pcc",
         physical_service_key="high_heat_pcc490",
         heat_scale=HIGH_HEAT_SCALE,
+        pcc_export_capacity_mw=490.0,
+        storage_duration_hours=None,
+    ),
+    "high_heat_tight_pcc_r1": E0D38StateSpec(
+        state_id="high_heat_tight_pcc_r1",
+        physical_service_key="high_heat_r1_pcc490",
+        heat_scale=R1_HIGH_HEAT_SCALE,
         pcc_export_capacity_mw=490.0,
         storage_duration_hours=None,
     ),
@@ -797,7 +805,11 @@ def build_parser() -> argparse.ArgumentParser:
     _add_common_inputs(reference)
     reference.add_argument(
         "--state",
-        choices=("baseline", "high_heat_tight_pcc"),
+        choices=(
+            "baseline",
+            "high_heat_tight_pcc",
+            "high_heat_tight_pcc_r1",
+        ),
         required=True,
     )
     case = subparsers.add_parser("case")
