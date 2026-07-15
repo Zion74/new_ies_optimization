@@ -6,12 +6,12 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D38–D43 失败均已登记。D44 已用 48-worker 80 位向外舍入证书恢复 TES R0/R1 下界 `254,860,566.6193158889 CNY`；BESS 下界仍为 `1,144,950,604.8368804 CNY`。两者都不是原 MILP 上界、容量或项目 TAC，不能技术排序；Hybrid 严格下界、真实项目账户、三架构可行上界和正式 TAC 仍未完成 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D38–D43 失败均已登记。D44 已用 48-worker 80 位向外舍入证书恢复 TES R0/R1 下界 `254,860,566.6193158889 CNY`；BESS 下界仍为 `1,144,950,604.8368804 CNY`。D45 已冻结 Hybrid R0 双快照—fork 下界合同，尚未实现。已有下界都不是原 MILP 上界、容量或项目 TAC，不能技术排序；真实项目账户、三架构可行上界和正式 TAC 仍未完成 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36/D37 已冻结；D38/R1/D39 三次失败均已登记。D41 三架构严格证书通过前不能继续机制扫描；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照或候选生成 | 全年可计算性、严格 gap、分解证书、代表期误差 | D43 唯一正式复算失败且不得重跑。D44 Gate A 与唯一 Gate B 已完成；IPX 24/24 块证书恢复 TES 下界，总 manifest `d6fe2f34...`。下一步只开放另立 Hybrid 下界合同；可行上界修复、技术排序和批量扫描仍禁止 |
+| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照或候选生成 | 全年可计算性、严格 gap、分解证书、代表期误差 | D43 唯一正式复算失败且不得重跑。D44 Gate A 与唯一 Gate B 已完成；IPX 24/24 块证书恢复 TES 下界，总 manifest `d6fe2f34...`。D45 Hybrid R0 合同已冻结，下一步实现并验证同哈希 Gate A；可行上界修复、技术排序和批量扫描仍禁止 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -164,6 +164,7 @@
 | `docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md` | 原生 `HighsLp` 指纹、显式 presolve、IPX、可恢复 dual simplex、定向舍入拉格朗日下界与资源停止规则 | E0/E5 | 第 1–11 节结果前冻结；第 12–16 节登记实现、Gate A、BESS 复核与 TES 失败。D42 已停止，三架构下界闭合前不得另立全年上界修复或技术排序 |
 | `src/tes_bess_boundary/e0d43_offline_dual_certificate.py`、`tests/test_e0d43_offline_dual_certificate.py`、`docs/03_sci_paper/e0_d43_frozen_snapshot_offline_dual_certificate_contract.md`、`风光火+熔盐储热/数据采集/e0d43_offline_dual_certificate_recovery/` | 哈希锁定 D42 LP/solution 快照，双 child 只读离线 80 位证书、Decimal 选择与资源停止 | E0/E5 | 第 1–10 节结果前冻结；源码/测试 SHA-256 为 `684385d5...` / `50c5e819...`，双端 Gate A 通过；正式 Gate B 总 manifest `c7b7e429...`，状态 `no_strict_certificate`，9 个规范文件本地/远端同哈希 |
 | `src/tes_bess_boundary/e0d44_fork_parallel_certificate.py`、`tests/test_e0d44_fork_parallel_certificate.py`、`docs/03_sci_paper/e0_d44_fork_parallel_lagrangian_certificate_contract.md`、`风光火+熔盐储热/数据采集/e0d44_gate_a/`、`风光火+熔盐储热/数据采集/e0d44_fork_parallel_lagrangian_certificate/` | 保持 D42 公式不变，把全部列固定切为 24 块并用 Linux fork 并行 80 位向外舍入；Fraction 精确等价性、失败隔离、Gate A 准入和正式哈希链 | E0/E5 | 第 1–10 节结果前冻结；提交 `b52c722`，OpenBayes D44 `24 passed`、全包 `558 passed`；正式 manifest `d6fe2f34...`，TES R0/R1 下界恢复，Hybrid 与技术排序未开放 |
+| `docs/03_sci_paper/e0_d45_hybrid_r0_strict_lower_bound_contract.md` | 锁定 Hybrid R0 原始/presolve 指纹，IPX/simplex_1 并行落盘完整 row-dual 快照，再复用 D44 的 24 块、80 位 fork 核形成严格下界 | E0/E5 | 第 1–11 节结果前冻结；尚无源码、Gate A 或正式 Hybrid。R0 合法下界覆盖 R1 与原 MILP，但不生成可行上界、容量、gap、TAC 或技术排序 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

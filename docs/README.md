@@ -59,6 +59,7 @@
 41. 在 D41 TES R0 无法返回合法下界后实现原生 HiGHS 可中断求解、基解检查点与独立拉格朗日下界时读 `docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md`
 42. 从 D42 冻结 row dual 只读恢复串行 80 位证书、理解 D43 正式超时终态时读 `docs/03_sci_paper/e0_d43_frozen_snapshot_offline_dual_certificate_contract.md`
 43. 查看 D43 单核认证超时后的 24 块/快照、48-worker 数学等价并行证书合同、Gate A 与 TES 下界恢复终态时读 `docs/03_sci_paper/e0_d44_fork_parallel_lagrangian_certificate_contract.md`
+44. 在 TES 下界恢复后，为 Hybrid R0 分离原生双快照与 fork 严格证书、闭合三架构下界时读 `docs/03_sci_paper/e0_d45_hybrid_r0_strict_lower_bound_contract.md`
 44. 对应层级的实验 / 图表 / 代码映射文档
 45. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
 42. 需要做清理或迁移时，再读 `docs/90_governance/`
