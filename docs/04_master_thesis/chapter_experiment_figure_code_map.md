@@ -2,7 +2,7 @@
 
 更新时间：2026-07-15
 
-除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-37 已闭合 BESS fixed-capacity/共同 PCS 规划账本、TES 证据门、同服务边界、严格数值证书、公开成本组合、完整内生容量接缝、受控材料性网格、代表周数据构造和分块循环状态边界。24 h 严格替代调度包络已精确闭合；D30 将 336 h 上界收紧至 `777.141 GWh/a`，D31/D32 为负筛查。D36 冻结代表周与年尾段；D37 使七块共享容量但分别闭合 CHP/BESS/TES 状态，规范结构 manifest 双端一致，完整回归均为 427 项。严格证据路线仍为 `0/16`，项目运行账户仍为 `0/4` 可进入正式复核；正式 TAC、D38 全年预验证与 E2-E6 批量入口尚待实现。
+除明确写出完整路径外，本文件中的 `model.py`、`scenarios.py`、`components/...` 等路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。E0-D-14–D-37 已闭合 BESS fixed-capacity/共同 PCS 规划账本、TES 证据门、同服务边界、严格数值证书、公开成本组合、完整内生容量接缝、受控材料性网格、代表周数据构造和分块循环状态边界。24 h 严格替代调度包络已精确闭合；D30 将 336 h 上界收紧至 `777.141 GWh/a`，D31/D32 为负筛查。D36 冻结代表周与年尾段；D37 使七块共享容量但分别闭合 CHP/BESS/TES 状态，规范结构 manifest 双端一致，完整回归均为 427 项。D38 已预注册三状态、同服务、代表期—全年验收与失败处置，但尚未求解。严格证据路线仍为 `0/16`，项目运行账户仍为 `0/4` 可进入正式复核；正式 TAC、D38 全年预验证结果与 E2-E6 批量入口尚待实现。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -31,11 +31,11 @@
 
 | 编号 | 内容 | 目的 | 代码 / 数据 | 状态 |
 |---|---|---|---|---|
-| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35 材料性结论已冻结；D36/D37 又完成六周代表集、52 周权重、年尾段和分块循环边界。下一步是 D38 三状态预验证，不得写成杨凌正式 TAC 或技术赢家 |
+| T4-1 / E1 | 受控价值分解 | 解释 BESS 与 TES 的价值来源 | `planning_model.py`、`e0d34_endogenous_capacity_sample.py`、`e0d35_tes_materiality.py`、`e0d35_materiality_bundle.py`；`_ch4_p1_milp_compare.py` 仅作旧原型 | D35 材料性结论已冻结；D36/D37 又完成六周代表集、52 周权重、年尾段和分块循环边界。D38 合同已冻结但未求解；下一步按合同执行三状态预验证，不得写成杨凌正式 TAC 或技术赢家 |
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
-| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | `e0d36_representative_weeks.py`、`e0d37_block_horizon.py`、`e0d37_structural_audit.py` 与待建 `validate_full_year.py` | D36 数据包和 D37 分块边界已实现并跨平台复现；D38 和正式 E5 待实现 |
+| T4-5 / E5 | 8784 h 回代与重优化 | 验证代表周边界 | `e0d36_representative_weeks.py`、`e0d37_block_horizon.py`、`e0d37_structural_audit.py`、`docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md` 与待建 D38 执行入口 | D36 数据包和 D37 分块边界已实现并跨平台复现；D38 三状态、同服务、固定容量回代、全年重优化及失败处置已预注册但尚未求解；正式 E5 待实现 |
 | T4-6 / E6 | 确定性稳健性 | 检查边界移动 | `run_sweep.py` | 待实现 |
 
 建议图表与 SCI 相同：价值分解、ε 前沿、物理主地图、经济主地图、全年验证和边界敏感性。

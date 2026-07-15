@@ -50,9 +50,10 @@
 32. 涉及 MT→LT 供热夹点、供回水温度来源、HITEC 液态裕量或可交付热量时读 `docs/03_sci_paper/e0_tes_heat_delivery_pinch_contract.md`
 33. 涉及 MT 候选、发电—供热显热分割或候选来源身份时读 `docs/03_sci_paper/e0_tes_mt_scenario_contract.md`
 34. 涉及杨凌原始数据或 CHP 口径时读 `docs/03_sci_paper/e0_original_source_evidence_audit.md`
-35. 对应层级的实验 / 图表 / 代码映射文档
-36. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-37. 需要做清理或迁移时，再读 `docs/90_governance/`
+35. 运行三个预注册物理状态的代表周规划、8784 h 固定容量回代或全年容量重优化时读 `docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`
+36. 对应层级的实验 / 图表 / 代码映射文档
+37. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+38. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

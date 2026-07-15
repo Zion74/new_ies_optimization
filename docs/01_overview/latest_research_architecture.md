@@ -99,7 +99,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D34 完整内生容量模型**：容量核已接入双机 CHP、风光、供热、公共 PCC 和年度服务；Rahman BESS 采用一个共同 PCS 并执行 `0` 或 `5–100 MW` 来源域析取，TES 接入环境相关损失、伴热、五路径泵耗、HT 发电/MT 供热两条独立额定放能轨迹及充热可达性。同弃电上限、同年度 PCC 的 24/336 h 四架构样本已按 objective bounds 和 SHA-256 冻结；早期只同弃电的结果降级为 smoke。1% 严格 ε 初筛得到 BESS `13.04 MW / 189.21 MWh` 与约 `98–104 t` TES，但 Hybrid 的 BESS 为零，且 TES 仍不到旧 `1,200 MWhth` 参考切片盐量的 `1%`。该尺度疑问现由 D35 材料性门闭合；D34 本身只打开公开成本下的小样本诊断与 E1 受控机制，不打开杨凌正式 TAC、E2 经济前沿或项目技术赢家；
 - **D35 材料性门**：以旧 `1,200 MWhth / 13,913.716 t / 150 MW` 切片为分母，在结果前锁定 `0/1%/5%/10%`，对盐量及每个启用端口实施半连续门。自然服务的 1% 解为约 `139–142 t` heat-only TES，但公开代理成本改善仅约 `0.03%–0.05%`；5%/10% 精确选择零 TES。严格服务在 1%/5%/10% 下形成约 `174–186/871/1,742 t` TES，且 Hybrid 全部折叠为 TES；TES/Hybrid objective bounds 重叠，不排序。D35 是材料性稳健性，不是现场最小规模或项目赢家；
 - **D36 代表周数据门**：以热负荷、风电 CF、光伏 CF 和气温组成 672 维周曲线，确定性 PAM 加热峰/高可再生压力强制极端周后冻结第 `4/5/8/29/39/48` 周和 `1/3/10/13/21/4` 权重；加入年尾实际 24 h warm-up 与 48 h 计分段后共 1080 行、8784 加权小时。三个规范文件跨平台逐字节一致。热量 `+5.35%` 和风电 `-8.98%` 等聚合偏差保留给 D38 验证，不事后改周；D36 没有运行单循环优化模型；
-- **D37 分块状态边界门**：新增显式 `BlockAnnualHorizonSpec` 和 D36 严格适配器；六个 168 h 周与一个 72 h 年尾块共享容量，但分别闭合 BESS SOC、HT/MT/LT 库存和两台 CHP 首尾启停/出力/爬坡。年尾 24 h warm-up 权重为零、48 h 计分权重为一；完整 Hybrid 结构审计为 1087 个 BESS/TES 状态节点、每台 CHP 各 1080 条转移及双向爬坡约束、零非线性组件，且未调用求解器。规范 manifest 双端哈希为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6`；D38 仍未启动；
+- **D37 分块状态边界门**：新增显式 `BlockAnnualHorizonSpec` 和 D36 严格适配器；六个 168 h 周与一个 72 h 年尾块共享容量，但分别闭合 BESS SOC、HT/MT/LT 库存和两台 CHP 首尾启停/出力/爬坡。年尾 24 h warm-up 权重为零、48 h 计分权重为一；完整 Hybrid 结构审计为 1087 个 BESS/TES 状态节点、每台 CHP 各 1080 条转移及双向爬坡约束、零非线性组件，且未调用求解器。规范 manifest 双端哈希为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6`；
+- **D38 三状态预验证**：结果前合同已冻结 `baseline`、`H*=0.80/G*=0.70` 高热紧 PCC 与基准物理下 24 h 长时边界，规定实际全年无储能两阶段 PCC 目标、10% 实际可再生弃电帽、四架构代表期规划、固定容量 8784 h 回代和三种储能架构全年重优化。合同已登记但尚未运行任何 D38 结果；
 - **服务器**：OpenBayes 60 核 / 约 100 GB 内存已连通；E0-D-23 双窗口、D24 证据路线、D25 项目取证合同、D26–D32 数值证书与筛查，以及 D33–D37 定向、全回归、材料性网格、代表周构造和分块结构审计均在远端执行；当前双端全回归为 `427 passed`，正式求解仅使用 HiGHS；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
@@ -123,6 +124,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0 公开 TES 成本组合与内生容量门：`docs/03_sci_paper/e0_public_tes_cost_portfolio_and_capacity_gate_contract.md`
 - E0-D-34 完整内生容量与额定服务认证：`docs/03_sci_paper/e0_d34_endogenous_capacity_full_model_contract.md`
 - E0-D-37 分块循环状态边界：`docs/03_sci_paper/e0_d37_block_cyclic_state_boundary_contract.md`
+- E0-D-38 三状态代表周—全年预验证：`docs/03_sci_paper/e0_d38_three_state_representative_full_year_prevalidation_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
