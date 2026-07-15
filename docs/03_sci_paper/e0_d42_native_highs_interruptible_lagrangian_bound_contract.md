@@ -1,6 +1,6 @@
 # E0-D-42 原生 HiGHS 可中断全年 LP 与拉格朗日下界证书合同
 
-状态：**第 1–11 节结果前合同已冻结；正式 8784 h build-only Gate A 结构门已通过，Gate B 尚未启动**
+状态：**第 1–11 节结果前合同已冻结；正式 8784 h build-only Gate A 结构门与 Gate B 执行器实现门均已通过，正式 BESS 复核和 LP 求解尚未启动**
 
 适用范围：D41 Gate B 的 TES R0 收敛、终止与合法下界提取失败之后的严格下界恢复
 
@@ -240,3 +240,16 @@ OpenBayes 按 TES R0、TES R1、Hybrid R0、Hybrid R1 `bess.installed=0`、Hybri
 五个案例 JSON、汇总 manifest 与 execution sidecar 已同步到 `风光火+熔盐储热/数据采集/e0d42_native_highs_lagrangian_bound/`。`structure_manifest.json` / `structure_execution.json` SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1` / `694c794a7a6fa1bb3228d5ee8714120efc7ef0aa6ff74a48eefe197161eef6ab`；本地/远端逐文件同哈希，本地只读重汇编与规范 manifest 完全相等。
 
 Gate A 总状态为 `gate_a_structure_passed`，`formal_gate_b_permitted=true`、`technical_ranking_permitted=false`。这只允许实现、回归并独立提交第 7–9 节的正式父进程执行器；当前仍没有 D42 下界、容量、成本、gap 或技术排序，Gate B 不得在执行器提交前启动。
+
+## 14. Gate B 执行器实现门
+
+正式数值结果产生前，提交 `271d473` 固定模型无关的父进程执行器，提交 `60b1fdb` 将其绑定到 D40/D41 全年模型与正式架构顺序，提交 `23bf966` 只修复双端证据路径测试。新增源码与测试 SHA-256 为：
+
+- `e0d42_gate_b_executor.py`：`c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51`；
+- `e0d42_gate_b_formal.py`：`a2ba832e51a227b3ad9e3c3484ffe958ca1df39442555dfd397a4330666ca53e`；
+- `test_e0d42_gate_b_executor.py`：`6e745b9965b8aa9c3cac9b2fa65da92a53af1eecb6595521d4e0314361b483de`；
+- `test_e0d42_gate_b_formal.py`：`804685d3907fc51151eff7ac1a2a098fa75544dd39c69bffe11cc198468254bd`。
+
+四个文件本地/OpenBayes 逐字节一致。执行器现已固定：确定性压缩 LP/solution 归档、IPX 加四段 simplex 计划、12 线程与全部 `1e-7` 容差、80 位证书、同指纹 basis、5 s 心跳、父进程硬墙钟、30 s 终止宽限、进程树/聚合 RSS 与主机内存门、单 LP 4500 s 总墙钟、逐产物哈希复审及最强合法证书选择。正式驱动器固定 BESS R0 build-only 复核、TES R0、Hybrid R0、Hybrid R1 `bess.installed=0/1` 的准入顺序，并按“分支取最小、R0/R1 取最大”汇编 Hybrid 下界。
+
+Windows D40–D42 定向回归为 `58 passed in 5.48s`，全包为 `519 passed in 92.69s`；OpenBayes 定向回归为 `58 passed in 0.74s`，全包为 `519 passed in 34.55s`，Ruff 通过。上述结果只证明执行基础设施与准入逻辑，不是正式全年数值结果。当前仍没有 D42 有限下界、容量、成本、gap 或技术排序；下一步只允许先执行 BESS R0 build-only 与 D41 下界复核，通过后才可启动 TES R0 的 B1/B2。

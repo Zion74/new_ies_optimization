@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：E0-D-1–D-37 既有结论保持不变。D38/R1/D39 的代表期失败和 D40 全年单体路线失败均已登记。D41 Gate B 中 BESS R0/R1 形成严格下界 `1,144,950,604.8368804 CNY`，但它不是原 MILP 可行上界或项目 TAC；TES R0 在 `720.462 s` 硬墙钟内没有返回合法下界或不可行证明，总判定 `no_strict_certificate`。D42 Gate A 五案例结构门现已通过：TES R0/R1 原始与 presolve 指纹一致，Hybrid R1 的 `bess.installed=0/1` 两支完整且均为纯 LP；manifest SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1`。但 Gate B 尚无新下界，因此仍无三架构可比的容量、成本、gap 或技术排序，也不能证明 TES 不可行或 BESS 更优。下一步只实现并提交 D42 Gate B 正式执行器；项目级 VOM/碳/结算和 TES 正式账户继续并行取证。
+当前进度：E0-D-1–D-37 既有结论保持不变。D38/R1/D39 的代表期失败和 D40 全年单体路线失败均已登记。D41 BESS 下界为 `1,144,950,604.8368804 CNY`，但 TES R0 无合法下界，总判定 `no_strict_certificate`。D42 Gate A 五案例结构门与 Gate B 执行器实现门现已通过：TES R0/R1 指纹一致，Hybrid 两支完整，父进程硬墙钟、IPX/四段 simplex、basis、80 位证书和架构准入均已双端 `519 passed`。但正式 Gate B 尚无新下界，因此仍无三架构可比的容量、成本、gap 或技术排序。下一步只执行 BESS R0 build-only 与 D41 下界复核，通过后启动 TES R0；项目级 VOM/碳/结算和 TES 正式账户继续并行取证。

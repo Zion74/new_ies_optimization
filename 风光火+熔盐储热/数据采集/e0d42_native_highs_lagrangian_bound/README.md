@@ -15,7 +15,7 @@
 - `structure_manifest.json` SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1`；
 - 本地下载件与 OpenBayes 逐文件同哈希，本地只读重新汇编与规范 manifest 完全相等。
 
-因此 `formal_gate_b_permitted=true`，但 `technical_ranking_permitted=false`。本目录没有 LP 下界、MILP 可行上界、容量方案、项目 TAC、gap 或技术赢家；正式 Gate B 必须使用另行提交并通过回归的固定墙钟/心跳执行器。
+因此 `formal_gate_b_permitted=true`，但 `technical_ranking_permitted=false`。固定墙钟/心跳/证书执行器与正式顺序驱动器已由提交 `271d473`、`60b1fdb`、`23bf966` 完成，并在 Windows/OpenBayes 达到同哈希 `519 passed`。本目录仍没有 LP 下界、MILP 可行上界、容量方案、项目 TAC、gap 或技术赢家；下一步只先执行 BESS R0 build-only 复核，通过后才允许启动 TES R0。
 
 ## 文件 SHA-256
 
