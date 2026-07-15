@@ -107,7 +107,8 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D41 严格全年界—修复分解（Gate B 最弱案例失败）**：Gate A 的 BESS/TES/Hybrid 原始二元为 `79,057/87,840/96,625`，R0 均剩 0，R1 只剩 `1/0/1` 个拓扑二元，完整固定后均无遗漏。修复接入后正式 Gate B 中，BESS R0/R1 均达到最优并通过审计，严格下界为 `1,144,950,604.8368804 CNY`；它只是受控公开成本敏感性下界，不是原 MILP 上界或项目 TAC。TES R0 已进入 dual simplex，但在 `720.462 s` 硬墙钟内没有返回结果 JSON、有限合法 dual 或不可行证明；峰值子进程树 RSS 仅 `2.389 GiB`，不是内存耗尽。按 BESS→TES→Hybrid 串行停止规则，TES R1 与 Hybrid 未启动，Gate C/D 禁止。总 manifest SHA-256 为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef`，状态 `no_strict_certificate`；不能推出 TES 不可行、BESS 优于 TES、容量方案或技术排序；
 - **D42 原生 HiGHS 可中断拉格朗日下界（TES R0 无证书，路线停止）**：Gate A、执行器实现门和 BESS R0 复核通过，BESS 严格下界 `1,144,950,604.8368804 CNY` 保留。正式 TES R0 的原始/presolve LP 指纹与 Gate A 一致；IPX 完成 31 次 IPM 迭代，simplex 第 1 段完成 `315,298` 次迭代，但两者均在求解器软中断返回后的 80 位证书计算阶段触发父进程硬墙钟，没有落盘 certificate 或 basis。TES R0 为 `no_strict_certificate`，simplex 2–4、TES R1 与 Hybrid 均未启动；
 - **D43 冻结快照离线证书恢复（正式 Gate B 失败）**：唯一一次正式复算已在 OpenBayes 执行。两个完整 `439,018` 维 row dual 均通过冻结哈希链和准入门，并在两个 clean child 中并行进入未修改的 80 位证书器；IPX/simplex child 均运行约 `1800.49 s` 后触发冻结硬墙钟、返回码 `-15`，没有生成 result 或 certificate。总 manifest SHA-256 为 `c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526`，状态 `no_strict_certificate`；
-- **服务器**：OpenBayes 60 核 / 约 100 GB 内存，正式求解仅使用 HiGHS。D43 不调用求解器，峰值父子合计 RSS 仅 `0.735 GiB`、最低可用内存 `96.629 GiB`，失败不是内存耗尽。D43 已结束且不得在原合同下重跑；Hybrid、技术排序和全年上界修复继续阻断，后续如继续数值路线只能另立更快但数学等价的严格证书、缩放/对偶修复或严格分解结果前合同；
+- **D44 fork 并行 80 位证书（结果前合同已冻结）**：D43 的算术核是单核逐列 Decimal 循环，而服务器有 60 核。D44 不改变 LP、dual、投影规则、80 位精度或向外舍入公式，只把 `509,289` 列固定切为 24 个连续块；两个快照各 fork 24 worker 并行，共 48 个计算 worker。合成精确 Fraction 等价性、分块完备性、失败 worker 和资源停止必须先通过 Gate A；尚未实现、尚未读取正式输入；
+- **服务器**：OpenBayes 60 核 / 约 100 GB 内存，正式求解仅使用 HiGHS。D44 本身不调用求解器，冻结每 phase 24 worker、900 s 硬墙钟和总父进程 1080 s；D44 Gate A/唯一 Gate B 完成前，Hybrid、技术排序和全年上界修复继续阻断；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -139,6 +140,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-41 严格全年界—修复分解合同：`docs/03_sci_paper/e0_d41_strict_full_year_bound_repair_decomposition_contract.md`
 - E0-D-42 原生 HiGHS 可中断拉格朗日下界合同：`docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md`
 - E0-D-43 冻结快照离线对偶证书恢复合同与正式失败：`docs/03_sci_paper/e0_d43_frozen_snapshot_offline_dual_certificate_contract.md`
+- E0-D-44 fork 并行 80 位拉格朗日证书合同：`docs/03_sci_paper/e0_d44_fork_parallel_lagrangian_certificate_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`

@@ -114,7 +114,8 @@
 - E0-D-41 已在任何代码、模型或数值产生前冻结严格全年界—修复分解合同。Gate A 已通过。修复接入并由提交 `0fb9346` 固定只读汇编器后，OpenBayes 完整回归 `491 passed in 33.89s`。正式 Gate B 中，BESS R0/R1 都达到最优并通过域、服务、线性、目标和 dual 审计，严格下界为 `1,144,950,604.8368804 CNY`；R1 全变量引导仍为 `candidate_only`。TES R0 完成 presolve 后进入 dual simplex，但 `720.462 s` 硬墙钟内未返回结果 JSON、有限合法 dual 或不可行证明；峰值进程树 RSS `2.389 GiB`，不是内存耗尽。TES R1 与 Hybrid 按串行停止规则未启动。总 manifest SHA-256 为 `bbc0638470859a58fe26a3166ec4825f455fd27671b7edf234b6e51557ee8aef`，状态 `no_strict_certificate`，Gate C/D 与技术排序均禁止；
 - E0-D-42 已冻结并执行原生 HiGHS 可中断拉格朗日下界合同。Gate A、执行器实现门和 BESS R0 build-only 复核通过，沿用下界 `1,144,950,604.8368804 CNY`。正式 TES R0 的 IPX 与 simplex 第 1 段分别完成 31 次 IPM 和 `315,298` 次 simplex 迭代，但都在求解器返回后的 80 位证书计算阶段触发父进程硬墙钟，没有合法 certificate 或 basis。D42 因 `no_strict_certificate` 停止，simplex 2–4、TES R1 与 Hybrid 均未启动；
 - E0-D-43 已按结果前冻结合同完成唯一一次正式离线复算。两个完整 D42 row dual 均通过哈希与准入门，但 IPX/simplex 两个 80 位证书 child 都在约 `1800.49 s` 硬墙钟前未完成，返回码 `-15`，没有 result/certificate；峰值父子合计 RSS `0.735 GiB`、最低可用内存 `96.629 GiB`，不是内存失败。总 manifest SHA-256 为 `c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526`，状态 `no_strict_certificate`；
-- 原始证据审计确认杨凌表内仍缺项目级 TES 参数和完整账户。D41/D42 的 BESS 下界不是原 MILP 可行解、容量方案或项目 TAC。当前仍没有三架构可比的容量、成本、gap 或赢家。D43 不得重跑，Hybrid、正式 E2–E4、全年上界修复与技术排序继续阻断；这不证明 TES 不可行或 BESS 更优。若继续数值路线，只能另立数学等价的快速严格证书、缩放/对偶修复或严格分解结果前合同。
+- E0-D-44 已在任何新增代码或正式输入读取前冻结 fork 并行 80 位证书合同。D42 的 LP、dual、行投影、Decimal 精度和向外舍入公式不变；`509,289` 列固定切为 24 个连续块，两个快照各 fork 24 worker 并行。Gate A 必须以 Fraction 精确值和 `1/2/3/24` 块交叉验证严格包含关系，并覆盖分块完备性、失败 worker 和资源停止；当前尚未实现；
+- 原始证据审计确认杨凌表内仍缺项目级 TES 参数和完整账户。D41/D42 的 BESS 下界不是原 MILP 可行解、容量方案或项目 TAC。当前仍没有三架构可比的容量、成本、gap 或赢家。D43 不得重跑；D44 Gate A/唯一 Gate B 前，Hybrid、正式 E2–E4、全年上界修复与技术排序继续阻断。这不证明 TES 不可行或 BESS 更优。
 
 ## 9. 与旧 SCI 文档的关系
 
