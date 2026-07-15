@@ -720,6 +720,7 @@ def test_gate_a_24h_original_model_rebuild_recovers_toy_upper_bound(
         collect_binary_inventory,
     )
     from tes_bess_boundary.e0d46_full_year_feasible_upper_bound_repair import (
+        EXPECTED_MODEL_SIZE,
         build_candidate_from_seed,
         fix_engineering_capacity_anchor,
         read_seed_csv_gz,
@@ -730,6 +731,8 @@ def test_gate_a_24h_original_model_rebuild_recovers_toy_upper_bound(
     from tes_bess_boundary.planning_model import build_endogenous_capacity_model
 
     architecture = Architecture(architecture_name)
+    assert EXPECTED_MODEL_SIZE[architecture]["nonlinear_component_count"] == 0
+    assert EXPECTED_MODEL_SIZE[architecture]["nonlinear_components"] == []
     case = _gate_a_24h_case(architecture)
     guide_model = build_endogenous_capacity_model(case)
     guide_inventory = collect_binary_inventory(guide_model)

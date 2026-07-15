@@ -99,16 +99,22 @@ EXPECTED_MODEL_SIZE = {
         "active_variable_count": 597_318,
         "active_constraint_count": 527_053,
         "active_binary_variable_count": 79_057,
+        "nonlinear_component_count": 0,
+        "nonlinear_components": [],
     },
     Architecture.TES: {
         "active_variable_count": 650_052,
         "active_constraint_count": 606_163,
         "active_binary_variable_count": 87_840,
+        "nonlinear_component_count": 0,
+        "nonlinear_components": [],
     },
     Architecture.HYBRID: {
         "active_variable_count": 685_194,
         "active_constraint_count": 667_662,
         "active_binary_variable_count": 96_625,
+        "nonlinear_component_count": 0,
+        "nonlinear_components": [],
     },
 }
 
