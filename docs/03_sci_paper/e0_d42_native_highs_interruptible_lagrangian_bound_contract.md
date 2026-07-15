@@ -1,6 +1,6 @@
 # E0-D-42 原生 HiGHS 可中断全年 LP 与拉格朗日下界证书合同
 
-状态：**第 1–11 节结果前合同已冻结；尚未实现 D42 代码，尚未启动正式 8784 h 求解**
+状态：**第 1–11 节结果前合同已冻结；Gate A 核心实现与小模型双端回归已通过，正式 8784 h build-only 结构门和 Gate B 均未启动**
 
 适用范围：D41 Gate B 的 TES R0 收敛、终止与合法下界提取失败之后的严格下界恢复
 
@@ -216,3 +216,13 @@ D42 正式结果产生后，不得在本合同名下：
 Agentic 只可核验哈希、选择已冻结的下一状态、监控资源、保存检查点、调用独立证书器并执行停止规则；不能修改模型、求解策略、时限、证书公式或判定阈值。
 
 任何正式结果只能追加在第 11 节之后或写入独立结果记录，不得反向修改第 1–11 节。
+
+## 12. Gate A 核心实现证据（不改写第 1–11 节）
+
+2026-07-15 已实现 `src/tes_bess_boundary/e0d42_native_highs_certificate.py` 及 `tests/test_e0d42_native_highs_certificate.py`。源码/测试 SHA-256 分别为 `14d9bd5872797c4ff677e07b2894c3ebc8b4a3ef353da7dd71dfa6fb08ffe527` 与 `3b7094d26b0798effe8368b1257b77171bd906979fb78cb7c59edc93e965a330`，Windows 与 OpenBayes 副本逐字节一致。
+
+本阶段已经关闭以下实现级风险：完整 `HighsLp` 数值指纹；Pyomo 6.10.1 到原生 HiGHS 1.15.1 的版本锁定翻译；显式一次 presolve；不少于 80 位 Decimal 定向舍入拉格朗日区间；单边无穷行乘子投影；所需列端点无穷时拒证；IPX/simplex callback 中断；同指纹 basis 恢复和异指纹提前拒绝。测试还暴露并修复了 HiGHS 进程级全局线程调度器复用问题：每个顺序阶段现在先阻塞重置调度器、逐项检查锁定选项，且 `HighsStatus.kError` 不得被包装为快照或证书。
+
+测试证据为：Windows D42 定向 `10 passed in 1.81s`、D40–D42 定向 `47 passed in 2.58s`、全包 `501 passed in 47.42s`，Ruff 通过；OpenBayes D40–D42 定向 `47 passed in 0.60s`、全包 `501 passed in 33.99s`。这些测试只证明适配器和证书器在解析/合成 LP 上方向正确，不是正式全年数值结果。
+
+尚未执行第 6 节要求的真实 8784 h build-only 结构门：TES R0/R1 的原始与预求解 LP 指纹一致性、Hybrid R1 唯一拓扑二元及 0/1 两支完整覆盖仍须在 OpenBayes 单独重建、落盘和审计。因此当前没有 D42 全年 LP 指纹、下界、容量、成本、gap 或技术排序；正式 Gate B 继续禁止。
