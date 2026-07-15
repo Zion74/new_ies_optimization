@@ -9,6 +9,7 @@ contract.  It does not reinterpret an incomplete solve as a scientific result.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from datetime import datetime
@@ -18,6 +19,7 @@ from typing import Any
 
 SCHEMA_ID = "tes_bess_boundary.e0d38_bundle_audit.v1"
 CASE_SCHEMA_ID = "tes_bess_boundary.e0d38_case_result.v1"
+SERVICE_SCHEMA_ID = "tes_bess_boundary.e0d38_service_contract.v1"
 STATES = ("baseline", "high_heat_tight_pcc_r1", "long_duration_24h")
 ARCHITECTURES = ("no_storage", "bess", "tes", "hybrid")
 STORAGE_ARCHITECTURES = ("bess", "tes", "hybrid")
@@ -35,6 +37,12 @@ FUEL_ERROR_LIMIT = 0.03
 COST_REGRET_LIMIT = 0.02
 CAPACITY_ERROR_LIMIT = 0.10
 ECONOMIC_INDIFFERENCE_BAND = 0.05
+
+SERVICE_FILE_BY_STATE = {
+    "baseline": "service_baseline.json",
+    "high_heat_tight_pcc_r1": "service_high_heat_tight_pcc_r1.json",
+    "long_duration_24h": "service_baseline.json",
+}
 
 CAPACITY_FIELDS = (
     "bess_energy_capacity_mwh",
@@ -79,6 +87,14 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"result is not a JSON object: {path}")
     return payload
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _finite_number(value: object, *, name: str) -> float:
@@ -338,6 +354,12 @@ def audit_result_bundle(result_dir: Path) -> dict[str, Any]:
     """Audit the canonical three-state D38-R1 result directory."""
 
     missing_files: list[str] = []
+    service_paths = {
+        name: result_dir / name for name in sorted(set(SERVICE_FILE_BY_STATE.values()))
+    }
+    for path in service_paths.values():
+        if not path.is_file():
+            missing_files.append(path.name)
     cases: dict[tuple[str, str, str], dict[str, Any]] = {}
     for state in STATES:
         for architecture in ARCHITECTURES:
@@ -373,14 +395,32 @@ def audit_result_bundle(result_dir: Path) -> dict[str, Any]:
     if missing_files:
         return {**base_payload, "status": "incomplete", "state_audits": {}}
 
+    services = {name: _read_json(path) for name, path in service_paths.items()}
     state_audits: dict[str, Any] = {}
     overall_failures: list[str] = []
     provenance_signatures: set[str] = set()
     for state in STATES:
+        service_name = SERVICE_FILE_BY_STATE[state]
+        service_path = service_paths[service_name]
+        service = services[service_name]
+        service_sha256 = _sha256(service_path)
+        service_failures: list[str] = []
+        if service.get("schema_id") != SERVICE_SCHEMA_ID:
+            service_failures.append("service_schema_mismatch")
+        if service.get("status") != "complete":
+            service_failures.append("service_not_complete")
+        if service.get("formal_project_tac_ready") is not False:
+            service_failures.append("service_claim_boundary_mismatch")
+        service_provenance = service.get("provenance")
+        if not isinstance(service_provenance, dict):
+            service_failures.append("service_provenance_missing")
+        else:
+            provenance_signatures.add(
+                json.dumps(service_provenance, sort_keys=True, ensure_ascii=False)
+            )
         architecture_audits: dict[str, Any] = {}
         representative_costs: dict[str, float] = {}
         full_year_costs: dict[str, float] = {}
-        service_hashes: set[str] = set()
         for architecture in ARCHITECTURES:
             architecture_cases = {
                 phase: cases[(state, architecture, phase)]
@@ -405,13 +445,21 @@ def audit_result_bundle(result_dir: Path) -> dict[str, Any]:
                 ]
             for payload in architecture_cases.values():
                 service_hash = payload.get("service_contract_sha256")
-                if isinstance(service_hash, str):
-                    service_hashes.add(service_hash)
+                if service_hash != service_sha256:
+                    service_failures.append(
+                        f"{architecture}:case_service_contract_hash_mismatch"
+                    )
                 provenance = payload.get("provenance")
                 if isinstance(provenance, dict):
                     provenance_signatures.add(
                         json.dumps(provenance, sort_keys=True, ensure_ascii=False)
                     )
+                    if provenance != service_provenance:
+                        service_failures.append(
+                            f"{architecture}:service_case_provenance_mismatch"
+                        )
+                else:
+                    service_failures.append(f"{architecture}:case_provenance_missing")
 
         ranking: dict[str, Any]
         if representative_costs and full_year_costs:
@@ -437,14 +485,14 @@ def audit_result_bundle(result_dir: Path) -> dict[str, Any]:
                 "failure": "no_complete_architecture_costs_for_ranking",
             }
             overall_failures.append(f"{state}:ranking")
-        if len(service_hashes) != 1:
-            overall_failures.append(f"{state}:service_contract_hash_mismatch")
+        if service_failures:
+            overall_failures.append(f"{state}:service_integrity")
         state_audits[state] = {
             "architectures": architecture_audits,
             "ranking_audit": ranking,
-            "service_contract_sha256": (
-                next(iter(service_hashes)) if len(service_hashes) == 1 else None
-            ),
+            "service_file": service_name,
+            "service_contract_sha256": service_sha256,
+            "service_integrity_failures": sorted(set(service_failures)),
         }
 
     if len(provenance_signatures) != 1:
