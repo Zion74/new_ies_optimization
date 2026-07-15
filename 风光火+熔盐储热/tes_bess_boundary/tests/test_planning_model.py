@@ -283,3 +283,67 @@ def test_full_endogenous_model_preserves_common_curtailment_and_pcc_services() -
     )
     assert result.bess_energy_capacity_mwh is not None
     assert result.bess_energy_capacity_mwh >= 0.0
+
+
+def test_complete_capacity_snapshot_fixes_every_storage_design_variable() -> None:
+    from pyomo.environ import value
+
+    from tes_bess_boundary.model import Architecture
+    from tes_bess_boundary.planning_model import (
+        EndogenousCapacitySnapshot,
+        build_endogenous_capacity_model,
+        fix_endogenous_capacity_snapshot,
+        solve_endogenous_capacity,
+    )
+
+    case = _case(Architecture.HYBRID)
+    planned = solve_endogenous_capacity(case)
+    snapshot = EndogenousCapacitySnapshot.from_result(planned)
+    model = build_endogenous_capacity_model(case)
+
+    fix_endogenous_capacity_snapshot(model, case, snapshot)
+
+    fixed_variables = (
+        model.bess.energy_capacity_mwh,
+        model.bess.charge_power_capacity_mw,
+        model.bess.discharge_power_capacity_mw,
+        model.bess.pcs_power_capacity_mw,
+        model.bess.installed,
+        model.tes.salt_mass_t,
+        model.tes.ht_tank_capacity_t,
+        model.tes.mt_tank_capacity_t,
+        model.tes.lt_tank_capacity_t,
+        model.tes.ht_service_salt_mass_t,
+        model.tes.mt_service_salt_mass_t,
+        model.tes.electric_charge_input_capacity_mw,
+        model.tes.steam_to_ht_input_capacity_mw,
+        model.tes.steam_to_mt_input_capacity_mw,
+        model.tes.electric_output_capacity_mw,
+        model.tes.heat_output_capacity_mw,
+    )
+    assert all(variable.fixed for variable in fixed_variables)
+    assert value(model.tes.ht_tank_capacity_t) == pytest.approx(
+        planned.tes_ht_tank_capacity_t
+    )
+
+    replayed = solve_endogenous_capacity(case, fixed_capacity=snapshot)
+
+    assert replayed.annual_total_cost_cny == pytest.approx(
+        planned.annual_total_cost_cny,
+        rel=1e-8,
+        abs=1e-6,
+    )
+    replayed_snapshot = EndogenousCapacitySnapshot.from_result(replayed)
+    assert replayed_snapshot.bess_energy_capacity_mwh == pytest.approx(
+        snapshot.bess_energy_capacity_mwh
+    )
+    assert replayed_snapshot.bess_common_pcs_power_capacity_mw == pytest.approx(
+        snapshot.bess_common_pcs_power_capacity_mw
+    )
+    assert replayed_snapshot.tes_salt_mass_t == pytest.approx(snapshot.tes_salt_mass_t)
+    assert replayed_snapshot.tes_ht_tank_capacity_t == pytest.approx(
+        snapshot.tes_ht_tank_capacity_t
+    )
+    assert replayed_snapshot.tes_heat_output_capacity_mw == pytest.approx(
+        snapshot.tes_heat_output_capacity_mw
+    )

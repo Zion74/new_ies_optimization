@@ -132,6 +132,9 @@ class EndogenousCapacityResult:
     objective_lower_bound_cny: float
     objective_upper_bound_cny: float
     relative_mip_gap: float
+    variable_count: int
+    binary_variable_count: int
+    constraint_count: int
     annual_total_cost_cny: float
     annual_operating_cost_cny: float
     annual_storage_capacity_cost_cny: float
@@ -144,8 +147,12 @@ class EndogenousCapacityResult:
     bess_charge_power_capacity_mw: float | None
     bess_discharge_power_capacity_mw: float | None
     bess_common_pcs_power_capacity_mw: float | None
+    bess_installation_binary: float | None
     bess_ac_discharge_throughput_mwh: float | None
     tes_salt_mass_t: float | None
+    tes_ht_tank_capacity_t: float | None
+    tes_mt_tank_capacity_t: float | None
+    tes_lt_tank_capacity_t: float | None
     tes_ht_service_salt_mass_t: float | None
     tes_mt_service_salt_mass_t: float | None
     tes_electric_charge_input_capacity_mw: float | None
@@ -164,6 +171,158 @@ class EndogenousCapacityResult:
     tes_public_cost_scenario: str | None
     formal_project_tac_ready: bool = False
     claim_scope: str = "controlled_public_cost_sensitivity_not_formal_project_tac"
+
+
+@dataclass(frozen=True)
+class EndogenousCapacitySnapshot:
+    """Complete storage design that can be fixed on another time horizon."""
+
+    architecture: Architecture
+    bess_energy_capacity_mwh: float | None
+    bess_charge_power_capacity_mw: float | None
+    bess_discharge_power_capacity_mw: float | None
+    bess_common_pcs_power_capacity_mw: float | None
+    bess_installation_binary: float | None
+    tes_salt_mass_t: float | None
+    tes_ht_tank_capacity_t: float | None
+    tes_mt_tank_capacity_t: float | None
+    tes_lt_tank_capacity_t: float | None
+    tes_ht_service_salt_mass_t: float | None
+    tes_mt_service_salt_mass_t: float | None
+    tes_electric_charge_input_capacity_mw: float | None
+    tes_steam_to_ht_input_capacity_mw: float | None
+    tes_steam_to_mt_input_capacity_mw: float | None
+    tes_electric_output_capacity_mw: float | None
+    tes_heat_output_capacity_mw: float | None
+    tes_installation_binary: float | None = None
+    tes_electric_charge_installation_binary: float | None = None
+    tes_steam_to_ht_installation_binary: float | None = None
+    tes_steam_to_mt_installation_binary: float | None = None
+    tes_electric_output_installation_binary: float | None = None
+    tes_heat_output_installation_binary: float | None = None
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.architecture, Architecture):
+            raise ValueError("snapshot architecture must be selected with Architecture")
+        includes_bess = self.architecture in (Architecture.BESS, Architecture.HYBRID)
+        includes_tes = self.architecture in (Architecture.TES, Architecture.HYBRID)
+        bess_fields = (
+            "bess_energy_capacity_mwh",
+            "bess_charge_power_capacity_mw",
+            "bess_discharge_power_capacity_mw",
+            "bess_common_pcs_power_capacity_mw",
+            "bess_installation_binary",
+        )
+        tes_capacity_fields = (
+            "tes_salt_mass_t",
+            "tes_ht_tank_capacity_t",
+            "tes_mt_tank_capacity_t",
+            "tes_lt_tank_capacity_t",
+            "tes_ht_service_salt_mass_t",
+            "tes_mt_service_salt_mass_t",
+            "tes_electric_charge_input_capacity_mw",
+            "tes_steam_to_ht_input_capacity_mw",
+            "tes_steam_to_mt_input_capacity_mw",
+            "tes_electric_output_capacity_mw",
+            "tes_heat_output_capacity_mw",
+        )
+        tes_binary_fields = (
+            "tes_installation_binary",
+            "tes_electric_charge_installation_binary",
+            "tes_steam_to_ht_installation_binary",
+            "tes_steam_to_mt_installation_binary",
+            "tes_electric_output_installation_binary",
+            "tes_heat_output_installation_binary",
+        )
+        self._validate_required_group(bess_fields, required=includes_bess)
+        self._validate_required_group(tes_capacity_fields, required=includes_tes)
+        tes_binary_values = tuple(getattr(self, name) for name in tes_binary_fields)
+        if any(value is not None for value in tes_binary_values) and not all(
+            value is not None for value in tes_binary_values
+        ):
+            raise ValueError("TES materiality binaries must be supplied as one complete group")
+        if not includes_tes and any(value is not None for value in tes_binary_values):
+            raise ValueError("disabled TES architecture cannot contain materiality binaries")
+        for name in (*bess_fields, *tes_capacity_fields, *tes_binary_fields):
+            value = getattr(self, name)
+            if value is None:
+                continue
+            if isinstance(value, bool) or not math.isfinite(float(value)) or value < 0.0:
+                raise ValueError(f"{name} must be finite and non-negative")
+        for name in ("bess_installation_binary", *tes_binary_fields):
+            value = getattr(self, name)
+            if value is not None and not any(
+                math.isclose(float(value), binary, rel_tol=0.0, abs_tol=1e-7)
+                for binary in (0.0, 1.0)
+            ):
+                raise ValueError(f"{name} must be binary")
+
+    def _validate_required_group(
+        self,
+        field_names: tuple[str, ...],
+        *,
+        required: bool,
+    ) -> None:
+        present = tuple(getattr(self, name) is not None for name in field_names)
+        if required and not all(present):
+            raise ValueError(f"snapshot is missing required capacity fields: {field_names}")
+        if not required and any(present):
+            raise ValueError("disabled storage architecture contains capacity values")
+
+    @classmethod
+    def from_result(
+        cls,
+        result: EndogenousCapacityResult,
+    ) -> EndogenousCapacitySnapshot:
+        """Capture every design variable from a solved planning result."""
+
+        return cls(
+            architecture=result.architecture,
+            bess_energy_capacity_mwh=result.bess_energy_capacity_mwh,
+            bess_charge_power_capacity_mw=result.bess_charge_power_capacity_mw,
+            bess_discharge_power_capacity_mw=(
+                result.bess_discharge_power_capacity_mw
+            ),
+            bess_common_pcs_power_capacity_mw=(
+                result.bess_common_pcs_power_capacity_mw
+            ),
+            bess_installation_binary=result.bess_installation_binary,
+            tes_salt_mass_t=result.tes_salt_mass_t,
+            tes_ht_tank_capacity_t=result.tes_ht_tank_capacity_t,
+            tes_mt_tank_capacity_t=result.tes_mt_tank_capacity_t,
+            tes_lt_tank_capacity_t=result.tes_lt_tank_capacity_t,
+            tes_ht_service_salt_mass_t=result.tes_ht_service_salt_mass_t,
+            tes_mt_service_salt_mass_t=result.tes_mt_service_salt_mass_t,
+            tes_electric_charge_input_capacity_mw=(
+                result.tes_electric_charge_input_capacity_mw
+            ),
+            tes_steam_to_ht_input_capacity_mw=(
+                result.tes_steam_to_ht_input_capacity_mw
+            ),
+            tes_steam_to_mt_input_capacity_mw=(
+                result.tes_steam_to_mt_input_capacity_mw
+            ),
+            tes_electric_output_capacity_mw=(
+                result.tes_electric_output_capacity_mw
+            ),
+            tes_heat_output_capacity_mw=result.tes_heat_output_capacity_mw,
+            tes_installation_binary=result.tes_installation_binary,
+            tes_electric_charge_installation_binary=(
+                result.tes_electric_charge_installation_binary
+            ),
+            tes_steam_to_ht_installation_binary=(
+                result.tes_steam_to_ht_installation_binary
+            ),
+            tes_steam_to_mt_installation_binary=(
+                result.tes_steam_to_mt_installation_binary
+            ),
+            tes_electric_output_installation_binary=(
+                result.tes_electric_output_installation_binary
+            ),
+            tes_heat_output_installation_binary=(
+                result.tes_heat_output_installation_binary
+            ),
+        )
 
 
 def _nonnegative_solution_value(
@@ -397,29 +556,112 @@ def build_endogenous_capacity_model(case: EndogenousCapacityCase) -> object:
     return model
 
 
+def fix_endogenous_capacity_snapshot(
+    model: object,
+    case: EndogenousCapacityCase,
+    snapshot: EndogenousCapacitySnapshot,
+) -> None:
+    """Fix every storage design variable without fixing dispatch or cyclic states."""
+
+    if not isinstance(snapshot, EndogenousCapacitySnapshot):
+        raise ValueError("fixed capacity must be EndogenousCapacitySnapshot")
+    if snapshot.architecture is not case.architecture:
+        raise ValueError("fixed capacity architecture does not match the planning case")
+    if case.bess is not None:
+        model.bess.energy_capacity_mwh.fix(snapshot.bess_energy_capacity_mwh)
+        model.bess.charge_power_capacity_mw.fix(
+            snapshot.bess_charge_power_capacity_mw
+        )
+        model.bess.discharge_power_capacity_mw.fix(
+            snapshot.bess_discharge_power_capacity_mw
+        )
+        model.bess.pcs_power_capacity_mw.fix(
+            snapshot.bess_common_pcs_power_capacity_mw
+        )
+        model.bess.installed.fix(snapshot.bess_installation_binary)
+    if case.tes is not None:
+        model.tes.salt_mass_t.fix(snapshot.tes_salt_mass_t)
+        model.tes.ht_tank_capacity_t.fix(snapshot.tes_ht_tank_capacity_t)
+        model.tes.mt_tank_capacity_t.fix(snapshot.tes_mt_tank_capacity_t)
+        model.tes.lt_tank_capacity_t.fix(snapshot.tes_lt_tank_capacity_t)
+        model.tes.ht_service_salt_mass_t.fix(snapshot.tes_ht_service_salt_mass_t)
+        model.tes.mt_service_salt_mass_t.fix(snapshot.tes_mt_service_salt_mass_t)
+        model.tes.electric_charge_input_capacity_mw.fix(
+            snapshot.tes_electric_charge_input_capacity_mw
+        )
+        model.tes.steam_to_ht_input_capacity_mw.fix(
+            snapshot.tes_steam_to_ht_input_capacity_mw
+        )
+        model.tes.steam_to_mt_input_capacity_mw.fix(
+            snapshot.tes_steam_to_mt_input_capacity_mw
+        )
+        model.tes.electric_output_capacity_mw.fix(
+            snapshot.tes_electric_output_capacity_mw
+        )
+        model.tes.heat_output_capacity_mw.fix(snapshot.tes_heat_output_capacity_mw)
+        has_materiality = hasattr(model.tes, "installed")
+        snapshot_has_materiality = snapshot.tes_installation_binary is not None
+        if has_materiality != snapshot_has_materiality:
+            raise ValueError(
+                "fixed capacity TES materiality policy does not match the planning case"
+            )
+        if has_materiality:
+            model.tes.installed.fix(snapshot.tes_installation_binary)
+            binary_values = {
+                "electric_charge_input": (
+                    snapshot.tes_electric_charge_installation_binary
+                ),
+                "steam_to_ht_input": snapshot.tes_steam_to_ht_installation_binary,
+                "steam_to_mt_input": snapshot.tes_steam_to_mt_installation_binary,
+                "electric_output": snapshot.tes_electric_output_installation_binary,
+                "heat_output": snapshot.tes_heat_output_installation_binary,
+            }
+            for port, value_to_fix in binary_values.items():
+                model.tes.port_installed[port].fix(value_to_fix)
+
+
 def solve_endogenous_capacity(
     case: EndogenousCapacityCase,
     *,
     solver: object | None = None,
+    fixed_capacity: EndogenousCapacitySnapshot | None = None,
+    maximum_accepted_relative_gap: float | None = None,
 ) -> EndogenousCapacityResult:
     """Solve one architecture with HiGHS and return a capacity/cost audit."""
 
-    from pyomo.environ import value
+    from pyomo.environ import Binary, Constraint, Var, value
 
     from tes_bess_boundary.solver import create_highs_solver
 
+    if maximum_accepted_relative_gap is not None and (
+        isinstance(maximum_accepted_relative_gap, bool)
+        or not math.isfinite(float(maximum_accepted_relative_gap))
+        or maximum_accepted_relative_gap < 0.0
+    ):
+        raise ValueError("maximum accepted relative gap must be finite and non-negative")
     model = build_endogenous_capacity_model(case)
+    if fixed_capacity is not None:
+        fix_endogenous_capacity_snapshot(model, case, fixed_capacity)
     active_solver = solver or create_highs_solver(threads=1, random_seed=0)
     solved = active_solver.solve(model)
     termination = str(solved.solver.termination_condition).lower()
-    if "optimal" not in termination:
-        raise RuntimeError(f"endogenous capacity solve did not converge: {termination}")
     objective_lower_bound = float(solved.problem.lower_bound)
     objective_upper_bound = float(solved.problem.upper_bound)
     relative_mip_gap = abs(objective_upper_bound - objective_lower_bound) / max(
         abs(objective_upper_bound),
         1e-12,
     )
+    bounded_acceptable = (
+        maximum_accepted_relative_gap is not None
+        and math.isfinite(objective_lower_bound)
+        and math.isfinite(objective_upper_bound)
+        and relative_mip_gap <= maximum_accepted_relative_gap
+    )
+    if "optimal" not in termination and not bounded_acceptable:
+        raise RuntimeError(
+            "endogenous capacity solve did not converge within the accepted gap: "
+            f"termination={termination}, relative_gap={relative_mip_gap}"
+        )
 
     has_bess = hasattr(model, "bess")
     has_tes = hasattr(model, "tes")
@@ -437,12 +679,20 @@ def solve_endogenous_capacity(
             )
         )
     portfolio = case.tes_cost_portfolio
+    variables = tuple(model.component_data_objects(Var, active=True))
     return EndogenousCapacityResult(
         architecture=case.architecture,
         termination_condition=termination,
         objective_lower_bound_cny=objective_lower_bound,
         objective_upper_bound_cny=objective_upper_bound,
         relative_mip_gap=relative_mip_gap,
+        variable_count=len(variables),
+        binary_variable_count=sum(
+            1 for variable in variables if variable.domain is Binary
+        ),
+        constraint_count=sum(
+            1 for _ in model.component_data_objects(Constraint, active=True)
+        ),
         annual_total_cost_cny=float(value(model.planning_total_cost_cny)),
         annual_operating_cost_cny=float(value(model.annual_operating_cost_cny)),
         annual_storage_capacity_cost_cny=_nonnegative_solution_value(
@@ -495,6 +745,14 @@ def solve_endogenous_capacity(
             if has_bess
             else None
         ),
+        bess_installation_binary=(
+            _nonnegative_solution_value(
+                model.bess.installed,
+                name="BESS installation binary",
+            )
+            if has_bess
+            else None
+        ),
         bess_ac_discharge_throughput_mwh=(
             float(value(model.planning_bess_ac_discharge_throughput_mwh))
             if has_bess
@@ -504,6 +762,30 @@ def solve_endogenous_capacity(
             _nonnegative_solution_value(
                 model.tes.salt_mass_t,
                 name="TES salt mass",
+            )
+            if has_tes
+            else None
+        ),
+        tes_ht_tank_capacity_t=(
+            _nonnegative_solution_value(
+                model.tes.ht_tank_capacity_t,
+                name="TES HT tank capacity",
+            )
+            if has_tes
+            else None
+        ),
+        tes_mt_tank_capacity_t=(
+            _nonnegative_solution_value(
+                model.tes.mt_tank_capacity_t,
+                name="TES MT tank capacity",
+            )
+            if has_tes
+            else None
+        ),
+        tes_lt_tank_capacity_t=(
+            _nonnegative_solution_value(
+                model.tes.lt_tank_capacity_t,
+                name="TES LT tank capacity",
             )
             if has_tes
             else None
