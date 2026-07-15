@@ -33,7 +33,7 @@ D44 只读使用 D43 已核验的 D42 正式证据：
 | `lp_manifest.json` | `23b10bd00abde649924f8f80901292188c60bf3a54d5dd2547ed60a44209fd84` |
 | `lp_execution.json` | `621bc909b9fe6d7af759c96e4e83ea92c4a4f67ffd6a4255825ea8ace08c2fe7` |
 | `presolved_lp.bin.gz` | `dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776` |
-| presolve LP fingerprint | `c2049cac42c4fa2198613dfe4807c5c17a8489420f90d27f4e97b8fa6b43dcc6` |
+| presolve LP fingerprint | `c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5` |
 | IPX solution / execution | `d56109dabfc599ff996771924bc78f11b85c90f1dec001fd90edc9766fa5bfc6` / `43bd8bb93120b917cf4a62433b2ab99ea349df7dfe5664c54ca9822febd4a206` |
 | simplex 1 solution / execution | `bec595dfbc6b878659f588ed100d08c7368e55e4d89f91bafa22e49a9163b58b` / `c872fbd63a72fc0f6b733220b86a57a9e2f75fbfe4e46204ef8586899317a7c1` |
 | D42 BESS reuse result | `ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36` |
