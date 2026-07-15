@@ -135,3 +135,21 @@ Gate A 首轮服务器构造在 No storage/BESS 通过后，由审计器错误�
 | Hybrid | 685,194 | 96,625 | 667,662 | 0.645 | 96.705 | `063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9` |
 
 全部非线性组件计数为零，四案均满足 20 GiB/40 GiB 资源门，架构规模排序符合预期。Gate A manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`，execution sidecar SHA-256 为 `30dceb1aa52acbc051ae735c287c5506334aeda268de50671cce90268e86c223`。规范目录已下载至本地并逐文件验哈，manifest—execution—服务引用链全部一致。Gate A 全程 `solver_invoked=false`，因此仍不存在容量、成本、gap 或技术排序结果；下一步只能实现并执行第 6–7 节锁定的 Gate B。
+
+## 12. Gate B 执行接入预注册（尚无 Gate B 数值）
+
+Gate B 使用独立模块 `e0d40_gate_b_solver.py`，不修改已经进入 Gate A 服务 provenance 的 `e0d40_full_year_compute_gate.py`。新模块必须逐字节锁定服务文件 SHA-256 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95` 和 Gate A manifest SHA-256 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`，并复核 Gate A 的服务引用、四架构结构哈希和 `solver_invoked=false` 后才可启动子进程。
+
+正式执行固定为 BESS → TES → Hybrid 顺序串行运行，不使用 D36/D39 容量、D35 结果、跨架构 incumbent 或任何 warm start。每案继续使用 HiGHS 12 线程、随机种子 0、`3600 s`、目标 gap `0.1%`，并设置 `1e-7` primal/dual/MIP feasibility tolerance。父进程每 `0.5 s` 监测求解子进程 RSS 与主机可用内存；单案 RSS 达到 `35 GiB` 或主机可用内存低于 `15 GiB` 时终止子进程，保留原始日志和 execution sidecar，并将该案降级为 `monolithic_not_viable`。串行执行使 D40 自身聚合 RSS 不超过单案门，仍需在汇总时复核 `75 GiB` 聚合上限。
+
+有 incumbent 的结果必须在载入 Pyomo 后同时满足：
+
+- PCC 年度服务绝对残差不超过 `1e-3 MWh`；
+- 弃电帽松弛不小于 `-1e-3 MWh`；
+- `planning_pcc_balance`、`planning_heat_allocation` 和 `planning_heat_balance` 的最大绝对等式残差均不超过 `1e-5 MW`；
+- 全部活动约束的最大归一化违反量不超过 `1e-6`；
+- 模型目标与 HiGHS incumbent 的相对差不超过 `1e-8`，容量与成本快照均为有限值。
+
+上述审计失败时，即使 HiGHS 报告较小 gap，也只能记为 `monolithic_not_viable`。若 HiGHS 明确返回全局 `infeasible`，可按第 7 节直接记为 `qualified_full_year`，但必须没有伪造的 incumbent 或容量快照。
+
+正式运行前只允许一次 BESS `60 s` 接入预检，仍用 12 线程和同一模型/服务，但写入独立 `preflight_*` 文件并标记 `formal_gate_b_eligible=false`。预检只检查父子进程、日志、bounds、incumbent 载入和资源监测接口；其目标值、gap、容量或终止状态不得进入 D40 正式判定，不得据此修改正式时限、gap、容差、架构顺序或删除任何架构。若预检只暴露纯接入缺陷，可在不改变本节数值口径的前提下修复并重新运行预检；正式 Gate B 每个架构只运行一次。
