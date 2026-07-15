@@ -1,6 +1,6 @@
 # E0-D-40 全年优先可计算性与证据门合同
 
-状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 接入器已本地实现，预检与正式求解均未启动**
+状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 接入器和唯一一次 BESS 预检已通过；正式 BESS 已启动但尚无结果**
 
 适用范围：D38-R1 与 D39 时间聚合连续失败后的全年直接求解路线判定
 
@@ -154,4 +154,6 @@ Gate B 使用独立模块 `e0d40_gate_b_solver.py`，不修改已经进入 Gate 
 
 正式运行前只允许一次 BESS `60 s` 接入预检，仍用 12 线程和同一模型/服务，但写入独立 `preflight_*` 文件并标记 `formal_gate_b_eligible=false`。预检只检查父子进程、日志、bounds、incumbent 载入和资源监测接口；其目标值、gap、容量或终止状态不得进入 D40 正式判定，不得据此修改正式时限、gap、容差、架构顺序或删除任何架构。若预检只暴露纯接入缺陷，可在不改变本节数值口径的前提下修复并重新运行预检；正式 Gate B 每个架构只运行一次。
 
-结果前提交 `03ad51a` 之后新增独立 Gate B 模块及 7 项测试。模块/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`；D40 Gate A/B 合并定向回归为 `15 passed`。当前只完成本地实现与静态/单元验证，尚未上传服务器、执行 60 s 预检或产生任何正式 Gate B 数值。
+结果前提交 `03ad51a` 之后新增独立 Gate B 模块及 7 项测试。模块/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`；D40 Gate A/B 合并定向回归为 `15 passed`，OpenBayes 完整回归为 `469 passed in 33.93s`。
+
+唯一一次 BESS 60 s 接入预检已完成。result/execution/log SHA-256 分别为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检在 60 s 返回 `maxtimelimit`、有限 dual 和无 incumbent；父进程 250 次采样的子进程/父子合计峰值 RSS 为 `2.913/2.936 GiB`，最低可用内存 `94.417 GiB`，资源门通过。该结果保持 `formal_gate_b_eligible=false`，不进入正式分类，也不改变任何参数。正式 BESS 已按冻结参数启动，当前尚无正式数值结果。

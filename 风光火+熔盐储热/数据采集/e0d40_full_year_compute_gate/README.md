@@ -45,3 +45,15 @@
 首轮构造因审计器把连续零容量 TES 误判为必须含安装二元而停止。该轮模型、日志和拒绝证据保留在服务器目录 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate_pre_audit_fix_20260715/`，不进入本正式证据包。审计修订没有改变物理模型、服务、成本、容量边界或资源阈值。
 
 本包只能证明全年模型可构造且资源门通过。`solver_invoked=false`，不得从中推导容量、成本、MIP gap、技术排序或杨凌项目技术赢家。
+
+## Gate B BESS 接入预检
+
+结果前提交 `03ad51a` 冻结预检口径、提交 `887b5a6` 实现独立 Gate B 适配器后，OpenBayes 完整回归为 `469 passed in 33.93s`。唯一一次 BESS 60 s 接入预检随后完成：
+
+- `preflight_bess.json` SHA-256：`96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`；
+- `preflight_bess_execution.json` SHA-256：`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227`；
+- `preflight_bess.log` SHA-256：`32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。
+
+预检确认 597,318 个活动变量、79,057 个二元变量和 527,053 条约束与 Gate A 完全一致，HiGHS 使用 12 线程并在 60 s 返回 `maxtimelimit` 和有限 dual bound `-110,674,644.2397 CNY`，但没有 incumbent。父进程完成 250 次采样，子进程峰值 RSS `2.913 GiB`、父子合计峰值 `2.936 GiB`、最低可用内存 `94.417 GiB`，资源门通过。
+
+该结果永久标记 `mode=preflight`、`formal_gate_b_eligible=false` 和 `classification=preflight_only`。其 dual、无 incumbent 状态、目标值和运行时间均不得进入正式 Gate B 判定，也不得用于修改 3600 s、0.1%/0.5% 阈值、求解顺序或模型。
