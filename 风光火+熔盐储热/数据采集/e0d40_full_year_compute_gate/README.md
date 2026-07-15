@@ -1,8 +1,8 @@
 # E0-D-40 Gate A 正式证据包
 
-状态：**Gate A 通过；Gate B 尚未实现或启动**
+状态：**Gate A 通过；Gate B BESS 正式案为 `monolithic_not_viable`；D40 全年单体路线未通过**
 
-本目录是 OpenBayes 规范目录 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate/` 的本地逐字节副本。正式执行使用真实 2024 年 8784 h 单循环块、D40 baseline 服务契约和四个独立 Python 构造进程；没有读取代表期输入，也没有创建或调用求解器。
+本目录保存 OpenBayes 规范目录 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate/` 的本地证据副本。Gate A 使用真实 2024 年 8784 h 单循环块、D40 baseline 服务契约和四个独立 Python 构造进程，没有读取代表期输入或调用求解器；Gate B 的预检与正式 BESS 文件另列在后文。
 
 ## 文件说明
 
@@ -57,3 +57,18 @@
 预检确认 597,318 个活动变量、79,057 个二元变量和 527,053 条约束与 Gate A 完全一致，HiGHS 使用 12 线程并在 60 s 返回 `maxtimelimit` 和有限 dual bound `-110,674,644.2397 CNY`，但没有 incumbent。父进程完成 250 次采样，子进程峰值 RSS `2.913 GiB`、父子合计峰值 `2.936 GiB`、最低可用内存 `94.417 GiB`，资源门通过。
 
 该结果永久标记 `mode=preflight`、`formal_gate_b_eligible=false` 和 `classification=preflight_only`。其 dual、无 incumbent 状态、目标值和运行时间均不得进入正式 Gate B 判定，也不得用于修改 3600 s、0.1%/0.5% 阈值、求解顺序或模型。
+
+## Gate B BESS 正式案失败
+
+正式 BESS 按冻结的真实 8784 h、12 线程、随机种子 0、HiGHS `3600 s` 选项和 `0.1%` 目标 gap 启动。父进程持续完成 8,995 次资源采样，子进程/父子合计峰值 RSS 为 `2.916/2.939 GiB`，最低可用内存为 `94.416 GiB`，资源门通过。但执行器只把 `3600 s` 传给 HiGHS，没有在父进程实现独立硬墙钟；子进程在启动后约 75 分钟仍未返回，也没有生成结果 JSON、有限 incumbent、有限 dual 或不可行证明。
+
+为避免软时限无限延伸，在 `2026-07-15T09:10:55.137712624+00:00` 对子进程组发送与执行器内部资源停止相同的 `SIGTERM`。父进程随后写出 `runtime_seconds=4527.394684`、`return_code=-15`、`status=resource_or_process_failure` 和 `effective_classification=monolithic_not_viable`。该终止保护不是把正式预算放宽到 75 分钟；它只记录父进程缺少硬墙钟的执行缺陷。
+
+- `gate_b_bess_execution.json` SHA-256：`1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a`；
+- `gate_b_bess.log` SHA-256：`3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9`；
+- `gate_b_bess_parent.log` SHA-256：`6247d8e2ca082a09c1de3485ca5e6a7f1685f77d61f55a4ac09c93c24186ed03`；
+- `gate_b_bess_parent.pid` SHA-256：`37a4ce3584dd349bf1bce650a018c41f1e98ea12318f8735c28cbe5a3ac242e3`；
+- `gate_b_bess_wall_clock_intervention.json` SHA-256：`76b0ff3bcc41f246e1dfac1096cbb97abc2fc8cc710e8e28600cb796547568c5`。
+- `gate_b_route_decision.json` SHA-256：`c455df496a0134e2af23122f71f7d31aaefc016f74bcd2ecf50761a8ae90aed1`。
+
+本案只证明当前单体全年执行路线不能在预注册墙钟内产生可审计 BESS 结果。它不证明 BESS 物理不可行，不提供容量、成本或技术排序。根据最弱案例规则，D40 已不能通过；TES/Hybrid 不在这次失效执行器下继续消耗正式单次机会，下一步必须另立带父进程硬墙钟和严格全年上下界的求解强化/分解合同。

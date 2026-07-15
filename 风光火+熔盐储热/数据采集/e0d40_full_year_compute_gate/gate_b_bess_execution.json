@@ -1,0 +1,27 @@
+{
+  "architecture": "bess",
+  "available_memory_before_gib": 97.31355667114258,
+  "available_memory_sample_count": 8995,
+  "effective_classification": "monolithic_not_viable",
+  "log_sha256": "3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9",
+  "minimum_available_memory_gib": 94.41629409790039,
+  "mode": "formal",
+  "peak_child_rss_gib": 2.9155540466308594,
+  "peak_gate_b_process_tree_rss_gib": 2.938732147216797,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "resource_gate_passed": true,
+  "resource_stop_reason": null,
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 75.0,
+    "host_memory_reserve_gib": 15.0,
+    "monitor_interval_seconds": 0.5,
+    "process_rss_limit_gib": 35.0
+  },
+  "result_sha256": null,
+  "return_code": -15,
+  "rss_sample_count": 8995,
+  "runtime_seconds": 4527.394683837891,
+  "schema_id": "tes_bess_boundary.e0d40_gate_b_case.v1.execution",
+  "status": "resource_or_process_failure"
+}

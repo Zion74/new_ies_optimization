@@ -1,6 +1,6 @@
 # E0-D-40 全年优先可计算性与证据门合同
 
-状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；Gate B 接入器和唯一一次 BESS 预检已通过；正式 BESS 已启动但尚无结果**
+状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；正式 BESS 为 `monolithic_not_viable`；D40 全年单体路线未通过**
 
 适用范围：D38-R1 与 D39 时间聚合连续失败后的全年直接求解路线判定
 
@@ -156,4 +156,8 @@ Gate B 使用独立模块 `e0d40_gate_b_solver.py`，不修改已经进入 Gate 
 
 结果前提交 `03ad51a` 之后新增独立 Gate B 模块及 7 项测试。模块/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`；D40 Gate A/B 合并定向回归为 `15 passed`，OpenBayes 完整回归为 `469 passed in 33.93s`。
 
-唯一一次 BESS 60 s 接入预检已完成。result/execution/log SHA-256 分别为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检在 60 s 返回 `maxtimelimit`、有限 dual 和无 incumbent；父进程 250 次采样的子进程/父子合计峰值 RSS 为 `2.913/2.936 GiB`，最低可用内存 `94.417 GiB`，资源门通过。该结果保持 `formal_gate_b_eligible=false`，不进入正式分类，也不改变任何参数。正式 BESS 已按冻结参数启动，当前尚无正式数值结果。
+唯一一次 BESS 60 s 接入预检已完成。result/execution/log SHA-256 分别为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检在 60 s 返回 `maxtimelimit`、有限 dual 和无 incumbent；父进程 250 次采样的子进程/父子合计峰值 RSS 为 `2.913/2.936 GiB`，最低可用内存 `94.417 GiB`，资源门通过。该结果保持 `formal_gate_b_eligible=false`，不进入正式分类，也不改变任何参数。
+
+正式 BESS 随后按冻结输入、12 线程、随机种子 0、HiGHS `3600 s` 选项和 `0.1%` 目标 gap 启动。父进程完成 8,995 次采样，子进程/父子合计峰值 RSS 为 `2.916/2.939 GiB`、最低可用内存为 `94.416 GiB`，资源门通过。但现有适配器只把时间选项传给 HiGHS，未在父进程实现独立硬墙钟；子进程启动后约 75 分钟仍未返回，且没有结果 JSON、有限 incumbent/dual 或不可行证明。为阻止软时限无限延伸，于 `2026-07-15T09:10:55.137712624+00:00` 对子进程组发送与内部资源停止相同的 `SIGTERM`。父进程最终记录 `runtime_seconds=4527.394684`、`return_code=-15`、`status=resource_or_process_failure` 与 `effective_classification=monolithic_not_viable`。
+
+execution/log/parent-log/PID/intervention SHA-256 分别为 `1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a`、`3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9`、`6247d8e2ca082a09c1de3485ca5e6a7f1685f77d61f55a4ac09c93c24186ed03`、`37a4ce3584dd349bf1bce650a018c41f1e98ea12318f8735c28cbe5a3ac242e3` 与 `76b0ff3bcc41f246e1dfac1096cbb97abc2fc8cc710e8e28600cb796547568c5`；人工 route-decision JSON SHA-256 为 `c455df496a0134e2af23122f71f7d31aaefc016f74bcd2ecf50761a8ae90aed1`，明确标记 `compiler_generated=false`。75 分钟不是新的科学预算，只是记录执行器缺少硬墙钟的滞后终止保护。该案不证明 BESS 物理不可行，也不提供容量、成本或技术排序。根据第 7 节最弱案例规则，D40 已不能通过；TES/Hybrid 不在失效执行器下继续消耗正式单次机会，下一步按第 8 节另立带父进程硬墙钟、有限主问题上下界和严格全年服务守恒的求解强化/分解合同。

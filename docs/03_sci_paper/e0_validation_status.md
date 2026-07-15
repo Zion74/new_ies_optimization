@@ -72,7 +72,7 @@
 - D35 已闭合 24 h 受控材料性网格，但它不能定义杨凌现场最小设备规模；D24 的 16 账户和 D25 项目记录仍未闭合，D33 公开组合不能生成杨凌正式 TAC；本地 `price_sell/price_buy` 仍只是作者生成情景；
 - D38 原三状态合同已执行到真实全年无储能参考门；`H*=0.80/G*=0.70` 状态在最小弃电第一阶段即 `infeasible`。静态诊断给出 490 MW PCC 下最大供热 `766.076788 MWth`，冻结高热序列 36 h 超限且全部位于代表周 4。因此原 D38 不能关闭，尚未进入该状态的代表期规划、固定容量回代或全年重优化。
 - D38-R1 静态诊断为 0 h 超限，但正式 baseline 链确认 D36/D37 代表期无储能在 10% 帽内 `complete`、真实 8784 h 同服务回放 `infeasible`。真实全年与代表期零燃料自然最小弃电分别为 `565,916.122/338,704.669 MWh`，低估 `227,211.453 MWh`；R1 三状态合同据此失败。
-- D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计；没有调用求解器，也没有任何 D40 容量、成本、gap 或技术排序结果。
+- D40 已结果前冻结全年优先合同并完成 Gate A。四个真实 8784 h 模型均在 OpenBayes 独立进程中完成构造、线性、容量联动、单全年循环和资源审计。正式 BESS 随后因墙钟执行链超限且无可审计结果被分类为 `monolithic_not_viable`；仍没有任何 D40 容量、成本、gap 或技术排序结果。
 
 ## 2. 测试证据
 
@@ -194,7 +194,9 @@ E0-D-40 已在任何新模型规模或求解结果出现前冻结真实 8784 h �
 
 正式 Gate A 已从 No storage 重新执行并通过。D40 服务文件 SHA-256 为 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95`；No storage/BESS/TES/Hybrid 构造 manifest 分别为 `535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9`、`1c1f775a9bb7d00968e2186ac78c77ecd4109800db4fd8e6b041e7ca4c411baf`、`2f12564fb9b261b27f10ca3a859ffc317923b2f41d80027062bc5862df952816` 与 `063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9`。四案活动变量/二元变量/活动约束依次为 `562176/70272/465554`、`597318/79057/527053`、`650052/87840/606163`、`685194/96625/667662`，非线性组件均为零；峰值 RSS 依次为 `0.482/0.518/0.610/0.645 GiB`，构造后可用内存最低为 `96.705 GiB`。Gate A manifest/execution SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577` 与 `30dceb1aa52acbc051ae735c287c5506334aeda268de50671cce90268e86c223`；服务器与本地副本逐文件同哈希，且 `solver_invoked=false`。Gate B 独立接入器及 7 项测试已双端同步，源码/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`，OpenBayes 完整回归 `469 passed in 33.93s`。
 
-唯一一次 BESS 60 s 接入预检 result/execution/log SHA-256 为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检模型规模与 Gate A 一致，HiGHS 在 60 s 返回 `maxtimelimit` 和有限 dual、无 incumbent；父进程 250 次采样确认子进程峰值 RSS `2.913 GiB`、父子合计 `2.936 GiB`、最低可用内存 `94.417 GiB`。预检永久 `formal_gate_b_eligible=false`，不进入正式分类或调参。正式 BESS 已启动，尚无正式结果。
+唯一一次 BESS 60 s 接入预检 result/execution/log SHA-256 为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检模型规模与 Gate A 一致，HiGHS 在 60 s 返回 `maxtimelimit` 和有限 dual、无 incumbent；父进程 250 次采样确认子进程峰值 RSS `2.913 GiB`、父子合计 `2.936 GiB`、最低可用内存 `94.417 GiB`。预检永久 `formal_gate_b_eligible=false`，不进入正式分类或调参。
+
+正式 BESS 按冻结输入、12 线程、随机种子 0、HiGHS `3600 s` 选项与 `0.1%` 目标 gap 执行。父进程完成 8,995 次采样，子进程/父子合计峰值 RSS `2.916/2.939 GiB`，最低可用内存 `94.416 GiB`，资源门通过。适配器只向 HiGHS 传递软时间选项，未实现父进程硬墙钟；子进程在约 75 分钟后仍无结果 JSON、有限 incumbent/dual 或不可行证明，遂发送与内部资源停止相同的 `SIGTERM`。execution 记录 `runtime_seconds=4527.394684`、`return_code=-15`、`status=resource_or_process_failure`、`effective_classification=monolithic_not_viable`。execution/log/parent-log/PID/intervention SHA-256 为 `1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a`、`3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9`、`6247d8e2ca082a09c1de3485ca5e6a7f1685f77d61f55a4ac09c93c24186ed03`、`37a4ce3584dd349bf1bce650a018c41f1e98ea12318f8735c28cbe5a3ac242e3` 与 `76b0ff3bcc41f246e1dfac1096cbb97abc2fc8cc710e8e28600cb796547568c5`。该结果只否定当前单体执行路线，不证明 BESS 物理不可行；根据最弱案例规则 D40 已失败，TES/Hybrid 未在失效执行器下继续，下一步另立严格求解强化/分解合同。
 
 E0-D-9B-2 确定性产物位于 `风光火+熔盐储热/数据采集/e0d9b2_tes_pump_calibration/`，远端上传件与独立再生成件逐字节一致：
 
