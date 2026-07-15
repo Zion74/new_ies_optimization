@@ -1,0 +1,271 @@
+{
+  "chunk_count": 24,
+  "chunks": [
+    {
+      "chunk_id": 0,
+      "content_sha256": "c1d6c1ec45fbaa69ff0c6a8b03567ee6556b830e87b9938760b1c060b1492d75",
+      "end_column": 21220,
+      "invalid_column_endpoint_count": 300,
+      "lower_bound_decimal": "-255140303.92921657632798489222375773395688945858523838682932956144528666467121784",
+      "nonzero_count": 53964,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 0,
+      "upper_bound_decimal": "352935422.94983612020723752975269737856593599549902890100097647827891247670886569"
+    },
+    {
+      "chunk_id": 1,
+      "content_sha256": "3303036b7a408e176ddafbd290dd0d4785fd19e4ba15d350130a1f07ef76e768",
+      "end_column": 42440,
+      "invalid_column_endpoint_count": 1505,
+      "lower_bound_decimal": "-1239827.7740162553642702468897359267729669451025589960520499834991800946923951312",
+      "nonzero_count": 108461,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 21220,
+      "upper_bound_decimal": "174252776.53364358593090082123386112913051823849314733111830971740327698768168593"
+    },
+    {
+      "chunk_id": 2,
+      "content_sha256": "59e545bfd0af56091a7a330bfda34990fb38f849a2ab7d52eb4620d2195b97e4",
+      "end_column": 63661,
+      "invalid_column_endpoint_count": 1345,
+      "lower_bound_decimal": "-2820738.5440425792209423106524461110893269180913400911568193285918303295872165283",
+      "nonzero_count": 108463,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 42440,
+      "upper_bound_decimal": "140215411.37050456593821542652779743021668509108665676973386631332370449037980747"
+    },
+    {
+      "chunk_id": 3,
+      "content_sha256": "83bfddf262cfb2a218eb57574b8b12f5290667fe68f768fea687e9a580c43311",
+      "end_column": 84881,
+      "invalid_column_endpoint_count": 1275,
+      "lower_bound_decimal": "-3209659.2268727046395199830745440277772059339908029629621879846363218355177410892",
+      "nonzero_count": 109130,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 63661,
+      "upper_bound_decimal": "147244362.05033610458064838250360444635675825151917832331313401155999265216805135"
+    },
+    {
+      "chunk_id": 4,
+      "content_sha256": "5d8862de1172ec6bc44721a7dc84714b6da0e20dd912ae6766140608eedb96cd",
+      "end_column": 106101,
+      "invalid_column_endpoint_count": 1732,
+      "lower_bound_decimal": "-367929.30992407069251270324527457912883215211244146009944756542512162789998359038",
+      "nonzero_count": 104823,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 84881,
+      "upper_bound_decimal": "122682937.84994158490599004669780465176500048901510613648345125966427210724883412"
+    },
+    {
+      "chunk_id": 5,
+      "content_sha256": "6344b74ae778df820921edf57ab9869dc130c5896c0e6ac28a60459ac9fc94b0",
+      "end_column": 127322,
+      "invalid_column_endpoint_count": 2628,
+      "lower_bound_decimal": "-2949.3727110166165541471627875580452382564544677734375000000000000000000000000000",
+      "nonzero_count": 97615,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 106101,
+      "upper_bound_decimal": "27457543.766192456166989381560750160815587150864303112030029296875000000000000000"
+    },
+    {
+      "chunk_id": 6,
+      "content_sha256": "712fe6e2c88599038064ea7775f7334bc382085ca89c1882cc3d0c1a041292c2",
+      "end_column": 148542,
+      "invalid_column_endpoint_count": 1603,
+      "lower_bound_decimal": "-78050.26528648369886381752635884367919061332941055297851562500000000000",
+      "nonzero_count": 94417,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 127322,
+      "upper_bound_decimal": "21611515.34501768601250888419268436635434227355290204286575317382812500000"
+    },
+    {
+      "chunk_id": 7,
+      "content_sha256": "a9ede29b09ea710d96aa3b7e397c22063fd86b7262eb7c826fda356f0120739d",
+      "end_column": 169763,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-43443.003832927179356467040083344954837230034172534942626953125",
+      "nonzero_count": 89351,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 148542,
+      "upper_bound_decimal": "35038030.178582683277952049272219170461539761163294315338134765625"
+    },
+    {
+      "chunk_id": 8,
+      "content_sha256": "c20667a2b73a245740cf023b78cd57fd0c27bdf57e3d4c37e588f4a0cabb5357",
+      "end_column": 190983,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-241393.5591986821321980466459322656191943679004907608032226562500",
+      "nonzero_count": 75980,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 169763,
+      "upper_bound_decimal": "29409383.5507998958857029461744225784514128463342785835266113281250"
+    },
+    {
+      "chunk_id": 9,
+      "content_sha256": "ef89404fe5af99e90b6b2d4c2927ead29df93041509993e03c9c837c0cf304d5",
+      "end_column": 212203,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-292479.2654185230108665471959739079466089606285095214843750000000",
+      "nonzero_count": 53348,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 190983,
+      "upper_bound_decimal": "24893760.6464893535972739101180817300473790965043008327484130859375"
+    },
+    {
+      "chunk_id": 10,
+      "content_sha256": "ac730e1e43aba1df3d080f884d17d5ae8475cbd1eace09e04bca3f6159c0d777",
+      "end_column": 233424,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-49633.742564278083531981167197955073788762092590332031250000000",
+      "nonzero_count": 42442,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 212203,
+      "upper_bound_decimal": "41542643.645206303223994859230572274100268259644508361816406250000"
+    },
+    {
+      "chunk_id": 11,
+      "content_sha256": "48a2dbb4c87a4700bd4cc12f09140a93f9c8998da0c579b61872751be0ac5dce",
+      "end_column": 254644,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-26765.151805013939621424867709720274433493614196777343750000",
+      "nonzero_count": 42440,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 233424,
+      "upper_bound_decimal": "35346801.895262667560111857767424226040020585060119628906250000"
+    },
+    {
+      "chunk_id": 12,
+      "content_sha256": "7c18473a15324521dc272e8c9cde4a101f73efe0278df6269ac1059230a7f71d",
+      "end_column": 275864,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-77430.0154202927981614834607171360403299331665039062500000000000",
+      "nonzero_count": 46141,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 254644,
+      "upper_bound_decimal": "26716838.2018165374633063141596167611169221345335245132446289062500"
+    },
+    {
+      "chunk_id": 13,
+      "content_sha256": "95f55f57f5127cb923ab431e64a346bf01d2fc3de0f01bb12a5019796b307f28",
+      "end_column": 297085,
+      "invalid_column_endpoint_count": 786,
+      "lower_bound_decimal": "-41975.49288531287125558755235488206380978226661682128906250",
+      "nonzero_count": 75421,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 275864,
+      "upper_bound_decimal": "819913.04214984919205355673454960196977481245994567871093750"
+    },
+    {
+      "chunk_id": 14,
+      "content_sha256": "af84b60f70f22dfa26f36fe5b5531fc3d2ce0bbd250520a1bdb7e5f1552d48cc",
+      "end_column": 318305,
+      "invalid_column_endpoint_count": 2380,
+      "lower_bound_decimal": "-4252.4851749430383182626336235898634186014533042907714843750000000000000000000000",
+      "nonzero_count": 97612,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 297085,
+      "upper_bound_decimal": "24712612.246160964757613623214715925513473848695866763591766357421875000000000000"
+    },
+    {
+      "chunk_id": 15,
+      "content_sha256": "8ab25f1ba9d0171e40d3927e8018134bff3a980ea14f10012ce9ded41819faf2",
+      "end_column": 339526,
+      "invalid_column_endpoint_count": 1641,
+      "lower_bound_decimal": "-39329.55114568285736199870772367148674675263464450836181640625000000000",
+      "nonzero_count": 95337,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 318305,
+      "upper_bound_decimal": "15902613.53787766760519367757048536660136051068548113107681274414062500000"
+    },
+    {
+      "chunk_id": 16,
+      "content_sha256": "ad944eeb0f4d66f7b50dcad6c86cbb0e8ee7e8770fa7af7f3148925481c352e9",
+      "end_column": 360746,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-3688.5961644192584929641265389932414109352976083755493164062500000",
+      "nonzero_count": 89362,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 339526,
+      "upper_bound_decimal": "17150731.0540692053919324209371177758498561161104589700698852539062500"
+    },
+    {
+      "chunk_id": 17,
+      "content_sha256": "9e16e18a2558ffcbaca552a55cc29681c3e64d36ec6eea885222692b545a05c1",
+      "end_column": 381966,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-63369.2105161530087258370258496142923831939697265625000000000000000",
+      "nonzero_count": 78696,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 360746,
+      "upper_bound_decimal": "21222383.5286878568379168026429570925728285146760754287242889404296875"
+    },
+    {
+      "chunk_id": 18,
+      "content_sha256": "3dcc0587a115c6d174a8a91d2c1fd2b3484449437d36a42bfb08e9641517325b",
+      "end_column": 403187,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-71997.1929207878983305590736563317477703094482421875000000000000",
+      "nonzero_count": 55615,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 381966,
+      "upper_bound_decimal": "24259729.7882899034387384346045379857059742789715528488159179687500"
+    },
+    {
+      "chunk_id": 19,
+      "content_sha256": "9219e02720f408078ca2c268cb2ae087709712f25dc17332583c1365a48aa391",
+      "end_column": 424407,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-23367.0998552864541721874047652818262577056884765625000000000000000",
+      "nonzero_count": 42440,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 403187,
+      "upper_bound_decimal": "33767942.2247163245902094128730874800226047227624803781509399414062500"
+    },
+    {
+      "chunk_id": 20,
+      "content_sha256": "6ea3b0436821e0d0d83317deb36db3ec08c83bad6047af45ec55aa82d6052ae7",
+      "end_column": 445627,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-15615.5357691569203737458337855059653520584106445312500000000",
+      "nonzero_count": 42440,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 424407,
+      "upper_bound_decimal": "25893019.8305800283382311910429507406661286950111389160156250000"
+    },
+    {
+      "chunk_id": 21,
+      "content_sha256": "1b77c4c4f1e0b5739e11636df95133598dfb577eb3371565ef745cc5e60e8571",
+      "end_column": 466848,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-49053.7595308590858138586554559879004955291748046875000000000000",
+      "nonzero_count": 43879,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 445627,
+      "upper_bound_decimal": "23699527.2349500417463250695471188578267174307256937026977539062500"
+    },
+    {
+      "chunk_id": 22,
+      "content_sha256": "a80fdc3ed356f94621bc13b2d25676a7923bc9d82a448787c758f1f770693c82",
+      "end_column": 488068,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-9558.3471673787630104980087809408480268316992659024782392205020301420664786483651",
+      "nonzero_count": 58571,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 466848,
+      "upper_bound_decimal": "16607.288057051612541164179842879937735494614068796381801112195532278085347011146"
+    },
+    {
+      "chunk_id": 23,
+      "content_sha256": "a00c829bfb6255f0004ba3f43b7a327d2adf878e24e25821b78504f1547f0150",
+      "end_column": 509289,
+      "invalid_column_endpoint_count": 0,
+      "lower_bound_decimal": "-676.82529970719482125307668101760677770423961309810710124446902381908956133719575",
+      "nonzero_count": 100063,
+      "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunk",
+      "start_column": 488068,
+      "upper_bound_decimal": "106790119.69305449128166185947132945000511880788683589820366617668121812485448422"
+    }
+  ],
+  "phase": "simplex_1",
+  "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.chunks"
+}

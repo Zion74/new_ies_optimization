@@ -1,6 +1,6 @@
 # E0-D-44 fork 并行 80 位拉格朗日证书合同
 
-状态：**第 1–10 节结果前合同已冻结；尚未实现 D44，尚未执行正式 D44**
+状态：**第 1–10 节结果前合同保持冻结；Gate A 与唯一一次正式 D44 均已完成，终态为 `tes_lower_bound_recovered`**
 
 适用范围：D43 两个冻结 TES R0 对偶快照均通过准入，但单核 80 位 Decimal 证书计算在每个 child 的 1800 s 硬墙钟前未完成之后的数学等价并行恢复
 
@@ -111,3 +111,19 @@ Gate A 只使用人工 LP/dual，不读取两个正式 D42 solution，不生成�
 D44 禁止：重跑 D42/D43、调用 HiGHS optimize、修改 row dual、读取日志 objective 代替证书、降低精度、按正式结果调分块或 worker 数、只汇总部分块、忽略失败 worker、启动 Hybrid、生成容量或技术赢家。
 
 只有 Gate A 独立提交且 OpenBayes 同哈希通过后，才允许唯一一次 Gate B。Gate B 输出下载并逐文件哈希核对、三层文档同步和本地提交前，不进入任何 D45 或 Hybrid 路线。
+
+## 11. 结果后执行记录（不修改第 1–10 节合同）
+
+Gate A 源码与测试先提交为 `b52c7227646faa8c340f917f96e0c6010b470ff8`，SHA-256 分别为 `16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c` 与 `eca55183bb8cd4e7eed133409556cdc2ad84ef1fca42b169406f459aa4f62a2e`。OpenBayes 使用 Linux / Python 3.10.18 / Pyomo 6.10.1 / highspy 1.15.1：D44 测试 `24 passed`，D40–D44 定向回归 `104 passed`，全包 `558 passed`，零失败、零跳过；4-worker `fork` smoke、Fraction 精确参考、`1/2/3/24` 分块交叉验证、失败注入、Ruff 0.15.10 与编译检查均通过。Gate A manifest SHA-256 为 `49b81748508bd517afa9c8b43fac4b3400d6844a0b294838010c10adac89f289`。
+
+唯一一次正式 Gate B 按冻结的两个 phase parent × 每 phase 24 个 worker 执行，IPX 与 simplex_1 均完成 `24/24` 块。规范总 manifest SHA-256 为 `d6fe2f34a354e5986ad4775034135f090df2e74492e0c7abc8f95861cb89739f`，execution SHA-256 为 `673f4442d1f53d714f5eabd0c450c33373457cbd214a5ce0a85956d60f89946e`；总运行 `819.732 s`，`stop_reason=null`，峰值父子聚合 RSS `15.434 GiB`，最低可用内存 `88.537 GiB`，无残留进程。
+
+IPX 的 24 块无缝覆盖 `[0, 509289)` 和全部 `1,806,011` 个非零元，块内容哈希全部通过，`invalid_column_endpoint_count=0`。80 位向外舍入证书为：
+
+- lower：`254860566.61931588889075258309724606578637338890918249419801438224278086471875331 CNY`；
+- upper：`2091080840.3627077923443033647707256993514499305815595432283723297221797777319790 CNY`；
+- interval width：`1836220273.7433919034535507816734796335650765416723770490303579474793989130132257 CNY`。
+
+simplex_1 也完成全部块并覆盖同一 LP，但 10 个块合计出现 `15,195` 个所需无穷列端点，故按冻结规则为 `nonfinite_required_column_endpoint`，没有合法有限下界。总 manifest 因而固定选择 IPX，状态 `tes_lower_bound_recovered`；D42 structure identity 允许该 R0 证书覆盖 TES R1。
+
+该成功只关闭 TES 下界缺口并允许**另立** Hybrid 下界结果前合同。它没有调用优化器或原生求解器，不生成原 MILP 可行上界、容量、项目 TAC、gap 或技术排序；BESS 下界 `1,144,950,604.8368804 CNY` 与 TES 下界不能单独用于宣称 BESS/TES 优劣。Gate A 与正式证据已分别下载到 `风光火+熔盐储热/数据采集/e0d44_gate_a/` 和 `风光火+熔盐储热/数据采集/e0d44_fork_parallel_lagrangian_certificate/`，25 个远端文件与本地逐文件 SHA-256 一致。

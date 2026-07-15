@@ -32,3 +32,9 @@
 *.zip      binary
 *.pkl      binary
 *.npz      binary
+
+# Preserve D44 hash-audited execution evidence byte-for-byte on checkout.
+**/e0d44_gate_a/*.log -text
+**/e0d44_fork_parallel_lagrangian_certificate/*.log -text
+**/e0d44_fork_parallel_lagrangian_certificate/*.ndjson -text
+**/e0d44_fork_parallel_lagrangian_certificate/README.md -text

@@ -1,0 +1,19 @@
+{
+  "certificate_sha256": "396043dd2cf0bb05c48ed9e830250799dceabe5461f3fddfe8f89fc4318b9d64",
+  "child_log_sha256": "08170d29df87da6bb11e6d39812268c3fe77b31718dcd65a315130191f602800",
+  "chunks_sha256": "43a14529f3a4feb509a56c298032d3b76e4c38180aeb27c13b86970254213dc3",
+  "completed_chunks": 24,
+  "formal_lower_bound_eligible": false,
+  "heartbeat_sha256": "2025c91178345d05a5d5e559af79579fdb7964018b1413af8e6bf36bf0d869b0",
+  "minimum_available_memory_gib": 88.53698348999023,
+  "peak_parent_child_aggregate_rss_gib": 15.434432983398438,
+  "peak_phase_process_tree_rss_gib": 7.725170135498047,
+  "phase": "simplex_1",
+  "progress_sha256": "982132a97419d4982610483df1c3bf8453f282b972d98a457569f5225014d40d",
+  "result_sha256": "f0e8127c3ec4214ee651f71eebe34233fd0cbdd8d9619a599c890eca39c9d8e6",
+  "return_code": 0,
+  "runtime_seconds": 819.7298722881824,
+  "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.phase.execution",
+  "stop_reason": null,
+  "technical_ranking_permitted": false
+}
