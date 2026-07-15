@@ -24,6 +24,7 @@ from tes_bess_boundary.e0d40_full_year_compute_gate import (
     _linearity_audit,
     _peak_rss_gib,
     _sha256,
+    _tree_sha256,
     _write_json,
 )
 from tes_bess_boundary.e0d40_gate_b_solver import (
@@ -106,6 +107,25 @@ def _code_hashes() -> dict[str, str]:
 
 def _presolve_status_eligible(status: str) -> bool:
     return status.endswith(("kReduced", "kNotReduced", "kReducedToEmpty"))
+
+
+def _input_hashes(
+    *,
+    service_path: Path,
+    d40_gate_a_manifest_path: Path,
+    d41_gate_a_manifest_path: Path,
+    heat_path: Path,
+    vre_path: Path,
+    price_basis_path: Path,
+) -> dict[str, str]:
+    return {
+        "service": _sha256(service_path),
+        "d40_gate_a_manifest": _sha256(d40_gate_a_manifest_path),
+        "d41_gate_a_manifest": _sha256(d41_gate_a_manifest_path),
+        "heat": _sha256(heat_path),
+        "vre": _sha256(vre_path),
+        "price_basis_tree": _tree_sha256(price_basis_path),
+    }
 
 
 def audit_relaxed_model_lp(
@@ -271,14 +291,14 @@ def build_full_year_structure_case(
             "binary_inventory_matches": current_inventory == expected_inventory,
         },
         "lp_identity_audit": lp_audit,
-        "input_sha256": {
-            "service": _sha256(service_path),
-            "d40_gate_a_manifest": _sha256(d40_gate_a_manifest_path),
-            "d41_gate_a_manifest": _sha256(d41_gate_a_manifest_path),
-            "heat": _sha256(heat_path),
-            "vre": _sha256(vre_path),
-            "price_basis": _sha256(price_basis_path),
-        },
+        "input_sha256": _input_hashes(
+            service_path=service_path,
+            d40_gate_a_manifest_path=d40_gate_a_manifest_path,
+            d41_gate_a_manifest_path=d41_gate_a_manifest_path,
+            heat_path=heat_path,
+            vre_path=vre_path,
+            price_basis_path=price_basis_path,
+        ),
         "provenance": {"code_sha256": _code_hashes()},
         "timing_seconds": {
             "model_build": build_seconds,

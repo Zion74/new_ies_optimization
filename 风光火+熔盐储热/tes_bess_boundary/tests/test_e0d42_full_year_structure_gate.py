@@ -52,6 +52,38 @@ def _hybrid_toy_model():
     return model
 
 
+def test_input_hashes_accept_locked_price_basis_directory(tmp_path) -> None:
+    from tes_bess_boundary.e0d42_full_year_structure_gate import _input_hashes
+
+    paths = {}
+    for name in ("service", "d40", "d41", "heat", "vre"):
+        path = tmp_path / f"{name}.txt"
+        path.write_text(name, encoding="utf-8")
+        paths[name] = path
+    price_basis = tmp_path / "price_basis"
+    price_basis.mkdir()
+    (price_basis / "snapshot.json").write_text("{}", encoding="utf-8")
+
+    hashes = _input_hashes(
+        service_path=paths["service"],
+        d40_gate_a_manifest_path=paths["d40"],
+        d41_gate_a_manifest_path=paths["d41"],
+        heat_path=paths["heat"],
+        vre_path=paths["vre"],
+        price_basis_path=price_basis,
+    )
+
+    assert set(hashes) == {
+        "service",
+        "d40_gate_a_manifest",
+        "d41_gate_a_manifest",
+        "heat",
+        "vre",
+        "price_basis_tree",
+    }
+    assert len(hashes["price_basis_tree"]) == 64
+
+
 @pytest.mark.solver
 def test_tes_r0_and_r1_have_identical_native_and_presolved_lp_identity() -> None:
     from tes_bess_boundary.e0d41_strict_full_year_decomposition import (
