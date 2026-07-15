@@ -18,6 +18,15 @@ def _price_basis_dir() -> Path:
     return Path(__file__).resolve().parents[2] / "数据采集" / "e0d4_price_basis_2024"
 
 
+def _formal_heat_csv() -> Path:
+    return (
+        Path(__file__).resolve().parents[2]
+        / "数据采集"
+        / "e0b_formal_2024"
+        / "e0b_heat_hourly_2024.csv"
+    )
+
+
 def test_preregistered_state_values_and_service_reuse_are_frozen() -> None:
     from tes_bess_boundary.e0d38_prevalidation import HIGH_HEAT_SCALE, state_spec
 
@@ -160,3 +169,26 @@ def test_representative_hybrid_case_builds_on_d37_blocks_without_solving() -> No
     assert len(model.tes.salt_mass_t) == 1
     assert not hasattr(model.bess, "initial_energy")
     assert not hasattr(model.tes, "initial_ht")
+
+
+@pytest.mark.solver
+def test_high_heat_static_pcc_diagnostic_identifies_frozen_week04_failure() -> None:
+    from argparse import Namespace
+
+    from tes_bess_boundary.e0d38_static_feasibility import run_diagnostic
+
+    diagnostic = run_diagnostic(
+        Namespace(
+            state="high_heat_tight_pcc",
+            heat_path=_formal_heat_csv(),
+            periods_path=_canonical_periods_csv(),
+            tolerance_mw=1e-7,
+        )
+    )
+
+    assert diagnostic["static_limit"]["maximum_static_useful_heat_mw"] == pytest.approx(
+        766.0767880248932
+    )
+    assert diagnostic["violating_hour_count"] == 36
+    assert diagnostic["violating_week_numbers"] == [4]
+    assert diagnostic["all_violating_hours_covered_by_d36"] is True
