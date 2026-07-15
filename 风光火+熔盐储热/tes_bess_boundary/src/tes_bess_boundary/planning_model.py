@@ -24,7 +24,11 @@ from tes_bess_boundary.components.chp import (
     CommitmentTransitionFormulation,
     FuelSegmentFormulation,
 )
-from tes_bess_boundary.economics import AnnualEconomicsSpec, AnnualHorizonSpec
+from tes_bess_boundary.economics import (
+    AnnualEconomicsSpec,
+    AnnualHorizonSpec,
+    BlockAnnualHorizonSpec,
+)
 from tes_bess_boundary.model import (
     AnnualCurtailmentServiceSpec,
     AnnualPCCExportServiceSpec,
@@ -73,7 +77,9 @@ class EndogenousCapacityCase:
             period_count=self.timeseries.period_count,
             dt_hours=self.timeseries.dt_hours,
         )
-        if self.chp_terminal_online != self.chp_initial_online:
+        if not isinstance(self.horizon, BlockAnnualHorizonSpec) and (
+            self.chp_terminal_online != self.chp_initial_online
+        ):
             raise ValueError("planning requires a closed CHP status boundary")
         includes_bess = self.architecture in (Architecture.BESS, Architecture.HYBRID)
         includes_tes = self.architecture in (Architecture.TES, Architecture.HYBRID)
@@ -204,6 +210,11 @@ def build_endogenous_capacity_model(case: EndogenousCapacityCase) -> object:
         raise ValueError("case must be EndogenousCapacityCase")
     model = build_e0c_model(_base_no_storage_case(case))
     model.name = f"e0_endogenous_{case.architecture.value}"
+    cyclic_period_blocks = (
+        case.horizon.cyclic_period_blocks
+        if isinstance(case.horizon, BlockAnnualHorizonSpec)
+        else None
+    )
 
     if case.bess is not None:
         assert case.bess_economics is not None
@@ -214,6 +225,7 @@ def build_endogenous_capacity_model(case: EndogenousCapacityCase) -> object:
             case.bess,
             dt_hours=case.timeseries.dt_hours,
             planning_economics=case.bess_economics,
+            cyclic_period_blocks=cyclic_period_blocks,
         )
     if case.tes is not None:
         assert case.tes_cost_portfolio is not None
@@ -227,6 +239,7 @@ def build_endogenous_capacity_model(case: EndogenousCapacityCase) -> object:
             loss_auxiliary=case.tes_loss_auxiliary,
             ambient_temperature_c=case.timeseries.ambient_temperature_c,
             certify_rated_discharge=True,
+            cyclic_period_blocks=cyclic_period_blocks,
         )
 
     model.pcc_balance.deactivate()

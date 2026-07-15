@@ -1,0 +1,19 @@
+{
+  "schema_id": "tes_bess_boundary.e0d37_verification.v1",
+  "date": "2026-07-15",
+  "local": {
+    "python_version": "3.11.15",
+    "targeted_tests": "7 passed",
+    "full_regression": "427 passed"
+  },
+  "openbayes": {
+    "python_version": "3.10.18",
+    "targeted_tests": "7 passed",
+    "full_regression": "427 passed"
+  },
+  "canonical_manifest_sha256": "1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6",
+  "canonical_manifest_cross_platform_identical": true,
+  "solver_used_for_structural_audit": false,
+  "d38_optimization_started": false,
+  "passed": true
+}

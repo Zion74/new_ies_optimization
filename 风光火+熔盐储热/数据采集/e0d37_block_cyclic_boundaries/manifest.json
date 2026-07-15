@@ -1,0 +1,80 @@
+{
+  "audit": {
+    "passed": true
+  },
+  "block_horizon": {
+    "block_count": 7,
+    "block_ids": [
+      "representative_week_04",
+      "representative_week_05",
+      "representative_week_08",
+      "representative_week_29",
+      "representative_week_39",
+      "representative_week_48",
+      "year_end_tail"
+    ],
+    "block_lengths": [
+      168,
+      168,
+      168,
+      168,
+      168,
+      168,
+      72
+    ],
+    "cross_block_state_transfer_allowed": false,
+    "independent_block_initial_states": true,
+    "shared_capacity_variables": true
+  },
+  "chp_audit": {
+    "first_hour_wraps_to_same_block_tail": true,
+    "ramp_down_constraints_per_unit": [
+      1080,
+      1080
+    ],
+    "ramp_up_constraints_per_unit": [
+      1080,
+      1080
+    ],
+    "transition_constraints_per_unit": [
+      1080,
+      1080
+    ],
+    "unit_count": 2
+  },
+  "claim_scope": "build_only_block_boundary_audit_not_d38_not_technology_comparison_not_formal_project_tac",
+  "formal_project_tac_ready": false,
+  "linearity_audit": {
+    "active_binary_variable_count": 16201,
+    "active_constraint_count": 75736,
+    "active_variable_count": 84306,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "schema_id": "tes_bess_boundary.e0d37_structural_audit.v1",
+  "solver_invoked": false,
+  "source": {
+    "d36_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9",
+    "period_count": 1080,
+    "weighted_scored_hours": 8784.0,
+    "zero_weight_warmup_periods": 24
+  },
+  "state_audit": {
+    "bess_cyclic_constraints": 7,
+    "bess_state_nodes": 1087,
+    "expected_state_nodes_per_storage": 1087,
+    "fixed_initial_or_terminal_constraints_absent": {
+      "bess_initial_energy": true,
+      "chp_terminal_online": true,
+      "tes_initial_ht": true,
+      "tes_initial_lt": true,
+      "tes_initial_mt": true
+    },
+    "tes_cyclic_constraints_per_inventory": {
+      "ht": 7,
+      "lt": 7,
+      "mt": 7
+    },
+    "tes_state_nodes": 1087
+  }
+}

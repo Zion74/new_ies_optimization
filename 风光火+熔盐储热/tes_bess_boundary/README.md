@@ -146,10 +146,22 @@ materiality gate, so D32 is a negative screen and D30 remains the latest global 
 The failure identifies cross-block trajectory compatibility as the missing structure;
 it does not justify changing block length after observing the result.
 
-`AnnualHorizonSpec` currently describes scored periods only. Every weight must be
-strictly positive and `sum(weight[t] * dt) = 8784 h`. The later representative-week
-module must give warm-up periods an explicit structural role and state boundary;
-zero weights are not accepted as an implicit warm-up shortcut.
+`AnnualHorizonSpec` describes legacy scored periods only. Every weight remains
+strictly positive and `sum(weight[t] * dt) = 8784 h`. E0-D-37 adds the explicit
+`BlockAnnualHorizonSpec`: its ordered blocks partition every model period exactly,
+zero weights are permitted only as a leading warm-up prefix, and every block has
+independent cyclic CHP/BESS/TES states while sharing one set of capacity variables.
+The D36 adapter and build-only structural audit can be run with:
+
+```bash
+python -m tes_bess_boundary.e0d37_structural_audit \
+  --periods-csv /path/to/e0d36_representative_periods.csv \
+  --price-basis-path /path/to/e0d4_price_basis_2024 \
+  --output-dir /path/to/e0d37_block_cyclic_boundaries
+```
+
+This command constructs the full 1080-period Hybrid model and checks linearity and
+boundary counts; it does not invoke HiGHS or produce D38 capacity results.
 
 Build the formal E0-B artifacts without overwriting legacy CSV files:
 
@@ -197,7 +209,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 Data-integration tests read Yangling files outside this package and are run only
 where those files already exist. Set `TES_BESS_E0B_FORMAL_DIR` when the formal
 directory is not in the local repository layout. The current full OpenBayes
-regression and D27--D32 hashes are recorded in
+regression and D27--D37 hashes are recorded in
 `docs/03_sci_paper/e0_validation_status.md`. E0-D-26--D32 source/tests and the
 authorized D19/D22 inputs are synchronized; their strict probes and deterministic
 bundles are generated on the server. The D23/D26 historical outputs remain

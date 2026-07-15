@@ -6,12 +6,12 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、HiGHS 状态与求解误差 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24/D25 仍为 `0/16` 与 `0/4`。D33–D35 完成公开成本、完整容量接缝和材料性网格；D36 冻结第 `4/5/8/29/39/48` 周、`1/3/10/13/21/4` 权重和年尾段，定向 `6 passed`、双端全回归 `420 passed`。真实项目账户、正式 TAC、D37/D38 和 336 h 外界闭合仍未完成 |
-| E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36 已冻结代表周数据；下一步实现 D37 分块状态边界并运行 D38 三状态预验证，再继续机制分解；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、HiGHS 状态与求解误差 | D30 仍保留最新 336 h 全局上界 `777,141.368858 MWh/a`，D31/D32 为负筛查。D24/D25 仍为 `0/16` 与 `0/4`。D33–D35 完成公开成本、完整容量接缝和材料性网格；D36 冻结代表周与年尾段；D37 已实现共享容量下七块独立 CHP/BESS/TES 循环边界，定向 `7 passed`、双端全回归 `427 passed`。真实项目账户、正式 TAC、D38 和 336 h 外界闭合仍未完成 |
+| E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36 代表周数据和 D37 分块状态边界均已冻结；下一步运行 D38 三状态预验证，再继续机制分解；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 验证代表周与真实点 | 6 个代表周 + 年末 48 h；三状态预验证；12 点固定容量 8784 h；6 点全年重优化 | 代表周误差、后悔值、全年赢家 | D36 数据包已实现；D37 分块边界、D38 预验证和正式全年验证待实现；`_ch4_p3_typdays.py` 仅作旧原型 |
+| E5 | 验证代表周与真实点 | 6 个代表周 + 年末 48 h；三状态预验证；12 点固定容量 8784 h；6 点全年重优化 | 代表周误差、后悔值、全年赢家 | D36 数据包与 D37 分块边界已实现；D38 预验证和正式全年验证待实现；`_ch4_p3_typdays.py` 仅作旧原型 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -137,9 +137,11 @@
 | `src/tes_bess_boundary/components/chp.py` | 台账凸包、毛/净口径、显式低负荷规则、UC 与精确 PWL | E0-E6 | E0-D-18 新增精确对数段编码与可选连续启停包络；默认旧 formulation 保持兼容，二维燃料面与经济敏感性待补 |
 | `src/tes_bess_boundary/components/bess.py` | 交流侧 SOC、能量口径与最小 Pyomo 组件 | E0-E6 | 已实现 E0-A；模型外退化经济核、年度 AC 吞吐成本及 EFC 接缝已完成；cell/PCS/BoP 候选证据与转换机制已建，正式指数快照待补 |
 | `src/tes_bess_boundary/components/molten_salt.py` | HT/MT/LT 盐量、焓与最小 Pyomo 组件 | E0-E6 | E0-D-18 新增路径特定流量上界、紧 Big-M 与零容量模式固定；正式成本和现场数值校准待补 |
-| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-36 回归 | E0 | Windows / OpenBayes 最新均为 `420 passed`；最终时间见 `e0_validation_status.md`；关闭 pytest cache；求解器仅 HiGHS |
+| `tests/` | 真实数据、本构、适配/桥接、线性、四架构、HiGHS、寿命、TES 温区/拓扑/夹点/MT/损失辅机、成本证据、BESS 正式账本、TES 正式就绪度、盈亏平衡、E0-D-17–D-37 回归 | E0 | Windows / OpenBayes 最新均为 `427 passed`；最终时间见 `e0_validation_status.md`；关闭 pytest cache；求解器仅 HiGHS |
 | `src/tes_bess_boundary/model.py` | 统一 fixed-capacity Pyomo 模型、四架构开关、年度经济/弃电/PCC 服务审计、逐时 PCC 只读轨迹与 TES 五路径运行审计 | E0-E6 | fixed-capacity 权威基座；D34 由 `planning_model.py` 复用其双机 CHP/PCC/年度服务并替换储能块。完整 TAC 与 336 h 数值闭合仍待补 |
-| `src/tes_bess_boundary/e0d36_representative_weeks.py` | 4 个 PAM medoid + 2 个强制极端周及年尾段 | E0/E3-E5 | D36 数据构造已实现；D37 多块状态模型与 D38 预验证待实现 |
+| `src/tes_bess_boundary/e0d36_representative_weeks.py` | 4 个 PAM medoid + 2 个强制极端周及年尾段 | E0/E3-E5 | D36 数据构造已实现；由 D37 适配器严格读取，不再直接进入旧单循环模型 |
+| `src/tes_bess_boundary/e0d37_block_horizon.py` | D36 哈希/结构校验、七块时域和 1080 时段规划输入适配 | E0/E5 | 已实现；保持六周权重与 24 h warm-up + 48 h 计分段不变 |
+| `src/tes_bess_boundary/e0d37_structural_audit.py` | 完整 Hybrid 分块边界只建模审计 | E0/E5 | 已实现；不调用求解器，规范 manifest 双端 SHA-256 为 `1e460ef35921d670a23867ad39716302c7f4eecb90cfd225ee628ea7bbd0ddb6` |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

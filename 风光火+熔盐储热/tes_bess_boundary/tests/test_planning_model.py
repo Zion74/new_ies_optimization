@@ -202,6 +202,53 @@ def test_hybrid_full_model_is_linear_and_uses_both_certified_capacity_blocks() -
     assert value(model.tes.mt_rated_output[0].body) == pytest.approx(0.0)
 
 
+def test_d37_hybrid_model_shares_capacity_and_uses_two_cyclic_state_blocks() -> None:
+    from dataclasses import replace
+
+    from pyomo.environ import Constraint, Objective, value
+    from pyomo.repn import generate_standard_repn
+
+    from tes_bess_boundary.economics import (
+        AnnualDispatchBlock,
+        BlockAnnualHorizonSpec,
+    )
+    from tes_bess_boundary.model import Architecture
+    from tes_bess_boundary.planning_model import build_endogenous_capacity_model
+
+    block_case = replace(
+        _case(Architecture.HYBRID),
+        chp_terminal_online=(0,),
+        horizon=BlockAnnualHorizonSpec(
+            period_weights=(2_196.0,) * 4,
+            dispatch_blocks=(
+                AnnualDispatchBlock("first", (0, 1)),
+                AnnualDispatchBlock("second", (2, 3)),
+            ),
+        ),
+    )
+    model = build_endogenous_capacity_model(block_case)
+
+    assert len(model.bess.energy_capacity_mwh) == 1
+    assert len(model.tes.salt_mass_t) == 1
+    assert tuple(model.bess.states) == (0, 1, 2, 3, 4, 5)
+    assert tuple(model.tes.states) == (0, 1, 2, 3, 4, 5)
+    assert not hasattr(model.bess, "initial_energy")
+    assert not hasattr(model.tes, "initial_ht")
+    assert not hasattr(model.chp[0], "terminal_online")
+    assert tuple(value(model.annual_period_weight[p]) for p in model.periods) == (
+        2_196.0,
+        2_196.0,
+        2_196.0,
+        2_196.0,
+    )
+    for component_type in (Constraint, Objective):
+        for item in model.component_data_objects(component_type, active=True):
+            expression = item.body if component_type is Constraint else item.expr
+            representation = generate_standard_repn(expression)
+            assert representation.nonlinear_expr is None
+            assert representation.quadratic_vars in (None, ())
+
+
 def test_full_endogenous_model_preserves_common_curtailment_and_pcc_services() -> None:
     from dataclasses import replace
 

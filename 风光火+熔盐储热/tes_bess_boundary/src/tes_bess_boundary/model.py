@@ -22,7 +22,11 @@ from tes_bess_boundary.components.molten_salt import (
     SaltInventory,
 )
 from tes_bess_boundary.components.molten_salt import add_molten_salt_dispatch
-from tes_bess_boundary.economics import AnnualEconomicsSpec, LifecycleAssetClass
+from tes_bess_boundary.economics import (
+    AnnualEconomicsSpec,
+    BlockAnnualHorizonSpec,
+    LifecycleAssetClass,
+)
 from tes_bess_boundary.tes_loss_auxiliary import (
     TESLossAuxiliarySpec,
     TESSaltPathThroughput,
@@ -306,6 +310,14 @@ class E0CCase:
 
         includes_bess = self.architecture in (Architecture.BESS, Architecture.HYBRID)
         includes_tes = self.architecture in (Architecture.TES, Architecture.HYBRID)
+        uses_block_horizon = self.economics is not None and isinstance(
+            self.economics.horizon,
+            BlockAnnualHorizonSpec,
+        )
+        if uses_block_horizon and (includes_bess or includes_tes):
+            raise ValueError(
+                "block annual storage dispatch requires the endogenous planning model"
+            )
         if includes_bess and self.bess is None:
             raise ValueError(f"{self.architecture.value} requires a BESS fixed spec")
         if not includes_bess and self.bess is not None:
@@ -315,7 +327,7 @@ class E0CCase:
         if not includes_tes and self.tes is not None:
             raise ValueError(f"{self.architecture.value} contains a disabled TES spec")
         if self.economics is not None:
-            if (
+            if not uses_block_horizon and (
                 self.chp_terminal_online is None
                 or self.chp_terminal_online != self.chp_initial_online
             ):
@@ -556,6 +568,12 @@ def build_e0c_model(case: E0CCase) -> object:
 
     model = ConcreteModel(name=f"e0c_{case.architecture.value}")
     model.periods = RangeSet(0, case.timeseries.period_count - 1)
+    cyclic_period_blocks = (
+        case.economics.horizon.cyclic_period_blocks
+        if case.economics is not None
+        and isinstance(case.economics.horizon, BlockAnnualHorizonSpec)
+        else None
+    )
     model.unit_index = RangeSet(0, len(case.chp_units) - 1)
     model.chp = Block(model.unit_index)
     for unit_index, spec in enumerate(case.chp_units):
@@ -568,8 +586,9 @@ def build_e0c_model(case: E0CCase) -> object:
             cycle_event_cost_proxy_cny=(case.objective.cycle_event_cost_proxy_cny),
             fuel_segment_formulation=case.chp_fuel_segment_formulation,
             transition_formulation=case.chp_transition_formulation,
+            cyclic_period_blocks=cyclic_period_blocks,
         )
-        if case.chp_terminal_online is not None:
+        if cyclic_period_blocks is None and case.chp_terminal_online is not None:
             model.chp[unit_index].terminal_online = Constraint(
                 expr=model.chp[unit_index].online[case.timeseries.period_count - 1]
                 == case.chp_terminal_online[unit_index]

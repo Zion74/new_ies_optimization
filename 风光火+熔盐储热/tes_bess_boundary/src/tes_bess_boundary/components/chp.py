@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from enum import Enum
 from math import isfinite
 
+from tes_bess_boundary.economics import validate_cyclic_period_blocks
+
 
 @dataclass(frozen=True)
 class CHPVertex:
@@ -423,6 +425,7 @@ def add_chp_unit_commitment(
     transition_formulation: CommitmentTransitionFormulation = (
         CommitmentTransitionFormulation.BINARY
     ),
+    cyclic_period_blocks: tuple[tuple[object, ...], ...] | None = None,
 ) -> object:
     """Attach exact fuel segments and evidence-bounded commitment variables.
 
@@ -471,6 +474,11 @@ def add_chp_unit_commitment(
     period_order = tuple(periods)
     if not period_order:
         raise ValueError("at least one dispatch period is required")
+    validated_period_blocks = (
+        None
+        if cyclic_period_blocks is None
+        else validate_cyclic_period_blocks(period_order, cyclic_period_blocks)
+    )
     fuel_knots = spec.fuel_flow_knots()
     add_chp_dispatch(block, periods, spec.unit)
     segment_count = len(fuel_knots) - 1
@@ -562,18 +570,23 @@ def add_chp_unit_commitment(
         block.startup = Var(periods, domain=NonNegativeReals, bounds=(0.0, 1.0))
         block.shutdown = Var(periods, domain=NonNegativeReals, bounds=(0.0, 1.0))
     first_period = period_order[0]
-    previous_period = {
-        period: period_order[index - 1]
-        for index, period in enumerate(period_order)
-        if index > 0
-    }
+    if validated_period_blocks is None:
+        previous_period = {
+            period: period_order[index - 1]
+            for index, period in enumerate(period_order)
+            if index > 0
+        }
+    else:
+        previous_period = {
+            period: period_block[index - 1]
+            for period_block in validated_period_blocks
+            for index, period in enumerate(period_block)
+        }
 
     def previous_online(model: object, period: object) -> object:
-        return (
-            initial_online
-            if period == first_period
-            else model.online[previous_period[period]]
-        )
+        if validated_period_blocks is None and period == first_period:
+            return initial_online
+        return model.online[previous_period[period]]
 
     def transition_rule(model: object, period: object) -> object:
         return (
@@ -614,7 +627,12 @@ def add_chp_unit_commitment(
         )
 
     if spec.normal_ramp_mw_per_min is not None:
-        block.ramp_periods = Set(initialize=period_order[1:], ordered=True)
+        ramp_period_order = (
+            period_order[1:]
+            if validated_period_blocks is None
+            else period_order
+        )
+        block.ramp_periods = Set(initialize=ramp_period_order, ordered=True)
         ramp_allowance_mw = (
             spec.normal_ramp_mw_per_min * 60.0 * time_step_hours
         )

@@ -89,6 +89,117 @@ class AnnualHorizonSpec:
 
 
 @dataclass(frozen=True)
+class AnnualDispatchBlock:
+    """One ordered dispatch block with its own cyclic physical state boundary."""
+
+    block_id: str
+    periods: tuple[int, ...]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.block_id, str) or not self.block_id.strip():
+            raise ValueError("block_id must be a non-empty string")
+        if not isinstance(self.periods, tuple) or not self.periods:
+            raise ValueError("block periods must be a non-empty immutable tuple")
+        if any(
+            isinstance(period, bool)
+            or not isinstance(period, int)
+            or period < 0
+            for period in self.periods
+        ):
+            raise ValueError("block periods must be non-negative integers")
+        expected = tuple(range(self.periods[0], self.periods[0] + len(self.periods)))
+        if self.periods != expected:
+            raise ValueError("block periods must be strictly consecutive")
+
+
+@dataclass(frozen=True)
+class BlockAnnualHorizonSpec(AnnualHorizonSpec):
+    """Annual scoring weights plus independent cyclic dispatch blocks.
+
+    Zero weights are permitted only as a leading warm-up prefix inside a block.
+    The legacy :class:`AnnualHorizonSpec` retains its strictly-positive contract.
+    """
+
+    dispatch_blocks: tuple[AnnualDispatchBlock, ...] = ()
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.period_weights, tuple) or not self.period_weights:
+            raise ValueError("period_weights must be a non-empty immutable tuple")
+        if any(
+            not _is_finite_real(weight) or weight < 0.0
+            for weight in self.period_weights
+        ):
+            raise ValueError("block period_weights must be finite and non-negative")
+        if not any(float(weight) > 0.0 for weight in self.period_weights):
+            raise ValueError("at least one block period weight must be positive")
+        if (
+            not _is_finite_real(self.expected_annual_hours)
+            or self.expected_annual_hours <= 0.0
+        ):
+            raise ValueError("expected_annual_hours must be finite and positive")
+        if float(self.expected_annual_hours) != 8784.0:
+            raise ValueError(
+                "expected_annual_hours must be exactly 8784 for the 2024 E0-D contract"
+            )
+        if not isinstance(self.dispatch_blocks, tuple) or not self.dispatch_blocks:
+            raise ValueError("dispatch_blocks must be a non-empty immutable tuple")
+        if any(
+            not isinstance(block, AnnualDispatchBlock)
+            for block in self.dispatch_blocks
+        ):
+            raise ValueError("dispatch_blocks must contain AnnualDispatchBlock values")
+        block_ids = tuple(block.block_id for block in self.dispatch_blocks)
+        if len(set(block_ids)) != len(block_ids):
+            raise ValueError("dispatch block ids must be unique")
+        flattened_periods = tuple(
+            period for block in self.dispatch_blocks for period in block.periods
+        )
+        if flattened_periods != tuple(range(len(self.period_weights))):
+            raise ValueError(
+                "dispatch blocks must form an ordered, exact partition of all periods"
+            )
+        for block in self.dispatch_blocks:
+            seen_scored_period = False
+            for period in block.periods:
+                weight = float(self.period_weights[period])
+                if weight > 0.0:
+                    seen_scored_period = True
+                elif seen_scored_period:
+                    raise ValueError(
+                        "zero-weight warm-up periods must precede scored periods "
+                        f"within block {block.block_id}"
+                    )
+            if not seen_scored_period:
+                raise ValueError(
+                    f"dispatch block {block.block_id} must contain a scored period"
+                )
+
+    @property
+    def cyclic_period_blocks(self) -> tuple[tuple[int, ...], ...]:
+        """Return the period partition consumed by block-cyclic components."""
+
+        return tuple(block.periods for block in self.dispatch_blocks)
+
+
+def validate_cyclic_period_blocks(
+    periods: tuple[object, ...],
+    cyclic_period_blocks: tuple[tuple[object, ...], ...],
+) -> tuple[tuple[object, ...], ...]:
+    """Validate an ordered exact partition used by block-cyclic components."""
+
+    if not isinstance(cyclic_period_blocks, tuple) or not cyclic_period_blocks:
+        raise ValueError("cyclic_period_blocks must be a non-empty immutable tuple")
+    if any(not isinstance(block, tuple) or not block for block in cyclic_period_blocks):
+        raise ValueError("every cyclic period block must be a non-empty tuple")
+    flattened = tuple(period for block in cyclic_period_blocks for period in block)
+    if flattened != periods:
+        raise ValueError(
+            "cyclic period blocks must form an ordered, exact partition of periods"
+        )
+    return cyclic_period_blocks
+
+
+@dataclass(frozen=True)
 class ProjectFinance:
     """Common real-discounting contract for one planning project."""
 

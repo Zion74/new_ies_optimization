@@ -13,6 +13,7 @@ import math
 from dataclasses import dataclass
 
 from tes_bess_boundary.components.molten_salt import MoltenSaltPhysics
+from tes_bess_boundary.economics import validate_cyclic_period_blocks
 from tes_bess_boundary.public_tes_costs import PublicTESCostPortfolio
 from tes_bess_boundary.tes_cost_mapping import TESCapacityBasis
 from tes_bess_boundary.tes_loss_auxiliary import TESLossAuxiliarySpec
@@ -26,6 +27,44 @@ def _finite_non_negative(value: float, name: str) -> None:
 def _finite_positive(value: float, name: str) -> None:
     if not math.isfinite(value) or value <= 0.0:
         raise ValueError(f"{name} must be finite and positive")
+
+
+@dataclass(frozen=True)
+class _StateTopology:
+    state_count: int
+    step_state_pairs: tuple[tuple[int, int], ...]
+    block_state_bounds: tuple[tuple[int, int], ...]
+
+
+def _build_state_topology(
+    period_values: tuple[object, ...],
+    cyclic_period_blocks: tuple[tuple[object, ...], ...] | None,
+) -> _StateTopology:
+    if cyclic_period_blocks is None:
+        return _StateTopology(
+            state_count=len(period_values) + 1,
+            step_state_pairs=tuple(
+                (step, step + 1) for step in range(len(period_values))
+            ),
+            block_state_bounds=((0, len(period_values)),),
+        )
+    validated = validate_cyclic_period_blocks(period_values, cyclic_period_blocks)
+    step_state_pairs: list[tuple[int, int]] = []
+    block_state_bounds: list[tuple[int, int]] = []
+    state_offset = 0
+    for period_block in validated:
+        terminal_state = state_offset + len(period_block)
+        block_state_bounds.append((state_offset, terminal_state))
+        step_state_pairs.extend(
+            (state_offset + step, state_offset + step + 1)
+            for step in range(len(period_block))
+        )
+        state_offset = terminal_state + 1
+    return _StateTopology(
+        state_count=state_offset,
+        step_state_pairs=tuple(step_state_pairs),
+        block_state_bounds=tuple(block_state_bounds),
+    )
 
 
 @dataclass(frozen=True)
@@ -183,6 +222,7 @@ def add_endogenous_bess_dispatch(
     dt_hours: float = 1.0,
     annual_capacity_cost: BESSAnnualCapacityCost | None = None,
     planning_economics: BESSPlanningEconomics | None = None,
+    cyclic_period_blocks: tuple[tuple[object, ...], ...] | None = None,
 ) -> object:
     """Attach a linear endogenous-capacity BESS model to a Pyomo block."""
 
@@ -194,6 +234,9 @@ def add_endogenous_bess_dispatch(
     period_values = tuple(periods)
     if not period_values:
         raise ValueError("at least one dispatch period is required")
+    if cyclic_period_blocks is not None and not spec.cyclic:
+        raise ValueError("block-cyclic BESS dispatch requires spec.cyclic=True")
+    state_topology = _build_state_topology(period_values, cyclic_period_blocks)
     if annual_capacity_cost is not None and planning_economics is not None:
         raise ValueError(
             "provide annual_capacity_cost or planning_economics, not both"
@@ -212,7 +255,7 @@ def add_endogenous_bess_dispatch(
         raise ValueError("annual_capacity_cost must be BESSAnnualCapacityCost")
 
     bounds = spec.bounds
-    block.states = RangeSet(0, len(period_values))
+    block.states = RangeSet(0, state_topology.state_count - 1)
     block.steps = RangeSet(0, len(period_values) - 1)
     block.energy_capacity_mwh = Var(
         bounds=(0.0, bounds.energy_capacity_upper_mwh)
@@ -280,18 +323,20 @@ def add_endogenous_bess_dispatch(
             model.energy_mwh[state] <= spec.soc_max * model.energy_capacity_mwh
         ),
     )
-    block.initial_energy = Constraint(
-        expr=(
-            block.energy_mwh[0]
-            == spec.initial_soc_fraction * block.energy_capacity_mwh
+    if cyclic_period_blocks is None:
+        block.initial_energy = Constraint(
+            expr=(
+                block.energy_mwh[0]
+                == spec.initial_soc_fraction * block.energy_capacity_mwh
+            )
         )
-    )
     loss_factor = (1.0 - spec.hourly_loss) ** dt_hours
 
     def energy_balance_rule(model: object, step: int) -> object:
         period = period_values[step]
-        return model.energy_mwh[step + 1] == (
-            loss_factor * model.energy_mwh[step]
+        state_start, state_end = state_topology.step_state_pairs[step]
+        return model.energy_mwh[state_end] == (
+            loss_factor * model.energy_mwh[state_start]
             + spec.charge_efficiency * model.charge_ac_mw[period] * dt_hours
             - model.discharge_ac_mw[period]
             * dt_hours
@@ -341,9 +386,26 @@ def add_endogenous_bess_dispatch(
         )
     )
     if spec.cyclic:
-        block.cyclic_energy = Constraint(
-            expr=block.energy_mwh[len(period_values)] == block.energy_mwh[0]
-        )
+        if cyclic_period_blocks is None:
+            block.cyclic_energy = Constraint(
+                expr=block.energy_mwh[len(period_values)] == block.energy_mwh[0]
+            )
+        else:
+            block.cyclic_block_index = RangeSet(
+                0,
+                len(state_topology.block_state_bounds) - 1,
+            )
+            block.cyclic_energy = Constraint(
+                block.cyclic_block_index,
+                rule=lambda model, block_index: (
+                    model.energy_mwh[
+                        state_topology.block_state_bounds[block_index][1]
+                    ]
+                    == model.energy_mwh[
+                        state_topology.block_state_bounds[block_index][0]
+                    ]
+                ),
+            )
     block.annual_capacity_cost_cny = Expression(
         expr=(
             costs.energy_cny_per_mwh_year * block.energy_capacity_mwh
@@ -566,6 +628,7 @@ def add_endogenous_tes_dispatch(
     loss_auxiliary: TESLossAuxiliarySpec | None = None,
     ambient_temperature_c: tuple[float, ...] | None = None,
     certify_rated_discharge: bool = True,
+    cyclic_period_blocks: tuple[tuple[object, ...], ...] | None = None,
 ) -> object:
     """Attach a linear endogenous TES kernel with five capacity-limited ports."""
 
@@ -577,6 +640,9 @@ def add_endogenous_tes_dispatch(
     period_values = tuple(periods)
     if not period_values:
         raise ValueError("at least one dispatch period is required")
+    if cyclic_period_blocks is not None and not spec.cyclic:
+        raise ValueError("block-cyclic TES dispatch requires spec.cyclic=True")
+    state_topology = _build_state_topology(period_values, cyclic_period_blocks)
     if cost_portfolio is not None:
         if not isinstance(cost_portfolio, PublicTESCostPortfolio):
             raise ValueError("cost_portfolio must be PublicTESCostPortfolio")
@@ -601,7 +667,7 @@ def add_endogenous_tes_dispatch(
     bounds = spec.bounds
     cp = physics.specific_heat_mwh_per_tonne_k
     full_delta = physics.temperature_ht - physics.temperature_lt
-    block.states = RangeSet(0, len(period_values))
+    block.states = RangeSet(0, state_topology.state_count - 1)
     block.steps = RangeSet(0, len(period_values) - 1)
     block.salt_mass_t = Var(bounds=(0.0, bounds.salt_mass_upper_t))
     block.ht_tank_capacity_t = Var(
@@ -762,6 +828,10 @@ def add_endogenous_tes_dispatch(
         setattr(block, name, Var(periods, bounds=(0.0, upper)))
 
     period_to_step = {period: step for step, period in enumerate(period_values)}
+    period_to_start_state = {
+        period: state_topology.step_state_pairs[step][0]
+        for step, period in enumerate(period_values)
+    }
     if loss_auxiliary is None:
         block.raw_loss_ht_to_mt = Expression(
             periods,
@@ -803,14 +873,14 @@ def add_endogenous_tes_dispatch(
             periods,
             rule=lambda model, period: (
                 ht_loss_coefficients[period_to_step[period]]
-                * model.ht_mass_t[period_to_step[period]]
+                * model.ht_mass_t[period_to_start_state[period]]
             ),
         )
         block.raw_loss_mt_to_lt = Expression(
             periods,
             rule=lambda model, period: (
                 mt_loss_coefficients[period_to_step[period]]
-                * model.mt_mass_t[period_to_step[period]]
+                * model.mt_mass_t[period_to_start_state[period]]
             ),
         )
         block.compensated_loss_ht_to_mt = Expression(
@@ -916,20 +986,22 @@ def add_endogenous_tes_dispatch(
             == model.salt_mass_t
         ),
     )
-    initial_ht, initial_mt, initial_lt = spec.initial_inventory_fractions
-    block.initial_ht = Constraint(
-        expr=block.ht_mass_t[0] == initial_ht * block.salt_mass_t
-    )
-    block.initial_mt = Constraint(
-        expr=block.mt_mass_t[0] == initial_mt * block.salt_mass_t
-    )
-    block.initial_lt = Constraint(
-        expr=block.lt_mass_t[0] == initial_lt * block.salt_mass_t
-    )
+    if cyclic_period_blocks is None:
+        initial_ht, initial_mt, initial_lt = spec.initial_inventory_fractions
+        block.initial_ht = Constraint(
+            expr=block.ht_mass_t[0] == initial_ht * block.salt_mass_t
+        )
+        block.initial_mt = Constraint(
+            expr=block.mt_mass_t[0] == initial_mt * block.salt_mass_t
+        )
+        block.initial_lt = Constraint(
+            expr=block.lt_mass_t[0] == initial_lt * block.salt_mass_t
+        )
 
     def ht_balance_rule(model: object, step: int) -> object:
         period = period_values[step]
-        return model.ht_mass_t[step + 1] == model.ht_mass_t[step] + dt_hours * (
+        state_start, state_end = state_topology.step_state_pairs[step]
+        return model.ht_mass_t[state_end] == model.ht_mass_t[state_start] + dt_hours * (
             model.electric_lt_to_ht[period]
             + model.steam_lt_to_ht[period]
             - model.power_ht_to_mt[period]
@@ -938,7 +1010,8 @@ def add_endogenous_tes_dispatch(
 
     def mt_balance_rule(model: object, step: int) -> object:
         period = period_values[step]
-        return model.mt_mass_t[step + 1] == model.mt_mass_t[step] + dt_hours * (
+        state_start, state_end = state_topology.step_state_pairs[step]
+        return model.mt_mass_t[state_end] == model.mt_mass_t[state_start] + dt_hours * (
             model.steam_lt_to_mt[period]
             + model.power_ht_to_mt[period]
             + model.loss_ht_to_mt[period]
@@ -948,13 +1021,14 @@ def add_endogenous_tes_dispatch(
 
     def lt_balance_rule(model: object, step: int) -> object:
         period = period_values[step]
-        return model.lt_mass_t[step + 1] + dt_hours * (
+        state_start, state_end = state_topology.step_state_pairs[step]
+        return model.lt_mass_t[state_end] + dt_hours * (
             model.electric_lt_to_ht[period]
             + model.steam_lt_to_ht[period]
             + model.steam_lt_to_mt[period]
             - model.heat_mt_to_lt[period]
             - model.loss_mt_to_lt[period]
-        ) == model.lt_mass_t[step]
+        ) == model.lt_mass_t[state_start]
 
     block.ht_balance = Constraint(block.steps, rule=ht_balance_rule)
     block.mt_balance = Constraint(block.steps, rule=mt_balance_rule)
@@ -1437,16 +1511,55 @@ def add_endogenous_tes_dispatch(
             rule=mt_rated_lt_balance,
         )
     if spec.cyclic:
-        final_state = len(period_values)
-        block.cyclic_ht = Constraint(
-            expr=block.ht_mass_t[final_state] == block.ht_mass_t[0]
-        )
-        block.cyclic_mt = Constraint(
-            expr=block.mt_mass_t[final_state] == block.mt_mass_t[0]
-        )
-        block.cyclic_lt = Constraint(
-            expr=block.lt_mass_t[final_state] == block.lt_mass_t[0]
-        )
+        if cyclic_period_blocks is None:
+            final_state = len(period_values)
+            block.cyclic_ht = Constraint(
+                expr=block.ht_mass_t[final_state] == block.ht_mass_t[0]
+            )
+            block.cyclic_mt = Constraint(
+                expr=block.mt_mass_t[final_state] == block.mt_mass_t[0]
+            )
+            block.cyclic_lt = Constraint(
+                expr=block.lt_mass_t[final_state] == block.lt_mass_t[0]
+            )
+        else:
+            block.cyclic_block_index = RangeSet(
+                0,
+                len(state_topology.block_state_bounds) - 1,
+            )
+            block.cyclic_ht = Constraint(
+                block.cyclic_block_index,
+                rule=lambda model, block_index: (
+                    model.ht_mass_t[
+                        state_topology.block_state_bounds[block_index][1]
+                    ]
+                    == model.ht_mass_t[
+                        state_topology.block_state_bounds[block_index][0]
+                    ]
+                ),
+            )
+            block.cyclic_mt = Constraint(
+                block.cyclic_block_index,
+                rule=lambda model, block_index: (
+                    model.mt_mass_t[
+                        state_topology.block_state_bounds[block_index][1]
+                    ]
+                    == model.mt_mass_t[
+                        state_topology.block_state_bounds[block_index][0]
+                    ]
+                ),
+            )
+            block.cyclic_lt = Constraint(
+                block.cyclic_block_index,
+                rule=lambda model, block_index: (
+                    model.lt_mass_t[
+                        state_topology.block_state_bounds[block_index][1]
+                    ]
+                    == model.lt_mass_t[
+                        state_topology.block_state_bounds[block_index][0]
+                    ]
+                ),
+            )
 
     quantity_expressions = _tes_quantity_expressions(block, physics)
     annual_cost_expression = 0.0
