@@ -1,6 +1,6 @@
 # E0-D-47 Hybrid 加权持久化 fork 严格证书恢复合同
 
-状态：**第 1–11 节结果前合同已冻结；尚未实现代码、Gate A 或正式运行**
+状态：**第 1–11 节结果前合同保持冻结；源码/测试与 OpenBayes 同哈希 Gate A 已通过，唯一正式 D47 尚未启动**
 
 适用范围：D45 唯一正式 Hybrid R0 双快照—24 块证书以 `no_strict_certificate` 结束后，只读复用其冻结 LP 与 row dual，以新的严格分解合同恢复最弱合法 Hybrid 全年下界
 
@@ -150,3 +150,13 @@ Agentic 只负责哈希准入、分区确定性、完整块资格、资源监控
 D47 禁止：重跑 D42–D45；读取 D45 部分块作为结果；修改正式 LP/dual；降低精度；跳过缺块；事后改为等列分区、改块数/worker/墙钟；IPX 成功后继续 simplex 以挑更大值；读取 native objective 代替证书；启动可行上界、容量恢复、TAC、E2–E4 扫描或技术排序。
 
 只有合同、源码/测试提交和 OpenBayes 同哈希 Gate A 全部完成后，才允许唯一正式 D47。正式证据下载、逐文件哈希核对、三层文档同步和本地提交前，不进入 D46。
+
+## 12. 实现与 OpenBayes Gate A 记录
+
+D47 生产模块与测试先后由提交 `6d584ee` 和进程组清理加固提交 `1515eca9cb24b0a3e073889b51480b8eefb0c413` 固定。最终源码与测试 SHA-256 分别为 `a503a8c0d1544e7c4c35c6ffc80d00d4b96324560accd6fb2f755963472a5fb5` 和 `9347f4e5ec4b9fe80864586c112aef8d31575bf44c28fa95af4ffa04049c9191`，OpenBayes 上传件逐字节同哈希。实现保持 D44 列证书核不变，新增确定性加权分区、56-worker Linux fork、逐块原子 JSON、完整集合汇总、IPX 优先回退、资源监控和主动进程组复核；证书路径未调用 HiGHS `run()`。
+
+第一次 Linux Gate A 在进程组清理测试中得到 `36 passed + 1 failed`，因此没有开放正式运行；失败证据保留在远端 `e0d47_gate_a_failed_6d584ee/`。随后 D47 将 `/proc` 进程组成员按活动态与 zombie 态分开审计，确保活动残留为 0，并以新提交、新源码/测试哈希完整重跑 Gate A。
+
+最终 OpenBayes Gate A 结果为 D47 `37 passed`、D40–D47 `168 passed`、全包 `622 passed`，全部零失败、零跳过；Ruff 0.15.10 与 py_compile 通过。对冻结正式 LP 的只读结构复核得到 `56` 块、总工作权重 `2,525,502`、块权重最小/最大 `43,901/46,293`、比值 `1.054486230381996`，partition content SHA-256 为 `6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677`。Gate A 未读取正式 dual 进行证书计算，`optimization_invoked=false`。
+
+Gate A manifest SHA-256 为 `80591c66ef15a1d01c02513283eb86d5f5bca2edacdcf0041791c87e349cb22d`；本地证据共 23 个文件，checksum 清单覆盖其余 22 个文件并逐文件与远端一致，清单 SHA-256 为 `7de18630e2c46a514b3bb88433e7a96ece88b55b35d02997729a3f6a67c916eb`。本节只开放一次正式 D47 的执行资格，不代表 Hybrid 已有下界、可行容量、项目 TAC、gap、协同价值或技术排序。
