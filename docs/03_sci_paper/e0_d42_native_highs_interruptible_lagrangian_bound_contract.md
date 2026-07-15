@@ -1,6 +1,6 @@
 # E0-D-42 原生 HiGHS 可中断全年 LP 与拉格朗日下界证书合同
 
-状态：**第 1–11 节结果前合同已冻结；Gate A 核心与全年结构审计器双端回归已通过，正式 8784 h build-only 结构门和 Gate B 均未启动**
+状态：**第 1–11 节结果前合同已冻结；正式 8784 h build-only Gate A 结构门已通过，Gate B 尚未启动**
 
 适用范围：D41 Gate B 的 TES R0 收敛、终止与合法下界提取失败之后的严格下界恢复
 
@@ -225,4 +225,18 @@ Agentic 只可核验哈希、选择已冻结的下一状态、监控资源、保
 
 测试证据为：Windows D42 定向 `17 passed`、D40–D42 定向 `54 passed in 4.22s`、全包 `508 passed in 66.17s`，Ruff 通过；OpenBayes D40–D42 定向 `54 passed in 0.65s`、全包 `508 passed in 34.22s`。这些测试只证明适配器、证书器和结构汇编器在解析/合成 LP 上方向正确，不是正式全年数值结果。
 
-尚未执行第 6 节要求的真实 8784 h build-only 结构门：TES R0/R1 的原始与预求解 LP 指纹一致性、Hybrid R1 唯一拓扑二元及 0/1 两支完整覆盖仍须在 OpenBayes 单独重建、落盘和审计。因此当前没有 D42 全年 LP 指纹、下界、容量、成本、gap 或技术排序；正式 Gate B 继续禁止。
+在正式结构结果产生前，TES R0/R1 的原始与预求解 LP 指纹一致性、Hybrid R1 唯一拓扑二元及 0/1 两支完整覆盖仍未闭合，因此当时不得启动 Gate B。该结果前状态由提交 `c238456` 固定；后续正式结果只追加在下节。
+
+## 13. 正式 Gate A 全年结构结果
+
+OpenBayes 按 TES R0、TES R1、Hybrid R0、Hybrid R1 `bess.installed=0`、Hybrid R1 `bess.installed=1` 的固定顺序独立重建五个 8784 h 案例。五案均通过 D40/D41 输入、模型规模、完整二元清单、线性、版本和原始/预求解 LP 审计；只调用显式 presolve，`optimization_invoked=false`。
+
+- TES R0/R1 原始 LP 均为 `606,163 × 650,052`、`2,521,170` 非零元，指纹均为 `c479a3bc96e4431534ada769e1aef209573f1e83192e07f24a38858efcce3a17`；
+- TES R0/R1 presolve LP 均为 `439,018 × 509,289`、`1,806,011` 非零元，指纹均为 `c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5`；
+- Hybrid R0 原始 LP 为 `667,662 × 685,194`、`2,688,087` 非零元，presolve 后为 `495,630 × 539,546`、`1,985,956` 非零元；
+- Hybrid R1 唯一拓扑变量严格为 `bess.installed`，固定为 0 与 1 的两支均通过，原始和 presolve 的非连续列计数均为 0；
+- 五案进程峰值 RSS 为 `2.288–2.407 GiB`，案例结束后可用内存均约 `95.8 GiB`，资源门无压力。
+
+五个案例 JSON、汇总 manifest 与 execution sidecar 已同步到 `风光火+熔盐储热/数据采集/e0d42_native_highs_lagrangian_bound/`。`structure_manifest.json` / `structure_execution.json` SHA-256 为 `2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1` / `694c794a7a6fa1bb3228d5ee8714120efc7ef0aa6ff74a48eefe197161eef6ab`；本地/远端逐文件同哈希，本地只读重汇编与规范 manifest 完全相等。
+
+Gate A 总状态为 `gate_a_structure_passed`，`formal_gate_b_permitted=true`、`technical_ranking_permitted=false`。这只允许实现、回归并独立提交第 7–9 节的正式父进程执行器；当前仍没有 D42 下界、容量、成本、gap 或技术排序，Gate B 不得在执行器提交前启动。
