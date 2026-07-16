@@ -90,4 +90,6 @@ BESS manifest 原始状态 `candidate_process_or_resource_failure` 按主合同�
 
 TES 候选阶段随后在 `3720.581 s` 父级硬墙钟受控结束，同样没有 candidate CSV/result JSON、repair、容量或上界，残留进程数为 0。TES manifest 原始状态 `candidate_process_or_resource_failure` 按主合同第 8 节同样映射为 `no_primal_status_closure`，不能解释为 TES 不可行。四个 TES 阶段文件也已下载到预注册本地阶段副本目录并与远端逐文件同哈希；详细数值和 SHA-256 见主 D48 合同第 13 节。
 
-编排器没有重启 BESS 或 TES，现已按原顺序进入 Hybrid；`formal_manifest.json` 尚未生成。因此本补充合同只登记正确路径已被使用及 BESS/TES 阶段结果，不提前关闭总批次，也不开放原样重跑、gap 收缩、E2–E4 或技术排序。
+编排器没有重启 BESS 或 TES，并按原顺序完成 Hybrid。Hybrid 也在 `3720.803 s` 父级硬墙钟结束且无 candidate、repair、容量或上界，残留进程为 0；其科学状态同样只能登记 `no_primal_status_closure`。
+
+`formal_manifest.json` 已生成，状态 `partial_or_no_upper_bound_recovery`、总运行 `11161.584 s`、成功上界恢复数 0，SHA-256 为 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。正确路径替代权限已消耗并闭合；D48-R1 不得原样重跑，也不开放 gap 收缩、E2–E4 或技术排序。

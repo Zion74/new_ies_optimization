@@ -1,6 +1,6 @@
 # E0-D-48 全年 Hamming 可行性搜索与原成本上界恢复合同
 
-状态：**第 1–11 节结果前合同已冻结；源码与 Gate A 已通过；D48-R1 正确路径总批次运行中，BESS/TES 阶段均已结束且未闭合 primal 状态，Hybrid 运行中**
+状态：**第 1–11 节结果前合同已冻结；源码与 Gate A 已通过；D48-R1 唯一正确路径总批次已完成，三架构均未闭合 primal 状态，上界恢复数为 0**
 
 适用范围：D46 唯一正式批次未获得任何原 MILP incumbent，且 D46 事后只读诊断已定位“逐变量取整不能形成一致离散轨迹”之后，在同一 2024 年 8784 h 原始 BESS、TES、Hybrid 规划 MILP 中恢复首个可审计 primal 状态。
 
@@ -206,4 +206,33 @@ TES 阶段文件已下载到同一本地阶段副本目录，远端—本地 SHA
 | `tes_candidate_execution.json` | `b2ff6f8ce3ba5323fc2812a9bacd100fa3815b692b23704dd91dcc5f979918e5` |
 | `tes_manifest.json` | `ec2c60d705bad6aaded70a8f9f70ced21c507b0b69df65143ffb5c4ba4692032` |
 
-截至本节更新，Hybrid 候选阶段仍在运行，`formal_manifest.json` 尚不存在。这里仍是阶段记录，不是 D48 总批次终态；`formal_project_tac_ready=false`、`technical_ranking_permitted=false` 保持不变。
+Hybrid 候选阶段随后按冻结顺序结束；总批次终态见第 14 节。
+
+## 14. D48-R1 正确路径总批次终态
+
+Hybrid 候选阶段在 `3720.8029388338327 s` 父级硬墙钟触发受控 `SIGTERM`，返回码 `-15`。`hybrid_candidate.log` 为 0 字节，没有 candidate CSV/result JSON、repair、容量或上界；`candidate_status=null`、`repair_status=null`、`audited_feasible_upper_bound_cny=null`。峰值子进程树/父子聚合 RSS 为 `5.578643798828125/5.6042327880859375 GiB`，最低可用内存 `91.7314567565918 GiB`，未越过 35/45 GiB RSS 或 30 GiB主机保留门。活动残留进程数为 0。
+
+Hybrid execution 的原始状态为 `resource_or_process_failure`、`stop_reason=hard_wall_clock_reached`，架构 manifest 为 `candidate_process_or_resource_failure`。依据第 8 节，Hybrid 同样只能登记 `no_primal_status_closure`，不能写成 Hybrid 物理不可行或 `engineering_mip_infeasible_under_original_bounds`。
+
+Hybrid 四文件远端—本地 SHA-256 一致：
+
+| 文件 | SHA-256 |
+|---|---|
+| `hybrid_candidate.log` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `hybrid_candidate_heartbeat.jsonl` | `893693cc63feba3518569cb6bc7b3f0ccb58affbfa6130d151e1e3daf0f7179b` |
+| `hybrid_candidate_execution.json` | `86cb2530709828c377ea81224945d872a4cbf1379463df0768fa9b378d4de77b` |
+| `hybrid_manifest.json` | `017a0471fa2d83343d7700ba70f68d20d0b779aaafecb337ccf71040c3f1b71f` |
+
+`formal_manifest.json` 已生成：
+
+- `status=partial_or_no_upper_bound_recovery`；
+- `runtime_seconds=11161.583798717707`；
+- `successful_architecture_count=0`；
+- BESS/TES/Hybrid 的 candidate、repair 与 audited upper bound 均为 `null`；
+- `rational_exact_feasibility_certificate=false`；
+- `formal_project_tac_ready=false`、`technical_ranking_permitted=false`；
+- launcher、全部候选子进程与三架构活动残留均为 0。
+
+总 manifest SHA-256 为 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。远端目录全部 13 个文件已下载到预注册本地目录并逐文件同哈希。
+
+因此，D48-R1 的唯一合格结论是：**在冻结模型、原容量边界、D46 guide、等权 Hamming 目标、HiGHS 选项和时限下，三架构均未恢复可审计 primal；D48 没有形成可行容量、上界、gap、项目 TAC 或技术排序。** 该结果不能改写为任何架构不可行，也不能把三案都无上界解释为技术平局。D48-R1 不得原样重跑；任何增强必须另立结果前合同。
