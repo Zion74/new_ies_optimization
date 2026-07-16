@@ -1,10 +1,12 @@
 # E0-D-48 全年 Hamming 可行性搜索与原成本上界恢复合同
 
-状态：**第 1–11 节结果前合同已冻结；源码、Gate A 和正式批次均未启动**
+状态：**第 1–11 节结果前合同已冻结；源码与 Gate A 已通过；D48-R1 正确路径总批次运行中，BESS 阶段已结束且未闭合 primal 状态**
 
 适用范围：D46 唯一正式批次未获得任何原 MILP incumbent，且 D46 事后只读诊断已定位“逐变量取整不能形成一致离散轨迹”之后，在同一 2024 年 8784 h 原始 BESS、TES、Hybrid 规划 MILP 中恢复首个可审计 primal 状态。
 
-日期：2026-07-15
+结果前合同日期：2026-07-15
+
+结果记录更新：2026-07-16
 
 ## 1. 本关只回答什么
 
@@ -157,3 +159,29 @@ OpenBayes 正式输出目录预注册为：
 D48 禁止：修改原约束或容量上界；重新固定 D46 最大容量锚点；按架构设置不同 Hamming 权重；新增第二 seed、第二目标、fallback、IIS 修补、局部分支或事后容量试探；把 Hamming objective、D46 guide objective、LP bound、未审计 callback 或 solver dual 当作上界；把超时写成不可行；把浮点 `Infeasible` 写成物理证明；从单架构成功推导技术赢家；在证据回传、逐文件哈希和三层文档提交前启动 gap、E2–E4 或排名。
 
 合同、源码/测试提交和 OpenBayes 同哈希 Gate A 全部完成前，不允许正式 D48。唯一正式总批次完成后不得按结果原样重跑；任何增强必须另立新的结果前合同。
+
+## 12. D48-R1 正确路径批次：BESS 阶段记录
+
+D48-R1 已使用原预注册远端目录启动唯一替代批次，除输出目录字符串外继续锁定实现提交 `1090cd83b54aac8a99dce0041c1371b1e0b4320d`、Gate A manifest `1d894652bfb91f9995f428c8f36fc7ad555675496e42c1dbec4c6673c14c8bfe` 及第 3、7 节全部输入、选项、容差、墙钟和顺序。
+
+BESS 候选阶段已结束：
+
+- 父级硬墙钟在 `3720.1756297620013 s` 触发，候选子进程以 `SIGTERM`、返回码 `-15` 受控终止；
+- `bess_candidate.log` 为 0 字节，没有 candidate CSV、candidate result JSON、repair 或可行上界；
+- `candidate_status=null`、`repair_status=null`、`audited_feasible_upper_bound_cny=null`；
+- 峰值子进程树/父子聚合 RSS 为 `3.171466827392578/3.195880889892578 GiB`，最低可用内存 `94.14612579345703 GiB`，未越过 35/45 GiB RSS 或 30 GiB 主机保留门；
+- execution 因硬墙钟终止登记 `resource_gate_passed=false`、`status=resource_or_process_failure`、`stop_reason=hard_wall_clock_reached`，但没有 RSS 或可用内存门槛越界；
+- BESS 活动残留进程数为 0，编排器未重启 BESS，而是按冻结顺序进入 TES 候选阶段。
+
+`bess_manifest.json` 的原始架构状态为 `candidate_process_or_resource_failure`。依据第 8 节，BESS 的科学分类只能是 `no_primal_status_closure`：该阶段既不满足完整 `Infeasible` 门，也没有合格 incumbent，故不能写成 BESS 物理不可行或 `engineering_mip_infeasible_under_original_bounds`。
+
+阶段文件已下载到 `风光火+熔盐储热/数据采集/e0d48_hamming_feasibility_primal_recovery/`，远端—本地 SHA-256 一致：
+
+| 文件 | SHA-256 |
+|---|---|
+| `bess_candidate.log` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `bess_candidate_heartbeat.jsonl` | `a89039078f0b2fd18dce916587097a43840172f9975f642a1b56f83fd18fd71a` |
+| `bess_candidate_execution.json` | `183e15b9d5f1df4799b397d7aebdec7afc236912fe8b2b05384df4bdb61a2291` |
+| `bess_manifest.json` | `2e028f35862ad647962bc3ad524c8ec91843b6a411d4b0047bbc888c9c876687` |
+
+截至本节更新，TES 候选阶段仍在运行，`formal_manifest.json` 尚不存在。这里是阶段记录，不是 D48 总批次终态；`formal_project_tac_ready=false`、`technical_ranking_permitted=false` 保持不变。

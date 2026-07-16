@@ -1,5 +1,9 @@
 # E0-D-48-R1 行政路径纠正与替代启动合同
 
+状态：**正确路径唯一替代批次已启动；BESS 阶段已结束且无 primal 状态闭合，TES 阶段运行中**
+
+结果记录更新：2026-07-16
+
 ## 1. 触发原因与无结果边界
 
 E0-D-48 的结果前合同预注册正式远端目录为：
@@ -77,3 +81,11 @@ Gate A 使用版本化归档目录 `e0d48_gate_a_1090cd8/` 与
 错误启动和本补充合同均不产生正式上界、容量、不可行证明、项目 TAC、gap 或
 技术排序；`formal_project_tac_ready=false`、
 `technical_ranking_permitted=false` 保持不变。
+
+## 6. 正确路径替代启动的阶段记录
+
+替代批次已经使用第 3 节规定的正确远端目录启动，编排器先重新验证 Gate A 和锁定输入，并保持 BESS→TES→Hybrid 顺序。BESS 候选阶段在 `3720.176 s` 父级硬墙钟触发受控 `SIGTERM`，没有 candidate CSV/result JSON、repair、容量或上界；残留进程数为 0。随后编排器按原顺序启动 TES，没有对 BESS 进行第二次启动。
+
+BESS manifest 原始状态 `candidate_process_or_resource_failure` 按主合同第 8 节映射为 `no_primal_status_closure`，不能解释为 BESS 不可行。四个 BESS 阶段文件已下载到预注册本地正式副本目录并与远端逐文件同哈希；详细数值和 SHA-256 见主 D48 合同第 12 节及该目录 `README.md`。
+
+截至本节更新，TES 候选阶段仍在运行，`formal_manifest.json` 尚未生成。因此本补充合同只登记正确路径已被使用及 BESS 阶段结果，不提前关闭总批次，也不开放原样重跑、gap 收缩、E2–E4 或技术排序。

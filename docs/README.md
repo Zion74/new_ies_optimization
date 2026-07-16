@@ -1,6 +1,6 @@
 ﻿# 文档中心
 
-更新时间：2026-07-15
+更新时间：2026-07-16
 
 `docs/` 是本仓库研究架构、论文逻辑、实验映射与文档治理的唯一权威入口。凡是涉及会议论文、SCI 论文、硕士论文的主线、章节、实验、图表、代码映射与归档判断，先看这里，而不是回到散落旧笔记中重新猜。
 
@@ -62,9 +62,11 @@
 44. 在 TES 下界恢复后，为 Hybrid R0 分离原生双快照与 fork 严格证书、闭合三架构下界时读 `docs/03_sci_paper/e0_d45_hybrid_r0_strict_lower_bound_contract.md`
 45. 在 D45 双快照已有但 24 块证书触发墙钟后，以 56 个加权持久块只读恢复 Hybrid 严格下界时读 `docs/03_sci_paper/e0_d47_hybrid_weighted_persistent_certificate_contract.md`
 46. 在三架构严格下界闭合后，以工程容量锚点、R0 seed、首 incumbent 和固定二元 Repair A/B 恢复首组原 MILP 可行上界时读 `docs/03_sci_paper/e0_d46_full_year_feasible_upper_bound_repair_contract.md`
-47. 对应层级的实验 / 图表 / 代码映射文档
-48. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-49. 需要做清理或迁移时，再读 `docs/90_governance/`
+47. 在 D46 没有任何 incumbent 后，以原容量边界、完整二元等权 Hamming 搜索和固定二元原成本 LP 恢复 primal 时读 `docs/03_sci_paper/e0_d48_hamming_feasibility_primal_recovery_contract.md`
+48. 审计 D48 错误输出路径、唯一正确路径替代启动及 D48-R1 阶段结果时读 `docs/03_sci_paper/e0_d48_r1_administrative_path_correction_contract.md`
+49. 对应层级的实验 / 图表 / 代码映射文档
+50. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+51. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 
