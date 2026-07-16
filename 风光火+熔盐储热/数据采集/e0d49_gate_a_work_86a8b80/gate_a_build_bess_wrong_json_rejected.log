@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d49_physics_first_fuel_projection_primal_recovery.py", line 1197, in <module>
+    main()
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d49_physics_first_fuel_projection_primal_recovery.py", line 1189, in main
+    write_gate_a_build_audit(
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d49_physics_first_fuel_projection_primal_recovery.py", line 1068, in write_gate_a_build_audit
+    partition, _, preparation = prepare_physics_first_model(
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d49_physics_first_fuel_projection_primal_recovery.py", line 391, in prepare_physics_first_model
+    raise ValueError("D49 D46 guide hash mismatch")
+ValueError: D49 D46 guide hash mismatch

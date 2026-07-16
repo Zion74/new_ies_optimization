@@ -1,6 +1,6 @@
 # E0-D-49 物理优先燃料投影—原成本可行上界恢复合同
 
-状态：**结果前合同已冻结；实现与本地 Gate A 定向验证已完成；OpenBayes Gate A 与正式优化尚未执行。**
+状态：**结果前合同、实现与 OpenBayes Gate A 已闭合；Gate A 只授权单次 BESS 正式方法门，正式优化尚未启动。**
 
 冻结日期：2026-07-16。
 
@@ -152,3 +152,16 @@ D49 核心、BESS-only 监控执行器与两份定向测试已由提交 `86a8b80
 实现包含：原始二元分区、燃料编码/燃料流直接依赖审计、只连续化注册编码位的物理 Hamming 目标、每台机组全部结点/分段的静态提升证明、逐时确定性精确提升、完整二元域恢复、候选独立残差审计、D48 clean 原成本修复复用，以及只允许 BESS 的父级硬墙钟/资源门编排。
 
 本地 D49 定向测试 `14 passed`，Ruff、format check 和 `py_compile` 通过。D40–D49 兼容回归为 `210 passed / 5 skipped / 3 failed`，本地全包为 `665 passed / 5 skipped / 3 failed`；两者的同一 3 个失败都来自既有 D42 测试在 Windows 中文长路径下调用 HiGHS `writeBasis` 返回 `kError`，没有 D49 栈帧或新增失败类型。该环境差异不被豁免为正式 Gate A 通过：必须在 OpenBayes Linux ASCII 路径上以同哈希提交重新执行 D49 定向、D40–D49 兼容与全包测试，要求零失败、零错误、零跳过，并完成三架构 8784 h build-only 后才允许正式 BESS。
+
+## 13. OpenBayes Gate A 记录（不改写第 1–11 节）
+
+OpenBayes Gate A 已使用实现提交 `86a8b80e...` 的同哈希源码/测试和文档记录提交 `865cc97b0428f12bb3592c931db27bfd5ed0e223` 编译通过：
+
+- D49 定向、D40–D49 兼容与全包分别为 `14/219/673 passed`，全部零失败、零错误、零跳过；Ruff 与 `py_compile` sentinel 均通过；
+- BESS/TES/Hybrid 的 8784 h build-only 原始规模分别为 `597,318/650,052/685,194` 个活动变量、`79,057/87,840/96,625` 个原始二元和 `527,053/606,163/667,662` 条活动约束；
+- 三架构均投影 `52,704` 个 CHP 燃料编码位，分别保留 `26,353/35,136/43,921` 个物理二元；分区覆盖、不交、依赖边界、约束身份、原容量边界和全部注册燃料段/结点静态提升证明均通过；
+- 三份构建均记录 `solver_invoked=false` 与 `formal_optimization_invoked=false`；Gate A 明确只允许 BESS，TES/Hybrid 正式权限为 `false`；
+- Gate A manifest/execution SHA-256 为 `11b283d6825cd5fcc5b41a09b8400bdb6116bb11e830b1dd1bc42b9417e789dd` / `2fd4a89660ff6b8443832eb29891e8dec689601bf54ca6bd041387502c60792b`；远端 19 个工作产物和 2 个 Gate A 产物已回传，checksum 复核零不一致；
+- 首次 build CLI 误把 D46 摘要 `bess_guide.json` 接入 guide 参数，被预注册哈希门在任何 solver 调用前拒绝；拒绝日志完整保留。通过版本使用原锁定 `*_guide.csv.gz` 快照，未改变代码、模型、种子、选项、容差或墙钟。
+
+Gate A 仅关闭正式执行准入门，不产生 candidate、repair、容量、上界、gap、项目 TAC、不可行证明或技术排序。下一步只能启动第 9 节冻结路径的一次 BESS 正式方法门。

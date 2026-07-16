@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 均为 `no_primal_status_closure`，没有 candidate、repair、容量或上界；总 manifest `ca024880...`。D49 已结果前冻结并由提交 `86a8b80e...` 实现：先只为 BESS 保留 `26,353` 个物理二元、投影 `52,704` 个 CHP 燃料编码位，逐时精确提升后回到 clean 原成本模型修复；本地 D49 定向 14 项和三架构 24 h 完整链通过。OpenBayes Gate A 与正式优化尚未执行，上界恢复数仍为 0。下界、guide、24 h toy、Gate A 和阶段失败都不是正式可行容量或项目 TAC；项目级账户继续并行取证。
+当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 均为 `no_primal_status_closure`，没有 candidate、repair、容量或上界；总 manifest `ca024880...`。D49 已结果前冻结并由提交 `86a8b80e...` 实现；OpenBayes D49/D40–D49/全包 `14/219/673 passed` 与三架构 8784 h build-only Gate A 已闭合，manifest `11b283d6...` 只授权一次 BESS 正式方法门。正式 BESS 尚未启动，上界恢复数仍为 0。下界、guide、24 h toy、Gate A 和阶段失败都不是正式可行容量或项目 TAC；项目级账户继续并行取证。
