@@ -1,6 +1,6 @@
 # E0-D-49 物理优先燃料投影—原成本可行上界恢复合同
 
-状态：**结果前合同、实现与 OpenBayes Gate A 已闭合；Gate A 只授权单次 BESS 正式方法门，正式优化尚未启动。**
+状态：**结果前合同、实现、OpenBayes Gate A 与唯一 BESS 正式方法门均已闭合；终态为 `no_primal_status_closure`，D49 不得原样重跑。**
 
 冻结日期：2026-07-16。
 
@@ -165,3 +165,13 @@ OpenBayes Gate A 已使用实现提交 `86a8b80e...` 的同哈希源码/测试�
 - 首次 build CLI 误把 D46 摘要 `bess_guide.json` 接入 guide 参数，被预注册哈希门在任何 solver 调用前拒绝；拒绝日志完整保留。通过版本使用原锁定 `*_guide.csv.gz` 快照，未改变代码、模型、种子、选项、容差或墙钟。
 
 Gate A 仅关闭正式执行准入门，不产生 candidate、repair、容量、上界、gap、项目 TAC、不可行证明或技术排序。下一步只能启动第 9 节冻结路径的一次 BESS 正式方法门。
+
+## 14. 唯一正式 BESS 方法门终态（不改写第 1–11 节）
+
+唯一正式 BESS 方法门已在冻结远端目录完成，formal manifest SHA-256 为 `0d66f06defcc8ecabe247bc7eb38c3f9e7f457d41dac82927295f54b0ad62a14`。候选阶段父级硬墙钟在 `3720.637203153223 s` 触发，child 收到 `SIGTERM`、返回码 `-15`；没有 `bess_candidate.csv.gz`、`bess_candidate.json`、exact-lift 产物或 repair，故 `candidate_status=null`、`repair_status=null`、`audited_feasible_upper_bound_cny=null`。
+
+执行资源事实为：峰值 child process-tree RSS `3.137737274169922 GiB`，峰值父子聚合 RSS `3.1623153686523438 GiB`，最低可用内存 `94.17270278930664 GiB`，活动残留进程数 0。`resource_gate_passed=false` 来自父级硬墙钟受控停止，不是 35/45 GiB RSS 或 30 GiB 主机可用内存阈值越界。TES/Hybrid 未执行，成功架构数为 0。
+
+按第 10 节预注册规则，BESS 科学终态只能登记为 `no_primal_status_closure`。这不证明 BESS 物理不可行、工程 MIP 不可行或有理数不可行，也不产生可行容量、原 MILP 上界、gap、项目 TAC 或技术排序。规范远端 5 个产物和 formal manifest 声明的 4 个 artifact 已全部回传并零哈希不一致；本地证据目录为 `风光火+熔盐储热/数据采集/e0d49_physics_first_fuel_projection_primal_recovery/`。
+
+D49 由此关闭且不得原样重跑。下一步仅允许另立 D50 结果前方法设计；不开放 TES/Hybrid 同方法正式执行、E2–E4、699 点扫描或技术排序。
