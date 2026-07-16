@@ -92,7 +92,7 @@
 6. 至少一个 BESS 区、一个 TES 区和一个边界点通过 8784 h 重优化；
 7. 如果 Hybrid 未形成稳定区域，诚实报告而不是调整阈值制造结论。
 
-当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 唯一正确路径总批次已完成：BESS/TES/Hybrid 候选阶段分别在 `3720.176/3720.581/3720.803 s` 硬墙钟内没有 candidate、repair、容量或上界，只能分别登记 `no_primal_status_closure`；总状态 `partial_or_no_upper_bound_recovery`、上界恢复数 0、总 manifest `ca024880...`。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
+当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 唯一正确路径总批次已完成：BESS/TES/Hybrid 均未产生 candidate、repair、容量或上界，只能登记 `no_primal_status_closure`；总 manifest `ca024880...`。D49 物理优先燃料投影合同已结果前冻结，下一步只做 Gate A 和通过后的单次 BESS 方法门；当前尚无 D49 数值。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
 
 ## 5. 完整技术设计
 

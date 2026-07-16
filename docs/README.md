@@ -64,9 +64,10 @@
 46. 在三架构严格下界闭合后，以工程容量锚点、R0 seed、首 incumbent 和固定二元 Repair A/B 恢复首组原 MILP 可行上界时读 `docs/03_sci_paper/e0_d46_full_year_feasible_upper_bound_repair_contract.md`
 47. 在 D46 没有任何 incumbent 后，以原容量边界、完整二元等权 Hamming 搜索和固定二元原成本 LP 恢复 primal 时读 `docs/03_sci_paper/e0_d48_hamming_feasibility_primal_recovery_contract.md`
 48. 审计 D48 错误输出路径、唯一正确路径替代启动及 D48-R1 BESS/TES/Hybrid 阶段结果时读 `docs/03_sci_paper/e0_d48_r1_administrative_path_correction_contract.md`
-49. 对应层级的实验 / 图表 / 代码映射文档
-50. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-51. 需要做清理或迁移时，再读 `docs/90_governance/`
+49. 在 D48-R1 无 primal 状态闭合后，以物理二元 Hamming、CHP 燃料编码投影、确定性精确提升和原成本 LP 恢复 BESS 上界时读 `docs/03_sci_paper/e0_d49_physics_first_fuel_projection_primal_recovery_contract.md`
+50. 对应层级的实验 / 图表 / 代码映射文档
+51. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+52. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 

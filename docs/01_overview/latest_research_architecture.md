@@ -113,6 +113,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - **D46 三架构可行上界正式批次（零上界恢复）**：结果前合同、最终源码提交 `4a18f42` 与 OpenBayes `22/204/644 passed` Gate A 已闭合。唯一正式 BESS→TES→Hybrid 总批次运行 `8820.162 s`，总 manifest `8693722...`。三个 R0 guide 均最优但只提供连续引导；BESS 新 seed 与限定 D41 回退均未产生 incumbent，TES/Hybrid seed 分别有 `48,801/48,791` 条行不可行，原 MILP 各跑满 `3600 s` 后 Primal bound 仍为 `inf`。三架构均为 `no_candidate_incumbent`，没有进入 Repair A/B，上界恢复数为 0；
 - **D46 事后只读诊断与 D48 结果前路线**：诊断 bundle `c74a694...` 未调用求解器；BESS 的 `55,425` 条违约主要来自 CHP 编码/启停轨迹，TES/Hybrid 的 `48,801/48,791` 条违约在幅值上由 HT 接收/送出模式主导，说明逐变量取整不能形成一致离散轨迹。D48 第 1–11 节已在任何实现和正式数值前冻结；实现与测试提交为 `1090cd83...`，OpenBayes 同源 Gate A manifest 为 `1d894652...`，三架构 build-only 审计、15 项定向测试和 659 项全包回归全部通过，Gate A 未调用正式优化；
 - **服务器与当前准入**：OpenBayes 60 核 / 约 100 GB 内存，D43、D45、D47、D46 均不得原样重跑。D48 首次错误路径启动已作为无结果行政失败归档；D48-R1 唯一正确路径总批次已完成。BESS/TES/Hybrid 候选阶段分别在 `3720.176/3720.581/3720.803 s` 父级硬墙钟受控终止，均未生成 candidate、repair、容量或上界，活动残留均为 0；三者都只能登记为 `no_primal_status_closure`，不构成相应架构不可行。正式总状态为 `partial_or_no_upper_bound_recovery`，成功上界恢复数 0，总 manifest SHA-256 `ca024880...`。正式 E2–E4、gap 收缩、项目 TAC 和技术赢家继续阻断；
+- **D49 物理优先燃料投影恢复（结果前冻结，未执行）**：下一道唯一方法门先只处理 BESS。原 `79,057` 个二元变量预注册为 `52,704` 个只负责 CHP 燃料相邻段编码的投影位和 `26,353` 个保留物理位；候选搜索只对物理位做等权 Hamming，燃料编码位连续化后必须按逐时总功率确定性精确回填，并在 clean 原始成本模型中固定完整二元快照、释放连续容量后通过独立 LP 修复与残差审计。Gate A、同哈希服务器回归通过前不得正式求解；首次正式门只授权 BESS，失败转 D50 而不延长 D49 墙钟；
 - **Agentic**：只完成研究定位，尚未实现与评价。
 
 ## 7. 权威入口
@@ -145,6 +146,7 @@ Agent 不直接生成容量答案，不替代 MILP，不擅自改变物理参数
 - E0-D-42 原生 HiGHS 可中断拉格朗日下界合同：`docs/03_sci_paper/e0_d42_native_highs_interruptible_lagrangian_bound_contract.md`
 - E0-D-43 冻结快照离线对偶证书恢复合同与正式失败：`docs/03_sci_paper/e0_d43_frozen_snapshot_offline_dual_certificate_contract.md`
 - E0-D-44 fork 并行 80 位拉格朗日证书合同：`docs/03_sci_paper/e0_d44_fork_parallel_lagrangian_certificate_contract.md`
+- E0-D-49 物理优先燃料投影—原成本可行上界恢复合同：`docs/03_sci_paper/e0_d49_physics_first_fuel_projection_primal_recovery_contract.md`
 - 硕士论文逻辑：`docs/04_master_thesis/latest_logic_structure.md`
 - 第 4 章计划：`docs/04_master_thesis/chapter4_tes_ees_regime_boundary_plan.md`
 - 第 5 章计划：`docs/04_master_thesis/chapter5_agentic_decision_support_plan.md`
