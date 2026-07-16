@@ -6,7 +6,7 @@
 
 D48-R1 唯一正确路径替代批次已完成。BESS/TES/Hybrid 候选阶段分别在 `3720.176/3720.581/3720.803 s` 硬墙钟受控结束，均没有 candidate、repair、容量或上界；科学状态分别为 `no_primal_status_closure`，不是相应架构不可行。正式总状态 `partial_or_no_upper_bound_recovery`、成功上界恢复数 0、总 manifest SHA-256 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。
 
-D49 已于 2026-07-16 结果前冻结，尚未实现、尚未执行 Gate A、尚未调用正式优化。它先只授权 BESS：保留 `26,353` 个物理二元做等权 Hamming，连续化 `52,704` 个 CHP 燃料段编码位；候选必须通过确定性相邻段精确提升和 clean 原始成本固定二元 LP 修复才具备上界资格。当前上界恢复数仍为 0。
+D49 已于 2026-07-16 结果前冻结，并由提交 `86a8b80e...` 完成核心、BESS-only 执行器和测试；本地定向 `14 passed`，三架构 24 h 候选—精确提升—原成本修复均通过。它先只授权 BESS：保留 `26,353` 个物理二元做等权 Hamming，连续化 `52,704` 个 CHP 燃料段编码位。OpenBayes Gate A 与正式优化尚未执行，当前上界恢复数仍为 0。
 
 ## 1. 已实现代码
 
@@ -86,7 +86,7 @@ D49 已于 2026-07-16 结果前冻结，尚未实现、尚未执行 Gate A、尚
 - D46 三架构可行上界与固定二元修复：第 1–11 节结果前合同、最终源码/测试提交 `4a18f42` 与 OpenBayes `22/204/644 passed` Gate A 均已闭合。唯一正式总批次运行 `8820.162 s`，总 manifest `8693722...`；BESS/TES/Hybrid 均为 `no_candidate_incumbent`，没有进入 Repair A/B，上界恢复数为 0。该失败不证明原物理模型不可行；没有正式可行容量、上界、gap、项目 TAC 或技术排序，D46 不得原样重跑。
 - D46 postmortem 只读诊断：在三架构原模型上加载已归档 complete guide seed，逐条计算活动约束违约，没有调用求解器。总 bundle SHA-256 为 `c74a6943570690ace8573a0dee2f65aa763d0371854e01625337a46244a35b58`；BESS/TES/Hybrid 在 `1e-7` 下分别有 `55,425/48,801/48,791` 条违约。BESS 主要是 CHP 编码/启停轨迹不一致；TES/Hybrid 违约幅值由 HT 接收/送出模式主导。该诊断永久 `formal_upper_bound_eligible=false`、`technical_ranking_permitted=false`。
 - D48 Hamming 可行性—原成本修复：实现提交 `1090cd83...`；Gate A `1d894652...` 已通过且未调用正式优化。首次错误路径启动已作为无结果行政失败归档。D48-R1 唯一正确路径总批次已完成；BESS/TES/Hybrid 候选阶段分别在 `3720.1756297620013/3720.5810301834717/3720.8029388338327 s` 父级硬墙钟触发 `SIGTERM`，均无 candidate CSV/result JSON、repair、容量或上界，残留进程均为 0。三案峰值子进程树/聚合 RSS 分别为 `3.171/3.196`、`4.580/4.606`、`5.579/5.604 GiB`，最低可用内存分别为 `94.146/92.733/91.731 GiB`，均未发生 RSS/内存门槛越界。三份架构原始状态 `candidate_process_or_resource_failure` 均按合同登记为 `no_primal_status_closure`。总状态 `partial_or_no_upper_bound_recovery`、总运行 `11161.584 s`、成功上界恢复数 0；`rational_exact_feasibility_certificate=false`、`formal_project_tac_ready=false`、`technical_ranking_permitted=false`。
-- D49 物理优先燃料投影—原成本修复：第 1–11 节结果前合同已冻结，首次方法门只授权 BESS；源码、测试、Gate A 和正式数值均尚未产生。Gate A 必须证明燃料编码投影的精确可提升性，完成三架构 build-only 与 24 h 双端回归，并保持 `formal_optimization_invoked=false`；未通过前不得启动正式 BESS。
+- D49 物理优先燃料投影—原成本修复：第 1–11 节结果前合同已冻结；源码/测试提交 `86a8b80e...`，四文件 SHA-256 已写入合同第 12 节。本地 D49 定向 `14 passed`，Ruff/format/pycompile 通过；D40–D49 兼容与全包分别为 `210/665 passed`、各 `5 skipped + 3 failed`，同一 3 失败仅来自既有 D42 在 Windows 中文路径写 HiGHS basis。正式 Gate A 仍必须在 OpenBayes 同哈希 Linux 路径上完成 D49 定向、D40–D49、全包零失败/零跳过和三架构 build-only，并保持 `formal_optimization_invoked=false`；未通过前不得启动正式 BESS。
 
 D48-R1 完整证据位于 `风光火+熔盐储热/数据采集/e0d48_hamming_feasibility_primal_recovery/`。BESS/TES 的四文件哈希保持前述阶段记录不变；Hybrid heartbeat/execution/manifest SHA-256 分别为 `893693cc63feba3518569cb6bc7b3f0ccb58affbfa6130d151e1e3daf0f7179b`、`86cb2530709828c377ea81224945d872a4cbf1379463df0768fa9b378d4de77b`、`017a0471fa2d83343d7700ba70f68d20d0b779aaafecb337ccf71040c3f1b71f`，空日志仍为 `e3b0c442...`；总 manifest SHA-256 为 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。远端目录 13 个文件已全部回传并逐文件同哈希，该目录现为 D48-R1 最终证据包。
 
@@ -354,4 +354,4 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 7. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构都未闭合 primal 状态，正式上界恢复数仍为 0。D49 当前仅冻结结果前合同，尚未形成任何新数值。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
+D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构都未闭合 primal 状态，正式上界恢复数仍为 0。D49 合同和实现已冻结，本地只形成 Gate A 方法验证，OpenBayes Gate A/正式数值仍为空。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。

@@ -1,6 +1,6 @@
 # E0-D-49 物理优先燃料投影—原成本可行上界恢复合同
 
-状态：**结果前冻结；尚未实现，尚未调用正式优化。**
+状态：**结果前合同已冻结；实现与本地 Gate A 定向验证已完成；OpenBayes Gate A 与正式优化尚未执行。**
 
 冻结日期：2026-07-16。
 
@@ -137,3 +137,18 @@ Gate A 不得调用 8784 h 正式 optimize，且 manifest 必须写明 `formal_o
 - 不延长墙钟，不因结果不理想改变 tie-break、钳制容差、架构顺序或终态解释；
 - 不把候选模型、精确提升前点、Hamming 值、24 h toy、Gate A、连续 guide、严格下界或 solver 文本状态写成原 MILP 可行容量或项目 TAC；
 - Agentic 仅可编排哈希、资源门、资格审计与停止规则，不替代物理模型、提升证明或 HiGHS。
+
+## 12. 冻结后的实现记录（不改写第 1–11 节）
+
+D49 核心、BESS-only 监控执行器与两份定向测试已由提交 `86a8b80e18e4858e32aac208152bb7796530753c` 固定：
+
+| 文件 | SHA-256 |
+|---|---|
+| `e0d49_physics_first_fuel_projection_primal_recovery.py` | `9d2dd610a2d7e59e9b8d9631e676277b0d36077c7a40d3448889defc041b3b14` |
+| `e0d49_monitored_executor.py` | `57597be318a1d0bf3fa153ac144f027958c675a1ed9a1c4c36b2d9a47128311d` |
+| `test_e0d49_physics_first_fuel_projection_primal_recovery.py` | `3bceaa97a186158b6039eff6b3f47cfb4c0a2047f3f635dd1402e120c1356dff` |
+| `test_e0d49_monitored_executor.py` | `10cf492a5fb74af01ef02530362d6929e8f288107babfbd32a7b1e99a3e3444f` |
+
+实现包含：原始二元分区、燃料编码/燃料流直接依赖审计、只连续化注册编码位的物理 Hamming 目标、每台机组全部结点/分段的静态提升证明、逐时确定性精确提升、完整二元域恢复、候选独立残差审计、D48 clean 原成本修复复用，以及只允许 BESS 的父级硬墙钟/资源门编排。
+
+本地 D49 定向测试 `14 passed`，Ruff、format check 和 `py_compile` 通过。D40–D49 兼容回归为 `210 passed / 5 skipped / 3 failed`，本地全包为 `665 passed / 5 skipped / 3 failed`；两者的同一 3 个失败都来自既有 D42 测试在 Windows 中文长路径下调用 HiGHS `writeBasis` 返回 `kError`，没有 D49 栈帧或新增失败类型。该环境差异不被豁免为正式 Gate A 通过：必须在 OpenBayes Linux ASCII 路径上以同哈希提交重新执行 D49 定向、D40–D49 兼容与全包测试，要求零失败、零错误、零跳过，并完成三架构 8784 h build-only 后才允许正式 BESS。
