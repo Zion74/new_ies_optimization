@@ -6,12 +6,12 @@
 
 | 编号 | 目的 | 核心设置 | 主输出 | 代码状态 |
 |---|---|---|---|---|
-| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D38–D43 失败均已登记。D44/D47 已使三架构下界闭合。D46 三架构均无 incumbent；D48-R1 三架构均为 `no_primal_status_closure`。D49 Gate A `11b283d6...` 已通过，但唯一正式 BESS 门在 `3720.637 s` 无 candidate/repair 收口为 `no_primal_status_closure`，formal manifest `0d66f06d...`，成功上界恢复数仍为 0。连续 guide、下界、24 h toy、Gate A 和阶段失败都不是正式可行容量或项目 TAC；正式项目账户完成前不能技术排序 |
+| E0 | 验证数据、物理与 MILP | 双机 CHP、BESS、HT/MT TES、PCC、寿命成本 | 可行域、能量守恒、现金流审计、TES 证据/成本门、BESS 正式账本、同 PCC 服务 EAC 上限、非燃料成本证书、影子成本稳健性、逐时 PCC、替代调度包络、严格数值证书、16 账户 TAC 路线、项目取证接口、公开敏感性成本账、完整内生容量接缝、工程材料性门、代表周数据门、分块循环状态边界、全年直接求解资源与精度门、HiGHS 状态与求解误差、严格全年下界—可行上界证书 | D38–D43 失败均已登记。D44/D47 已使三架构下界闭合。D46 三架构均无 incumbent；D48-R1 三架构和 D49 BESS 均为 `no_primal_status_closure`，成功上界恢复数仍为 0。D50 已冻结同一个完整 8784 h 模型上的 `336 h` 整数前视—`168 h` 提交合同，尚未实现或执行。连续 guide、下界、24 h toy、Gate A、部分轨迹和阶段失败都不是正式可行容量或项目 TAC；正式项目账户完成前不能技术排序 |
 | E1 | 隔离价值机制 | No storage / BESS / P2H / TES-E / TES-H / dual TES；控制后恢复真实参数 | 电移峰、热替代、强迫出力释放 | D35 表明自然服务在 5%/10% 门下精确折叠为无储能，1% 仅保留约 `139–142 t` heat-only TES 且代理改善约 `0.03%–0.05%`；严格服务保留 TES，但所有 Hybrid 的 BESS 为零且 TES/Hybrid bounds 重叠。D36/D37 已冻结；D38/R1/D39 三次失败均已登记。三架构下界已闭合，但 D46 未恢复任何可行上界；新可行性恢复合同通过前不能继续批量机制扫描；`_ch4_p1_milp_compare.py` 只保留为旧原型 |
 | E2 | 建立公平成本—消纳前沿 | 四架构 × 5 个共同可行 ε 目标 | TAC—弃风前沿、容量、煤耗、碳排、启停 | 待实现综合 MILP |
 | E3 | 识别物理选择边界 | 6 档 \(H^*\) × 5 档架构无关 \(G^*\) × 3 档风电 × 四架构 | BESS / TES / Hybrid / No storage / Indifferent / Infeasible 地图 | `_ch4_p4_sensitivity.py` 只能复用扫描经验 |
 | E4 | 识别时长—成本边界 | 低/中/高 3 锚点 × 6 档服务时长 × 7 档 TES 成本倍率；边界二分加密 | 经济边界与边界移动量 | 待实现 |
-| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照或候选生成 | 全年可计算性、严格 gap、分解证书、代表期误差 | D43、D45、D47、D46、D48-R1、D49 均不得原样重跑。D44/D47 已使三架构严格下界闭合；D46/D48-R1/D49 上界恢复数均为 0。下一步只开放另立 D50 结果前方法设计，技术排序和批量扫描仍禁止 |
+| E5 | 全年证据与时间方法验证 | 真实 8784 h 单循环块；D36/D39 仅保留为失败对照 | 全年可计算性、严格 gap、分解证书、代表期误差 | D43、D45、D47、D46、D48-R1、D49 均不得原样重跑。D44/D47 已使三架构严格下界闭合；D46/D48-R1/D49 上界恢复数均为 0。D50 结果前方法已冻结，下一步只允许实现与 Gate A；技术排序和批量扫描仍禁止 |
 | E6 | 确定性稳健性 | 4 锚点 OAT：循环寿命、TES 效率、碳价、价差、退化口径和可比资源年 | 边界移动与结论稳定区间 | 待实现；不做随机分析 |
 
 完整水平、算例预算与验收标准见：
@@ -169,6 +169,7 @@
 | `src/tes_bess_boundary/e0d46_full_year_feasible_upper_bound_repair.py`、`src/tes_bess_boundary/e0d46_monitored_executor.py`、两份 `tests/test_e0d46_*.py`、`docs/03_sci_paper/e0_d46_full_year_feasible_upper_bound_repair_contract.md`、`数据采集/e0d46_gate_a/`、`数据采集/e0d46_full_year_feasible_upper_bound_repair/` | 三架构工程上界容量锚点、同服务 R0 连续 seed、原 MILP 首个 incumbent、D41 完整二元固定、最大容量 Repair A 与可选容量收缩 Repair B、独立全约束/服务/循环/目标残差审计和正式批次资源编排 | E0/E5 | 第 1–11 节结果前冻结；最终源码提交 `4a18f42`，OpenBayes Gate A 为 `22/204/644 passed`。唯一正式总批次 manifest `8693722...`；BESS/TES/Hybrid 均为 `no_candidate_incumbent`，没有 Repair A/B、可行容量、上界、gap、项目 TAC 或技术排序，D46 不得原样重跑 |
 | `docs/03_sci_paper/e0_d48_hamming_feasibility_primal_recovery_contract.md`、`e0_d48_r1_administrative_path_correction_contract.md`、`数据采集/e0d48_gate_a_1090cd8/`、`数据采集/e0d48_invalid_wrong_output_path_launch/`、`数据采集/e0d48_hamming_feasibility_primal_recovery/` | D46 guide seed 只读诊断；原容量边界下完整二元等权 Hamming 搜索，再固定全部二元恢复原成本 LP | E0/E5 | 实现 `1090cd83...`、Gate A `1d894652...` 已归档。D48-R1 唯一正确路径总批次已完成；三架构各四个阶段文件与总 manifest 共 13 个文件远端—本地同哈希，三案均无 candidate/repair/上界，只能分别登记 `no_primal_status_closure`；总 manifest `ca024880...`，上界恢复数 0，D48-R1 不得原样重跑 |
 | `src/tes_bess_boundary/e0d49_physics_first_fuel_projection_primal_recovery.py`、`e0d49_monitored_executor.py`、两份 `tests/test_e0d49_*.py`、D49 合同、`数据采集/e0d49_gate_a_*`、`e0d49_physics_first_fuel_projection_primal_recovery/` | 保留物理二元的等权 Hamming、只投影 CHP 燃料编码位、全部结点/分段静态证明、逐时确定性精确提升、完整二元固定、原成本 LP 修复与 BESS-only 资源编排 | E0/E5 | Gate A `11b283d6...` 已通过；唯一正式 BESS 门无 candidate/repair，以 `no_primal_status_closure` 结束，formal manifest `0d66f06d...`。不产生上界、gap、TAC 或技术排序，D49 不得重跑 |
+| `docs/03_sci_paper/e0_d50_full_year_coupled_physical_block_relax_and_fix_contract.md` | BESS 完整 8784 h 年度耦合模型上的燃料编码持续投影、`336 h` 物理整数前视、`168 h` 逐块提交、完整物理轨迹提升和 clean 原成本 LP | E0/E5 | 第 1–11 节结果前冻结；尚无源码、Gate A 或正式数值。中间阶段与部分轨迹均为 candidate-only，只有完整 53 阶段、精确提升和 clean repair 全通过才可登记 BESS 上界 |
 | `scenarios.py` / `run_sweep.py` | 场景网格和并行断点续跑 | E2-E6 | 待实现 |
 | `validate_full_year.py` / `postprocess.py` | 全年回代、边界和机理分解 | E1-E6 | 待实现 |
 

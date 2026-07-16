@@ -6,7 +6,7 @@
 
 D48-R1 唯一正确路径替代批次已完成。BESS/TES/Hybrid 候选阶段分别在 `3720.176/3720.581/3720.803 s` 硬墙钟受控结束，均没有 candidate、repair、容量或上界；科学状态分别为 `no_primal_status_closure`，不是相应架构不可行。正式总状态 `partial_or_no_upper_bound_recovery`、成功上界恢复数 0、总 manifest SHA-256 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。
 
-D49 已于 2026-07-16 结果前冻结，并由提交 `86a8b80e...` 完成核心、BESS-only 执行器和测试；本地定向 `14 passed`，三架构 24 h 候选—精确提升—原成本修复均通过。它先只授权 BESS：保留 `26,353` 个物理二元做等权 Hamming，连续化 `52,704` 个 CHP 燃料段编码位。OpenBayes Gate A 与正式优化尚未执行，当前上界恢复数仍为 0。
+D49 已完成合同、实现、OpenBayes Gate A 和唯一正式 BESS 方法门；正式候选在 `3720.637 s` 内没有 incumbent、exact lift、repair、容量或上界，终态为 `no_primal_status_closure`。D50 已冻结结果前方法合同：在同一个完整 8784 h 模型中保留年度服务与单全年循环，只对最多 `336 h` 物理二元前视带恢复整数并每次提交 `168 h`，最后调用 D49 精确提升与 clean repair。D50 尚未实现、未执行 Gate A，也没有任何数值结果；当前上界恢复数仍为 0。
 
 ## 1. 已实现代码
 
@@ -87,6 +87,7 @@ D49 已于 2026-07-16 结果前冻结，并由提交 `86a8b80e...` 完成核心�
 - D46 postmortem 只读诊断：在三架构原模型上加载已归档 complete guide seed，逐条计算活动约束违约，没有调用求解器。总 bundle SHA-256 为 `c74a6943570690ace8573a0dee2f65aa763d0371854e01625337a46244a35b58`；BESS/TES/Hybrid 在 `1e-7` 下分别有 `55,425/48,801/48,791` 条违约。BESS 主要是 CHP 编码/启停轨迹不一致；TES/Hybrid 违约幅值由 HT 接收/送出模式主导。该诊断永久 `formal_upper_bound_eligible=false`、`technical_ranking_permitted=false`。
 - D48 Hamming 可行性—原成本修复：实现提交 `1090cd83...`；Gate A `1d894652...` 已通过且未调用正式优化。首次错误路径启动已作为无结果行政失败归档。D48-R1 唯一正确路径总批次已完成；BESS/TES/Hybrid 候选阶段分别在 `3720.1756297620013/3720.5810301834717/3720.8029388338327 s` 父级硬墙钟触发 `SIGTERM`，均无 candidate CSV/result JSON、repair、容量或上界，残留进程均为 0。三案峰值子进程树/聚合 RSS 分别为 `3.171/3.196`、`4.580/4.606`、`5.579/5.604 GiB`，最低可用内存分别为 `94.146/92.733/91.731 GiB`，均未发生 RSS/内存门槛越界。三份架构原始状态 `candidate_process_or_resource_failure` 均按合同登记为 `no_primal_status_closure`。总状态 `partial_or_no_upper_bound_recovery`、总运行 `11161.584 s`、成功上界恢复数 0；`rational_exact_feasibility_certificate=false`、`formal_project_tac_ready=false`、`technical_ranking_permitted=false`。
 - D49 物理优先燃料投影—原成本修复：合同、提交 `86a8b80e...` 与 OpenBayes Gate A `11b283d6...` 已闭合；D49/D40–D49/全包 `14/219/673 passed`，三架构 8784 h build-only 均通过。唯一正式 BESS 候选在 `3720.637 s` 父级硬墙钟受控 `SIGTERM`，没有 candidate、exact lift、repair、容量或上界；峰值进程树/聚合 RSS `3.138/3.162 GiB`、最低可用内存 `94.173 GiB`、残留进程 0。formal manifest `0d66f06d...` 将终态锁定为 `no_primal_status_closure`，TES/Hybrid 未执行，D49 不得原样重跑。
+- D50 全年耦合物理分块 Relax-and-Fix：第 1–11 节已在任何实现、Gate A 或 D50 数值前冻结。BESS 原模型、连续容量边界、年度 PCC/弃电服务和真实年循环始终保留；`52,704` 个燃料编码位持续投影，`26,353` 个物理二元按 `52×168 h + 48 h` 的 53 个提交块逐步收紧，整数前视最多 `336 h`。当前 `implementation_started=false`、`gate_a_passed=false`、`formal_optimization_invoked=false`，因此不产生容量、上界、gap 或权限放行。
 
 D48-R1 完整证据位于 `风光火+熔盐储热/数据采集/e0d48_hamming_feasibility_primal_recovery/`。BESS/TES 的四文件哈希保持前述阶段记录不变；Hybrid heartbeat/execution/manifest SHA-256 分别为 `893693cc63feba3518569cb6bc7b3f0ccb58affbfa6130d151e1e3daf0f7179b`、`86cb2530709828c377ea81224945d872a4cbf1379463df0768fa9b378d4de77b`、`017a0471fa2d83343d7700ba70f68d20d0b779aaafecb337ccf71040c3f1b71f`，空日志仍为 `e3b0c442...`；总 manifest SHA-256 为 `ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165`。远端目录 13 个文件已全部回传并逐文件同哈希，该目录现为 D48-R1 最终证据包。
 
@@ -352,10 +353,10 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43、D45、D47、D46、D48-R1 与 D49 均不得原样重跑；D44 已恢复 TES R0/R1 合法下界，D47 已恢复 Hybrid R0 下界并覆盖 R1/原 MILP。D46 三架构均无 incumbent；D48-R1 三架构和 D49 BESS 均为 `no_primal_status_closure`，上界恢复数为 0。下一步只能另立 D50 结果前方法设计；
+3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43、D45、D47、D46、D48-R1 与 D49 均不得原样重跑；D44 已恢复 TES R0/R1 合法下界，D47 已恢复 Hybrid R0 下界并覆盖 R1/原 MILP。D46 三架构均无 incumbent；D48-R1 三架构和 D49 BESS 均为 `no_primal_status_closure`，上界恢复数为 0。D50 结果前合同已冻结，下一步只能实现 D50 并完成不调用 8784 h optimize 的 Gate A；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 7. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构和 D49 BESS 都未闭合 primal 状态，正式上界恢复数仍为 0。D49 已关闭且只开放另立 D50 方法设计。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担哈希、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
+D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构和 D49 BESS 都未闭合 primal 状态，正式上界恢复数仍为 0。D50 已冻结完整全年耦合的 `336 h` 前视—`168 h` 提交合同，尚未实现或执行；下一步只允许 D50 实现与 Gate A。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担哈希、阶段域、资源、bound 资格与停止规则编排，不替代物理模型或优化器。
