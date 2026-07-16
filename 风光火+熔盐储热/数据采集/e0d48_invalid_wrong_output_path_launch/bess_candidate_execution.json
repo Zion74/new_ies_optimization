@@ -1,0 +1,18 @@
+{
+  "architecture": "bess",
+  "available_memory_before_gib": 97.2977066040039,
+  "hard_wall_enforced_by_parent": true,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 45.0,
+    "hard_wall_seconds": 3720.0,
+    "heartbeat_interval_seconds": 5.0,
+    "host_memory_reserve_gib": 30.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_limit_gib": 35.0
+  },
+  "schema_id": "tes_bess_boundary.e0d48_stage_execution.v1",
+  "stage": "candidate",
+  "status": "child_starting"
+}
