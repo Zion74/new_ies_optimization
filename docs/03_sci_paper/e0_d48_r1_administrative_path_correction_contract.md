@@ -88,4 +88,6 @@ Gate A 使用版本化归档目录 `e0d48_gate_a_1090cd8/` 与
 
 BESS manifest 原始状态 `candidate_process_or_resource_failure` 按主合同第 8 节映射为 `no_primal_status_closure`，不能解释为 BESS 不可行。四个 BESS 阶段文件已下载到预注册本地正式副本目录并与远端逐文件同哈希；详细数值和 SHA-256 见主 D48 合同第 12 节及该目录 `README.md`。
 
-截至本节更新，TES 候选阶段仍在运行，`formal_manifest.json` 尚未生成。因此本补充合同只登记正确路径已被使用及 BESS 阶段结果，不提前关闭总批次，也不开放原样重跑、gap 收缩、E2–E4 或技术排序。
+TES 候选阶段随后在 `3720.581 s` 父级硬墙钟受控结束，同样没有 candidate CSV/result JSON、repair、容量或上界，残留进程数为 0。TES manifest 原始状态 `candidate_process_or_resource_failure` 按主合同第 8 节同样映射为 `no_primal_status_closure`，不能解释为 TES 不可行。四个 TES 阶段文件也已下载到预注册本地阶段副本目录并与远端逐文件同哈希；详细数值和 SHA-256 见主 D48 合同第 13 节。
+
+编排器没有重启 BESS 或 TES，现已按原顺序进入 Hybrid；`formal_manifest.json` 尚未生成。因此本补充合同只登记正确路径已被使用及 BESS/TES 阶段结果，不提前关闭总批次，也不开放原样重跑、gap 收缩、E2–E4 或技术排序。

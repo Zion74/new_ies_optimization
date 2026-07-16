@@ -1,6 +1,6 @@
 # E0-D-48 全年 Hamming 可行性搜索与原成本上界恢复合同
 
-状态：**第 1–11 节结果前合同已冻结；源码与 Gate A 已通过；D48-R1 正确路径总批次运行中，BESS 阶段已结束且未闭合 primal 状态**
+状态：**第 1–11 节结果前合同已冻结；源码与 Gate A 已通过；D48-R1 正确路径总批次运行中，BESS/TES 阶段均已结束且未闭合 primal 状态，Hybrid 运行中**
 
 适用范围：D46 唯一正式批次未获得任何原 MILP incumbent，且 D46 事后只读诊断已定位“逐变量取整不能形成一致离散轨迹”之后，在同一 2024 年 8784 h 原始 BESS、TES、Hybrid 规划 MILP 中恢复首个可审计 primal 状态。
 
@@ -184,4 +184,26 @@ BESS 候选阶段已结束：
 | `bess_candidate_execution.json` | `183e15b9d5f1df4799b397d7aebdec7afc236912fe8b2b05384df4bdb61a2291` |
 | `bess_manifest.json` | `2e028f35862ad647962bc3ad524c8ec91843b6a411d4b0047bbc888c9c876687` |
 
-截至本节更新，TES 候选阶段仍在运行，`formal_manifest.json` 尚不存在。这里是阶段记录，不是 D48 总批次终态；`formal_project_tac_ready=false`、`technical_ranking_permitted=false` 保持不变。
+## 13. D48-R1 正确路径批次：TES 阶段记录
+
+TES 候选阶段已按冻结顺序结束，编排器没有重启 BESS 或 TES：
+
+- 父级硬墙钟在 `3720.5810301834717 s` 触发，候选子进程以 `SIGTERM`、返回码 `-15` 受控终止；
+- `tes_candidate.log` 为 0 字节，没有 candidate CSV、candidate result JSON、repair 或可行上界；
+- `candidate_status=null`、`repair_status=null`、`audited_feasible_upper_bound_cny=null`；
+- 峰值子进程树/父子聚合 RSS 为 `4.5804290771484375/4.6058349609375 GiB`，最低可用内存 `92.7331771850586 GiB`，未越过 35/45 GiB RSS 或 30 GiB 主机保留门；
+- execution 因硬墙钟终止登记 `resource_gate_passed=false`、`status=resource_or_process_failure`、`stop_reason=hard_wall_clock_reached`，但没有 RSS 或可用内存门槛越界；
+- TES 活动残留进程数为 0，编排器随后按冻结顺序进入 Hybrid 候选阶段。
+
+`tes_manifest.json` 的原始架构状态为 `candidate_process_or_resource_failure`。依据第 8 节，TES 的科学分类同样只能是 `no_primal_status_closure`：该阶段既不满足完整 `Infeasible` 门，也没有合格 incumbent，故不能写成 TES 物理不可行或 `engineering_mip_infeasible_under_original_bounds`。
+
+TES 阶段文件已下载到同一本地阶段副本目录，远端—本地 SHA-256 一致：
+
+| 文件 | SHA-256 |
+|---|---|
+| `tes_candidate.log` | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `tes_candidate_heartbeat.jsonl` | `479704c35b654c8d98f43a3ca877c63fe6a7fce91199b2a737e02c9d77717ced` |
+| `tes_candidate_execution.json` | `b2ff6f8ce3ba5323fc2812a9bacd100fa3815b692b23704dd91dcc5f979918e5` |
+| `tes_manifest.json` | `ec2c60d705bad6aaded70a8f9f70ced21c507b0b69df65143ffb5c4ba4692032` |
+
+截至本节更新，Hybrid 候选阶段仍在运行，`formal_manifest.json` 尚不存在。这里仍是阶段记录，不是 D48 总批次终态；`formal_project_tac_ready=false`、`technical_ranking_permitted=false` 保持不变。
