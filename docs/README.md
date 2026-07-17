@@ -67,9 +67,10 @@
 49. 在 D48-R1 无 primal 状态闭合后，以物理二元 Hamming、CHP 燃料编码投影、确定性精确提升和原成本 LP 恢复 BESS 上界时读 `docs/03_sci_paper/e0_d49_physics_first_fuel_projection_primal_recovery_contract.md`
 50. 在 D49 单体物理二元搜索仍无 incumbent 后，以完整全年耦合、336 h 整数前视、168 h 提交、燃料精确提升和 clean repair 恢复 BESS 上界时读 `docs/03_sci_paper/e0_d50_full_year_coupled_physical_block_relax_and_fix_contract.md`
 51. 查阅 D51 逐尝试原子检查点、一步回退、no-good cut 控制器及已通过的 OpenBayes Gate 0 证据时读 `docs/03_sci_paper/e0_d51_checkpointed_bounded_backtracking_gate0_contract.md`；该结果不开放 8784 h 正式优化
-52. 对应层级的实验 / 图表 / 代码映射文档
-53. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
-54. 需要做清理或迁移时，再读 `docs/90_governance/`
+52. 查阅 D52 已冻结但尚未实现的 8784 h BESS 检查点化有界回退正式方法、预算、终态和 Gate A 权限边界时读 `docs/03_sci_paper/e0_d52_full_year_checkpointed_bounded_backtracking_primal_recovery_contract.md`
+53. 对应层级的实验 / 图表 / 代码映射文档
+54. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
+55. 需要做清理或迁移时，再读 `docs/90_governance/`
 
 ## 3. 与稿件源码目录的分工
 
