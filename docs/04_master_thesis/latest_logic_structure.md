@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`，formal manifests `ca024880...` / `0d66f06d...`。D50 BESS-only 结果前方法已完成实现与 Gate A：同一个完整 8784 h 模型上采用 `336 h` 整数前视、`168 h` 提交，最后执行燃料精确提升与 clean repair；提交 `04e17643...`、Gate A `d74891b9...` 已闭合，只开放唯一正式 BESS 流水线，尚未产生数值。下界、guide、24 h toy、Gate A、部分轨迹和阶段失败都不是正式可行容量或项目 TAC；项目级账户继续并行取证。
+当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`，formal manifests `ca024880...` / `0d66f06d...`。D50 唯一正式 BESS 流水线已启动：同一个完整 8784 h 模型上采用 `336 h` 整数前视、`168 h` 提交；阶段 `0/1` 已提交、阶段 `2` 运行中，累计固定 `1,009` 个物理二元。阶段结果均不具正式上界资格，尚无完整轨迹、clean repair、容量或 gap。下界、guide、24 h toy、Gate A 和部分轨迹都不是正式可行容量或项目 TAC；项目级账户继续并行取证。

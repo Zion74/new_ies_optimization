@@ -1,0 +1,75 @@
+{
+  "capture": {
+    "complete_variable_mapping": true,
+    "expected_variable_count": 597318,
+    "formal_upper_bound_eligible": false,
+    "incumbent_captured": true,
+    "reported_original_cost_objective": null,
+    "runtime_seconds": 241.8930454067886,
+    "solver_status": {
+      "highs_model_status": "Interrupted by user",
+      "mip_node_count": 0,
+      "primal_solution_status": 2,
+      "solution_value_valid": true,
+      "termination_condition": "unknown"
+    },
+    "status": "block_stage_incumbent_captured",
+    "variable_count": 597318,
+    "variable_names_sha256": "b6996a6d377ac667cb24fdfbb0f5b3c3100dee433966d4ab7ce18df5dd1bfae1",
+    "warmstart_requested": false
+  },
+  "commit_audit": {
+    "artificial_rounding_applied": false,
+    "binary_tolerance": 1e-07,
+    "commit_names_sha256": "715cebf6d0f655020e241c9ffc19548c55c1d4636f9c213f79251edf8c534889",
+    "current_commit_count": 504,
+    "fixed_count_after_commit": 1009,
+    "fixed_names_sha256_after_commit": "53bfc18e0d41e9a75f54892e8f7c061943f4f6375fcb5fb6083721f81f689097",
+    "invalid_commit_name_count": 0,
+    "invalid_commit_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lookahead_block_committed": false,
+    "maximum_integrality_residual": 2.220446049250313e-16,
+    "passed": true,
+    "prior_fixed_count": 505,
+    "stage_index": 1
+  },
+  "constraint_and_objective_identity_preserved": true,
+  "domain_audit": {
+    "active_binary_count_after_domain_update": 1513,
+    "active_binary_names_sha256_after_domain_update": "e797c5e0fac8aa7ac622f2e7f8cf3bf420d9358f588e9c4b5a39ed2dca085101",
+    "active_physical_count": 1008,
+    "active_physical_names_sha256": "594a89df09c1aaa856b6b16cc08965a06a4d38ba0d3774f591d88577a0c630f5",
+    "artificial_rounding_applied": false,
+    "current_block": {
+      "hours": 168,
+      "index": 1,
+      "start_position": 168,
+      "stop_position": 336
+    },
+    "fixed_physical_count": 505,
+    "fixed_physical_names_sha256": "0f20978be51a6513c9d827ce9e655ce875de2313891b698b617385dc850e2e33",
+    "fixed_values_match_snapshot": true,
+    "legal_integer_initial_values_retained_count": 853,
+    "lookahead_block": {
+      "hours": 168,
+      "index": 2,
+      "start_position": 336,
+      "stop_position": 504
+    },
+    "newly_active_fractional_values_cleared_count": 155,
+    "partition_complete_and_disjoint": true,
+    "passed": true,
+    "projected_fuel_count": 52704,
+    "projected_fuel_names_sha256": "79341c53213df2da3bd2aeaad00e13f6a60dbe2c8fbd777d3bfc6a5c9b471ae7",
+    "relaxed_domains_valid": true,
+    "relaxed_physical_count": 24840,
+    "relaxed_physical_names_sha256": "b698ad9af99c06d0f43158dfb3fbc11996df2878185844c9f042ba314964356a",
+    "stage_index": 1,
+    "warmstart_requested": false
+  },
+  "formal_upper_bound_eligible": false,
+  "schema_id": "tes_bess_boundary.e0d50_block_stage.v1",
+  "stage_count": 53,
+  "stage_index": 1,
+  "status": "block_stage_incumbent_committed"
+}
