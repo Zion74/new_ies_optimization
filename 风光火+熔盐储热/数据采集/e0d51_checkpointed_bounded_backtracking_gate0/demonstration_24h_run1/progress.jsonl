@@ -1,0 +1,6 @@
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "stage_index": 0}
+{"attempt_index": 0, "checkpoint_sha256": "f43f2e6aae11d97d4c39cededa7c94e4cf1852819376e92c6d257fdfd131217d", "event": "attempt_checkpointed", "next_event": "advance", "next_stage_index": 1, "stage_index": 0}
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "stage_index": 1}
+{"attempt_index": 0, "checkpoint_sha256": "33bbd11c7e6e7ed9b73167ec858f270efe0f11a390f30b5b7b2204d12fbdfcff", "event": "attempt_checkpointed", "next_event": "advance", "next_stage_index": 2, "stage_index": 1}
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "stage_index": 2}
+{"attempt_index": 0, "checkpoint_sha256": "c105479ebb637d60502482cc09fee24b8b489c0c259245742155a0ad07de3dfe", "event": "attempt_checkpointed", "next_event": "path_complete", "next_stage_index": null, "stage_index": 2}

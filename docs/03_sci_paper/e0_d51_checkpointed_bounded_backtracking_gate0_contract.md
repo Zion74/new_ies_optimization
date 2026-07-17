@@ -1,6 +1,6 @@
 # E0-D-51 检查点化有界回退 Relax-and-Fix Gate 0 合同
 
-状态：**结果前合同已冻结；当前只允许缩短时域的实现与 Gate 0 验证，8784 h 正式优化尚未获准。**
+状态：**结果前合同已冻结且 Gate 0 已验证通过；8784 h 正式优化仍未获准。**
 
 冻结日期：2026-07-17。
 
@@ -147,3 +147,32 @@ Agentic 不得选择二元值、改变 no-good cut 含义、修改容量/物理�
 ## 12. 登记规则
 
 第 1–11 节必须先形成独立 Git 提交，之后才允许新增 D51 源码、测试或任何 Gate 0 数值产物。实现身份、测试结果、OpenBayes Gate 0 和后续正式权限只能按时间顺序追加在本节之后，不得反写冻结规则。
+
+## 13. 实现登记
+
+结果前合同提交为 `58f1069`；其后实现提交为 `baec96179728ccc8ad73e16d937d31e390f0f820`。实现没有增加 8784 h 命令，只暴露 `demonstration-24h` 和只读 `compile-gate0` 两个 Gate 0 入口。
+
+同提交核心文件及 SHA-256 为：
+
+- `e0d51_checkpointed_bounded_backtracking.py`：`1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447`；
+- `e0d51_gate0_evidence.py`：`35b289bfb1bc38afe568cd37ece3c1e0ebad3276b1bfcbce23aa3cbbe00a5e13`；
+- `test_e0d51_checkpointed_bounded_backtracking.py`：`e00fe64395cef3d1bc4712cca6adbba69b078f10f360e7d2a2802c5527330690`。
+
+实现覆盖原子 gzip 变量快照、不可覆盖 JSON manifest、父节点和 cut 哈希链、容量/变量/域身份拒绝、clean 同阶段域重放、确定性一步回退状态机、零可行性目标的激活与原目标恢复、首 incumbent 捕获、精确燃料提升及 D50 clean 原成本 repair。入口对 `period_count > 840` 直接拒绝，因此 Gate 0 代码本身不能触发全年正式求解。
+
+## 14. OpenBayes Gate 0 结果与权限
+
+2026-07-17 在 OpenBayes `60 CPU / 97 GiB`、Python `3.10.18`、HiGHS `1.15.1` 环境以实现提交同哈希执行。Linux 证据为：
+
+- D51 定向测试 `15 passed`，零失败、零错误、零跳过；
+- D40–D51 兼容回归 `249 passed`，零失败、零错误、零跳过；
+- 全包回归 `703 passed`，零失败、零错误、零跳过；
+- Ruff 与 `py_compile` 均通过；
+- 24 h 案例按三个 `8 h` 块完成候选搜索，三个原子检查点均由 clean 模型重放通过，固定值最大残差为 `0`；随后完成精确燃料提升和原成本 clean repair；
+- demonstration 明确记录 `formal_8784h_optimization_invoked=false`、`formal_run_permitted=false` 和 `formal_upper_bound_eligible=false`。
+
+Gate 0 manifest 状态为 `gate0_controller_validated`，SHA-256 为 `883d4c0bad9bb9e66011d769b5c7886bc09494f64fb68bcdf927ae65fb90d152`；execution SHA-256 为 `d5e084b65d713d817cb759415eb81361cb688b51a0c9461e27a125535c31a6bd`。远端证据根共 `30` 个文件并通过 `SHA256SUMS.txt` 逐项校验。原始远端完整归档 SHA-256 为 `01df6ae94640d9638e247998550700041861f437b3143a54056004b26f66f408`；为兼容 Windows 文件名生成的只读导出归档 SHA-256 为 `2fb84863999e15a5e89b20fccc420d034a060444ce45412bef948ac6a75a5c9d`。
+
+首次调用 24 h 示范时，预先创建的空 `demonstration/` 目录触发不可覆盖保护，求解器未启动；该失败日志原样保留。规范示范随后只在全新 `demonstration_24h_run1/` 路径执行一次。早期 PowerShell 管道还使四个辅助日志名带尾随回车；原始归档保留精确文件名，Windows 导出仅把该字符显式映射为 `.__TRAILING_CR__`，没有改写规范 JSON、JUnit、检查点或求解结果。
+
+据此，D51 只获得“检查点化有界回退控制器通过 Gate 0”的资格。它没有产生正式容量、年度可行上界、gap、TAC 或技术排序证据；`formal_run_permitted=false` 继续有效。下一步若要运行 8784 h BESS，必须另立并先提交结果前正式合同，重新冻结块长、前视、回退预算、尝试数、线程、容差、墙钟、目录和终态，不得把本节 24 h repair 升格为年度上界。

@@ -66,7 +66,7 @@
 48. 审计 D48 错误输出路径、唯一正确路径替代启动及 D48-R1 BESS/TES/Hybrid 阶段结果时读 `docs/03_sci_paper/e0_d48_r1_administrative_path_correction_contract.md`
 49. 在 D48-R1 无 primal 状态闭合后，以物理二元 Hamming、CHP 燃料编码投影、确定性精确提升和原成本 LP 恢复 BESS 上界时读 `docs/03_sci_paper/e0_d49_physics_first_fuel_projection_primal_recovery_contract.md`
 50. 在 D49 单体物理二元搜索仍无 incumbent 后，以完整全年耦合、336 h 整数前视、168 h 提交、燃料精确提升和 clean repair 恢复 BESS 上界时读 `docs/03_sci_paper/e0_d50_full_year_coupled_physical_block_relax_and_fix_contract.md`
-51. 在 D50 无回退路径于阶段 3 失去延拓后，设计逐尝试原子检查点、一步回退和 no-good cut 控制器时读 `docs/03_sci_paper/e0_d51_checkpointed_bounded_backtracking_gate0_contract.md`
+51. 查阅 D51 逐尝试原子检查点、一步回退、no-good cut 控制器及已通过的 OpenBayes Gate 0 证据时读 `docs/03_sci_paper/e0_d51_checkpointed_bounded_backtracking_gate0_contract.md`；该结果不开放 8784 h 正式优化
 52. 对应层级的实验 / 图表 / 代码映射文档
 53. 若任务涉及其他模型定义 / 数据口径争议，再读 `docs/辩论确认/` 与相应 research session
 54. 需要做清理或迁移时，再读 `docs/90_governance/`

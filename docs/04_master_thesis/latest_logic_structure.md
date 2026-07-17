@@ -117,4 +117,4 @@ Agent 不直接替代 MILP，不修改物理规律，不自主发布规划结论
 4. 第 3 章只做与第 4 章输入真正相关的杨凌源荷匹配，不重跑无关案例；
 5. 等第 3、4 章模型 API 稳定后再做 Agentic，避免把尚未稳定的脚本包装成系统。
 
-当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`。D50 唯一正式 BESS 流水线在阶段 `0/1/2` 提交后，于阶段 `3` 返回当前固定路径 `Infeasible` 且无 incumbent，终态 `block_path_no_incumbent`、manifest `3efdbba5...`。D51 已结果前冻结原子检查点、clean 重放、一步回退和 no-good cut 的缩短时域 Gate 0，但 8784 h 正式运行尚未获准。仍没有完整轨迹、clean repair、容量、上界或 gap；下界、guide、toy、Gate 0 和部分轨迹都不是正式可行容量或项目 TAC，项目级账户继续并行取证。
+当前进度：D44/D47 已使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`。D50 唯一正式 BESS 流水线在阶段 `0/1/2` 提交后，于阶段 `3` 返回当前固定路径 `Infeasible` 且无 incumbent，终态 `block_path_no_incumbent`、manifest `3efdbba5...`。D51 已以 `15/249/703 passed` 和 24 h 三检查点 clean 重放通过原子检查点、一步回退与 no-good cut 控制器 Gate 0，manifest `883d4c0b...`；但 `formal_run_permitted=false`，8784 h 正式运行尚未获准。仍没有正式全年完整轨迹、clean repair、容量、上界或 gap；下界、guide、toy、Gate 0 和部分轨迹都不是正式可行容量或项目 TAC，项目级账户继续并行取证。

@@ -1,0 +1,155 @@
+{
+  "architecture": "bess",
+  "audit": {
+    "passed": true
+  },
+  "candidate_result_sha256": "cf3a280d107974d5438a0dd87688329592c27c464371ecee5805d4aeb1a51359",
+  "candidate_status": "gate0_checkpointed_candidate_exactly_lifted",
+  "checkpoint_replay_audit": [
+    {
+      "checkpoint": "stage_00_attempt_00.json",
+      "checkpoint_manifest_sha256": "f43f2e6aae11d97d4c39cededa7c94e4cf1852819376e92c6d257fdfd131217d",
+      "replay_audit": {
+        "checkpoint_manifest_sha256": "f43f2e6aae11d97d4c39cededa7c94e4cf1852819376e92c6d257fdfd131217d",
+        "fixed_physical_count": 17,
+        "maximum_fixed_value_residual": 0.0,
+        "passed": true,
+        "registered_no_good_cut_count": 0,
+        "stage_domain_replay_audit": {
+          "active_binary_count_after_domain_update": 33,
+          "active_binary_names_sha256_after_domain_update": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+          "active_physical_count": 33,
+          "active_physical_names_sha256": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+          "artificial_rounding_applied": false,
+          "current_block": {
+            "hours": 8,
+            "index": 0,
+            "start_position": 0,
+            "stop_position": 8
+          },
+          "fixed_physical_count": 0,
+          "fixed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "fixed_values_match_snapshot": true,
+          "legal_integer_initial_values_retained_count": 0,
+          "lookahead_block": {
+            "hours": 8,
+            "index": 1,
+            "start_position": 8,
+            "stop_position": 16
+          },
+          "newly_active_fractional_values_cleared_count": 0,
+          "partition_complete_and_disjoint": true,
+          "passed": true,
+          "projected_fuel_count": 24,
+          "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+          "relaxed_domains_valid": true,
+          "relaxed_physical_count": 16,
+          "relaxed_physical_names_sha256": "685fe6bcd98e0c639acc59fedac263b9b705e5f7710bfa6c6258aee52c89fc9d",
+          "stage_index": 0,
+          "warmstart_requested": false
+        },
+        "stage_domain_replayed": true,
+        "variable_count": 534
+      }
+    },
+    {
+      "checkpoint": "stage_01_attempt_00.json",
+      "checkpoint_manifest_sha256": "33bbd11c7e6e7ed9b73167ec858f270efe0f11a390f30b5b7b2204d12fbdfcff",
+      "replay_audit": {
+        "checkpoint_manifest_sha256": "33bbd11c7e6e7ed9b73167ec858f270efe0f11a390f30b5b7b2204d12fbdfcff",
+        "fixed_physical_count": 33,
+        "maximum_fixed_value_residual": 0.0,
+        "passed": true,
+        "registered_no_good_cut_count": 0,
+        "stage_domain_replay_audit": {
+          "active_binary_count_after_domain_update": 49,
+          "active_binary_names_sha256_after_domain_update": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+          "active_physical_count": 32,
+          "active_physical_names_sha256": "bb9c9da8a7d580359875b95207e172a78298b641c684f2aee4b0ab8c1fd79af1",
+          "artificial_rounding_applied": false,
+          "current_block": {
+            "hours": 8,
+            "index": 1,
+            "start_position": 8,
+            "stop_position": 16
+          },
+          "fixed_physical_count": 17,
+          "fixed_physical_names_sha256": "b075b6405e9276b8ad72fb8d060a18a7f33c04e6d8d3b5f846e28a9628903791",
+          "fixed_values_match_snapshot": true,
+          "legal_integer_initial_values_retained_count": 0,
+          "lookahead_block": {
+            "hours": 8,
+            "index": 2,
+            "start_position": 16,
+            "stop_position": 24
+          },
+          "newly_active_fractional_values_cleared_count": 0,
+          "partition_complete_and_disjoint": true,
+          "passed": true,
+          "projected_fuel_count": 24,
+          "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+          "relaxed_domains_valid": true,
+          "relaxed_physical_count": 0,
+          "relaxed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage_index": 1,
+          "warmstart_requested": false
+        },
+        "stage_domain_replayed": true,
+        "variable_count": 534
+      }
+    },
+    {
+      "checkpoint": "stage_02_attempt_00.json",
+      "checkpoint_manifest_sha256": "c105479ebb637d60502482cc09fee24b8b489c0c259245742155a0ad07de3dfe",
+      "replay_audit": {
+        "checkpoint_manifest_sha256": "c105479ebb637d60502482cc09fee24b8b489c0c259245742155a0ad07de3dfe",
+        "fixed_physical_count": 49,
+        "maximum_fixed_value_residual": 0.0,
+        "passed": true,
+        "registered_no_good_cut_count": 0,
+        "stage_domain_replay_audit": {
+          "active_binary_count_after_domain_update": 49,
+          "active_binary_names_sha256_after_domain_update": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+          "active_physical_count": 16,
+          "active_physical_names_sha256": "685fe6bcd98e0c639acc59fedac263b9b705e5f7710bfa6c6258aee52c89fc9d",
+          "artificial_rounding_applied": false,
+          "current_block": {
+            "hours": 8,
+            "index": 2,
+            "start_position": 16,
+            "stop_position": 24
+          },
+          "fixed_physical_count": 33,
+          "fixed_physical_names_sha256": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+          "fixed_values_match_snapshot": true,
+          "legal_integer_initial_values_retained_count": 0,
+          "lookahead_block": null,
+          "newly_active_fractional_values_cleared_count": 0,
+          "partition_complete_and_disjoint": true,
+          "passed": true,
+          "projected_fuel_count": 24,
+          "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+          "relaxed_domains_valid": true,
+          "relaxed_physical_count": 0,
+          "relaxed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage_index": 2,
+          "warmstart_requested": false
+        },
+        "stage_domain_replayed": true,
+        "variable_count": 534
+      }
+    }
+  ],
+  "commit_hours": 8,
+  "formal_8784h_optimization_invoked": false,
+  "formal_run_permitted": false,
+  "formal_upper_bound_eligible": false,
+  "guide_status": "continuous_guide_recovered",
+  "period_count": 24,
+  "repair_result_sha256": "640c67d6c567d0fbf81b0d42ff5e8ef16f18116cce67c84bcb1464aa282db66f",
+  "repair_status": "audited_feasible_upper_bound_recovered",
+  "runtime_seconds": 1.4617629572749138,
+  "schema_id": "tes_bess_boundary.e0d51_gate0_demonstration.v1",
+  "stage_count": 3,
+  "status": "gate0_24h_demonstration_passed"
+}
