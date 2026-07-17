@@ -101,7 +101,7 @@ D50 唯一正式证据位于 `风光火+熔盐储热/数据采集/e0d50_full_yea
 
 D51 已在结果前合同提交 `58f1069` 之后，以实现提交 `baec96179728ccc8ad73e16d937d31e390f0f820` 完成检查点化有界回退 Gate 0。OpenBayes 同哈希 24 h 案例按三个 `8 h` 块生成原子检查点，三个检查点均由 clean 模型重放且最大固定值残差为 `0`，随后完成精确燃料提升和原成本 clean repair。Gate 0 manifest `883d4c0b...` 登记 `gate0_controller_validated`，但同时锁定 `formal_8784h_optimization_invoked=false`、`formal_run_permitted=false`、`formal_capacity_or_upper_bound_available=false` 和 `technical_ranking_permitted=false`。
 
-D52 已独立冻结全年 BESS 检查点化有界回退正式合同，并完成独立核心、BESS-only 监控执行器与 17 项定向测试。实现逐字节沿用 D50 的真实 8784 h 模型和服务，将 `336 h` 整数前视、`168 h` 提交扩展为 52 个完整块加 48 h 年尾的 53 阶段；固定常数零可行性目标、一步回退、每阶段最多 3 个不同模式、全批最多 8 次回退和最多 69 次 solver 尝试，再执行精确燃料提升与 clean 原成本 repair。rollback 必须销毁当前模型、clean 重建并重放父检查点和顺序 cuts；初始与回退 clean build 均向父监控器发布 390 s 计时事件。HiGHS 12 线程、seed 0、每次 `360/390 s` 软/硬墙钟、总批次 `32,400 s` 和全部成功/失败终态均未改变。本地 D52/D51–D52/D40–D52/全包回归为 `17/32/261/715 passed`；跨平台集的 `5` 个跳过必须在 OpenBayes Linux Gate A 中变为零。当前尚未形成 Gate A manifest，也没有创建远端正式目录；独立实现提交和同哈希 Gate A 提交未闭合前，`formal_run_permitted=false`，8784 h optimize 明确禁止。
+D52 已独立冻结全年 BESS 检查点化有界回退正式合同，并以实现提交 `c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c` 完成独立核心、BESS-only 监控执行器、测试和 OpenBayes 同哈希 Gate A。实现逐字节沿用 D50 的真实 8784 h 模型和服务，将 `336 h` 整数前视、`168 h` 提交扩展为 52 个完整块加 48 h 年尾的 53 阶段；固定常数零可行性目标、一步回退、每阶段最多 3 个不同模式、全批最多 8 次回退和最多 69 次 solver 尝试，再执行精确燃料提升与 clean 原成本 repair。rollback 必须销毁当前模型、clean 重建并重放父检查点和顺序 cuts；初始与回退 clean build 均向父监控器发布 390 s 计时事件。HiGHS 12 线程、seed 0、每次 `360/390 s` 软/硬墙钟、总批次 `32,400 s` 和全部成功/失败终态均未改变。Gate A 的 D52 定向、D40–D52 兼容和全包回归为 `17/266/720 passed`，零失败零跳过；Ruff 与 `py_compile` 通过。24 h 实际演示完成 3 阶段、5 次 solver attempt、1 次 rollback、2 次 clean build 和 4 份最大固定值残差为 `0` 的检查点重放，但其 candidate/repair 明确不具备正式上界资格。8784 h build-only 审计得到 `597,318` 个活动变量、`79,057` 个二元变量、`527,053` 条活动约束和零非线性，运行 `469.867 s` 且 `solver_invoked=false`。Gate A manifest/execution SHA-256 分别为 `e591914704182f06d15b11b8a3116e358d85ec29db15a8b676d4e021e739f55c` / `432fcdeac603efbcb081e8dbd4f146e1951c273735e8934e555e9c1926b7bcb2`；现仅 `formal_run_permitted=true`、BESS-only，TES/Hybrid 仍禁止。远端正式目录尚未创建，`formal_8784h_optimization_invoked=false`，仍没有正式 candidate、容量、上界或 gap。
 
 ## 2. 测试证据
 
@@ -362,10 +362,10 @@ E0-C 已实现的一维总燃料流量曲线使用精确相邻段二进制，禁
 
 1. D34 的 24 h/336 h 同服务样本、D35 的 24 h 材料性网格、D36 的结构化代表周数据包和 D37 的分块边界 manifest 均已按 SHA-256 冻结；D35 的 `0/1%/5%/10%` 为受控工程尺度敏感性，不得改写为现场最小设备规模。D36 原代表集及 D38/R1 失败记录永久保留；任何修订必须使用新合同、新文件和新哈希；
 2. D35 已区分连续微容量与工程尺度响应：自然服务 5%/10% 精确回到无储能，1% heat-only TES 的微小代理改善落在 5% 无差异带内；严格服务保留 TES，但 Hybrid 不安装 BESS，且 TES/Hybrid bounds 重叠。该结论冻结为 E1 受控机制证据，不升级为 E2 杨凌经济赢家；
-3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43、D45、D47、D46、D48-R1、D49 与 D50 均不得原样重跑；D44 已恢复 TES R0/R1 合法下界，D47 已恢复 Hybrid R0 下界并覆盖 R1/原 MILP。D46/D48-R1/D49/D50 上界恢复数均为 0；D50 只证明当前无回退块路径在阶段 `3` 无可行延拓。D51 Gate 0 已验证控制器机制，D52 独立 8784 h 正式合同与源码/测试实现已完成；下一方法门是在实现提交后完成不调用年度 optimize 的 OpenBayes 同哈希 Gate A；
+3. D39 代表期定量保真失败、D40 单体路线失败、D41 Gate B 最弱案例失败、D42 TES R0 证书失败与 D43 离线证书超时均已登记。D43、D45、D47、D46、D48-R1、D49 与 D50 均不得原样重跑；D44 已恢复 TES R0/R1 合法下界，D47 已恢复 Hybrid R0 下界并覆盖 R1/原 MILP。D46/D48-R1/D49/D50 上界恢复数均为 0；D50 只证明当前无回退块路径在阶段 `3` 无可行延拓。D51 Gate 0 已验证控制器机制，D52 同哈希 Gate A 已通过并只授权唯一 BESS 正式运行；下一方法门是在 Gate A 证据与文档独立提交后创建唯一正式目录并按冻结参数启动，不开放 TES/Hybrid；
 4. E0-D-25 项目证据与 D24 正式 TES 成本闭合继续并行推进：按空白模板索取合同结算、碳清缴、CHP 科目拆分和双服务 TES VOM，定向补蒸汽充热、对外供热和 power-block retrofit；材料先本地隔离，公开来源不得回填项目账本；
 5. 继续争取杨凌一次网供回水温度、抽汽温压、换热器端差/UA、泵曲线、压降和运行记录；现场缺失不阻止公开敏感性，但作者 MT/泵耗情景不得升级为现场基线；
 6. D30 继续作为最新 336 h 全局上界。D31/D32 已排除逐变量 OBBT 和可分离日块求和，近期停止同类数值紧化；只有出现保留跨块共同轨迹互斥性且能给出单一 global dual 的新证书思路时才重启；
 7. 争取补充 DCS 点表、居民热量公式、热网日报、热平衡图和煤耗曲线年份，以缩小数据敏感性范围。
 
-D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构和 D49 BESS 都未闭合 primal 状态，D50 则以 `block_path_no_incumbent` 关闭；D51 只把缩短时域控制器推进到 `gate0_controller_validated`。D52 已完成正式方法实现但尚未通过 OpenBayes Gate A，正式上界恢复数仍为 0。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担检查点、哈希、阶段域、资源、bound 资格与固定状态转移编排，不替代物理模型或优化器。
+D36/D37 已关闭原结构化代表周的数据选择、权重和分块状态边界门；D38/R1/D39 的失败证明代表期不能恢复为正式主证据。D44/D47 已使三架构下界门闭合。D46 三架构均无 incumbent；postmortem 不生成上界。D48-R1 三架构和 D49 BESS 都未闭合 primal 状态，D50 则以 `block_path_no_incumbent` 关闭；D51 只把缩短时域控制器推进到 `gate0_controller_validated`。D52 Gate A 已通过但 8784 h 正式优化尚未启动，正式上界恢复数仍为 0。杨凌正式 E2、699 次边界扫描、gap 与技术排序继续禁止。Agentic 只承担检查点、哈希、阶段域、资源、bound 资格与固定状态转移编排，不替代物理模型或优化器。

@@ -1,0 +1,9 @@
+{
+  "formal_8784h_optimization_invoked": false,
+  "implementation_git_commit": "c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c",
+  "manifest_sha256": "e591914704182f06d15b11b8a3116e358d85ec29db15a8b676d4e021e739f55c",
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "schema_id": "tes_bess_boundary.e0d52_gate_a_manifest.v1.execution",
+  "status": "complete"
+}

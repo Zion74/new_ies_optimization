@@ -215,3 +215,13 @@ Agentic 只可读取检查点与 heartbeat、校验哈希/域/资源/预算、�
 2026-07-17 已在合同提交 `5e6b58c791d74257c0d0e23269453c0f93af7295` 之后新增独立 D52 核心、BESS-only 监控执行器和两份测试文件；D51 核心 SHA-256 仍为 `1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447`。实现强制初始与 rollback clean build 向父监控器发布计时事件，rollback 后销毁当前模型、从 accepted parent checkpoint 重建固定前缀并按注册顺序重放 cuts；第三个被拒块模式在尝试耗尽关闭时仍登记，但不扩大搜索。
 
 本地 D52 定向、D51–D52、D40–D52 和全包分别为 `17/32/261/715 passed`；D40–D52 与全包另有 `5` 个 Linux-only skipped。D52 新增文件 Ruff 与 `py_compile` 通过。上述结果仅证明本地实现与缩短时域演示；实现提交尚待形成，OpenBayes 零跳过 Gate A 尚未执行，`formal_8784h_optimization_invoked=false`、`formal_run_permitted=false`，不得创建正式目录。
+
+## 17. OpenBayes Gate A 记录（正式运行前）
+
+2026-07-17 已将实现固定为提交 `c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c`，并在 OpenBayes 独立干净检出上执行同哈希 Gate A。D52 定向、D40–D52 兼容和全包回归分别为 `17/266/720 passed`，三组均为零失败、零错误、零跳过；Ruff 与 `py_compile` 质量门通过。D51 核心实际/预期 SHA-256 均为 `1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447`，无漂移。
+
+24 h 实际 HiGHS 演示完成 3 个 `8 h` 阶段、5 次 solver attempt、1 次 rollback、2 次 clean model build 和 4 份检查点重放；每份 replay 的最大固定值残差为 `0`，强制失败后的一步回退、顺序 no-good cut、精确燃料提升和 clean 原成本 repair 均通过。该演示的 candidate 与 `audited_feasible_upper_bound_recovered` 仅属于缩短时域 toy 机制证据，`formal_run_permitted=false`、`formal_upper_bound_eligible=false`，不得进入正式容量或 gap。
+
+全年 build-only 审计使用冻结输入和 D41 BESS R1 guide，命中 `8,784 h`、53 阶段，得到 `597,318` 个活动变量、`79,057` 个活动二元变量、`527,053` 条活动约束和零非线性；原约束/目标、物理二元布局、燃料投影依赖、guide 身份、父前缀与 clean rebuild replay 全部通过。总 build-only 运行 `469.86650189198554 s`，`solver_invoked=false`、`formal_8784h_optimization_invoked=false`。
+
+Gate A manifest/execution SHA-256 分别为 `e591914704182f06d15b11b8a3116e358d85ec29db15a8b676d4e021e739f55c` 和 `432fcdeac603efbcb081e8dbd4f146e1951c273735e8934e555e9c1926b7bcb2`；证据位于 `风光火+熔盐储热/数据采集/e0d52_gate_a_work_c3b2e0c/` 与 `e0d52_gate_a_c3b2e0c/`，服务器下载归档 SHA-256 为 `bb91fa4e48e06c429bbd5a820a313b2012253eaf133ffc7bfb53e824ebe65a87`，34 个清单内文件本地复算一致。Gate A 现仅设置 `formal_run_permitted=true`、`formal_architecture_order=[bess]`，TES/Hybrid 仍禁止；远端正式目录尚不存在，也没有正式 candidate、capacity、upper bound、gap、项目 TAC 或技术排序。只有本节与权威文档形成独立提交后，才允许按第 10–12 节创建唯一正式 BESS 目录并启动一次冻结运行。

@@ -1,0 +1,184 @@
+{
+  "architecture": "bess",
+  "attempt_index": 0,
+  "capacity_variable_values": {
+    "bess.charge_power_capacity_mw": 100.0,
+    "bess.discharge_power_capacity_mw": 90.4972602739726,
+    "bess.energy_capacity_mwh": 952.6027397260276,
+    "bess.pcs_power_capacity_mw": 100.0
+  },
+  "capture_audit": {
+    "candidate_objective": "constant_zero",
+    "capture_source": "mip_solution_callback",
+    "complete_variable_mapping": true,
+    "expected_variable_count": 534,
+    "formal_upper_bound_eligible": false,
+    "incumbent_captured": true,
+    "reported_candidate_objective": 0.0,
+    "runtime_seconds": 0.017345131374895573,
+    "solver_status": {
+      "highs_model_status": "Optimal",
+      "mip_node_count": 1,
+      "primal_solution_status": 2,
+      "solution_value_valid": true,
+      "termination_condition": "optimal"
+    },
+    "status": "stage_feasibility_incumbent_captured",
+    "variable_count": 534,
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af",
+    "warmstart_requested": false
+  },
+  "commit_audit": {
+    "artificial_rounding_applied": false,
+    "binary_tolerance": 1e-07,
+    "commit_names_sha256": "02f76cc362c9f5d2bf9936e7c0755328ef71077e3855a2ff205857ab54f37f61",
+    "current_commit_count": 16,
+    "fixed_count_after_commit": 33,
+    "fixed_names_sha256_after_commit": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+    "invalid_commit_name_count": 0,
+    "invalid_commit_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lookahead_block_committed": false,
+    "maximum_integrality_residual": 0.0,
+    "passed": true,
+    "prior_fixed_count": 17,
+    "stage_index": 1
+  },
+  "current_block_physical_values": {
+    "bess.charge_mode[10]": 1,
+    "bess.charge_mode[11]": 0,
+    "bess.charge_mode[12]": 0,
+    "bess.charge_mode[13]": 0,
+    "bess.charge_mode[14]": 1,
+    "bess.charge_mode[15]": 0,
+    "bess.charge_mode[8]": 0,
+    "bess.charge_mode[9]": 0,
+    "chp[0].online[10]": 1,
+    "chp[0].online[11]": 1,
+    "chp[0].online[12]": 1,
+    "chp[0].online[13]": 1,
+    "chp[0].online[14]": 1,
+    "chp[0].online[15]": 1,
+    "chp[0].online[8]": 1,
+    "chp[0].online[9]": 1
+  },
+  "current_constraint_identity": {
+    "active_constraint_count": 615,
+    "active_constraint_expressions_sha256": "4d1d5e2d8c880c716c806986c2e36925edbd2f60c9f0acd32be500bdaa472366",
+    "active_constraint_names_sha256": "c9d62cfed06832b7ed836e944e5d1f33400e7de6fb166d808df2f80da8fcf5e5"
+  },
+  "current_variable_boundary_identity": {
+    "name_bound_fixed_domain_sha256": "ac11f30bd330a579d9642a3174023405f042719142d7c8609492f79ee482cb37",
+    "variable_count": 534
+  },
+  "domain_audit": {
+    "active_binary_count_after_domain_update": 49,
+    "active_binary_names_sha256_after_domain_update": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "active_physical_count": 32,
+    "active_physical_names_sha256": "bb9c9da8a7d580359875b95207e172a78298b641c684f2aee4b0ab8c1fd79af1",
+    "artificial_rounding_applied": false,
+    "current_block": {
+      "hours": 8,
+      "index": 1,
+      "start_position": 8,
+      "stop_position": 16
+    },
+    "fixed_physical_count": 17,
+    "fixed_physical_names_sha256": "b075b6405e9276b8ad72fb8d060a18a7f33c04e6d8d3b5f846e28a9628903791",
+    "fixed_values_match_snapshot": true,
+    "legal_integer_initial_values_retained_count": 32,
+    "lookahead_block": {
+      "hours": 8,
+      "index": 2,
+      "start_position": 16,
+      "stop_position": 24
+    },
+    "newly_active_fractional_values_cleared_count": 0,
+    "partition_complete_and_disjoint": true,
+    "passed": true,
+    "projected_fuel_count": 24,
+    "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+    "relaxed_domains_valid": true,
+    "relaxed_physical_count": 0,
+    "relaxed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage_index": 1,
+    "warmstart_requested": false
+  },
+  "fixed_physical_count_after_commit": 33,
+  "fixed_physical_values_after_commit": {
+    "bess.charge_mode[0]": 0,
+    "bess.charge_mode[10]": 1,
+    "bess.charge_mode[11]": 0,
+    "bess.charge_mode[12]": 0,
+    "bess.charge_mode[13]": 0,
+    "bess.charge_mode[14]": 1,
+    "bess.charge_mode[15]": 0,
+    "bess.charge_mode[1]": 0,
+    "bess.charge_mode[2]": 0,
+    "bess.charge_mode[3]": 0,
+    "bess.charge_mode[4]": 0,
+    "bess.charge_mode[5]": 0,
+    "bess.charge_mode[6]": 0,
+    "bess.charge_mode[7]": 0,
+    "bess.charge_mode[8]": 0,
+    "bess.charge_mode[9]": 0,
+    "bess.installed": 1,
+    "chp[0].online[0]": 1,
+    "chp[0].online[10]": 1,
+    "chp[0].online[11]": 1,
+    "chp[0].online[12]": 1,
+    "chp[0].online[13]": 1,
+    "chp[0].online[14]": 1,
+    "chp[0].online[15]": 1,
+    "chp[0].online[1]": 1,
+    "chp[0].online[2]": 1,
+    "chp[0].online[3]": 1,
+    "chp[0].online[4]": 1,
+    "chp[0].online[5]": 1,
+    "chp[0].online[6]": 1,
+    "chp[0].online[7]": 1,
+    "chp[0].online[8]": 1,
+    "chp[0].online[9]": 1
+  },
+  "formal_upper_bound_eligible": false,
+  "global_topology_values": {
+    "bess.installed": 1
+  },
+  "objective_audit": {
+    "constant_zero_objective": true,
+    "feasibility_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "8d30971d85d0de7ab99cd365b0609cd163c720450a728bdad584bcfbed2e0806",
+      "active_objective_names": [
+        "d51_feasibility_objective"
+      ]
+    },
+    "original_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    },
+    "original_objective_name": "planning_cost",
+    "passed": true
+  },
+  "original_constraint_identity": {
+    "active_constraint_count": 615,
+    "active_constraint_expressions_sha256": "4d1d5e2d8c880c716c806986c2e36925edbd2f60c9f0acd32be500bdaa472366",
+    "active_constraint_names_sha256": "c9d62cfed06832b7ed836e944e5d1f33400e7de6fb166d808df2f80da8fcf5e5"
+  },
+  "parent_checkpoint_sha256": "2d985237555832d1c0829f87784e467c7056ed57669fbf38db80b746ab067948",
+  "registered_no_good_cut_count": 0,
+  "registered_no_good_cuts": [],
+  "rollback_source_checkpoint_sha256": null,
+  "schema_id": "tes_bess_boundary.e0d51_attempt_checkpoint.v1",
+  "stage_index": 1,
+  "state_event": "stage_incumbent_checkpointed_before_next_fixing",
+  "values_artifact": {
+    "byte_count": 1896,
+    "relative_path": "stage_01_attempt_00.values.csv.gz",
+    "sha256": "4a854b7ebc73f03a98d48d9cba349b76364c771cfb2b67f6e4a916948d9f9552",
+    "variable_count": 534,
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af"
+  }
+}

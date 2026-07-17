@@ -1,0 +1,219 @@
+{
+  "architecture": "bess",
+  "attempt_index": 0,
+  "capacity_variable_values": {
+    "bess.charge_power_capacity_mw": 100.0,
+    "bess.discharge_power_capacity_mw": 0.0,
+    "bess.energy_capacity_mwh": 0.0,
+    "bess.pcs_power_capacity_mw": 100.0
+  },
+  "capture_audit": {
+    "candidate_objective": "constant_zero",
+    "capture_source": "mip_solution_callback",
+    "complete_variable_mapping": true,
+    "expected_variable_count": 534,
+    "formal_upper_bound_eligible": false,
+    "incumbent_captured": true,
+    "reported_candidate_objective": 0.0,
+    "runtime_seconds": 0.014920716173946857,
+    "solver_status": {
+      "highs_model_status": "Optimal",
+      "mip_node_count": 1,
+      "primal_solution_status": 2,
+      "solution_value_valid": true,
+      "termination_condition": "optimal"
+    },
+    "status": "stage_feasibility_incumbent_captured",
+    "variable_count": 534,
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af",
+    "warmstart_requested": false
+  },
+  "commit_audit": {
+    "artificial_rounding_applied": false,
+    "binary_tolerance": 1e-07,
+    "commit_names_sha256": "685fe6bcd98e0c639acc59fedac263b9b705e5f7710bfa6c6258aee52c89fc9d",
+    "current_commit_count": 16,
+    "fixed_count_after_commit": 49,
+    "fixed_names_sha256_after_commit": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "invalid_commit_name_count": 0,
+    "invalid_commit_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lookahead_block_committed": false,
+    "maximum_integrality_residual": 0.0,
+    "passed": true,
+    "prior_fixed_count": 33,
+    "stage_index": 2
+  },
+  "current_block_physical_values": {
+    "bess.charge_mode[16]": 0,
+    "bess.charge_mode[17]": 0,
+    "bess.charge_mode[18]": 0,
+    "bess.charge_mode[19]": 1,
+    "bess.charge_mode[20]": 0,
+    "bess.charge_mode[21]": 1,
+    "bess.charge_mode[22]": 1,
+    "bess.charge_mode[23]": 1,
+    "chp[0].online[16]": 1,
+    "chp[0].online[17]": 1,
+    "chp[0].online[18]": 1,
+    "chp[0].online[19]": 1,
+    "chp[0].online[20]": 1,
+    "chp[0].online[21]": 1,
+    "chp[0].online[22]": 1,
+    "chp[0].online[23]": 1
+  },
+  "current_constraint_identity": {
+    "active_constraint_count": 616,
+    "active_constraint_expressions_sha256": "8ce148aa658704e9640c56a1a5b6fa2a09b5478c243911e4138f4c410e14b808",
+    "active_constraint_names_sha256": "4058e4f8d90b7d041db7044a1e355c1b890e4b9405a19f605b7b90249bca1210"
+  },
+  "current_variable_boundary_identity": {
+    "name_bound_fixed_domain_sha256": "e3220512eb7019938ed0e6bb70aeafb1d197b72822127465b9e0fc391e5b5cff",
+    "variable_count": 534
+  },
+  "domain_audit": {
+    "active_binary_count_after_domain_update": 49,
+    "active_binary_names_sha256_after_domain_update": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "active_physical_count": 16,
+    "active_physical_names_sha256": "685fe6bcd98e0c639acc59fedac263b9b705e5f7710bfa6c6258aee52c89fc9d",
+    "artificial_rounding_applied": false,
+    "current_block": {
+      "hours": 8,
+      "index": 2,
+      "start_position": 16,
+      "stop_position": 24
+    },
+    "fixed_physical_count": 33,
+    "fixed_physical_names_sha256": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+    "fixed_values_match_snapshot": true,
+    "legal_integer_initial_values_retained_count": 16,
+    "lookahead_block": null,
+    "newly_active_fractional_values_cleared_count": 0,
+    "partition_complete_and_disjoint": true,
+    "passed": true,
+    "projected_fuel_count": 24,
+    "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+    "relaxed_domains_valid": true,
+    "relaxed_physical_count": 0,
+    "relaxed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage_index": 2,
+    "warmstart_requested": false
+  },
+  "fixed_physical_count_after_commit": 49,
+  "fixed_physical_values_after_commit": {
+    "bess.charge_mode[0]": 0,
+    "bess.charge_mode[10]": 0,
+    "bess.charge_mode[11]": 0,
+    "bess.charge_mode[12]": 1,
+    "bess.charge_mode[13]": 0,
+    "bess.charge_mode[14]": 0,
+    "bess.charge_mode[15]": 0,
+    "bess.charge_mode[16]": 0,
+    "bess.charge_mode[17]": 0,
+    "bess.charge_mode[18]": 0,
+    "bess.charge_mode[19]": 1,
+    "bess.charge_mode[1]": 0,
+    "bess.charge_mode[20]": 0,
+    "bess.charge_mode[21]": 1,
+    "bess.charge_mode[22]": 1,
+    "bess.charge_mode[23]": 1,
+    "bess.charge_mode[2]": 0,
+    "bess.charge_mode[3]": 0,
+    "bess.charge_mode[4]": 0,
+    "bess.charge_mode[5]": 0,
+    "bess.charge_mode[6]": 0,
+    "bess.charge_mode[7]": 0,
+    "bess.charge_mode[8]": 0,
+    "bess.charge_mode[9]": 0,
+    "bess.installed": 1,
+    "chp[0].online[0]": 1,
+    "chp[0].online[10]": 1,
+    "chp[0].online[11]": 1,
+    "chp[0].online[12]": 1,
+    "chp[0].online[13]": 1,
+    "chp[0].online[14]": 1,
+    "chp[0].online[15]": 1,
+    "chp[0].online[16]": 1,
+    "chp[0].online[17]": 1,
+    "chp[0].online[18]": 1,
+    "chp[0].online[19]": 1,
+    "chp[0].online[1]": 1,
+    "chp[0].online[20]": 1,
+    "chp[0].online[21]": 1,
+    "chp[0].online[22]": 1,
+    "chp[0].online[23]": 1,
+    "chp[0].online[2]": 1,
+    "chp[0].online[3]": 1,
+    "chp[0].online[4]": 1,
+    "chp[0].online[5]": 1,
+    "chp[0].online[6]": 1,
+    "chp[0].online[7]": 1,
+    "chp[0].online[8]": 1,
+    "chp[0].online[9]": 1
+  },
+  "formal_upper_bound_eligible": false,
+  "global_topology_values": {
+    "bess.installed": 1
+  },
+  "objective_audit": {
+    "constant_zero_objective": true,
+    "feasibility_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "8d30971d85d0de7ab99cd365b0609cd163c720450a728bdad584bcfbed2e0806",
+      "active_objective_names": [
+        "d51_feasibility_objective"
+      ]
+    },
+    "original_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    },
+    "original_objective_name": "planning_cost",
+    "passed": true
+  },
+  "original_constraint_identity": {
+    "active_constraint_count": 615,
+    "active_constraint_expressions_sha256": "4d1d5e2d8c880c716c806986c2e36925edbd2f60c9f0acd32be500bdaa472366",
+    "active_constraint_names_sha256": "c9d62cfed06832b7ed836e944e5d1f33400e7de6fb166d808df2f80da8fcf5e5"
+  },
+  "parent_checkpoint_sha256": "847c20d54f1dd3113ce99c22af38105d10d237c4aa66f368ce03fded71ca40c3",
+  "registered_no_good_cut_count": 1,
+  "registered_no_good_cuts": [
+    {
+      "binary_values": {
+        "bess.charge_mode[10]": 1,
+        "bess.charge_mode[11]": 0,
+        "bess.charge_mode[12]": 0,
+        "bess.charge_mode[13]": 0,
+        "bess.charge_mode[14]": 1,
+        "bess.charge_mode[15]": 0,
+        "bess.charge_mode[8]": 0,
+        "bess.charge_mode[9]": 0,
+        "chp[0].online[10]": 1,
+        "chp[0].online[11]": 1,
+        "chp[0].online[12]": 1,
+        "chp[0].online[13]": 1,
+        "chp[0].online[14]": 1,
+        "chp[0].online[15]": 1,
+        "chp[0].online[8]": 1,
+        "chp[0].online[9]": 1
+      },
+      "block_index": 1,
+      "cut_sha256": "fa83185e435b38c6ddbdf9d691aef1b2cb923739eb87d0254ea97c4fca86bf3d",
+      "stage_index": 1
+    }
+  ],
+  "rollback_source_checkpoint_sha256": null,
+  "schema_id": "tes_bess_boundary.e0d51_attempt_checkpoint.v1",
+  "stage_index": 2,
+  "state_event": "stage_incumbent_checkpointed_before_next_fixing",
+  "values_artifact": {
+    "byte_count": 1665,
+    "relative_path": "stage_02_attempt_00.values.csv.gz",
+    "sha256": "ab58634d94346525972966f1dd0f47b22d8e84e82bc009b64a0c8c8afaae6c76",
+    "variable_count": 534,
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af"
+  }
+}

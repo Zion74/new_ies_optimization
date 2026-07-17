@@ -1,0 +1,68 @@
+{
+  "attempt_index": 0,
+  "capture_audit": {
+    "formal_upper_bound_eligible": false,
+    "gate_a_fault_injection": true,
+    "incumbent_captured": false,
+    "runtime_seconds": 0.0,
+    "status": "fault_injected_frontier_no_incumbent"
+  },
+  "current_constraint_identity": {
+    "active_constraint_count": 615,
+    "active_constraint_expressions_sha256": "4d1d5e2d8c880c716c806986c2e36925edbd2f60c9f0acd32be500bdaa472366",
+    "active_constraint_names_sha256": "c9d62cfed06832b7ed836e944e5d1f33400e7de6fb166d808df2f80da8fcf5e5"
+  },
+  "domain_audit": {
+    "active_binary_count_after_domain_update": 49,
+    "active_binary_names_sha256_after_domain_update": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "active_physical_count": 16,
+    "active_physical_names_sha256": "685fe6bcd98e0c639acc59fedac263b9b705e5f7710bfa6c6258aee52c89fc9d",
+    "artificial_rounding_applied": false,
+    "current_block": {
+      "hours": 8,
+      "index": 2,
+      "start_position": 16,
+      "stop_position": 24
+    },
+    "fixed_physical_count": 33,
+    "fixed_physical_names_sha256": "caa26ce75db92c174c3681b210f27631dceb3b56cb3f2d3524f4d515ad08cc69",
+    "fixed_values_match_snapshot": true,
+    "legal_integer_initial_values_retained_count": 16,
+    "lookahead_block": null,
+    "newly_active_fractional_values_cleared_count": 0,
+    "partition_complete_and_disjoint": true,
+    "passed": true,
+    "projected_fuel_count": 24,
+    "projected_fuel_names_sha256": "7348136b4aff2b036b85268423076b34d3b7b331f8cd02159735a0ce3cccaa22",
+    "relaxed_domains_valid": true,
+    "relaxed_physical_count": 0,
+    "relaxed_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage_index": 2,
+    "warmstart_requested": false
+  },
+  "formal_8784h_optimization_invoked": false,
+  "formal_upper_bound_eligible": false,
+  "objective_audit": {
+    "constant_zero_objective": true,
+    "feasibility_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "8d30971d85d0de7ab99cd365b0609cd163c720450a728bdad584bcfbed2e0806",
+      "active_objective_names": [
+        "d51_feasibility_objective"
+      ]
+    },
+    "original_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    },
+    "original_objective_name": "planning_cost",
+    "passed": true
+  },
+  "registered_no_good_cuts": [],
+  "schema_id": "tes_bess_boundary.e0d52_attempt_failure.v1",
+  "stage_index": 2,
+  "status": "stage_no_feasibility_incumbent"
+}

@@ -2,7 +2,7 @@
 
 更新时间：2026-07-17
 
-除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。D44/D47 已使三架构严格全年下界闭合。D46/D48-R1/D49/D50 的成功上界恢复数均为 0；D51 已通过缩短时域控制器 Gate 0。D52 的结果前合同、独立核心、BESS-only 监控执行器与本地测试已完成，但 OpenBayes Gate A 尚未执行，`formal_run_permitted=false`。严格项目账户仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC 与 E2-E6 批量入口继续阻断。
+除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。D44/D47 已使三架构严格全年下界闭合。D46/D48-R1/D49/D50 的成功上界恢复数均为 0；D51 已通过缩短时域控制器 Gate 0。D52 实现提交 `c3b2e0cf...` 的 OpenBayes Gate A 已以 `17/266/720 passed`、零跳过闭合，现只授权唯一 BESS 正式运行；正式目录和年度 optimize 尚未产生。严格项目账户仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC 与 E2-E6 批量入口继续阻断。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -12,7 +12,7 @@
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
 | T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向、分部件寿命和缺证成本风险 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even*.py`、`operating_cost_evidence.py`、`project_primary_evidence_intake.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` | 三温区/五端口、损失/辅机、成本门、同 PCC 燃料空间、影子成本传播、调度价差暴露和 51 字段取证门通过；12 个 TES 与四个项目运行账户仍阻断，阈值只能作 sensitivity |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、D17–D32 数值模块、`e0d52_*` + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合；D29/D30 将 336 h 上界降至 `777,141.368858 MWh/a`；D31/D32 未形成更强 336 h 证书。D52 已实现初始/回退 clean build 计时、原子检查点、一步回退和 no-good cut 证据链，本地全包 `715 passed + 5 Linux-only skipped`；必须在 OpenBayes Gate A 零跳过后才可启动正式 8784 h BESS |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、D17–D32 数值模块、`e0d52_*` + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合；D29/D30 将 336 h 上界降至 `777,141.368858 MWh/a`；D31/D32 未形成更强 336 h 证书。D52 已通过 OpenBayes 零跳过 Gate A：D52/D40–D52/全包 `17/266/720 passed`，全年 build-only 命中 `597,318/79,057/527,053` 个活动变量/二元变量/约束、零非线性且未调用 solver；下一步只允许正式 8784 h BESS |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 
@@ -35,7 +35,7 @@
 | T4-2 / E2 | 同服务 ε 前沿 | 建立公平经济比较 | `model.py`、`scenarios.py` | 待实现 |
 | T4-3 / E3 | 热约束 × 通道紧张度地图 | 识别物理选择边界 | `run_sweep.py`、`postprocess.py` | 待实现 |
 | T4-4 / E4 | 时长 × 相对成本地图 | 识别经济选择边界 | 同上 | 待实现 |
-| T4-5 / E5 | 8784 h 全年证据与时间方法 | 建立不依赖失真代表期的正式边界路线 | D36–D39 失败证据；D40–D47 下界/上界证据链；D46 postmortem；D48 合同/源码/Gate A/D48-R1 | D43、D45、D47、D46 均不得原样重跑。D44/D47 使三架构下界闭合；D46 上界恢复数为 0。D48 错误路径启动无结果，D48-R1 替代批次尚待启动，技术排序与批量扫描仍禁止 |
+| T4-5 / E5 | 8784 h 全年证据与时间方法 | 建立不依赖失真代表期的正式边界路线 | D36–D39 失败证据；D40–D52 下界/上界/恢复证据链；D46 postmortem；D51 Gate 0；D52 Gate A | D43、D45、D47、D46、D48-R1、D49、D50 均不得原样重跑。D44/D47 使三架构下界闭合，D46/D48-R1/D49/D50 上界恢复数均为 0；D52 Gate A `e5919147...` 已只授权唯一 BESS 正式运行，但年度 optimize 尚未启动，技术排序与批量扫描仍禁止 |
 | T4-6 / E6 | 确定性稳健性 | 检查边界移动 | `run_sweep.py` | 待实现 |
 
 建议图表与 SCI 相同：价值分解、ε 前沿、物理主地图、经济主地图、全年验证和边界敏感性。
