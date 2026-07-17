@@ -225,3 +225,18 @@ Agentic 只可读取检查点与 heartbeat、校验哈希/域/资源/预算、�
 全年 build-only 审计使用冻结输入和 D41 BESS R1 guide，命中 `8,784 h`、53 阶段，得到 `597,318` 个活动变量、`79,057` 个活动二元变量、`527,053` 条活动约束和零非线性；原约束/目标、物理二元布局、燃料投影依赖、guide 身份、父前缀与 clean rebuild replay 全部通过。总 build-only 运行 `469.86650189198554 s`，`solver_invoked=false`、`formal_8784h_optimization_invoked=false`。
 
 Gate A manifest/execution SHA-256 分别为 `e591914704182f06d15b11b8a3116e358d85ec29db15a8b676d4e021e739f55c` 和 `432fcdeac603efbcb081e8dbd4f146e1951c273735e8934e555e9c1926b7bcb2`；证据位于 `风光火+熔盐储热/数据采集/e0d52_gate_a_work_c3b2e0c/` 与 `e0d52_gate_a_c3b2e0c/`，服务器下载归档 SHA-256 为 `bb91fa4e48e06c429bbd5a820a313b2012253eaf133ffc7bfb53e824ebe65a87`，34 个清单内文件本地复算一致。Gate A 现仅设置 `formal_run_permitted=true`、`formal_architecture_order=[bess]`，TES/Hybrid 仍禁止；远端正式目录尚不存在，也没有正式 candidate、capacity、upper bound、gap、项目 TAC 或技术排序。只有本节与权威文档形成独立提交后，才允许按第 10–12 节创建唯一正式 BESS 目录并启动一次冻结运行。
+
+## 18. 唯一正式 BESS 终态记录
+
+2026-07-17 已在实现提交 `c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c` 和 Gate A 独立归档提交之后，按第 10–12 节创建唯一正式目录并启动 BESS-only 冻结运行。未修改模型、guide、输入哈希、阶段顺序、HiGHS 选项、seed、容差、单次/总墙钟或资源阈值；TES/Hybrid 未执行。
+
+阶段 0 和阶段 1 均以 HiGHS `Optimal` 捕获完整 `597,318` 变量映射，分别运行 `243.5186315253377 s` 和 `219.70896829571575 s`，提交 `505/504` 个物理二元并累计固定 `1,009` 个。checkpoint/values SHA-256 分别为：
+
+- stage 0：`9af8c1c5c1df2c341d4f98ed15d08caafea3b6375e2891da3e5336c4349e94ae` / `84956758ac514b045cd70664a35a440e7aad261187f5d25a06470588f259d452`；
+- stage 1：`c8328947ef88ec5f66a52134ea4e9b65f58cee22d6322c3212c09609a9812a78` / `2b54ba908a44447c9f0d95516df41b6267a6816e535f1be8d56674a2e2f85753`。
+
+两个 checkpoint 均明确 `formal_upper_bound_eligible=false`。阶段 2 attempt 0 未在冻结 `390 s` 父级硬墙钟前返回 result，父进程按合同发送 `SIGTERM`，return code 为 `-15`，`stop_reason=attempt_hard_wall`。候选阶段和总 formal 状态均归类为 `no_primal_status_closure`；总运行 `1185.0414108345285 s`，正式 manifest SHA-256 为 `c80fc8bffa5cb49478e552ef44b2eea1726660f3421d306ed68146e8f9bc0f73`。
+
+该终止不是内存耗尽：峰值 child process tree / parent-child aggregate RSS 为 `3.444622 / 3.470619 GiB`，最低可用内存为 `93.859192 GiB`，RSS warning 未触发，结束后活动残留进程为 0，主机正式锁已释放。没有生成完整 candidate、物理快照、精确燃料提升、clean repair、容量、审计上界或 gap；不能把阶段 0/1 checkpoint 外推为完整轨迹，也不能写成 BESS 或原 MILP 不可行。
+
+正式 bundle 已逐文件下载至 `风光火+熔盐储热/数据采集/e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery/` 并以 `SHA256SUMS` 复核服务器哈希。manifest 锁定 `successful_architecture_count=0`、`formal_project_tac_ready=false`、`technical_ranking_permitted=false`、`restart_or_resume_permitted=false`。因此 D52 已关闭，不得延长预算、恢复、原样重跑或据此开放 TES/Hybrid、项目 TAC、技术排序和 E2–E4。

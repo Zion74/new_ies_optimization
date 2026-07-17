@@ -48,5 +48,8 @@
 **/e0d52_gate_a_work_c3b2e0c/** -text whitespace=-blank-at-eol
 **/e0d52_gate_a_c3b2e0c/** -text whitespace=-blank-at-eol
 
-# Preserve immutable D52 formal-run checkpoints byte-for-byte while the batch is active.
+# Preserve the closed D52 formal bundle exactly as declared by formal_manifest.json.
+**/e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery/** -text whitespace=-blank-at-eol
+
+# Preserve the D52 stage-0/1 live snapshots retained for chronological provenance.
 **/e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery_live/** -text whitespace=-blank-at-eol

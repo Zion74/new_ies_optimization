@@ -1,0 +1,56 @@
+{
+  "active_residual_process_count": 0,
+  "architecture": "bess",
+  "available_memory_before_gib": 97.28684616088867,
+  "available_memory_sample_count": 2346,
+  "declared_artifact_sha256": {
+    "bess_candidate.csv.gz": null,
+    "bess_candidate.json": null,
+    "bess_candidate_progress.jsonl": "998a9fef93fac6ddb8dd21be55831fe02c6ce702eed4316a49c4966af575a8d3",
+    "bess_physical_snapshot.json": null
+  },
+  "hard_wall_enforced_by_parent": true,
+  "heartbeat_sha256": "acf8deaed9067eb591530212642880b48cf439b6a578554ccd83a90a9464f891",
+  "last_progress": {
+    "attempt_index": 0,
+    "event": "attempt_started",
+    "rollback_events": 0,
+    "solver_attempt_count": 3,
+    "stage_index": 2,
+    "unix_time": 1784286980.7551408
+  },
+  "minimum_available_memory_gib": 93.85919189453125,
+  "peak_child_process_tree_rss_gib": 3.444622039794922,
+  "peak_parent_child_aggregate_rss_gib": 3.4706192016601562,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "process_tree_rss_warning_triggered": false,
+  "python_version": "3.10.18",
+  "recursive_attempt_artifact_sha256": {
+    "bess_candidate_checkpoints/stage_00_attempt_00.json": "9af8c1c5c1df2c341d4f98ed15d08caafea3b6375e2891da3e5336c4349e94ae",
+    "bess_candidate_checkpoints/stage_00_attempt_00.values.csv.gz": "84956758ac514b045cd70664a35a440e7aad261187f5d25a06470588f259d452",
+    "bess_candidate_checkpoints/stage_01_attempt_00.json": "c8328947ef88ec5f66a52134ea4e9b65f58cee22d6322c3212c09609a9812a78",
+    "bess_candidate_checkpoints/stage_01_attempt_00.values.csv.gz": "2b54ba908a44447c9f0d95516df41b6267a6816e535f1be8d56674a2e2f85753"
+  },
+  "residual_termination_signal": null,
+  "resource_gate_passed": false,
+  "resource_thresholds": {
+    "aggregate_rss_stop_gib": 45.0,
+    "attempt_hard_wall_seconds": 390.0,
+    "clean_rebuild_hard_wall_seconds": 390.0,
+    "hard_wall_seconds": 30600.0,
+    "heartbeat_interval_seconds": 30.0,
+    "host_memory_reserve_gib": 30.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_warning_gib": 35.0
+  },
+  "result_sha256": null,
+  "return_code": -15,
+  "rss_sample_count": 2346,
+  "runtime_seconds": 1185.0249910606071,
+  "schema_id": "tes_bess_boundary.e0d52_stage_execution.v1",
+  "solver_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stage": "candidate",
+  "status": "resource_or_process_failure",
+  "stop_reason": "attempt_hard_wall",
+  "termination_signal": "sigterm"
+}

@@ -92,7 +92,7 @@
 6. 至少一个 BESS 区、一个 TES 区和一个边界点通过 8784 h 重优化；
 7. 如果 Hybrid 未形成稳定区域，诚实报告而不是调整阈值制造结论。
 
-当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`。D50 在阶段 `3` 形成当前无回退块路径死路并关闭；D51 的检查点化一步回退控制器已通过 24 h Gate 0。D52 已完成 BESS 全年有界回退的结果前合同、实现与 OpenBayes 同哈希 Gate A；唯一正式 BESS 已启动，阶段 0/1 checkpoint 通过审计后进入阶段 2，但仍无完整年度轨迹、clean repair、正式容量或上界。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
+当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`。D50 在阶段 `3` 形成当前无回退块路径死路并关闭；D51 的检查点化一步回退控制器已通过 24 h Gate 0。D52 阶段 0/1 checkpoint 通过审计，但阶段 2 attempt 触发冻结硬墙钟，终态 `no_primal_status_closure`；仍无完整年度轨迹、clean repair、正式容量或上界，且 D52 不得恢复或原样重跑。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
 
 ## 5. 完整技术设计
 
