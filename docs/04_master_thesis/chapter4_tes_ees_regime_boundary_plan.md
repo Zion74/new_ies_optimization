@@ -92,7 +92,7 @@
 6. 至少一个 BESS 区、一个 TES 区和一个边界点通过 8784 h 重优化；
 7. 如果 Hybrid 未形成稳定区域，诚实报告而不是调整阈值制造结论。
 
-当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`，formal manifests `ca024880...` / `0d66f06d...`。D50 已冻结 BESS 完整全年耦合的 `336 h` 整数前视—`168 h` 提交合同，尚未实现或执行；下一步只允许 D50 实现与 Gate A。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
+当前已完成 E0-D-1–D-37 的数据、物理、经济边界、材料性、代表周和分块循环状态门，D38/R1/D39 的时间聚合失败、D40–D43 的全年求解/证书失败均已保留。D44/D47 已闭合三架构严格下界，D46 三架构均无 incumbent。D48-R1 的 BESS/TES/Hybrid 和 D49 BESS 均为 `no_primal_status_closure`，formal manifests `ca024880...` / `0d66f06d...`。D50 BESS 完整全年耦合的 `336 h` 整数前视—`168 h` 提交实现与 Gate A 已闭合，下一步只允许唯一正式 BESS 流水线。因此正式 TAC、gap、E2–E4 边界扫描和技术排序仍不得启动。
 
 ## 5. 完整技术设计
 

@@ -1,6 +1,6 @@
 # E0-D-50 全年耦合物理分块 Relax-and-Fix—原成本上界恢复合同
 
-状态：**结果前方法合同已冻结；尚未实现、尚未执行 Gate A，也没有任何 D50 数值结果。**
+状态：**结果前方法合同、实现与 Gate A 已闭合；仅允许一次正式 BESS 流水线，尚无任何 D50 正式数值结果。**
 
 冻结日期：2026-07-16。
 
@@ -114,7 +114,7 @@ Gate A 必须在不调用 8784 h optimize 的情况下完成：
 5. 至少一个缩短时域的三块集成模型完整执行“前两块整数前视→提交首块→移动前视→尾块→精确提升→clean repair”；
 6. 对故意缺块、重复块、回退 fixing、局部循环、服务删失、额外 seed、分数快照、错误燃料提升和 repair 漏固定进行拒绝测试；
 7. D49、D40–D50 定向回归、全包测试、Ruff 与 `py_compile` 在 OpenBayes Linux ASCII 路径零失败、零错误、零跳过；
-8. Gate A manifest 明确 `formal_8784_optimization_invoked=false`，并完成本地—远端源码、测试和产物哈希闭合。
+8. Gate A manifest 明确 `formal_optimization_invoked=false`，并完成本地—远端源码、测试和产物哈希闭合。
 
 Gate A 可以使用缩短时域小模型求解验证流程，但不得用其结果选择块长、时限、目标、seed 或终态解释。
 
@@ -162,3 +162,26 @@ Gate A 通过并形成独立提交后，才允许一次正式 BESS 流水线：
 ## 12. 结果登记规则
 
 第 1–11 节形成独立提交后，才能新增 D50 源码、测试或数值产物。实现、Gate A 和唯一正式终态只能顺序追加在本节之后，不得反向改写块长、预算、solver 选项、判据或权限。
+
+## 13. 实现登记（2026-07-16）
+
+D50 已在独立提交 `04e17643ea06efe67b60804202e18fca7e2ce2f5` 完成实现：
+
+- 核心 `e0d50_full_year_coupled_physical_block_relax_and_fix.py` SHA-256 为 `3fa1a3e4e2934a8b8ce763841e13a2d37c3945fa9803aed7c1aebd6b70bb2934`；
+- 父级执行器 `e0d50_monitored_executor.py` SHA-256 为 `9b16c431be0fa57cb2b871410348241753c8f4e6fd2b83ae1de4910fb275c0a1`；
+- 核心/执行器测试 SHA-256 分别为 `c1cc425a87ac2f0082889c90fe6767b3cb6260179fe5df172702cdb35f6309b6` / `b2410f05946d7cbd61c11c9a9dcd72cfbb101758ef1e505f56e5f68e0e2dfe68`。
+
+实现保持一个 clean candidate child 和一份全年模型：模型只构造一次，53 阶段在同一 Pyomo 对象上依次更新固定/整数/连续域；父进程读取子进程阶段进度，分别强制每阶段 `390 s` 与候选总 `21,600 s` 硬墙钟。各阶段关闭 warm start；D41 BESS R1 guide 只读取三类标签和完整变量身份，`values_applied_to_model=false`、`binary_seed_applied=false`。本地缩短 24 h 三块链已完整通过候选、物理快照、燃料精确提升和 clean repair。Windows 定向为 `15 passed`，D40–D50 兼容为 `239 passed + 5 Linux-only skipped`，全包为 `683 passed + 5 skipped`，零失败。
+
+## 14. OpenBayes Gate A 登记（2026-07-16）
+
+Gate A 已在提交 `04e17643...` 的同哈希源码上通过，未调用正式全年优化：
+
+- build-only 证据：`gate_a_build_bess.json` SHA-256 `196c5fd15b5ce0c530a70905839622b3aa2ca02aef21f95d3c08cc632f790be1`，运行 `282.213 s`，`solver_invoked=false`、`formal_optimization_invoked=false`；
+- 精确证明 `53` 块覆盖 `8784=52×168+48`，并对阶段 `0/26/51/52` 完成域、约束身份和原经济目标身份审计；D41 guide 命中 `2d03ab0a...` 且未写入模型；
+- OpenBayes Linux 定向/兼容/全包分别为 `15/244/688 passed`，失败、错误、跳过均为 `0`；Ruff 与 `py_compile` 哨兵通过；
+- Gate A manifest / execution SHA-256 分别为 `d74891b9c9d8499918f0bdddfd25cf4badf0af09ad76504898fc97aaa199eef7` / `35827275786f11aaaf6038f1d9cbbdff2141e3f144458df39d761b05e055cca0`；
+- `SHA256SUMS.txt` 排除自身后覆盖 12 个规范文件，SHA-256 `6b1c3e06babe4823e6d662cfa6abd945749220f1514b3951784cfff4c62cc09d`，远端—本地逐文件 `0` 不一致；
+- 远端证据为 `results/e0d50_gate_a_work_04e1764/` 与 `results/e0d50_gate_a_04e1764/`，本地镜像位于 `风光火+熔盐储热/数据采集/` 同名目录。
+
+Gate A 只把唯一 BESS 正式流水线置为 `formal_run_permitted=true`，没有产生候选、容量、上界或 gap；TES/Hybrid 仍未获准。唯一正式目录、53 阶段顺序、预算与终态解释继续按第 9–10 节执行。
