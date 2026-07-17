@@ -1,6 +1,6 @@
 # E0-D-50 全年耦合物理分块 Relax-and-Fix—原成本上界恢复合同
 
-状态：**结果前方法合同、实现与 Gate A 已闭合；仅允许一次正式 BESS 流水线，尚无任何 D50 正式数值结果。**
+状态：**唯一正式 BESS 流水线已以 `block_path_no_incumbent` 关闭；D50 不得原样重跑，未形成正式可行上界。**
 
 冻结日期：2026-07-16。
 
@@ -191,3 +191,11 @@ Gate A 只把唯一 BESS 正式流水线置为 `formal_run_permitted=true`，没
 唯一正式流水线已于 `2026-07-17T05:47:39Z` 在冻结提交、输入、guide、顺序和预算下启动。`2026-07-17T05:59:38Z` 检查点显示父/候选进程均存活，阶段 `0/1` 已提交，阶段 `2` 正在运行；两个已提交阶段均捕获完整 `597,318` 变量 incumbent，域分区、固定值、整数残差和约束/目标身份审计通过，累计固定物理二元 `1,009` 个。阶段文件 SHA-256 为 `26f17de7...` / `cdc16ad1...`，聚合 RSS `2.856 GiB`、可用内存 `94.492 GiB`，未触发资源门。
 
 本检查点只证明分块执行链正常推进。阶段 incumbent、已固定部分轨迹和 `Interrupted by user` 的阶段求解器状态均 `formal_upper_bound_eligible=false`；在 53 阶段、精确燃料提升与 clean 原成本 repair 全部闭合前，仍无正式候选、容量、上界、gap、TAC 或技术排序资格。
+
+## 16. 唯一正式终态（2026-07-17）
+
+唯一正式流水线在阶段 `3` 终止。阶段 `0/1/2` 分别捕获 incumbent 并提交累计 `1,513` 个物理二元；阶段 `3` 在当前已固定路径及 `336 h` 整数前视下由 HiGHS 返回 `Infeasible`，`primal_solution_status=0`、`solution_value_valid=false`，运行 `204.921 s`，未捕获 incumbent。域分区、固定值继承、燃料投影和原约束/目标身份审计仍通过，因此正式状态按第 6、10 节登记为 `block_path_no_incumbent`，失败块索引为 `3`。
+
+候选阶段总运行 `1218.705 s`，其中 solver 累计 `703.379 s`；峰值父子聚合 RSS `3.607 GiB`、最低可用内存 `93.739 GiB`，资源门通过且残留进程为 0。由于没有完成 53 个提交阶段，`bess_candidate.csv.gz`、完整物理快照、精确燃料提升、clean repair 和可审计上界均不存在。总 manifest SHA-256 为 `3efdbba505ed2e34d14592e2384a67d074ae8ee08f35a32acdaa6b9639f10e91`，本地最终清单 SHA-256 `ff44043a0bb2bab2deecbc0d6fadeb3c62996dd2ee30c894abca876c5e7d0a1b`；`successful_architecture_count=0`、`formal_project_tac_ready=false`、`technical_ranking_permitted=false`。
+
+该终态只证明“无回退、贪心提交的确定性块路径在第 3 块失去可行延拓”，不证明原 BESS 全年 MILP、BESS 技术或其容量边界不可行。D50 由此关闭且不得延长时限、回退块、扩大前视或更换 seed 原样重跑；若继续 primal 恢复，只能另立 D51 结果前合同。TES/Hybrid、E2–E4、699 点扫描、项目 TAC、gap 和技术排序仍未获准。

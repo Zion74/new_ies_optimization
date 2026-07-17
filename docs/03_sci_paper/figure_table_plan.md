@@ -36,7 +36,7 @@
 | Tab S-E0D46 | `tab:e0d46_upper_bound_recovery` | 三架构 R0 guide、seed 行不可行数、候选墙钟、incumbent/Repair 状态、资源峰值与残留进程 | E0/E5 | 补充材料失败证据；必须明确三个 guide 都不是可行上界，三架构均为 `no_candidate_incumbent`、上界恢复数为 0，不能写成物理不可行或技术排序 |
 | Tab S-E0D48 | `tab:e0d48_primal_recovery` | 三架构完整二元数、Hamming seed 身份、首 incumbent/工程 infeasible/未闭合状态、固定二元原成本 repair、残差、容量和上界资格 | E0/E5 | Gate A `1d894652...` 已通过；D48-R1 三架构均为 `no_primal_status_closure`，无 candidate/repair/上界，总 manifest `ca024880...`。Hamming objective、postmortem、Gate A 和阶段失败都不是上界 |
 | Tab S-E0D49 | `tab:e0d49_fuel_projection_recovery` | 原始/投影/保留二元清单、燃料编码依赖、精确提升残差、候选与原成本 repair 资格 | E0/E5 | Gate A `11b283d6...` 已通过；正式 BESS 在 `3720.637 s` 无 candidate/repair，终态 `no_primal_status_closure`、formal manifest `0d66f06d...`。表中上界/容量/提升残差/repair 列必须留空并注明未进入相应阶段；Gate A 与 toy 不进入上界列 |
-| Tab S-E0D50 | `tab:e0d50_block_relax_fix` | 53 个提交阶段、固定/整数前视/未来放松/燃料投影计数、首 incumbent、完整物理轨迹、精确提升和 clean repair 资格 | E0/E5 | 唯一正式运行中：阶段 `0/1` 已提交、阶段 `2` 运行中，阶段审计与资源门通过。可先登记方法运行状态，但阶段 incumbent 均 `formal_upper_bound_eligible=false`；只有正式终态完成后才可填上界、容量或 gap 列 |
+| Tab S-E0D50 | `tab:e0d50_block_relax_fix` | 53 个提交阶段、固定/整数前视/未来放松/燃料投影计数、首 incumbent、完整物理轨迹、精确提升和 clean repair 资格 | E0/E5 | 唯一正式终态 `block_path_no_incumbent`：阶段 `0/1/2` 提交，阶段 `3` 无 incumbent。表中只能登记路径失败、资源与审计证据；上界、容量、gap、lift 和 repair 列留空，不能写成原 MILP 或 BESS 不可行 |
 | Tab 3 | `tab:fairness_architectures` | 固定四架构与公平比较口径 | E1/E2 | 待整理 |
 | Tab 4 | `tab:yangling_results` | 杨凌基准点四架构最优配置与年度结果 | E2 | 待生成 |
 | Tab 5 | `tab:validation` | 代表周与 8784 h 的误差、后悔值和赢家一致性 | E5 | 待生成 |
