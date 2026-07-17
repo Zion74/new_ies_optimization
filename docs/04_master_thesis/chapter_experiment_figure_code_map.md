@@ -1,8 +1,8 @@
 # 硕士论文：章节 / 实验 / 图表 / 代码映射
 
-更新时间：2026-07-15
+更新时间：2026-07-17
 
-除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。D44/D47 已使三架构严格全年下界闭合。D46 三架构均无 incumbent。D48 实现和 Gate A 已通过；首次错误路径启动无结果并已终止，D48-R1 仅许可正确路径替代启动，尚无正式可行容量或上界。严格项目账户仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC 与 E2-E6 批量入口继续阻断。
+除明确写出完整路径外，本文件中的代码路径均相对于 `风光火+熔盐储热/tes_bess_boundary/`。D44/D47 已使三架构严格全年下界闭合。D46/D48-R1/D49/D50 的成功上界恢复数均为 0；D51 已通过缩短时域控制器 Gate 0。D52 的结果前合同、独立核心、BESS-only 监控执行器与本地测试已完成，但 OpenBayes Gate A 尚未执行，`formal_run_permitted=false`。严格项目账户仍为 `0/16`，项目运行账户为 `0/4`；正式 TAC 与 E2-E6 批量入口继续阻断。
 
 ## 1. 第 2 章：系统、数据与统一模型
 
@@ -12,7 +12,7 @@
 | T2-2 | 双机 CHP 可行域与煤耗校准 | 建立热致强迫出力和燃料面 | `components/chp.py`、机组台账 | 厂界有效热、厂用电率、相邻段一维 PWL 与三种 98–105 MW 规则已实现；二维热增量燃料仍无证据 |
 | T2-3 | BESS 单元验证 | 验证 P/E、SOC、退化和更换 | `components/bess.py`、`economics.py` | AC SOC、两锚点、更换/残值、EFC 与 2024 CNY 转换机制通过；cell/PCS/BoP 正式指数快照待补 |
 | T2-4 | 双品位 TES 单元验证 | 验证 HT/MT、端口、盐量、品位方向、分部件寿命和缺证成本风险 | `components/molten_salt.py`、`tes_loss_auxiliary.py`、`model.py`、`formal_tes_costs.py`、`tes_break_even*.py`、`operating_cost_evidence.py`、`project_primary_evidence_intake.py`、`shadow_cost_robustness.py`、`pcc_settlement_exposure.py`、`alternative_dispatch_envelope.py` | 三温区/五端口、损失/辅机、成本门、同 PCC 燃料空间、影子成本传播、调度价差暴露和 51 字段取证门通过；12 个 TES 与四个项目运行账户仍阻断，阈值只能作 sensitivity |
-| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、D17–D32 数值模块 + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合；D29/D30 将 336 h 上界降至 `777,141.368858 MWh/a`；D31 完成 1440 个 OBBT LP但 336 h 增量不足 `0.1%`；D32 完成 15 个联合块 dual 与 24 h reopened 等价门，但 14 块和为 `1,930,160.868929 MWh/a`，高于 D30，故未生成新 336 h dual |
+| T2-5 | HiGHS 求解验证 | 验证可行性、MIP gap、复现和资源占用 | `solver.py`、`heat_bridge.py`、D17–D32 数值模块、`e0d52_*` + `highspy` | D26 使用无量纲 cap、`1e-9` 容差和已知证人；D27 分离方向 dual 与全局 dual，24 h 精确闭合；D29/D30 将 336 h 上界降至 `777,141.368858 MWh/a`；D31/D32 未形成更强 336 h 证书。D52 已实现初始/回退 clean build 计时、原子检查点、一步回退和 no-good cut 证据链，本地全包 `715 passed + 5 Linux-only skipped`；必须在 OpenBayes Gate A 零跳过后才可启动正式 8784 h BESS |
 
 建议图表：系统边界图、2024 数据覆盖图、CHP 热电可行域、BESS/TES 能量守恒测试、求解器验收表。
 

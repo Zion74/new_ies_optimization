@@ -209,3 +209,9 @@ Agentic 只可读取检查点与 heartbeat、校验哈希/域/资源/预算、�
 ## 15. 登记规则
 
 第 1–14 节必须先形成独立 Git 提交。之后才能新增 D52 源码、测试或 Gate A 数值产物；实现身份与测试结果按时间顺序追加。Gate A 通过后再形成独立提交，才允许创建唯一正式目录。正式终态只能追加在本节之后，不得反向改写方法、参数、预算、目录、终态或权限。
+
+## 16. 实现记录（Gate A 前）
+
+2026-07-17 已在合同提交 `5e6b58c791d74257c0d0e23269453c0f93af7295` 之后新增独立 D52 核心、BESS-only 监控执行器和两份测试文件；D51 核心 SHA-256 仍为 `1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447`。实现强制初始与 rollback clean build 向父监控器发布计时事件，rollback 后销毁当前模型、从 accepted parent checkpoint 重建固定前缀并按注册顺序重放 cuts；第三个被拒块模式在尝试耗尽关闭时仍登记，但不扩大搜索。
+
+本地 D52 定向、D51–D52、D40–D52 和全包分别为 `17/32/261/715 passed`；D40–D52 与全包另有 `5` 个 Linux-only skipped。D52 新增文件 Ruff 与 `py_compile` 通过。上述结果仅证明本地实现与缩短时域演示；实现提交尚待形成，OpenBayes 零跳过 Gate A 尚未执行，`formal_8784h_optimization_invoked=false`、`formal_run_permitted=false`，不得创建正式目录。
