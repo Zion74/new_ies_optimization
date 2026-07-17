@@ -1,0 +1,380 @@
+{
+  "architecture": "hybrid",
+  "audit": {
+    "passed": true
+  },
+  "build_audit": {
+    "binary_inventory_audit": {
+      "actual": {
+        "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+        "all_binary_variable_count": 96625,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784,
+          "tes.ht_receiving_mode": 8784,
+          "tes.mt_direct_charge_mode": 8784
+        },
+        "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+        "operational_binary_variable_count": 96624,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "expected": {
+        "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+        "all_binary_variable_count": 96625,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784,
+          "tes.ht_receiving_mode": 8784,
+          "tes.mt_direct_charge_mode": 8784
+        },
+        "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+        "operational_binary_variable_count": 96624,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "mismatches": {},
+      "passed": true
+    },
+    "model_size": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "original_capacity_boundary_audit": {
+      "architecture": "hybrid",
+      "bounds": {
+        "bess.charge_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        },
+        "bess.discharge_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        },
+        "bess.energy_capacity_mwh": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 2400.0
+        },
+        "bess.pcs_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        },
+        "tes.electric_charge_input_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 300.0
+        },
+        "tes.electric_output_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 300.0
+        },
+        "tes.heat_output_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 300.0
+        },
+        "tes.ht_tank_capacity_t": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 55654.86255374656
+        },
+        "tes.lt_tank_capacity_t": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 55654.86255374656
+        },
+        "tes.mt_tank_capacity_t": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 55654.86255374656
+        },
+        "tes.steam_to_ht_input_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 300.0
+        },
+        "tes.steam_to_mt_input_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 300.0
+        }
+      },
+      "continuous_capacity_variable_count": 12,
+      "d46_capacity_anchor_applied": false,
+      "expected_continuous_capacity_variable_count": 12,
+      "fixed_continuous_capacity_variable_count": 0,
+      "passed": true
+    },
+    "post_build_model_size": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    }
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "formal_optimization_invoked": false,
+  "formal_project_tac_ready": false,
+  "highs_option_roundtrip": {
+    "actual": {
+      "mip_detect_symmetry": true,
+      "mip_feasibility_tolerance": 1e-08,
+      "mip_heuristic_effort": 0.2,
+      "mip_heuristic_run_feasibility_jump": true,
+      "mip_heuristic_run_rens": true,
+      "mip_heuristic_run_rins": true,
+      "mip_heuristic_run_root_reduced_cost": true,
+      "mip_heuristic_run_shifting": true,
+      "mip_heuristic_run_zi_round": true,
+      "presolve": "choose",
+      "random_seed": 0,
+      "threads": 12
+    },
+    "highs_version": "1.15.1",
+    "passed": true,
+    "requested": {
+      "mip_detect_symmetry": true,
+      "mip_feasibility_tolerance": 1e-08,
+      "mip_heuristic_effort": 0.2,
+      "mip_heuristic_run_feasibility_jump": true,
+      "mip_heuristic_run_rens": true,
+      "mip_heuristic_run_rins": true,
+      "mip_heuristic_run_root_reduced_cost": true,
+      "mip_heuristic_run_shifting": true,
+      "mip_heuristic_run_zi_round": true,
+      "presolve": "choose",
+      "random_seed": 0,
+      "threads": 12
+    },
+    "status": {
+      "mip_detect_symmetry": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_feasibility_tolerance": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_effort": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_feasibility_jump": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_rens": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_rins": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_root_reduced_cost": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_shifting": "HighsStatus.kOk/HighsStatus.kOk",
+      "mip_heuristic_run_zi_round": "HighsStatus.kOk/HighsStatus.kOk",
+      "presolve": "HighsStatus.kOk/HighsStatus.kOk",
+      "random_seed": "HighsStatus.kOk/HighsStatus.kOk",
+      "threads": "HighsStatus.kOk/HighsStatus.kOk"
+    }
+  },
+  "input_sha256": {
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "physics_first_preparation_audit": {
+    "binary_partition_audit": {
+      "architecture": "hybrid",
+      "formal_counts_passed": true,
+      "formal_counts_required": true,
+      "original_binary_count": 96625,
+      "original_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+      "partition_complete_and_disjoint": true,
+      "passed": true,
+      "physical_binary_count": 43921,
+      "physical_binary_names_sha256": "c53ce7277e8bb889df6db0890cb8960b424ed778abfc557a11b1c0d6f4356ea3",
+      "projected_component_names": [
+        "chp[0].fuel_code_bit",
+        "chp[1].fuel_code_bit"
+      ],
+      "projected_components_valid": true,
+      "projected_fuel_code_binary_count": 52704,
+      "projected_fuel_code_names_sha256": "79341c53213df2da3bd2aeaad00e13f6a60dbe2c8fbd777d3bfc6a5c9b471ae7"
+    },
+    "constraint_identity_after": {
+      "active_constraint_count": 667662,
+      "active_constraint_expressions_sha256": "245405f64110842ff00f97ac9fcd4ab6ca8fc3cdbe6c9329e8f12565fe06e804",
+      "active_constraint_names_sha256": "a2540407ab4dd7616a337147598b151211d67f021cbd6f0cdf9cccb1e7717175"
+    },
+    "constraint_identity_before": {
+      "active_constraint_count": 667662,
+      "active_constraint_expressions_sha256": "245405f64110842ff00f97ac9fcd4ab6ca8fc3cdbe6c9329e8f12565fe06e804",
+      "active_constraint_names_sha256": "a2540407ab4dd7616a337147598b151211d67f021cbd6f0cdf9cccb1e7717175"
+    },
+    "constraint_identity_preserved": true,
+    "expected_guide_sha256": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+    "fuel_code_relaxation_audit": {
+      "active_binary_count_after_projection": 43921,
+      "active_binary_names_sha256_after_projection": "c53ce7277e8bb889df6db0890cb8960b424ed778abfc557a11b1c0d6f4356ea3",
+      "only_registered_fuel_code_bits_projected": true,
+      "passed": true,
+      "physical_binaries_retained": true,
+      "projected_relaxed_to_unit_interval": true
+    },
+    "fuel_projection_dependency_audit": {
+      "active_objective_count": 1,
+      "allowed_code_constraint_components": [
+        "chp[0].fuel_code",
+        "chp[1].fuel_code"
+      ],
+      "allowed_flow_constraint_components": [
+        "chp[0].fuel_flow_definition",
+        "chp[1].fuel_flow_definition"
+      ],
+      "code_bad_occurrence_count": 0,
+      "code_bad_occurrence_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "flow_bad_occurrence_count": 0,
+      "flow_bad_occurrence_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "forbidden_code_constraint_count": 0,
+      "forbidden_code_constraint_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "forbidden_flow_constraint_count": 0,
+      "forbidden_flow_constraint_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fuel_code_variable_count": 52704,
+      "fuel_flow_used_only_by_definition_and_original_objective": true,
+      "fuel_flow_variable_count": 17568,
+      "fuel_or_emissions_cap_detected": false,
+      "objective_code_variable_count": 0,
+      "objective_fuel_flow_variable_count": 17568,
+      "passed": true,
+      "touched_code_constraint_components": [
+        "chp[0].fuel_code",
+        "chp[1].fuel_code"
+      ],
+      "touched_flow_constraint_components": [
+        "chp[0].fuel_flow_definition",
+        "chp[1].fuel_flow_definition"
+      ]
+    },
+    "guide_hash_required": true,
+    "guide_sha256": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+    "objective_replacement_audit": {
+      "active_objective_count_after": 1,
+      "added_constraint_count": 0,
+      "auxiliary_variable_count": 0,
+      "equal_binary_weight": 1.0,
+      "hamming_objective_name": "d49_physical_hamming_distance",
+      "hamming_physical_binary_names_sha256": "c53ce7277e8bb889df6db0890cb8960b424ed778abfc557a11b1c0d6f4356ea3",
+      "hamming_physical_binary_term_count": 43921,
+      "hamming_value_at_seed": 0.0,
+      "original_objective_active_after": false,
+      "original_objective_name": "planning_cost",
+      "passed": true,
+      "projected_fuel_code_binary_term_count": 0
+    },
+    "passed": true,
+    "seed_application_audit": {
+      "all_values_finite": true,
+      "binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+      "binary_variable_count": 96625,
+      "passed": true,
+      "variable_count": 685194,
+      "variable_names_sha256": "e91d73cc0b8ad6e5859de265b7cd39fd56030f6c1ecb72c992c7ac31e65c9627"
+    }
+  },
+  "projected_model_size_audit": {
+    "expected_projected_binary_count": 43921,
+    "original_model_size": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "passed": true,
+    "projected_model_size": {
+      "active_binary_variable_count": 43921,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "variable_and_constraint_identity_retained": true
+  },
+  "provenance": {
+    "code_sha256": {
+      "components/chp.py": "ead644a19b5d26913e8211958e789ad37cd1b876685fdb31bd25111950afd296",
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d48_hamming_primal_recovery.py": "c82923d3e40ff93feefff62c98dd8aa75e96b76ecdd25b60863919d4b8e69c57",
+      "e0d49_monitored_executor.py": "57597be318a1d0bf3fa153ac144f027958c675a1ed9a1c4c36b2d9a47128311d",
+      "e0d49_physics_first_fuel_projection_primal_recovery.py": "9d2dd610a2d7e59e9b8d9631e676277b0d36077c7a40d3448889defc041b3b14",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "representative_period_input_used": false,
+  "runtime_seconds": 167.0659261373803,
+  "schema_id": "tes_bess_boundary.e0d49_gate_a_build.v1",
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solver_invoked": false,
+  "stage": "gate_a_build_only",
+  "static_fuel_lift_spec_audit": {
+    "all_registered_segments_and_knots_checked": true,
+    "chp_unit_count": 2,
+    "passed": true,
+    "unit_audit": {
+      "0": {
+        "fuel_knot_count": 9,
+        "fuel_knots_sha256": "d04dcebf87c482e79b05c2da66b68bb2337eb53b7400c53c50ab824f9a0b3f5a",
+        "fuel_segment_count": 8,
+        "internal_knot_tie_check_count": 7,
+        "maximum_knot_check_passed": true,
+        "midpoint_check_count": 8,
+        "minimum_knot_check_passed": true,
+        "offline_check_passed": true,
+        "passed": true
+      },
+      "1": {
+        "fuel_knot_count": 9,
+        "fuel_knots_sha256": "239ef445b2f3d3496c35315531a23a947b109bd9c1aaf54c28b500c11cd14b2e",
+        "fuel_segment_count": 8,
+        "internal_knot_tie_check_count": 7,
+        "maximum_knot_check_passed": true,
+        "midpoint_check_count": 8,
+        "minimum_knot_check_passed": true,
+        "offline_check_passed": true,
+        "passed": true
+      }
+    }
+  },
+  "status": "gate_a_build_passed",
+  "technical_ranking_permitted": false
+}

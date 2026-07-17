@@ -1,0 +1,68 @@
+{
+  "d19_source_lock": {
+    "csv": "e0d19_same_pcc_service.csv",
+    "csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "manifest": "manifest.json",
+    "manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63"
+  },
+  "dispatch_selection": {
+    "interpretation": "one_reproducible_selected_dispatch;continuous_alternate_optima_not_excluded",
+    "primary": "minimum_known_annual_cost",
+    "secondary": "fix_primary_incumbent_integers_then_minimize_curtailment",
+    "solver": "appsi_highs"
+  },
+  "inputs": {
+    "formal_heat": {
+      "file": "e0b_heat_hourly_2024.csv",
+      "sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e"
+    },
+    "renewable_shape": {
+      "file": "口径3_统一数据集_2024.csv",
+      "sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "status": "legacy_2019_resource_year_mapped_to_2024_calendar"
+    }
+  },
+  "mathematical_contract": {
+    "envelope_status": "exact_for_arbitrary_period_prices_within_bounds_for_the_selected_trace",
+    "flat_price_identity": "pi_flat*sum(delta_E_t)=0",
+    "same_service_identity": "sum(delta_E_t)=0",
+    "selected_trace_envelope": "abs(sum(pi_t*delta_E_t))<=(pi_max-pi_min)*0.5*sum(abs(delta_E_t))"
+  },
+  "output": {
+    "e0d22_pcc_dispatch_trace.csv": {
+      "rows": 360,
+      "sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2"
+    },
+    "e0d22_settlement_exposure.csv": {
+      "rows": 2,
+      "sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f"
+    }
+  },
+  "schema": "tes_bess_boundary.e0d22_pcc_settlement_exposure.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "flat_price_settlement_complete": true,
+    "formal_tac": false,
+    "time_varying_settlement_complete": false,
+    "trace_solution_uniqueness_proven": false
+  },
+  "scientific_scope": "selected_dispatch_price_spread_exposure_not_formal_tac_not_e1",
+  "sources": {
+    "e0d19_same_pcc_service.py": "2a3bc7305f24dff595906c24c665c87e62990e635b4d11e9ec91eecd42861382",
+    "model.py": "4a1dfe24a2242681862ab6f5dd2879f94abd23f49ac654ddc64e72613404d260",
+    "pcc_settlement_exposure.py": "bff1aaa6b2f871a560a800a5938d27ef95d395cefba172bf09be148d5fa1e800"
+  },
+  "windows": [
+    {
+      "annual_weight_per_hour": 366.0,
+      "hours": 24,
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "annual_weight_per_hour": 26.142857142857,
+      "hours": 336,
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

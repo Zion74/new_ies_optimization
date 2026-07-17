@@ -1,0 +1,87 @@
+{
+  "architecture": "bess",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_project_tac_ready": false,
+  "repair_selection": null,
+  "runtime_seconds": 596.968363456428,
+  "schema_id": "tes_bess_boundary.e0d46_architecture_manifest.v1",
+  "stage_execution": {
+    "candidate": {
+      "active_residual_process_count": 0,
+      "architecture": "bess",
+      "available_memory_before_gib": 97.30128479003906,
+      "available_memory_sample_count": 601,
+      "declared_artifact_sha256": {
+        "bess_candidate.csv.gz": null,
+        "bess_candidate.json": "fac6f30f98b8fa2095262b649b9f45ac388fbd83e5b894f028b7c6c1c5ee573e",
+        "bess_d41_fallback_seed.csv.gz": "061cce6ec845e77d38f1d0bb44e32cb65641185673b14144f788725e6aa03eed"
+      },
+      "hard_wall_enforced_by_parent": true,
+      "heartbeat_sha256": "4e112a2989d45b03b0e7ac5c1334a99988b6dcd37b497f2c77308f1deda058d8",
+      "minimum_available_memory_gib": 93.15563201904297,
+      "peak_child_process_tree_rss_gib": 4.160556793212891,
+      "peak_parent_child_aggregate_rss_gib": 4.185855865478516,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "residual_termination_signal": null,
+      "resource_gate_passed": true,
+      "resource_thresholds": {
+        "aggregate_rss_limit_gib": 45.0,
+        "hard_wall_seconds": 3720.0,
+        "heartbeat_interval_seconds": 5.0,
+        "host_memory_reserve_gib": 30.0,
+        "monitor_interval_seconds": 0.5,
+        "process_tree_rss_limit_gib": 35.0
+      },
+      "result_sha256": "fac6f30f98b8fa2095262b649b9f45ac388fbd83e5b894f028b7c6c1c5ee573e",
+      "return_code": 0,
+      "rss_sample_count": 601,
+      "runtime_seconds": 303.77192523051053,
+      "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+      "solver_log_sha256": "82ab73b4d78e132d8ad3aa312c68a4079a0010d8afd2f89f3747fa02c35bdb04",
+      "stage": "candidate",
+      "status": "complete",
+      "stop_reason": null,
+      "termination_signal": null
+    },
+    "guide": {
+      "active_residual_process_count": 0,
+      "architecture": "bess",
+      "available_memory_before_gib": 97.30145645141602,
+      "available_memory_sample_count": 581,
+      "declared_artifact_sha256": {
+        "bess_guide.csv.gz": "b69f4035deb5aa5f83a504e1e40347a23fa352b4104087bc017da6940c828b1f",
+        "bess_guide.json": "ec76c9b9aada251807552b921463cd8149407d61dd548d31e35bde579657d20d"
+      },
+      "hard_wall_enforced_by_parent": true,
+      "heartbeat_sha256": "4010da2b7d847995286e00cf848eaba2f6164873068cefeb283e137dedbc0e5b",
+      "minimum_available_memory_gib": 94.7082405090332,
+      "peak_child_process_tree_rss_gib": 2.6115379333496094,
+      "peak_parent_child_aggregate_rss_gib": 2.636219024658203,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "residual_termination_signal": null,
+      "resource_gate_passed": true,
+      "resource_thresholds": {
+        "aggregate_rss_limit_gib": 45.0,
+        "hard_wall_seconds": 1020.0,
+        "heartbeat_interval_seconds": 5.0,
+        "host_memory_reserve_gib": 30.0,
+        "monitor_interval_seconds": 0.5,
+        "process_tree_rss_limit_gib": 35.0
+      },
+      "result_sha256": "ec76c9b9aada251807552b921463cd8149407d61dd548d31e35bde579657d20d",
+      "return_code": 0,
+      "rss_sample_count": 581,
+      "runtime_seconds": 293.183031543158,
+      "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+      "solver_log_sha256": "17b40dc731e6043b1548204b6875853bed5f753ac4f194000238b9bd5ba7e4fc",
+      "stage": "guide",
+      "status": "complete",
+      "stop_reason": null,
+      "termination_signal": null
+    }
+  },
+  "status": "no_candidate_incumbent",
+  "technical_ranking_permitted": false
+}

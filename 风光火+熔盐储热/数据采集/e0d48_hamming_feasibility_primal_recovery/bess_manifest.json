@@ -1,0 +1,52 @@
+{
+  "architecture": "bess",
+  "audited_feasible_upper_bound_cny": null,
+  "candidate_status": null,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_project_tac_ready": false,
+  "guide_sha256": "b69f4035deb5aa5f83a504e1e40347a23fa352b4104087bc017da6940c828b1f",
+  "repair_status": null,
+  "runtime_seconds": 3720.18031236995,
+  "schema_id": "tes_bess_boundary.e0d48_architecture_manifest.v1",
+  "stage_execution": {
+    "candidate": {
+      "active_residual_process_count": 0,
+      "architecture": "bess",
+      "available_memory_before_gib": 97.29767227172852,
+      "available_memory_sample_count": 7375,
+      "declared_artifact_sha256": {
+        "bess_candidate.csv.gz": null,
+        "bess_candidate.json": null
+      },
+      "hard_wall_enforced_by_parent": true,
+      "heartbeat_sha256": "a89039078f0b2fd18dce916587097a43840172f9975f642a1b56f83fd18fd71a",
+      "minimum_available_memory_gib": 94.14612579345703,
+      "peak_child_process_tree_rss_gib": 3.171466827392578,
+      "peak_parent_child_aggregate_rss_gib": 3.195880889892578,
+      "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+      "python_version": "3.10.18",
+      "residual_termination_signal": null,
+      "resource_gate_passed": false,
+      "resource_thresholds": {
+        "aggregate_rss_limit_gib": 45.0,
+        "hard_wall_seconds": 3720.0,
+        "heartbeat_interval_seconds": 5.0,
+        "host_memory_reserve_gib": 30.0,
+        "monitor_interval_seconds": 0.5,
+        "process_tree_rss_limit_gib": 35.0
+      },
+      "result_sha256": null,
+      "return_code": -15,
+      "rss_sample_count": 7375,
+      "runtime_seconds": 3720.1756297620013,
+      "schema_id": "tes_bess_boundary.e0d48_stage_execution.v1",
+      "solver_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "candidate",
+      "status": "resource_or_process_failure",
+      "stop_reason": "hard_wall_clock_reached",
+      "termination_signal": "sigterm"
+    }
+  },
+  "status": "candidate_process_or_resource_failure",
+  "technical_ranking_permitted": false
+}

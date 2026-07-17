@@ -1,0 +1,58 @@
+{
+  "canonical": false,
+  "equivalence_probe": {
+    "runtime_seconds": 18.23532326053828,
+    "termination": "optimal",
+    "threads": 28,
+    "time_limit_seconds": 300.0
+  },
+  "schema": "tes_bess_boundary.e0d32_joint_block_envelope_execution.v1",
+  "screens": {
+    "screen_24h.json": {
+      "block_runtime_seconds": [
+        300.2862751921639
+      ],
+      "block_termination": [
+        "maxtimelimit"
+      ],
+      "per_block_time_limit_seconds": 300.0,
+      "workers": 1
+    },
+    "screen_336h.json": {
+      "block_runtime_seconds": [
+        304.2232959866524,
+        34.647198997437954,
+        305.034613863565,
+        304.2124808328226,
+        178.9558566743508,
+        306.5900436937809,
+        304.3286686288193,
+        306.238934869878,
+        262.0313732912764,
+        304.1393604176119,
+        304.21353291906416,
+        306.57275919243693,
+        307.98342058062553,
+        103.2299032676965
+      ],
+      "block_termination": [
+        "maxtimelimit",
+        "optimal",
+        "maxtimelimit",
+        "maxtimelimit",
+        "optimal",
+        "maxtimelimit",
+        "maxtimelimit",
+        "maxtimelimit",
+        "optimal",
+        "maxtimelimit",
+        "maxtimelimit",
+        "maxtimelimit",
+        "maxtimelimit",
+        "optimal"
+      ],
+      "per_block_time_limit_seconds": 300.0,
+      "workers": 14
+    }
+  }
+}

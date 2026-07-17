@@ -1,0 +1,28 @@
+{
+  "artifact_sha256": {
+    "heartbeat": "1ccc4b1c6d791ff1b9b006a1a508317f0ee580efe19f6797293aa9f59e0e7dd5",
+    "log": "034c237d3797ae908213be025f414696c0af1b218fdcaf5f7c966640d14ad43a",
+    "progress": "8f06c3fd7f2abf1d9dfa72b46b87dd6ff5b980207517bf82bb27860ff7ff3dda",
+    "result": "6a1c362e2ebce81f230246f1ea79fdbc0e752fcd72fa3c1dd1e9cd6ab48d0275",
+    "solution": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80"
+  },
+  "available_memory_sample_count": 1786,
+  "hard_wall_enforced_by_parent": true,
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "minimum_available_memory_gib": 95.74405288696289,
+  "peak_phase_process_tree_rss_gib": 0.7609596252441406,
+  "peak_stage_aggregate_rss_gib": 1.6270408630371094,
+  "phase": "ipx",
+  "phase_runtime_seconds": 903.9484022725374,
+  "residual_process_group_detected": false,
+  "resource_gate_passed": true,
+  "return_code": 0,
+  "rss_sample_count": 1786,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.solver_snapshot.execution",
+  "stage": "solver",
+  "stage_runtime_seconds": 903.9498435296118,
+  "status": "complete",
+  "stop_reason": null,
+  "technical_ranking_permitted": false,
+  "termination_signal": null
+}

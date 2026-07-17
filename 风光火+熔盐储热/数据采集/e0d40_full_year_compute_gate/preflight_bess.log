@@ -1,0 +1,50 @@
+Running HiGHS 1.15.1 (git hash: 04024d7): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+MIP has 527053 rows; 597318 cols; 2187237 nonzeros; 79057 integer variables (79057 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 2e+03]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+483132 rows, 548857 cols, 1826795 nonzeros 1s
+390253 rows, 455822 cols, 1628793 nonzeros 3s
+349369 rows, 434057 cols, 1496974 nonzeros 6s
+Presolve reductions: rows 349369(-177684); columns 434057(-163261); nonzeros 1496974(-690263) 
+
+Solving MIP model with:
+   349369 rows
+   434057 cols (79056 binary, 0 integer, 0 implied int., 355001 continuous, 0 domain fixed)
+   1496974 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -110674644.2397 inf                  inf        0      0      0         0    11.4s
+         0       0         0   0.00%   -110674644.2397 inf                  inf        0      0      2    138227    60.1s
+
+Solving report
+  Status            Time limit reached
+  Primal bound      inf
+  Dual bound        -110674644.24
+  Gap               inf
+  P-D integral      0
+  Solution status   -
+  Timing            60.07
+                    6.76 (Presolve)
+                    53.29 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     138227
+                    0 (strong br.)
+                    0 (separation)
+                    0 (heuristics)
+{"actual_relative_mip_gap": null, "architecture": "bess", "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac", "classification": "preflight_only", "classification_reason": "preflight_is_not_formal_evidence", "formal_gate_b_eligible": false, "formal_project_tac_ready": false, "gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577", "global_infeasibility_proven": false, "mode": "preflight", "model_size": {"active_binary_variable_count": 79057, "active_constraint_count": 527053, "active_variable_count": 597318, "nonlinear_component_count": 0, "nonlinear_components": []}, "objective_lower_bound_cny": -110674644.23969972, "objective_upper_bound_cny": null, "provenance": {"code_sha256": {"capacity_planning.py": "c22adbdaa9fcd2b8947d3b19b0c59f9ad44c21417699bef5bf6cad436680eedb", "e0d37_block_horizon.py": "44b359c91c99f8f70cec63949f453e05a87af51ead89897ccbb1787eeb2d30ce", "e0d38_prevalidation.py": "c82329d00bed539425950eab4f814dcbd62c506c756581d40b357775dc27b015", "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877", "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca", "model.py": "a629300cf288c0080f066b0ee24d35aad84d82a8b6152f45d6c2884ddac43a83", "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"}, "heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e", "price_basis_tree_sha256": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3", "vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"}, "representative_period_input_used": false, "schema_id": "tes_bess_boundary.e0d40_gate_b_case.v1", "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95", "solution": null, "solution_audit": null, "solution_loaded": false, "solver": {"dual_feasibility_tolerance": 1e-07, "mip_feasibility_tolerance": 1e-07, "name": "appsi_highs", "primal_feasibility_tolerance": 1e-07, "random_seed": 0, "target_relative_mip_gap": 0.001, "threads": 12, "time_limit_seconds": 60.0, "warm_start_used": false}, "solver_invoked": true, "status": "no_loadable_incumbent", "termination_condition": "maxtimelimit"}

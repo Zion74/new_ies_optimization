@@ -1,0 +1,53 @@
+{
+  "canonical": true,
+  "locked_inputs": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "d30_csv_sha256": "32ca2a7171d35da1311c3316127b9285eb3ab2af5c9e8680741e7c5efc735e6c",
+    "d30_manifest_sha256": "c430fa852f3934c8466387a32f2ce67152764b8bd7fb1d228fc1fc416f08520e",
+    "d31_screen_24h_sha256": "acf2c49126485ad9d4d41e9d036ed45ec0487fdeeeab71958412d370c03f5836",
+    "d31_screen_336h_sha256": "1789b76b5589f890e14b9dcbece0cec0dfdea486baa89613f24284bc670f668e",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "method_contract": {
+    "block_bound_safety_margin_mwh": 0.001,
+    "block_hours": 24,
+    "block_sign_binaries_retained": true,
+    "full_intertemporal_paths_retained": true,
+    "global_probe_336h_launched": false,
+    "materiality_threshold_fraction": 0.01,
+    "primary_integer_domains_relaxed_in_block_screens": true,
+    "sum_of_block_duals_is_valid_global_l1_upper_bound": true
+  },
+  "noncanonical_execution": {
+    "path": "execution.json",
+    "sha256": "4eff8405d49f28bcded74c6b45b81355fb81e5181ff8451c3fac558b0551782e"
+  },
+  "output": {
+    "csv": "e0d32_joint_block_envelope_screening.csv",
+    "csv_sha256": "47b273c511717cb4f9c19cf640d806df2c00250a929bd0936df4a4601a534939",
+    "row_count": 2
+  },
+  "raw_inputs": {
+    "24h.json": {
+      "sha256": "f1ae9d076cc00547f8003df4c5adf161f38a6f3e9a78fedd01a5c39efc027968"
+    },
+    "screen_24h.json": {
+      "sha256": "721754d4c06423963e4273b13a43f36521a1af6b6b0857d113d7e43619e85f3e"
+    },
+    "screen_336h.json": {
+      "sha256": "bb3212c24852f8d0ef6655ff298e4bcf04f34c6ea0ef10e60d13566c51fced91"
+    }
+  },
+  "schema": "tes_bess_boundary.e0d32_joint_block_envelope_screening.v1",
+  "scientific_boundaries": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "latest_336h_strict_interval_source": "E0-D-30"
+  }
+}

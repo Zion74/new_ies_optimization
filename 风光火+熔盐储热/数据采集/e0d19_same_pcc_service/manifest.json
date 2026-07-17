@@ -1,0 +1,92 @@
+{
+  "case": {
+    "coal_price_cny_per_tce": 800.86,
+    "curtailment_penalty_cny_per_mwh": 0.0,
+    "known_cost_scope": "fuel_only_same_annual_pcc_service_2024_cny_exploratory",
+    "omitted_non_tes_cost_terms": [
+      "chp_variable_om",
+      "carbon_compliance_allowance",
+      "time_varying_electricity_settlement",
+      "tes_variable_om"
+    ],
+    "pcc_capacity_mw": 700.0,
+    "pv_capacity_mw": 200.0,
+    "tes_port_capacity_mw": 150.0,
+    "tes_thermal_capacity_mwh_th": 1200.0,
+    "wind_capacity_mw": 1050.0
+  },
+  "inputs": {
+    "formal_heat": {
+      "file": "e0b_heat_hourly_2024.csv",
+      "locked_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+      "sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e"
+    },
+    "renewable_shape": {
+      "file": "口径3_统一数据集_2024.csv",
+      "locked_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "status": "legacy_2019_resource_year_mapped_to_2024_calendar"
+    }
+  },
+  "output": {
+    "csv": "e0d19_same_pcc_service.csv",
+    "csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "float_decimals": 6,
+    "rows": 2
+  },
+  "schema": "tes_bess_boundary.e0d19_same_pcc_service.v2",
+  "scientific_scope": "same_annual_pcc_service_screen_not_formal_tac_not_e1",
+  "settlement_boundary": {
+    "baseline": "same_annual_PCC_delivery",
+    "flat_price_identity": "pi_flat*(candidate_export-comparator_export)=0",
+    "flat_price_settlement_complete": true,
+    "legacy_tou_status": "generated_scenario_without_registered_primary_source;excluded",
+    "ownership": "single_system_owner_at_common_PCC",
+    "time_varying_settlement_complete": false
+  },
+  "solver_contract": {
+    "candidate_primary_mip_gap_by_hours": {
+      "24": 0.0,
+      "336": 0.005
+    },
+    "comparator_primary_mip_gap": 0.0,
+    "interval_definition": "lower=comparator_exact_cost-candidate_secondary_audited_cost;upper=comparator_exact_cost-candidate_primary_dual_bound",
+    "pcc_service_feasibility_warm_start": {
+      "24": false,
+      "336": true,
+      "acceptance": "deviation_mw<=1e-9",
+      "phase_1": "minimize_average_PCC_delivery_absolute_deviation",
+      "phase_2": "restore_exact_PCC_equality_and_primary_cost_objective"
+    },
+    "random_seed": 0,
+    "secondary_audited_cost_contract": "fixed_primary_integers;cost<=primary_incumbent+reported_tolerance",
+    "secondary_tie_break": "fix_primary_incumbent_integers_then_minimize_curtailment",
+    "solver": "appsi_highs",
+    "threads": 1,
+    "time_limit_seconds_per_solve": 900.0
+  },
+  "sources": {
+    "components/chp.py": "6e16cedb711631fa03f7c647db6559c5a5f37eef46b2576a293fee968ff45b32",
+    "components/molten_salt.py": "7843c16d5ab42b229720b72258e2948c44eb508b05e6f9794547a0adb8f1068b",
+    "e0d18_performance.py": "ebc6b8c9e277d3b30ddead1c2aab8bcc21b08d2c85813268402705cd3cab0d66",
+    "e0d19_same_pcc_service.py": "dae128181193a10969cc35f566996590afbcd7fc18aae689db5b6b66611e42f0",
+    "model.py": "f1a22c3e8e67e81483a78b17c88a6342ff5138637c148a784211f7dfc80adb70",
+    "tes_break_even_adapter.py": "d036ee89b7f836b5491fe6832353e631ffb39b899b146289e695345f5bbb8318"
+  },
+  "windows": [
+    {
+      "curtailment_service_id": "e0d19_primary_incumbent_no_storage:winter_day_20240101",
+      "hours": 24,
+      "pcc_export_service_id": "e0d19_flat_price_common_delivery:winter_day_20240101",
+      "start": "2024-01-01T00:00:00",
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "curtailment_service_id": "e0d19_primary_incumbent_no_storage:winter_fortnight_20240101",
+      "hours": 336,
+      "pcc_export_service_id": "e0d19_flat_price_common_delivery:winter_fortnight_20240101",
+      "start": "2024-01-01T00:00:00",
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

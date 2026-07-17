@@ -1,29 +1,54 @@
-﻿# 三层映射表
+# 论文成果与硕士论文章节映射
 
-更新时间：2026-04-10
+更新时间：2026-07-16
 
-## 1. 载体层 -> 研究层映射总表
+## 1. 成果载体映射
 
-| 载体层 | 这篇文档要完成的任务 | 主要承接的研究层 | 主实验 | 关键图表 | 主要代码文件 | 稿件目录 | 权威文档入口 |
-|---|---|---|---|---|---|---|---|
-| 会议论文 | 把一个核心概念讲清、讲硬，完成规划层 concept validation | 规划层（IEMI 几何表达） | 德国案例下 `economic_only / std / euclidean`；预算对齐的 8760h 后验验证 | `论文撰写/会议/figures/pareto_normalized.png`、`论文撰写/会议/figures/budget_sweep.png`、系统拓扑图 | `run.py --exp N --post-analysis-mode full`、`run.py`、`cchp_gaproblem.py`、`operation.py`、`scripts/export_ieee_conference_data.py`、`scripts/generate_conference_figures.py` | `论文撰写/会议/` | `docs/02_conference_paper/` |
-| SCI 论文 | 把核心创新扩展成完整论文故事，形成更强证据链 | 规划层（EQD 正式展开） + 设备层（卡诺电池配置价值） | 实验 1-4；外加 8760h 后验分析、λ 敏感性、韧性 / 极端场景支撑 | 五方法 Pareto、双案例对比、无 / 有卡诺对比、卡诺下 `std vs EQD`、运行指标与敏感性图组 | `run.py`、`scripts/post_analysis_report.py`、`case_config.py`、`cchp_gaproblem.py`、`operation.py`、`scripts/post_analysis.py`、`scripts/enhanced_analysis.py`、`scripts/lambda_sensitivity.py`、`scripts/resilience_test.py` | `论文撰写/paper/` | `docs/03_sci_paper/` |
-| 硕士论文 | 把会议与 SCI 纳入规划-设备-运行闭环，形成章节递进 | 第 2 章规划层 + 第 3 章设备层 + 第 4 章运行层 | 规划层沿用实验 1 / 2；设备层沿用实验 3 / 4；运行层新增负荷预测、日前调度、鲁棒性实验 | 第 2 章 Pareto / 后验 / 敏感性图组；第 3 章卡诺电池价值图组；第 4 章预测架构、预测精度、日前 / 实时对比与鲁棒性图组 | 当前已落地代码 + `scripts/resilience_test.py`；预测与日前调度模块待新增 | 硕士论文正式稿待统一落地 | `docs/04_master_thesis/` |
+| 成果 | 核心问题 | 与硕士论文关系 | 主对象 / 案例 | 主方法 | 权威入口 |
+|---|---|---|---|---|---|
+| 源荷匹配会议稿 | 多能流失配如何量化 | 第 3 章的方法来源与辅助证据 | 德国 / 松山湖 concept validation；杨凌迁移 | IEMI / EQD、容量规划 | `docs/02_conference_paper/` |
+| 负荷预测会议稿 | 多能负荷如何预测 | 独立成果，不进入硕士论文主线 | 其原有数据与任务，正式路径待确认 | 预测模型 | `docs/02_conference_paper/load_forecasting/` |
+| 当前主 SCI | BESS、双用途熔盐 TES 与 Hybrid 在什么条件下切换 | 第 4 章核心 | 杨凌 2×350 MW + 归一化场景 | Pyomo 综合 MILP、ε-约束、regime map、8784 h 验证 | `docs/03_sci_paper/` |
+| 旧 EQD/Carnot SCI 稿 | EQD 与卡诺电池配置价值 | 独立历史资产，不再控制大论文 | 德国 / 松山湖 | NSGA-II / OEMOF | `docs/03_sci_paper/README.md` 中的旧稿说明 |
+| 硕士论文 | 从灵活性识别到技术选择，再到可信决策支持 | 总载体 | 杨凌为唯一主案例 | 源荷匹配 + 综合 MILP + 可审计 Agentic | `docs/04_master_thesis/` |
 
-## 2. 研究层 -> 载体层分工表
+## 2. 硕士论文章节映射
 
-| 研究层 | 会议论文 | SCI 论文 | 硕士论文 |
-|---|---|---|---|
-| 规划层 | **核心承载**：只保留 IEMI 这一条主线，强调 concept validation | **核心承载**：升级为 EQD，补足㶲权重与两案例证据链 | **第 2 章**：系统化收束规划层理论、实验与讨论 |
-| 设备层 | 不作为会议主线，只能轻量作为 journal extension 提及 | **核心扩展**：卡诺电池集成、无 / 有卡诺对比、配置价值分析 | **第 3 章**：独立成章，做设备层闭环验证 |
-| 运行层 | 不承担 | 只保留后验运行指标、敏感性和韧性作为强证据，不展开完整预测章节 | **第 4 章**：负荷预测、日前调度、鲁棒性验证完整展开 |
+| 章节 | 回答的问题 | 核心实验 | 主要图表 | 代码资产 |
+|---|---|---|---|---|
+| 第 1 章 绪论 | 为什么热约束下的新能源接入与储能选择值得研究 | 文献综述与技术路线 | 研究路线图 | 高质量文献证据包 |
+| 第 2 章 系统、数据与统一模型 | 杨凌对象和物理/经济口径是否可信 | 数据审计、CHP 可行域、BESS/TES 单元验证、正式输入桥接、HiGHS 验证、成本证据闭环 | 系统边界、数据覆盖、可行域、模型误差、证据资格矩阵 | E0-D-14–D-20 已闭合 BESS fixed-capacity 生命周期账本、TES 正式成本门、同 PCC 燃料空间和四类非燃料成本证据审计；D21–D23 给出风险预算、逐时 PCC 和替代调度包络，D26–D30 建立严格证书，D31/D32 为负筛查。D24/D25 仍为 `0/16` 严格账户、`0/4` 项目账户。D44/D47 使三架构严格全年下界闭合，但不能跨来源排序。D46 三架构均无 incumbent，D48-R1 三架构与 D49 BESS 均为 `no_primal_status_closure`。D50 在阶段 `3` 形成无回退块路径死路并以 `block_path_no_incumbent` 关闭。D51 的 24 h 检查点化一步回退 Gate 0 已通过；D52 实现提交 `c3b2e0cf...` 的 OpenBayes Gate A 已以 `17/266/720 passed`、零跳过闭合，全年 build-only 未调用 solver，现只允许唯一 BESS 正式运行，TES/Hybrid 仍禁止 |
+| 第 3 章 源荷匹配与服务需求识别 | 哪种新能源规划状态在何时产生多强的灵活性服务需求 | 杨凌风光接入规划；ε、冲突时段与服务指标；德国/松山湖辅助迁移 | 失配指标、风光规模、`H* / G* / R_W / I_HC`、ε、冲突时段 | `run.py`、`cchp_gaproblem.py`、`operation.py` 及待建杨凌适配层 |
+| 第 4 章 BESS—TES 适用边界 | 应由哪一种储能提供灵活性 | E1-E6，含四架构、公平前沿、双边界图和 8784 h 验证 | 价值分解、ε 前沿、两张 regime map、全年验证 | D33–D37 已完成公开成本/容量/材料性/代表周/分块边界；D38/R1/D39、D40–D43 的失败均保留。D44 与 D47 已使三架构严格下界门闭合。D46/D48-R1/D49/D50 上界恢复数均为 0；D51 Gate 0 只验证了缩短时域控制器。D52 阶段 0/1 checkpoint 通过审计，但阶段 2 attempt 触发冻结硬墙钟，终态 `no_primal_status_closure`；无完整候选、容量或上界，正式 gap、技术排序和 E2–E4 扫描继续阻断 |
+| 第 5 章 Agentic 决策支持 | 如何让场景输入、求解和结论可审计、可复现 | 人工脚本 vs 普通 LLM vs Agentic 工具链 | 工作流、准确率、违规漏检、耗时 | 计划在稳定优化器之上实现，不改变物理模型 |
+| 第 6 章 结论与展望 | 三个研究问题如何形成闭环 | 综合归纳 | 结论表 | 不新增模型 |
 
-## 3. 未来同步更新的最小动作
+## 3. 研究问题递进
 
-当任何一层发生变化时，默认执行下面动作：
+```text
+第 2 章：对象和模型可信吗？
+        ↓
+第 3 章：哪种规划状态何时需要多强的灵活性服务？
+        ↓
+第 4 章：BESS、TES、Hybrid 谁来提供，边界在哪里？
+        ↓
+第 5 章：如何把前述模型转成可审计的场景决策流程？
+```
 
-1. 先判断变化属于会议、SCI、硕士论文哪一层。
-2. 更新对应层级的 `latest_logic_structure.md`。
-3. 更新对应层级的实验 / 图表 / 代码映射文档。
-4. 如果改变了三层之间的边界，再同步更新本文件和 `latest_research_architecture.md`。
+## 4. 明确边界
 
+- 德国和松山湖不作为硕士论文主题，只作源荷匹配方法辅助证据；
+- 负荷预测不作为硕士论文章节；
+- Agentic 不进入主 SCI，也不替代优化器；
+- 第 3 章不输出 BESS/TES 设备容量、不提前回答技术选择；第 4 章不重新发明源荷匹配指标；
+- 当前 SCI 不继承旧同规格储能对比的优劣结论。
+
+## 5. 同步规则
+
+若第 3—5 章的研究边界、主实验或代码路径发生变化，必须同步更新：
+
+- `docs/01_overview/latest_research_architecture.md`
+- 本文件
+- `docs/03_sci_paper/` 对应权威文件
+- `docs/04_master_thesis/` 对应权威文件
+- `项目索引目录.md`

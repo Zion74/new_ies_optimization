@@ -1,0 +1,55 @@
+{
+  "capture": {
+    "formal_upper_bound_eligible": false,
+    "incumbent_captured": false,
+    "runtime_seconds": 204.9213661197573,
+    "solver_status": {
+      "highs_model_status": "Infeasible",
+      "mip_node_count": 1,
+      "primal_solution_status": 0,
+      "solution_value_valid": false,
+      "termination_condition": "infeasible"
+    },
+    "status": "block_path_no_incumbent",
+    "warmstart_requested": false
+  },
+  "constraint_and_objective_identity_preserved": true,
+  "domain_audit": {
+    "active_binary_count_after_domain_update": 2521,
+    "active_binary_names_sha256_after_domain_update": "3c0c6040a27262a47f109006e0d914d8ead7b9f94fb8cfc33882540260cc13a8",
+    "active_physical_count": 1008,
+    "active_physical_names_sha256": "87c344c0d284648e28f1ee927dac6bb208575714f14f396c7368775c9e8b2182",
+    "artificial_rounding_applied": false,
+    "current_block": {
+      "hours": 168,
+      "index": 3,
+      "start_position": 504,
+      "stop_position": 672
+    },
+    "fixed_physical_count": 1513,
+    "fixed_physical_names_sha256": "e797c5e0fac8aa7ac622f2e7f8cf3bf420d9358f588e9c4b5a39ed2dca085101",
+    "fixed_values_match_snapshot": true,
+    "legal_integer_initial_values_retained_count": 842,
+    "lookahead_block": {
+      "hours": 168,
+      "index": 4,
+      "start_position": 672,
+      "stop_position": 840
+    },
+    "newly_active_fractional_values_cleared_count": 166,
+    "partition_complete_and_disjoint": true,
+    "passed": true,
+    "projected_fuel_count": 52704,
+    "projected_fuel_names_sha256": "79341c53213df2da3bd2aeaad00e13f6a60dbe2c8fbd777d3bfc6a5c9b471ae7",
+    "relaxed_domains_valid": true,
+    "relaxed_physical_count": 23832,
+    "relaxed_physical_names_sha256": "3a4ac2e3112408c3be4db8a9e7a7fffff646359bd3894359d32857939cd544ec",
+    "stage_index": 3,
+    "warmstart_requested": false
+  },
+  "formal_upper_bound_eligible": false,
+  "schema_id": "tes_bess_boundary.e0d50_block_stage.v1",
+  "stage_count": 53,
+  "stage_index": 3,
+  "status": "block_path_no_incumbent"
+}

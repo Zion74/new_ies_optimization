@@ -1,0 +1,29 @@
+{
+  "canonical": false,
+  "screen_runtime_seconds": {
+    "winter_day_20240101": {
+      "candidate_maximum": 0.040953139774501324,
+      "candidate_minimum": 0.04278096556663513,
+      "comparator_maximum": 0.03596417419612408,
+      "comparator_minimum": 0.09444012399762869
+    },
+    "winter_fortnight_20240101": {
+      "candidate_maximum": 0.7060950417071581,
+      "candidate_minimum": 0.44276982452720404,
+      "comparator_maximum": 0.30474248994141817,
+      "comparator_minimum": 0.3905207561329007
+    }
+  },
+  "windows": {
+    "winter_day_20240101": {
+      "global_runtime_seconds": 68.58648005034775,
+      "threads": 28,
+      "time_limit_seconds": 300.0
+    },
+    "winter_fortnight_20240101": {
+      "global_runtime_seconds": 1804.5757830459625,
+      "threads": 28,
+      "time_limit_seconds": 1800.0
+    }
+  }
+}

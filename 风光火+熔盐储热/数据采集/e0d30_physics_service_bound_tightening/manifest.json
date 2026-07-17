@@ -1,0 +1,50 @@
+{
+  "cut_contract": {
+    "feasible_set_changed_for_integer_solutions": false,
+    "per_period_cuts": 6,
+    "primary_integer_patterns_reopened": true,
+    "sign_binaries_reopened": true
+  },
+  "execution_sidecar": {
+    "canonical": false,
+    "file": "execution.json",
+    "sha256": "31235b956ea0e1497369e861aa5d5921a56cf295d8c6b46aa42bf45bc7eb8eec"
+  },
+  "output": {
+    "csv": "e0d30_physics_service_bound_certificate.csv",
+    "csv_sha256": "32ca2a7171d35da1311c3316127b9285eb3ab2af5c9e8680741e7c5efc735e6c",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "probes": {
+    "24h.json": "13d4a9ca232beebab05e16d5b88534c3b3d0e40452d07bc39265a77495440ca0",
+    "336h.json": "c27abd940a66582cf541cb3cc6bffbf283d7e7cdf66d51e582266edf6e81fbf7"
+  },
+  "schema": "tes_bess_boundary.e0d30_physics_service_bound_certificate.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "global_dual_is_valid_l1_upper_bound": true
+  },
+  "scientific_scope": "physics_service_global_l1_bound_tightening_not_settlement_or_tac",
+  "screens": {
+    "screen_24h.json": "e412e702f856e7576027380d17082f842a64f29b0b3c23a3149efc60ec907cf6",
+    "screen_336h.json": "9b06d54073906fd3676aeb2ec03e4408331f942eb686828cc3dfc19a2d949f08"
+  },
+  "source_locks": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "d29_csv_sha256": "85fe459cebfd6f058d58e76f4358293630c80dfe3229cd5d6c8e366a78e26811",
+    "d29_manifest_sha256": "8c3924e49421a68e6179a2eef69eca699ac43392e895f07be357052bf821a11a",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "sources": {
+    "d30_certification_bundle.py": "d60a5401462a3d4b6b8dd401850de453e3d3bb23b8cdcc1e6cc1fbe6ac0f777a",
+    "d30_physics_service_bound_tightening.py": "2484676d410a94323c93505fa9e930f360b26d9dbc8d89756e72253134b8eceb"
+  }
+}

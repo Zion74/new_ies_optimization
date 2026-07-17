@@ -1,0 +1,105 @@
+{
+  "audit": {
+    "passed": true
+  },
+  "build_audit_sha256": "fccdbdaf6fc83df8ecb9a7d5b7713f0006c4a26768b110988d2cf40d9ab554d9",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d51_core_identity_audit": {
+    "actual_sha256": "1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447",
+    "expected_sha256": "1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447",
+    "passed": true,
+    "path": "e0d51_checkpointed_bounded_backtracking.py",
+    "unchanged": true
+  },
+  "demonstration_sha256": "3819918a56a45b7779d783e252da73ad34acc4567356af74ad331829afc28e55",
+  "formal_8784h_optimization_invoked": false,
+  "formal_architecture_order": [
+    "bess"
+  ],
+  "formal_input_sha256": {
+    "d40_gate_a": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_bess_r1_guide": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+    "d41_gate_a": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "d46_formal_manifest": "8693722ad362b2f604f08b3ebd2bfa2c45f085e42c2ece6cf334c097db80afa9",
+    "d46_postmortem_bundle": "c74a6943570690ace8573a0dee2f65aa763d0371854e01625337a46244a35b58",
+    "d50_formal_manifest": "3efdbba505ed2e34d14592e2384a67d074ae8ee08f35a32acdaa6b9639f10e91",
+    "d51_gate0_manifest": "883d4c0bad9bb9e66011d769b5c7886bc09494f64fb68bcdf927ae65fb90d152",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "formal_project_tac_ready": false,
+  "formal_run_permitted": true,
+  "frozen_method": {
+    "candidate_objective": "constant_zero",
+    "commit_hours": 168,
+    "integer_lookahead_hours": 336,
+    "maximum_attempts_per_stage": 3,
+    "maximum_solver_attempts": 69,
+    "maximum_total_rollback_events": 8,
+    "stage_count": 53,
+    "warmstart_requested": false
+  },
+  "provenance": {
+    "code_sha256": {
+      "capacity_planning.py": "c22adbdaa9fcd2b8947d3b19b0c59f9ad44c21417699bef5bf6cad436680eedb",
+      "components/chp.py": "ead644a19b5d26913e8211958e789ad37cd1b876685fdb31bd25111950afd296",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d48_hamming_primal_recovery.py": "c82923d3e40ff93feefff62c98dd8aa75e96b76ecdd25b60863919d4b8e69c57",
+      "e0d49_physics_first_fuel_projection_primal_recovery.py": "9d2dd610a2d7e59e9b8d9631e676277b0d36077c7a40d3448889defc041b3b14",
+      "e0d50_full_year_coupled_physical_block_relax_and_fix.py": "3fa1a3e4e2934a8b8ce763841e13a2d37c3945fa9803aed7c1aebd6b70bb2934",
+      "e0d51_checkpointed_bounded_backtracking.py": "1b50ed42ebc31fb845dc5a1498abd5dcac38899eb09682ee809850504ea4d447",
+      "e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery.py": "5d3c13971ecc0d9822da102eb8c6c7691294f97102aeb3d0845174c55d097dd5",
+      "e0d52_monitored_executor.py": "5551bb6d915b4523a4933ff1990c94dfb21b8cccb15206808c87342f728eceab",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    },
+    "contract_git_commit": "5e6b58c791d74257c0d0e23269453c0f93af7295",
+    "implementation_git_commit": "c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c",
+    "test_sha256": {
+      "test_e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery.py": "5a5945faa1074f228633e9cb8fb2da55a8ae8fd5e0cdde8f16ea79276f7e0ff9",
+      "test_e0d52_monitored_executor.py": "900247914a38286f0fd36a89c2b8a9d1fec8c50f9dd5ad342ab5cc6f70357c5f"
+    }
+  },
+  "quality_evidence": {
+    "pycompile": {
+      "file_sha256": "8967006cd911fa956f4a6716e1891519da2f991149f6b114f20eef6e86ca714c",
+      "sentinel_present": true
+    },
+    "ruff": {
+      "file_sha256": "7033128360e8c91a9d031630f9fbe7afd699f215b4112475e0133322453c8c78",
+      "sentinel_present": true
+    }
+  },
+  "schema_id": "tes_bess_boundary.e0d52_gate_a_manifest.v1",
+  "status": "gate_a_passed",
+  "technical_ranking_permitted": false,
+  "tes_or_hybrid_formal_run_permitted": false,
+  "test_evidence": {
+    "d40_d52_compatibility": {
+      "errors": 0,
+      "failures": 0,
+      "file_sha256": "8598f850a7c25c548e91a1671cb2f8b691290b0bf4f3a99ae98cee098ae34b25",
+      "passed": true,
+      "skipped": 0,
+      "tests": 266
+    },
+    "d52_targeted": {
+      "errors": 0,
+      "failures": 0,
+      "file_sha256": "da3440ea47dd3789b605753e4660a8f78e27d0890d9fa94c8ef673cb817bd111",
+      "passed": true,
+      "skipped": 0,
+      "tests": 17
+    },
+    "full_package": {
+      "errors": 0,
+      "failures": 0,
+      "file_sha256": "596ce462a6ad02d2b761ff59f1064132cbd307bcb225ec9fcd4bed1f5a8b6d32",
+      "passed": true,
+      "skipped": 0,
+      "tests": 720
+    }
+  }
+}

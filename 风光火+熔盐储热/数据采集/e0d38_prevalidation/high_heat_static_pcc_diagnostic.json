@@ -1,0 +1,259 @@
+{
+  "all_violating_hours_covered_by_d36": true,
+  "claim_scope": "necessary_static_feasibility_diagnostic_not_tac",
+  "generated_at": "2026-07-15T04:10:50.529546+00:00",
+  "interpretation": "Any listed hour is infeasible for no-storage operation even after all renewables are curtailed, before ramping, minimum-up/down, annual service, or fuel objectives are imposed.",
+  "maximum_scaled_heat_demand_mw": 827.4670623083888,
+  "provenance": {
+    "code_sha256": "f35e62d7794527fcf21d3375b9e0440aae6d6df6196e22e77cd579ca511ee2e9",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "representative_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9"
+  },
+  "schema_id": "tes_bess_boundary.e0d38_static_pcc_heat_feasibility.v1",
+  "state": {
+    "heat_scale": 1.824264742834285,
+    "pcc_export_capacity_mw": 490.0,
+    "state_id": "high_heat_tight_pcc"
+  },
+  "static_limit": {
+    "maximum_static_useful_heat_mw": 766.0767880248933,
+    "net_chp_export_at_maximum_heat_mw": 490.0,
+    "termination_condition": "optimal",
+    "unit_online": [
+      1.0,
+      1.0
+    ],
+    "unit_power_gross_mw": [
+      227.7871440807885,
+      286.00000000000006
+    ],
+    "unit_useful_heat_mw": [
+      328.0767880248932,
+      438.0000000000001
+    ]
+  },
+  "tolerance_mw": 1e-07,
+  "violating_hour_count": 36,
+  "violating_hours_covered_by_d36_count": 36,
+  "violating_week_numbers": [
+    4
+  ],
+  "violations": [
+    {
+      "excess_heat_mw": 11.245797164838223,
+      "scaled_heat_demand_mw": 777.3225851897315,
+      "source_hour_index": 513,
+      "timestamp": "2024-01-22T09:00:00"
+    },
+    {
+      "excess_heat_mw": 0.33145768722238245,
+      "scaled_heat_demand_mw": 766.4082457121157,
+      "source_hour_index": 518,
+      "timestamp": "2024-01-22T14:00:00"
+    },
+    {
+      "excess_heat_mw": 0.4750340790200198,
+      "scaled_heat_demand_mw": 766.5518221039133,
+      "source_hour_index": 519,
+      "timestamp": "2024-01-22T15:00:00"
+    },
+    {
+      "excess_heat_mw": 25.12878968461098,
+      "scaled_heat_demand_mw": 791.2055777095043,
+      "source_hour_index": 521,
+      "timestamp": "2024-01-22T17:00:00"
+    },
+    {
+      "excess_heat_mw": 18.199961929883216,
+      "scaled_heat_demand_mw": 784.2767499547765,
+      "source_hour_index": 522,
+      "timestamp": "2024-01-22T18:00:00"
+    },
+    {
+      "excess_heat_mw": 2.6337473580400683,
+      "scaled_heat_demand_mw": 768.7105353829334,
+      "source_hour_index": 527,
+      "timestamp": "2024-01-22T23:00:00"
+    },
+    {
+      "excess_heat_mw": 1.235988955545622,
+      "scaled_heat_demand_mw": 767.3127769804389,
+      "source_hour_index": 540,
+      "timestamp": "2024-01-23T12:00:00"
+    },
+    {
+      "excess_heat_mw": 17.670418414254527,
+      "scaled_heat_demand_mw": 783.7472064391478,
+      "source_hour_index": 542,
+      "timestamp": "2024-01-23T14:00:00"
+    },
+    {
+      "excess_heat_mw": 30.469831459465013,
+      "scaled_heat_demand_mw": 796.5466194843583,
+      "source_hour_index": 543,
+      "timestamp": "2024-01-23T15:00:00"
+    },
+    {
+      "excess_heat_mw": 44.39251862873425,
+      "scaled_heat_demand_mw": 810.4693066536275,
+      "source_hour_index": 544,
+      "timestamp": "2024-01-23T16:00:00"
+    },
+    {
+      "excess_heat_mw": 6.6589537304244,
+      "scaled_heat_demand_mw": 772.7357417553177,
+      "source_hour_index": 545,
+      "timestamp": "2024-01-23T17:00:00"
+    },
+    {
+      "excess_heat_mw": 1.5172297700646595,
+      "scaled_heat_demand_mw": 767.594017794958,
+      "source_hour_index": 555,
+      "timestamp": "2024-01-24T03:00:00"
+    },
+    {
+      "excess_heat_mw": 12.264344979586667,
+      "scaled_heat_demand_mw": 778.34113300448,
+      "source_hour_index": 558,
+      "timestamp": "2024-01-24T06:00:00"
+    },
+    {
+      "excess_heat_mw": 2.4859481311909803,
+      "scaled_heat_demand_mw": 768.5627361560843,
+      "source_hour_index": 559,
+      "timestamp": "2024-01-24T07:00:00"
+    },
+    {
+      "excess_heat_mw": 61.3902742834955,
+      "scaled_heat_demand_mw": 827.4670623083888,
+      "source_hour_index": 560,
+      "timestamp": "2024-01-24T08:00:00"
+    },
+    {
+      "excess_heat_mw": 44.64251046386323,
+      "scaled_heat_demand_mw": 810.7192984887565,
+      "source_hour_index": 561,
+      "timestamp": "2024-01-24T09:00:00"
+    },
+    {
+      "excess_heat_mw": 53.5966099099428,
+      "scaled_heat_demand_mw": 819.6733979348361,
+      "source_hour_index": 562,
+      "timestamp": "2024-01-24T10:00:00"
+    },
+    {
+      "excess_heat_mw": 54.94116059077248,
+      "scaled_heat_demand_mw": 821.0179486156658,
+      "source_hour_index": 563,
+      "timestamp": "2024-01-24T11:00:00"
+    },
+    {
+      "excess_heat_mw": 39.84368070979747,
+      "scaled_heat_demand_mw": 805.9204687346908,
+      "source_hour_index": 564,
+      "timestamp": "2024-01-24T12:00:00"
+    },
+    {
+      "excess_heat_mw": 39.852970946912706,
+      "scaled_heat_demand_mw": 805.929758971806,
+      "source_hour_index": 565,
+      "timestamp": "2024-01-24T13:00:00"
+    },
+    {
+      "excess_heat_mw": 23.443033931510513,
+      "scaled_heat_demand_mw": 789.5198219564038,
+      "source_hour_index": 566,
+      "timestamp": "2024-01-24T14:00:00"
+    },
+    {
+      "excess_heat_mw": 22.607757158056074,
+      "scaled_heat_demand_mw": 788.6845451829494,
+      "source_hour_index": 567,
+      "timestamp": "2024-01-24T15:00:00"
+    },
+    {
+      "excess_heat_mw": 3.833877080063189,
+      "scaled_heat_demand_mw": 769.9106651049565,
+      "source_hour_index": 582,
+      "timestamp": "2024-01-25T06:00:00"
+    },
+    {
+      "excess_heat_mw": 0.018967893311469197,
+      "scaled_heat_demand_mw": 766.0957559182048,
+      "source_hour_index": 583,
+      "timestamp": "2024-01-25T07:00:00"
+    },
+    {
+      "excess_heat_mw": 34.925767007238846,
+      "scaled_heat_demand_mw": 801.0025550321321,
+      "source_hour_index": 584,
+      "timestamp": "2024-01-25T08:00:00"
+    },
+    {
+      "excess_heat_mw": 30.10920134595142,
+      "scaled_heat_demand_mw": 796.1859893708447,
+      "source_hour_index": 585,
+      "timestamp": "2024-01-25T09:00:00"
+    },
+    {
+      "excess_heat_mw": 49.65670480562562,
+      "scaled_heat_demand_mw": 815.7334928305189,
+      "source_hour_index": 586,
+      "timestamp": "2024-01-25T10:00:00"
+    },
+    {
+      "excess_heat_mw": 55.91156808591825,
+      "scaled_heat_demand_mw": 821.9883561108115,
+      "source_hour_index": 587,
+      "timestamp": "2024-01-25T11:00:00"
+    },
+    {
+      "excess_heat_mw": 31.478244470087702,
+      "scaled_heat_demand_mw": 797.555032494981,
+      "source_hour_index": 588,
+      "timestamp": "2024-01-25T12:00:00"
+    },
+    {
+      "excess_heat_mw": 47.10188959864706,
+      "scaled_heat_demand_mw": 813.1786776235404,
+      "source_hour_index": 589,
+      "timestamp": "2024-01-25T13:00:00"
+    },
+    {
+      "excess_heat_mw": 39.20012064774164,
+      "scaled_heat_demand_mw": 805.2769086726349,
+      "source_hour_index": 590,
+      "timestamp": "2024-01-25T14:00:00"
+    },
+    {
+      "excess_heat_mw": 4.649728812274816,
+      "scaled_heat_demand_mw": 770.7265168371681,
+      "source_hour_index": 591,
+      "timestamp": "2024-01-25T15:00:00"
+    },
+    {
+      "excess_heat_mw": 25.097540705219103,
+      "scaled_heat_demand_mw": 791.1743287301124,
+      "source_hour_index": 610,
+      "timestamp": "2024-01-26T10:00:00"
+    },
+    {
+      "excess_heat_mw": 20.240435827422857,
+      "scaled_heat_demand_mw": 786.3172238523161,
+      "source_hour_index": 611,
+      "timestamp": "2024-01-26T11:00:00"
+    },
+    {
+      "excess_heat_mw": 7.675812411151696,
+      "scaled_heat_demand_mw": 773.752600436045,
+      "source_hour_index": 612,
+      "timestamp": "2024-01-26T12:00:00"
+    },
+    {
+      "excess_heat_mw": 4.293321533814378,
+      "scaled_heat_demand_mw": 770.3701095587077,
+      "source_hour_index": 653,
+      "timestamp": "2024-01-28T05:00:00"
+    }
+  ]
+}

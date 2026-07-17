@@ -1,0 +1,37 @@
+{
+  "adapter_commit": "568f3aeb516d6589c0d0d0764f3c1938a5d8aa76",
+  "adapter_source_sha256": {
+    "e0d37_block_horizon.py": "44b359c91c99f8f70cec63949f453e05a87af51ead89897ccbb1787eeb2d30ce",
+    "e0d38_prevalidation.py": "c82329d00bed539425950eab4f814dcbd62c506c756581d40b357775dc27b015",
+    "e0d38_weekly_diagnostic.py": "90db0d19232dd3a31b1e79f9b9d93a8da6d15c8b34b134091ac12dcdd25ae124"
+  },
+  "claim_scope": "d39_gate_b_failure_not_formal_project_tac_not_technology_comparison",
+  "decision": {
+    "d39_gate_b_passed": false,
+    "gate_c_launched": false,
+    "gate_d_launched": false,
+    "reason": "classification_consistent_but_natural_curtailment_rate_error_exceeds_one_percentage_point",
+    "threshold_changed_after_result": false
+  },
+  "formal_project_tac_ready": false,
+  "gate_a_commit": "1a602b2edeb5ec18e26da3cba31cdc7718e0f5a0",
+  "gate_b_result": {
+    "actual_minimum_curtailment_mwh": 565916.1220067485,
+    "actual_natural_curtailment_rate": 0.16665673584282514,
+    "actual_relative_mip_gap": 0.0002196379843500837,
+    "actual_runtime_seconds": 94.62596870120615,
+    "epsilon_10_percent_ceiling_mwh": 339569.90645758656,
+    "feasibility_classification_consistent": true,
+    "natural_curtailment_rate_error_percentage_points": 5.17618942467652,
+    "preregistered_maximum_rate_error_percentage_points": 1.0,
+    "representative_minimum_curtailment_mwh": 390148.306132333,
+    "representative_natural_curtailment_rate": 0.11489484159605995,
+    "representative_relative_mip_gap": 0.000032271338714657325,
+    "representative_runtime_seconds": 11.134836204349995
+  },
+  "gate_b_result_file": "gate_b_baseline_minimum_curtailment.json",
+  "gate_b_result_sha256": "47f33db2d3a00bbe5f70cd342198fd5daa1538663c49b8ec7d39641fd27b645b",
+  "pre_adapter_rejection_log": "gate_b_pre_adapter_rejection.log",
+  "pre_adapter_rejection_log_sha256": "52d613664eaca2b227aba3722ee6e925f36ea431694ac0cbf675dd5156e34a8c",
+  "schema_id": "tes_bess_boundary.e0d39_gate_b_decision.v1"
+}

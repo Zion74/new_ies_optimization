@@ -1,0 +1,11 @@
+{
+  "callback_count": 241226,
+  "elapsed_seconds": 900.142784059979,
+  "ipm_iteration_count": 31,
+  "phase": "ipx",
+  "pid": 151568,
+  "schema_id": "tes_bess_boundary.e0d42_gate_b_phase.v1.execution",
+  "simplex_iteration_count": 0,
+  "soft_interrupt_requested": true,
+  "state": "native_returned_certifying"
+}

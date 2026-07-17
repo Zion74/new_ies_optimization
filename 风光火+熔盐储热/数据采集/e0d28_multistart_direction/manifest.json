@@ -1,0 +1,46 @@
+{
+  "execution_sidecar": {
+    "canonical": false,
+    "file": "execution.json",
+    "sha256": "b3516a7ab26dda83ae7259aa506b6ada00992e8de0aff320d9ef2e0b26effefd"
+  },
+  "output": {
+    "csv": "e0d28_multistart_screening.csv",
+    "csv_sha256": "1172ee16c16353e68fc907fa698495a8195d8f211bead70be64d9a4d3e9a0330",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "probe_contract": {
+    "global_l1_bound_generated": false,
+    "preregistered_iterations_per_seed": 1,
+    "strict_feasibility_tolerance": 1e-09,
+    "support_dual_is_global_l1_upper_bound": false
+  },
+  "probes": {
+    "336h_alternating.json": "63b7859d64a1890ae67acee2e776c598e439a43f3fe265df8f66f533555baddd",
+    "336h_negated.json": "718bc50c74e45fd3242675670f6acd3b2a07014a6c0899fa7916346c34f82d85"
+  },
+  "schema": "tes_bess_boundary.e0d28_multistart_screening.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "global_l1_bound_generated": false,
+    "support_dual_is_global_l1_upper_bound": false
+  },
+  "scientific_scope": "multistart_feasible_l1_screen_not_global_bound",
+  "source_locks": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "sources": {
+    "d27_direction_generation.py": "123ddd38d65a5f8dac09b5bebf9e02adc612db19012666200b99f0a96638fd9d",
+    "d28_multistart_bundle.py": "54c9eee41ca2d5c6bdd2e40143025d76c9b2e7923ab3c2b77270e8851924a932",
+    "d28_multistart_direction.py": "4a61d7e0d13a401b18f3e43a990fc942069af0a016525bd8b40e254a6efa7a0a"
+  }
+}

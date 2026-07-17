@@ -1,0 +1,38 @@
+{
+  "account_count": 4,
+  "e1_ready": false,
+  "files": {
+    "e0d25_current_coverage.csv": "f0134129f5db358c1cadb89d1c25a8b4524594200a15994d4f48a8c26db00263",
+    "e0d25_required_fields.csv": "877923986fe6d689e75e5a8c7225bff6b8775a02d46a3fa31a35674884c7a347",
+    "e0d25_submission_template.csv": "f7b4157e996ec45a2837045f3c5105e9727cfad7177b0ac0494b6fc0f8b0d0c6"
+  },
+  "formal_portfolio_ready": false,
+  "formal_tac_ready": false,
+  "local_confidential_values_exported": false,
+  "prohibitions": [
+    "no_guessing_missing_project_values",
+    "no_public_or_comparable_substitution_for_project_primary_records",
+    "no_raw_confidential_source_export",
+    "no_submitted_value_export",
+    "no_intake_completeness_as_formal_tac_certificate"
+  ],
+  "project_data_request_ready": true,
+  "project_primary_intake_ready": false,
+  "raw_confidential_sources_exported": false,
+  "ready_account_count": 0,
+  "requirement_count": 51,
+  "schema": "tes_bess_boundary.e0d25_project_primary_evidence_intake.v1",
+  "source_receipts": [
+    {
+      "confidentiality": "internal",
+      "export_policy": "metadata_only",
+      "reviewed_locators": [
+        "煤电机组经济性指标!A18:A19",
+        "煤电机组经济性指标!H3",
+        "煤电机组经济性指标!H18:H19"
+      ],
+      "sha256": "72d71cfeed7d8c3f3d564e00ca8bfdd47ee48228bf58ab3de5c9605added8fcf",
+      "source_document_id": "yangling_2024_economic_workbook"
+    }
+  ]
+}

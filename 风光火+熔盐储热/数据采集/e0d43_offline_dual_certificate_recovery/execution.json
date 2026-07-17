@@ -1,0 +1,18 @@
+{
+  "available_memory_before_gib": 97.30405044555664,
+  "manifest_sha256": "c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526",
+  "minimum_available_memory_gib": 96.6288833618164,
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "peak_parent_child_aggregate_rss_gib": 0.7346572875976562,
+  "phase_execution_sha256": {
+    "ipx": "1691096160ab961efcc51b61de749672cad6e8caaf0f6750ae019a5ee1840a0e",
+    "simplex_1": "957f7660904e82462c209402e08d573d40cbb95d031dbe7b48eb520c79353870"
+  },
+  "readme_sha256": "da5057ead81f8d0e271a1dae0a285997d3aeb678731a3d49705c2351a9c757e6",
+  "runtime_seconds": 1800.489843642339,
+  "schema_id": "tes_bess_boundary.e0d43_offline_dual_certificate.v1.manifest.execution",
+  "status": "no_strict_certificate",
+  "stop_reason": "child_hard_wall_reached:ipx",
+  "technical_ranking_permitted": false
+}

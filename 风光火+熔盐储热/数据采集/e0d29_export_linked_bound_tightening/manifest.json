@@ -1,0 +1,48 @@
+{
+  "cut_contract": {
+    "aggregate_cuts": 5,
+    "feasible_set_changed_for_integer_solutions": false,
+    "per_period_cuts": 4,
+    "primary_integer_patterns_reopened": true,
+    "sign_binaries_reopened": true
+  },
+  "execution_sidecar": {
+    "canonical": false,
+    "file": "execution.json",
+    "sha256": "311435314b89ee7f688d10f46c8141138b76c27574c999b91f9eeaf3d095c66e"
+  },
+  "output": {
+    "csv": "e0d29_bound_tightening_certificate.csv",
+    "csv_sha256": "85fe459cebfd6f058d58e76f4358293630c80dfe3229cd5d6c8e366a78e26811",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "probes": {
+    "24h.json": "c048bd314106459bd21ad5ee71dcba7696610b8be2ad409503e55a728e998398",
+    "336h.json": "7436273dd0fc2182487768f5b468e639dd335e7e338e9dcc7cbaff24cf36ee04"
+  },
+  "schema": "tes_bess_boundary.e0d29_bound_tightening_certificate.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "global_dual_is_valid_l1_upper_bound": true
+  },
+  "scientific_scope": "global_l1_bound_tightening_not_settlement_or_tac",
+  "source_locks": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "d27_csv_sha256": "f3f8b0756fad1bf806aa631c7a6e72e1f83285fa5e45d0ac01307da5e37ee894",
+    "d27_manifest_sha256": "2f926e1f0d6b91d395538fe85eb2a3a11ae4f342783e974ef720ecd8fd96b8ab",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "sources": {
+    "d27_direction_generation.py": "123ddd38d65a5f8dac09b5bebf9e02adc612db19012666200b99f0a96638fd9d",
+    "d29_certification_bundle.py": "64f114bd489b8ee7372f462f47d26a56f61591655ac8715191ef9f80728e224c",
+    "d29_export_linked_bound_tightening.py": "40246e0141aaf59169abb0687e7547e86fab15eb0949e00bffcfa743bbb7d315"
+  }
+}

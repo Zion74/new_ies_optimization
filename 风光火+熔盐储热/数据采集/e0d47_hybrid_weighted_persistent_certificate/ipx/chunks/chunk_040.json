@@ -1,0 +1,17 @@
+{
+  "chunk_id": 40,
+  "column_count": 8656,
+  "content_sha256": "26333c865ef06f047817938efe17f6e4d38f8bd764a22b3869fa85a1f2da873f",
+  "end_column": 371984,
+  "invalid_column_endpoint_count": 0,
+  "lower_bound_decimal": "0E-52",
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "nonzero_count": 36440,
+  "partition_sha256": "6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677",
+  "phase": "ipx",
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.chunk",
+  "solution_sha256": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80",
+  "start_column": 363328,
+  "upper_bound_decimal": "23389858.0657236581335371994327942957170307636260986328125000",
+  "work_weight": 45096
+}

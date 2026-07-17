@@ -1,0 +1,74 @@
+{
+  "d40_d47_regression_passed": true,
+  "d45_input_sha256": {
+    "artifact_list": "ef53178bcfdab3cad719d94994c41f8e35906b1593ee95e55e679182303058e9",
+    "execution": "60af4ee5b16f9aed6ec1a048b87cd57cbaf58b9b90141001ad667bdc71dcbca0",
+    "ipx_solution": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80",
+    "ipx_solver_execution": "39b547a06bea1fdbd7924651e8e57b8be06322a2b6da7d205640fabfa2eed6f1",
+    "lp_archive": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "manifest": "668fb0ea4c9293f789781298ca54f56da2bdcb55a3a7806d5bf8171d6e24cc55",
+    "simplex_1_solution": "6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c",
+    "simplex_1_solver_execution": "8bf887665d6271d27963e8d90aa53822cc90eb037d8c0b56ddc539feeb0f1167"
+  },
+  "dependency_source_sha256": {
+    "e0d44_fork_parallel_certificate.py": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "e0d45_hybrid_r0_strict_lower_bound.py": "cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d"
+  },
+  "directed_regression_passed": true,
+  "failed_attempt_preserved_at": "/root/e0-b-20260711-019f4f64/results/e0d47_gate_a_failed_6d584ee",
+  "fork_available": true,
+  "formal_dual_certificate_invoked": false,
+  "four_worker_persistence_smoke_passed": true,
+  "four_worker_persistence_tree_sha256": "8647a26c570abb198cb9d6579f68a45e86e9ae03d6553a148f07e0092b3b3365",
+  "fraction_direction_passed": true,
+  "full_regression_passed": true,
+  "git_commit": "1515eca9cb24b0a3e073889b51480b8eefb0c413",
+  "highs_version": "1.15.1",
+  "identity_gate_passed": true,
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "partition_audit_sha256": "e637b78defaa12574ff6ddc842842b8dd7ef9b88163d0da32975e69c49eae355",
+  "partition_chunk_count": 56,
+  "partition_content_sha256": "6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677",
+  "partition_maximum_work_weight": 46293,
+  "partition_minimum_work_weight": 43901,
+  "partition_total_work_weight": 2525502,
+  "partition_work_weight_ratio": 1.054486230381996,
+  "phase_fallback_passed": true,
+  "platform": "linux",
+  "process_group_cleanup_execution_sha256": "1318761e01c204db78aa95a75d76706c3fc8acaba3f9d6b4a99bab015977459c",
+  "process_tree_cleanup_passed": true,
+  "py_compile_passed": true,
+  "python_version": "3.10.18",
+  "ruff_passed": true,
+  "ruff_version": "0.15.10",
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.gate_a",
+  "source_sha256": "a503a8c0d1544e7c4c35c6ffc80d00d4b96324560accd6fb2f755963472a5fb5",
+  "status": "gate_a_passed",
+  "tamper_rejection_passed": true,
+  "test_failed_count": 0,
+  "test_passed_count": 37,
+  "test_runs": {
+    "d40_d47": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 168
+    },
+    "d47_directed": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 37
+    },
+    "full": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 622
+    }
+  },
+  "test_sha256": "9347f4e5ec4b9fe80864586c112aef8d31575bf44c28fa95af4ffa04049c9191",
+  "test_skipped_count": 0,
+  "weighted_partition_passed": true
+}

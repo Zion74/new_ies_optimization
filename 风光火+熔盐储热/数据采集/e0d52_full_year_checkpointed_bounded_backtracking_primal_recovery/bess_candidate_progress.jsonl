@@ -1,0 +1,7 @@
+{"event": "clean_rebuild_started", "initial_clean_build": true, "parent_checkpoint_sha256": null, "rollback_source_checkpoint_sha256": null, "target_stage_index": 0, "unix_time": 1784286186.4010818}
+{"clean_rebuild_count": 0, "event": "clean_rebuild_completed", "initial_clean_build": true, "registered_cut_count": 0, "target_stage_index": 0, "unix_time": 1784286270.8667378}
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "solver_attempt_count": 1, "stage_index": 0, "unix_time": 1784286274.938508}
+{"attempt_index": 0, "checkpoint_sha256": "9af8c1c5c1df2c341d4f98ed15d08caafea3b6375e2891da3e5336c4349e94ae", "event": "attempt_checkpointed", "next_event": "advance", "next_stage_index": 1, "stage_index": 0, "unix_time": 1784286635.409998}
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "solver_attempt_count": 2, "stage_index": 1, "unix_time": 1784286639.4545815}
+{"attempt_index": 0, "checkpoint_sha256": "c8328947ef88ec5f66a52134ea4e9b65f58cee22d6322c3212c09609a9812a78", "event": "attempt_checkpointed", "next_event": "advance", "next_stage_index": 2, "stage_index": 1, "unix_time": 1784286976.6749992}
+{"attempt_index": 0, "event": "attempt_started", "rollback_events": 0, "solver_attempt_count": 3, "stage_index": 2, "unix_time": 1784286980.7551408}

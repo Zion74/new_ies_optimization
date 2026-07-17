@@ -1,0 +1,125 @@
+MIP has 527053 rows; 597318 cols; 2152084 nonzeros; 79057 integer variables (79056 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 8e+02]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 7e+05]
+Assessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-08
+WARNING: Row  44467 has         infeasibility of     0.01432 from [lower, value, upper] = [              0;     0.014319085;               0]
+WARNING: Row  44483 has         infeasibility of     0.03559 from [lower, value, upper] = [              0;     0.035592128;               0]
+WARNING: Row 254739 has         infeasibility of      0.1577 from [lower, value, upper] = [              0;     -0.15765263;               0]
+WARNING: Row 509501 has         infeasibility of       12.96 from [lower, value, upper] = [           -inf;         12.9619;               0]
+WARNING: Row 510316 has         infeasibility of       36.19 from [lower, value, upper] = [           -inf;       36.189006;               0]
+Solution has               num          max          sum
+Col     infeasibilities      0            0            0
+Integer infeasibilities      0            0            0
+Row     infeasibilities  55425        49.72         8925
+Row     residuals            0            0            0
+Attempting to find feasible solution by solving LP for user-supplied values of discrete variables
+Presolving model
+Problem status detected on presolve: Infeasible
+Model status        : Infeasible
+Objective value     :  0.0000000000e+00
+HiGHS run time      :          0.55
+Presolving model
+447987 rows, 548852 cols, 1756504 nonzeros 1s
+359991 rows, 460700 cols, 1545376 nonzeros 3s
+319109 rows, 438935 cols, 1413561 nonzeros 6s
+Presolve reductions: rows 319109(-207944); columns 438935(-158383); nonzeros 1413561(-738523) 
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -inf            inf                  inf        0      0      0         0     6.8s
+
+Solving report
+  Status            Interrupted by user
+  Primal bound      inf
+  Dual bound        -inf
+  Gap               inf
+  P-D integral      0
+  Solution status   -
+  Timing            6.81
+                    6.50 (Presolve)
+                    0.31 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     0
+WARNING: Received unhandled status=<HighsModelStatus.kInterrupt: 17> from
+solver HiGHS.
+MIP has 527053 rows; 597318 cols; 2152084 nonzeros; 79057 integer variables (79056 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 8e+02]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 6e+05]
+Assessing feasibility of MIP using primal feasibility and integrality tolerance of       1e-08
+WARNING: Row  44467 has         infeasibility of     0.01432 from [lower, value, upper] = [              0;     0.014319085;               0]
+WARNING: Row  44483 has         infeasibility of     0.03559 from [lower, value, upper] = [              0;     0.035592128;               0]
+WARNING: Row 254739 has         infeasibility of      0.1577 from [lower, value, upper] = [              0;     -0.15765263;               0]
+WARNING: Row 509501 has         infeasibility of       12.96 from [lower, value, upper] = [           -inf;         12.9619;               0]
+Solution has               num          max          sum
+Col     infeasibilities      0            0            0
+Integer infeasibilities      0            0            0
+Row     infeasibilities  56649        49.72    1.476e+04
+Row     residuals            0            0            0
+Attempting to find feasible solution by solving LP for user-supplied values of discrete variables
+Presolving model
+Problem status detected on presolve: Infeasible
+Model status        : Infeasible
+Objective value     :  0.0000000000e+00
+HiGHS run time      :          0.53
+Presolving model
+447987 rows, 548852 cols, 1756504 nonzeros 1s
+359991 rows, 460700 cols, 1545376 nonzeros 3s
+319109 rows, 438935 cols, 1413561 nonzeros 6s
+Presolve reductions: rows 319109(-207944); columns 438935(-158383); nonzeros 1413561(-738523) 
+
+Solving MIP model with:
+   319109 rows
+   438935 cols (79055 binary, 0 integer, 0 implied int., 359880 continuous, 0 domain fixed)
+   1413561 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   666723520.3114  inf                  inf        0      0      0         0    10.9s
+         0       0         0   0.00%   1144950941.976  inf                  inf        0      0      2    266894    93.8s
+         0       0         0   0.00%   1144950941.976  inf                  inf    15537      0    253    268646   103.1s
+         1       0         1 100.00%   inf             inf                  inf        0      0    254    268647   104.9s
+
+Solving report
+  Status            Infeasible
+  Primal bound      inf
+  Dual bound        inf
+  Gap               inf
+  P-D integral      0
+  Solution status   -
+  Timing            104.91
+                    7.38 (Presolve)
+                        MIP    time [calls] = 6.46 [1]
+                        subMIP time [calls] = 0.92 [1]
+                    97.51 (Solve)
+                    0.00 (Postsolve)
+                        MIP    time [calls] = 0.00 [1]
+                        subMIP time [calls] = 0.00 [1]
+  Max sub-MIP depth 2
+  Nodes             1
+  Repair LPs        0
+  LP iterations     268647
+                    0 (strong br.)
+                    1752 (separation)
+                    1 (heuristics)

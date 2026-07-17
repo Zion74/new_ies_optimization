@@ -1,0 +1,19 @@
+{
+  "certificate_phase_execution_sha256": {
+    "ipx": "c85de258ea1374555d1e1c92fb731a0499761843897436785845ea2236531977",
+    "simplex_1": "9ae2b24bab8164ab1954a8e41c23abeb8c283d7ce0758e23615cb1096ce82694"
+  },
+  "manifest_sha256": "668fb0ea4c9293f789781298ca54f56da2bdcb55a3a7806d5bf8171d6e24cc55",
+  "native_solver_invoked": true,
+  "optimization_invoked": true,
+  "prepare_execution_sha256": "6cd193c89a6d071f54f61e53d305c5f11c15dc9047688adf63dc194b85fa608b",
+  "runtime_seconds": 1969.9582074005157,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.manifest.execution",
+  "solver_phase_execution_sha256": {
+    "ipx": "39b547a06bea1fdbd7924651e8e57b8be06322a2b6da7d205640fabfa2eed6f1",
+    "simplex_1": "8bf887665d6271d27963e8d90aa53822cc90eb037d8c0b56ddc539feeb0f1167"
+  },
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false,
+  "total_hard_wall_seconds": 2700.0
+}

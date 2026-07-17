@@ -1,0 +1,13 @@
+2026-07-17T10:27:23Z
+enginism-48g93reow9iz-main
+c3b2e0cf67bb76f7dbb8ae4ac4e5b2017c3a616c
+platform Linux-5.15.0-47-generic-x86_64-with-glibc2.35
+python 3.10.18 | packaged by conda-forge | (main, Jun  4 2025, 14:45:41) [GCC 13.3.0]
+cpu_count 60
+pyomo 6.10.1
+highs 1.15.1
+pytest 9.1.1
+ruff 0.15.10
+               total        used        free      shared  buff/cache   available
+Mem:            97Gi       354Mi        95Gi       0.0Ki       1.8Gi        97Gi
+Swap:             0B          0B          0B

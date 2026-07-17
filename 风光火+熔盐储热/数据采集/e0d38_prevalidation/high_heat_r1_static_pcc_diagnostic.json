@@ -1,0 +1,40 @@
+{
+  "all_violating_hours_covered_by_d36": true,
+  "claim_scope": "necessary_static_feasibility_diagnostic_not_tac",
+  "generated_at": "2026-07-15T04:34:27.382873+00:00",
+  "interpretation": "Any listed hour is infeasible for no-storage operation even after all renewables are curtailed, before ramping, minimum-up/down, annual service, or fuel objectives are imposed.",
+  "maximum_scaled_heat_demand_mw": 724.03367951984,
+  "provenance": {
+    "code_sha256": "f7f04cb1b50c91f894a757bbd0939d34b13dbb82e911cf72f518a7e7bef57179",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "representative_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9"
+  },
+  "schema_id": "tes_bess_boundary.e0d38_static_pcc_heat_feasibility.v1",
+  "state": {
+    "heat_scale": 1.5962316499799991,
+    "pcc_export_capacity_mw": 490.0,
+    "state_id": "high_heat_tight_pcc_r1"
+  },
+  "static_limit": {
+    "maximum_static_useful_heat_mw": 766.0767880248933,
+    "net_chp_export_at_maximum_heat_mw": 490.0,
+    "termination_condition": "optimal",
+    "unit_online": [
+      1.0,
+      1.0
+    ],
+    "unit_power_gross_mw": [
+      227.7871440807885,
+      286.00000000000006
+    ],
+    "unit_useful_heat_mw": [
+      328.0767880248932,
+      438.0000000000001
+    ]
+  },
+  "tolerance_mw": 1e-07,
+  "violating_hour_count": 0,
+  "violating_hours_covered_by_d36_count": 0,
+  "violating_week_numbers": [],
+  "violations": []
+}

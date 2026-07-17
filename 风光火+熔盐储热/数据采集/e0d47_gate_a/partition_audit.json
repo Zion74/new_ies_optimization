@@ -1,0 +1,559 @@
+{
+  "dependency_source_sha256": {
+    "e0d44_fork_parallel_certificate.py": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "e0d45_hybrid_r0_strict_lower_bound.py": "cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d"
+  },
+  "input_sha256": {
+    "artifact_list": "ef53178bcfdab3cad719d94994c41f8e35906b1593ee95e55e679182303058e9",
+    "execution": "60af4ee5b16f9aed6ec1a048b87cd57cbaf58b9b90141001ad667bdc71dcbca0",
+    "ipx_solution": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80",
+    "ipx_solver_execution": "39b547a06bea1fdbd7924651e8e57b8be06322a2b6da7d205640fabfa2eed6f1",
+    "lp_archive": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "manifest": "668fb0ea4c9293f789781298ca54f56da2bdcb55a3a7806d5bf8171d6e24cc55",
+    "simplex_1_solution": "6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c",
+    "simplex_1_solver_execution": "8bf887665d6271d27963e8d90aa53822cc90eb037d8c0b56ddc539feeb0f1167"
+  },
+  "lp_archive_sha256": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+  "lp_audit": {
+    "array_lengths": {
+      "col_cost": 539546,
+      "col_lower": 539546,
+      "col_upper": 539546,
+      "integrality": 0,
+      "matrix_index": 1985956,
+      "matrix_start": 539547,
+      "matrix_value": 1985956,
+      "row_lower": 495630,
+      "row_upper": 495630
+    },
+    "noncontinuous_column_count": 0,
+    "num_col": 539546,
+    "num_nz": 1985956,
+    "num_row": 495630,
+    "objective_sense": "minimize",
+    "passed": true,
+    "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1"
+  },
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "partition": {
+    "chunk_count": 56,
+    "chunks": [
+      {
+        "chunk_id": 0,
+        "column_count": 15033,
+        "content_sha256": "999e5507577e0f9ac8b204df048f3cb7eeba326b798f98650caee803a2136f21",
+        "end_column": 15033,
+        "nonzero_count": 30066,
+        "start_column": 0,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 1,
+        "column_count": 8521,
+        "content_sha256": "e5b49190f2ffd7b439c5efe2c0b50448926529ebbfc7ba0e74d15e5b295a1d90",
+        "end_column": 23554,
+        "nonzero_count": 36578,
+        "start_column": 15033,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 2,
+        "column_count": 7231,
+        "content_sha256": "2465023855a99837c8cb19eeedf67d5ecbc99ffa5334b86174234805ec5021b3",
+        "end_column": 30785,
+        "nonzero_count": 37870,
+        "start_column": 23554,
+        "work_weight": 45101
+      },
+      {
+        "chunk_id": 3,
+        "column_count": 7229,
+        "content_sha256": "f4f7d758d538f0485dcf921139cf16432265f3583a1353b77f75211f89e777e2",
+        "end_column": 38014,
+        "nonzero_count": 37866,
+        "start_column": 30785,
+        "work_weight": 45095
+      },
+      {
+        "chunk_id": 4,
+        "column_count": 7231,
+        "content_sha256": "604463c2d10d4f06f434fa9dab20b31bd6c38f429ea76c2fd5a72cf9d1070bf8",
+        "end_column": 45245,
+        "nonzero_count": 37871,
+        "start_column": 38014,
+        "work_weight": 45102
+      },
+      {
+        "chunk_id": 5,
+        "column_count": 7236,
+        "content_sha256": "7c2bec9b480ea7eca8844b2077a3c1fd600e3c6ab4b4ec2fefc4e14f09884a08",
+        "end_column": 52481,
+        "nonzero_count": 37863,
+        "start_column": 45245,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 6,
+        "column_count": 7229,
+        "content_sha256": "bf4adebea2a2d97ba31ce0f8d4ca6e4d2e7172d401a19f29c6d77c45a0d7673a",
+        "end_column": 59710,
+        "nonzero_count": 37869,
+        "start_column": 52481,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 7,
+        "column_count": 7230,
+        "content_sha256": "6901fabdc76a0fd5fe24f71f21649e5f95b4dd9dda82a2d1b2bfe6ce04885b6e",
+        "end_column": 66940,
+        "nonzero_count": 37863,
+        "start_column": 59710,
+        "work_weight": 45093
+      },
+      {
+        "chunk_id": 8,
+        "column_count": 7231,
+        "content_sha256": "b323007a8d5daa3617b1d7432b0cbbdb9466af4ff436da5eba1bc9abc7a960eb",
+        "end_column": 74171,
+        "nonzero_count": 37871,
+        "start_column": 66940,
+        "work_weight": 45102
+      },
+      {
+        "chunk_id": 9,
+        "column_count": 7230,
+        "content_sha256": "0bdbc6d53c82c80f8dd7d04895f9ab0bc9015efd678c9928f716dac0bf5cba68",
+        "end_column": 81401,
+        "nonzero_count": 37865,
+        "start_column": 74171,
+        "work_weight": 45095
+      },
+      {
+        "chunk_id": 10,
+        "column_count": 7230,
+        "content_sha256": "7ab0dfb64869c5d59b051431e8c0876dac1ced59ba8b06647bfb199e38f31219",
+        "end_column": 88631,
+        "nonzero_count": 37873,
+        "start_column": 81401,
+        "work_weight": 45103
+      },
+      {
+        "chunk_id": 11,
+        "column_count": 7183,
+        "content_sha256": "19389ea04772c241c9c5697316f9b08f0157d9531c45107a0507b4c6bada2350",
+        "end_column": 95814,
+        "nonzero_count": 37914,
+        "start_column": 88631,
+        "work_weight": 45097
+      },
+      {
+        "chunk_id": 12,
+        "column_count": 7127,
+        "content_sha256": "13da94ac75be584cfbca0667db3465b9c3f77c23c13473b9a68eae0fa2b09ae7",
+        "end_column": 102941,
+        "nonzero_count": 37969,
+        "start_column": 95814,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 13,
+        "column_count": 7127,
+        "content_sha256": "3f68755abef099529fd11fa35ebd2ee7943c38592433f0da0637b427c4296854",
+        "end_column": 110068,
+        "nonzero_count": 37972,
+        "start_column": 102941,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 14,
+        "column_count": 4397,
+        "content_sha256": "4fa9b9b023a3f43f5fda496f999e892a5cef1a2e7b3e7608ecfdc88b2b1c07d7",
+        "end_column": 114465,
+        "nonzero_count": 40710,
+        "start_column": 110068,
+        "work_weight": 45107
+      },
+      {
+        "chunk_id": 15,
+        "column_count": 8053,
+        "content_sha256": "c1b0f6806e754a471a3292ccb2e73d0ee3585ceccb6495ee64a767432ebefb6d",
+        "end_column": 122518,
+        "nonzero_count": 37037,
+        "start_column": 114465,
+        "work_weight": 45090
+      },
+      {
+        "chunk_id": 16,
+        "column_count": 8052,
+        "content_sha256": "e842d3c1c65cfec75e3e18c938541032c04c9a7d84151538f886e7aba8b4a6e2",
+        "end_column": 130570,
+        "nonzero_count": 37046,
+        "start_column": 122518,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 17,
+        "column_count": 8055,
+        "content_sha256": "3efc08d48d5a2e80a3c276bb293990309c561c53ecd784aa7ca74463ce30dd42",
+        "end_column": 138625,
+        "nonzero_count": 37053,
+        "start_column": 130570,
+        "work_weight": 45108
+      },
+      {
+        "chunk_id": 18,
+        "column_count": 8052,
+        "content_sha256": "591c85deed8d7616eced71a19cda3130bbc1daa4760a86fe4ebda2bee4188fe0",
+        "end_column": 146677,
+        "nonzero_count": 37034,
+        "start_column": 138625,
+        "work_weight": 45086
+      },
+      {
+        "chunk_id": 19,
+        "column_count": 8053,
+        "content_sha256": "bc95d7906b92bdb2d26b5b7a59b2812bcc1e762f7122d99332f7f26fcdc13fad",
+        "end_column": 154730,
+        "nonzero_count": 37049,
+        "start_column": 146677,
+        "work_weight": 45102
+      },
+      {
+        "chunk_id": 20,
+        "column_count": 8416,
+        "content_sha256": "95f5125fcfcd89f03cb2f013400b6028e2f5eef6c8c09ca142833a9acf05c1fc",
+        "end_column": 163146,
+        "nonzero_count": 36679,
+        "start_column": 154730,
+        "work_weight": 45095
+      },
+      {
+        "chunk_id": 21,
+        "column_count": 8661,
+        "content_sha256": "618d19c685c30bcdf5ba4755e22e7b79fa8d64b3b2214322b68245bf2aced437",
+        "end_column": 171807,
+        "nonzero_count": 36438,
+        "start_column": 163146,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 22,
+        "column_count": 8660,
+        "content_sha256": "63f689b5668ace6405ab767cdf0925a7e5eeb504fdb8bc20ec742cd8185b6768",
+        "end_column": 180467,
+        "nonzero_count": 36438,
+        "start_column": 171807,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 23,
+        "column_count": 8657,
+        "content_sha256": "d7fc80b7b165883fb5b76a3ea87de9e16ff9816fed9efbc222bf67f78e280e63",
+        "end_column": 189124,
+        "nonzero_count": 36440,
+        "start_column": 180467,
+        "work_weight": 45097
+      },
+      {
+        "chunk_id": 24,
+        "column_count": 8740,
+        "content_sha256": "4c4e83d265d09b73689aef1c88cb795e3e06a42d34a6842a8d5f2bdac2fb7cf1",
+        "end_column": 197864,
+        "nonzero_count": 36362,
+        "start_column": 189124,
+        "work_weight": 45102
+      },
+      {
+        "chunk_id": 25,
+        "column_count": 11274,
+        "content_sha256": "24684a94ff8dfe1faf5c1d2d06715c8ccb3f417df942f710ff7ffaed9e3310dd",
+        "end_column": 209138,
+        "nonzero_count": 33822,
+        "start_column": 197864,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 26,
+        "column_count": 11593,
+        "content_sha256": "1ee1cbe500fcdcd39208afab707a57de1b5bf7046d14b963d45bbec0a5d2ae5c",
+        "end_column": 220731,
+        "nonzero_count": 33506,
+        "start_column": 209138,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 27,
+        "column_count": 15032,
+        "content_sha256": "55ff99a0d1ba6ae4506da23988bb5a1000aa9b4bf071d89ed7d0b60eadeaac8b",
+        "end_column": 235763,
+        "nonzero_count": 30064,
+        "start_column": 220731,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 28,
+        "column_count": 15033,
+        "content_sha256": "3e6accb8454d1915485698644e09ce9542423cd33baab097bf4f5b78ad7bade1",
+        "end_column": 250796,
+        "nonzero_count": 30066,
+        "start_column": 235763,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 29,
+        "column_count": 15033,
+        "content_sha256": "4aa836429af2a8d067b60e818e40cae5a5fc94c53aae2ae6d6889b6cb0fa96d4",
+        "end_column": 265829,
+        "nonzero_count": 30066,
+        "start_column": 250796,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 30,
+        "column_count": 15033,
+        "content_sha256": "14405a2f9e361c2091145154f8d39e35b178c77da1d30939a402706ec22fb5c0",
+        "end_column": 280862,
+        "nonzero_count": 30066,
+        "start_column": 265829,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 31,
+        "column_count": 13491,
+        "content_sha256": "6578fc39b033a9083505e41f52ed3243ebd8c7a463ae14c8f746b1484416ab4f",
+        "end_column": 294353,
+        "nonzero_count": 31605,
+        "start_column": 280862,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 32,
+        "column_count": 11275,
+        "content_sha256": "dfe95cb6af135d02dcdf526d5a5df4dade5c0879e48339c5cbc025712e18fcbe",
+        "end_column": 305628,
+        "nonzero_count": 33825,
+        "start_column": 294353,
+        "work_weight": 45100
+      },
+      {
+        "chunk_id": 33,
+        "column_count": 8531,
+        "content_sha256": "0c7695a3cb9b0a181dfd2a95a7c602f7eb98bc2bd3abba10556a88bac3f8d8c4",
+        "end_column": 314159,
+        "nonzero_count": 36568,
+        "start_column": 305628,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 34,
+        "column_count": 8054,
+        "content_sha256": "f452f2600e7abfa8edf257434e8f70a3f369b802db56fe530eaced90e95f7a4d",
+        "end_column": 322213,
+        "nonzero_count": 37051,
+        "start_column": 314159,
+        "work_weight": 45105
+      },
+      {
+        "chunk_id": 35,
+        "column_count": 8053,
+        "content_sha256": "d8c78196c764a93994a6f9cf6cb48d74b9988c610132eeb28e528bb8372d462e",
+        "end_column": 330266,
+        "nonzero_count": 37037,
+        "start_column": 322213,
+        "work_weight": 45090
+      },
+      {
+        "chunk_id": 36,
+        "column_count": 8052,
+        "content_sha256": "92ee337861dfc9f691657058d2e5f761131835b5dac9dbe2cfda072fa22bdab4",
+        "end_column": 338318,
+        "nonzero_count": 37046,
+        "start_column": 330266,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 37,
+        "column_count": 8055,
+        "content_sha256": "f53e20ecd13997047a72e72ce039215eead77d54d7ac68cd707dbb65b3f92d18",
+        "end_column": 346373,
+        "nonzero_count": 37053,
+        "start_column": 338318,
+        "work_weight": 45108
+      },
+      {
+        "chunk_id": 38,
+        "column_count": 8297,
+        "content_sha256": "e386d092f98cce4c6c3d2fa9c07bc6b142c2d1eea6f7dd4a23e9ab0febb52772",
+        "end_column": 354670,
+        "nonzero_count": 36792,
+        "start_column": 346373,
+        "work_weight": 45089
+      },
+      {
+        "chunk_id": 39,
+        "column_count": 8658,
+        "content_sha256": "1094660459b51ccf3b5bd09a2b58c3f0af1dfc4a0fc1ebdf988f48cf5db53191",
+        "end_column": 363328,
+        "nonzero_count": 36444,
+        "start_column": 354670,
+        "work_weight": 45102
+      },
+      {
+        "chunk_id": 40,
+        "column_count": 8656,
+        "content_sha256": "18888e01fdcdbb2ab37222f1b54039c962031b10de74d9634f0c14e521e09696",
+        "end_column": 371984,
+        "nonzero_count": 36440,
+        "start_column": 363328,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 41,
+        "column_count": 8656,
+        "content_sha256": "1bbc3d776a373415f50e91bd36017f54884c29ba655d393180c4e3be3d64a701",
+        "end_column": 380640,
+        "nonzero_count": 36444,
+        "start_column": 371984,
+        "work_weight": 45100
+      },
+      {
+        "chunk_id": 42,
+        "column_count": 8654,
+        "content_sha256": "87ddf82ba4f076df548a3f4c26236161a55a3733b9b0dc252a53c2ecaa955ce9",
+        "end_column": 389294,
+        "nonzero_count": 36441,
+        "start_column": 380640,
+        "work_weight": 45095
+      },
+      {
+        "chunk_id": 43,
+        "column_count": 10830,
+        "content_sha256": "584d01ba44cdf324f6d8b66042cbc00bda14c793822d22a8739e166ca6509634",
+        "end_column": 400124,
+        "nonzero_count": 34268,
+        "start_column": 389294,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 44,
+        "column_count": 11275,
+        "content_sha256": "75744a979000781957377b6935e6e2ac4e1fc913b083b97802aaf685148d2ba3",
+        "end_column": 411399,
+        "nonzero_count": 33825,
+        "start_column": 400124,
+        "work_weight": 45100
+      },
+      {
+        "chunk_id": 45,
+        "column_count": 14597,
+        "content_sha256": "a7369652c0f00e231f8c670cb3daf8f0dcbd5b70747f8d1020ea7809367e0c04",
+        "end_column": 425996,
+        "nonzero_count": 30501,
+        "start_column": 411399,
+        "work_weight": 45098
+      },
+      {
+        "chunk_id": 46,
+        "column_count": 15032,
+        "content_sha256": "955500b184676053dad7f6767d33a9a22d9a9e17dc2ca1cd6837a09175a5acc6",
+        "end_column": 441028,
+        "nonzero_count": 30064,
+        "start_column": 425996,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 47,
+        "column_count": 15033,
+        "content_sha256": "79ecce3fd3cb44b9195f78841dbd9e80f8567e51180dc5aa9a0c0c6d63a54fe1",
+        "end_column": 456061,
+        "nonzero_count": 30066,
+        "start_column": 441028,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 48,
+        "column_count": 15033,
+        "content_sha256": "90888836a8bde24a9b88f16a1c49d4626c4ca3180fbe12aad5c46bdea29e1aa4",
+        "end_column": 471094,
+        "nonzero_count": 30066,
+        "start_column": 456061,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 49,
+        "column_count": 14246,
+        "content_sha256": "fdea85059dcf23c442836769907498b5722db462fd67a41d303166f37227e180",
+        "end_column": 485340,
+        "nonzero_count": 30854,
+        "start_column": 471094,
+        "work_weight": 45100
+      },
+      {
+        "chunk_id": 50,
+        "column_count": 11274,
+        "content_sha256": "e39e6f406039c2ad4f3f77bb8e39e48217ee0dfcfd81a5bf38efb0d2a236baff",
+        "end_column": 496614,
+        "nonzero_count": 33822,
+        "start_column": 485340,
+        "work_weight": 45096
+      },
+      {
+        "chunk_id": 51,
+        "column_count": 5508,
+        "content_sha256": "cd75760e8459011e98624c2ea29e4caa585d7d83118e2e2c8b33e9dc9b0e5058",
+        "end_column": 502122,
+        "nonzero_count": 39595,
+        "start_column": 496614,
+        "work_weight": 45103
+      },
+      {
+        "chunk_id": 52,
+        "column_count": 11534,
+        "content_sha256": "965d335f75bf1f101f5ce9b7b27941ec45e080f62fc84d2cd3a208fe8e9e84f3",
+        "end_column": 513656,
+        "nonzero_count": 33560,
+        "start_column": 502122,
+        "work_weight": 45094
+      },
+      {
+        "chunk_id": 53,
+        "column_count": 15033,
+        "content_sha256": "e1daa61458bf76895f2bf6239af7aff3cbf7e52eb8b2cb7d1a7aeb3b891fbeac",
+        "end_column": 528689,
+        "nonzero_count": 30066,
+        "start_column": 513656,
+        "work_weight": 45099
+      },
+      {
+        "chunk_id": 54,
+        "column_count": 10848,
+        "content_sha256": "87c28251ff763ae8b3ff0c8be359a1c5659eaa9a38b5554736369d09545fbb21",
+        "end_column": 539537,
+        "nonzero_count": 35445,
+        "start_column": 528689,
+        "work_weight": 46293
+      },
+      {
+        "chunk_id": 55,
+        "column_count": 9,
+        "content_sha256": "fda4a1bd22af02d56a5df957c42ea586424ce986f695057d2788cc6da29bb28f",
+        "end_column": 539546,
+        "nonzero_count": 43892,
+        "start_column": 539537,
+        "work_weight": 43901
+      }
+    ],
+    "content_sha256": "6c8dd0cff80dabfdbe3cf3d629d5e3518f93c956cf56566942c4d11c1c02b677",
+    "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+    "maximum_chunk_work_weight": 46293,
+    "minimum_chunk_work_weight": 43901,
+    "partition_rule": "cumulative_sum(1+column_nnz),ceil(k*W/K),clamped_nonempty",
+    "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.partition",
+    "total_work_weight": 2525502,
+    "work_weight_ratio": 1.054486230381996
+  },
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.gate_a.partition_audit",
+  "status": "passed"
+}

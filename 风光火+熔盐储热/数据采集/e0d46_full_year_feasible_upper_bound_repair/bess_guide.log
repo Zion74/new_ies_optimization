@@ -1,0 +1,53 @@
+Running HiGHS 1.15.1 (git hash: 04024d7): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+LP has 527053 rows; 597318 cols; 2152084 nonzeros
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 8e+02]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 7e+05]
+Presolving model
+447987 rows, 548852 cols, 1756504 nonzeros 1s
+359991 rows, 460700 cols, 1517997 nonzeros 2s
+Dependent equations search running on 96469 equations with time limit of 9.00s
+Dependent equations search removed 0 rows and 0 nonzeros in 0.01s (limit = 9.00s)
+359991 rows, 456404 cols, 1509405 nonzeros 4s
+Presolve reductions: rows 359991(-167062); columns 456404(-140914); nonzeros 1509405(-642679) 
+Solving the presolved LP
+Using dual simplex solver
+  Iteration        Objective     Infeasibilities num(sum)
+          0     0.0000000000e+00 Ph1: 0(0) 4.5s
+       9623     6.5503031438e+08 Pr: 66169(1.05247e+06); Du: 0(3.05071e-08) 9.9s
+      11923     6.5503031443e+08 Pr: 68814(1.112e+06); Du: 0(2.48567e-08) 15.3s
+      14016     7.0424709988e+08 Pr: 61699(955684) 21.2s
+      56631     9.7043444300e+08 Pr: 54654(629045); Du: 0(2.44618e-08) 26.5s
+      72718     1.0047855983e+09 Pr: 43245(493444); Du: 0(5.17416e-08) 31.9s
+      87729     1.0505437160e+09 Pr: 46743(568822); Du: 0(5.01341e-08) 37.2s
+     100089     1.0578397652e+09 Pr: 53030(646438); Du: 0(6.7305e-08) 45.2s
+     109853     1.0647150310e+09 Pr: 52034(727041); Du: 0(7.44693e-08) 53.1s
+     117446     1.0658632539e+09 Pr: 53478(684236); Du: 0(7.44691e-08) 60.3s
+     134558     1.0848121145e+09 Pr: 51037(492136); Du: 0(5.3912e-08) 65.3s
+     149462     1.0875500991e+09 Pr: 54372(503927); Du: 0(4.81214e-08) 70.5s
+     164162     1.0919716898e+09 Pr: 47422(449600); Du: 0(4.81214e-08) 76.6s
+     183028     1.1054254449e+09 Pr: 34531(238450); Du: 0(3.40327e-08) 83.1s
+     202467     1.1378043630e+09 Pr: 28390(115956); Du: 0(2.25637e-08) 88.2s
+     214022     1.1448080129e+09 Pr: 25663(93609.1); Du: 0(7.81706e-09) 95.1s
+     224008     1.1457953426e+09 Pr: 24056(89319.2); Du: 0(7.81706e-09) 100.6s
+     230009     1.1458482688e+09 Pr: 25407(115174); Du: 0(7.81706e-09) 105.9s
+     233920     1.1459701427e+09 Pr: 27046(139412); Du: 0(7.81706e-09) 112.0s
+     236599     1.1460832241e+09 Pr: 27964(161908); Du: 0(7.81706e-09) 119.1s
+     245186     1.1477121110e+09 Pr: 25837(129223); Du: 0(7.46773e-09) 124.9s
+     261344     1.1545047366e+09 Pr: 17955(45830.2) 130.2s
+     270935     1.1566860106e+09 Pr: 10734(13439.2) 135.2s
+     276514     1.1568630619e+09 Pr: 8670(7952.14) 140.8s
+     286852     1.1570633376e+09 Pr: 2110(511.503) 147.3s
+     289171     1.1570635618e+09 Pr: 0(0); Du: 0(2.00015e-08) 148.1s
+
+Performed postsolve
+Solving the original LP from the solution after postsolve
+
+Model status        : Optimal
+Simplex   iterations: 289171
+Objective value     :  1.1570635618e+09
+P-D objective error :  5.7592335486e-14
+HiGHS run time      :        148.75

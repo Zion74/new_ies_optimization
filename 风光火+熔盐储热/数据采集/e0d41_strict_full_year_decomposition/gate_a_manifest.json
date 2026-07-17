@@ -1,0 +1,125 @@
+{
+  "architecture_audit_sha256": {
+    "bess": "5d0609fad197977ab5c0dff4e355186c8452d34661036bd1c82a446bf02095e0",
+    "hybrid": "59edc53cebd07d820e66a5910b2576589faa4b365a1095ad43e169cb099f9c61",
+    "tes": "0448e6441574960b9f88b248687f54c438023261ca891192f527c38b20c8e6a3"
+  },
+  "audit": {
+    "passed": true
+  },
+  "binary_inventory": {
+    "bess": {
+      "all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+      "all_binary_variable_count": 79057,
+      "classification_complete": true,
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784
+      },
+      "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21",
+      "operational_binary_variable_count": 79056,
+      "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "topology_binary_variable_count": 1,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    },
+    "hybrid": {
+      "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+      "all_binary_variable_count": 96625,
+      "classification_complete": true,
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784,
+        "tes.ht_receiving_mode": 8784,
+        "tes.mt_direct_charge_mode": 8784
+      },
+      "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+      "operational_binary_variable_count": 96624,
+      "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "topology_binary_variable_count": 1,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    },
+    "tes": {
+      "all_binary_names_sha256": "e092a5867b25d0b1effef7be1f48d27e4613fccf532bc0173347e06cba9ce628",
+      "all_binary_variable_count": 87840,
+      "classification_complete": true,
+      "component_counts": {
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784,
+        "tes.ht_receiving_mode": 8784,
+        "tes.mt_direct_charge_mode": 8784
+      },
+      "operational_binary_names_sha256": "e092a5867b25d0b1effef7be1f48d27e4613fccf532bc0173347e06cba9ce628",
+      "operational_binary_variable_count": 87840,
+      "topology_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "topology_binary_variable_count": 0,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    }
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "formal_project_tac_ready": false,
+  "model_size": {
+    "bess": {
+      "active_binary_variable_count": 79057,
+      "active_constraint_count": 527053,
+      "active_variable_count": 597318,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "hybrid": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "tes": {
+      "active_binary_variable_count": 87840,
+      "active_constraint_count": 606163,
+      "active_variable_count": 650052,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    }
+  },
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "relaxation_containment": {
+    "candidate_blocks_provide_formal_bound": false,
+    "full_year_repair_required_for_upper_bound": true,
+    "r0_contains_original_milp": true,
+    "r1_contains_original_milp": true
+  },
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_a_manifest.v1",
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solver_invoked": false,
+  "status": "gate_a_passed"
+}

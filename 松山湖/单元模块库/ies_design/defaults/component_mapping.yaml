@@ -1,0 +1,129 @@
+﻿schema_version: "1.0"
+
+component_mappings:
+  external_source:
+    backend: oemof
+    component: Source
+    build_logic: external_source_with_price
+    notes: 电网、天然气管网、外购氢等可购买能源。
+
+  fixed_load:
+    backend: oemof
+    component: Sink
+    build_logic: fixed_demand_sink
+    notes: 用户侧固定负荷曲线。
+
+  renewable_power:
+    backend: oemof
+    component: Source
+    profile_required: true
+    capacity_mode: invest_or_nominal
+    build_logic: fixed_profile_source
+    notes: 光伏、风电、潮汐等可再生发电。
+
+  renewable_heat:
+    backend: oemof
+    component: Source
+    profile_required: true
+    build_logic: renewable_heat_source
+    notes: 地热、太阳能集热等可再生热源。
+
+  cogeneration:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [fuel]
+      outputs: [electricity, heat]
+    parameter_mapping:
+      eta_e: conversion_factor_electricity
+      eta_h: conversion_factor_heat
+    build_logic: multi_output_transformer
+    notes: 燃气 CHP、燃料电池 CHP、生物质 CHP。
+
+  power_to_heat:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [electricity]
+      outputs: [heat]
+    parameter_mapping:
+      cop: conversion_factor_heat
+    build_logic: single_input_single_output_transformer
+
+  power_to_cooling:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [electricity]
+      outputs: [cooling]
+    parameter_mapping:
+      cop: conversion_factor_cooling
+    build_logic: single_input_single_output_transformer
+
+  heat_to_cooling:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [heat]
+      outputs: [cooling]
+    parameter_mapping:
+      cop: conversion_factor_cooling
+    build_logic: single_input_single_output_transformer
+
+  power_to_fuel:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [electricity]
+      outputs: [hydrogen, oxygen]
+    build_logic: multi_output_transformer
+    notes: 电解槽等电转燃料设备。
+
+  fuel_to_steam:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [fuel]
+      outputs: [steam]
+    build_logic: fuel_to_steam_transformer
+
+  fuel_to_heat:
+    backend: oemof
+    component: Transformer
+    ports:
+      inputs: [fuel]
+      outputs: [heat]
+    build_logic: fuel_to_heat_transformer
+
+  storage:
+    backend: oemof
+    component: GenericStorage
+    ports:
+      inputs: [carrier]
+      outputs: [carrier]
+    parameter_mapping:
+      charge_efficiency: inflow_conversion_factor
+      discharge_efficiency: outflow_conversion_factor
+      loss_rate: loss_rate
+    build_logic: generic_storage
+
+  fuel_storage:
+    backend: oemof_or_pyomo
+    component: GenericStorage
+    ports:
+      inputs: [fuel]
+      outputs: [fuel]
+    build_logic: fuel_storage
+    notes: 储氢、储气可能需要自定义质量单位和泄漏约束。
+
+  multi_output_storage:
+    backend: oemof_or_pyomo
+    component: GenericStorage_plus_Transformer
+    build_logic: storage_with_byproduct_recovery
+    notes: 卡诺电池等带副产热回收的储能设备。
+
+  recoverable_energy_to_heat:
+    backend: oemof
+    component: Source_plus_Transformer
+    build_logic: recoverable_energy_limited_transformer
+    notes: 余热回收、余压利用等。

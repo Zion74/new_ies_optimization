@@ -1,0 +1,15 @@
+{
+  "canonical_manifest_sha256": "dabb565087e9adb2e597d00ea7c12fcb30bf9e522517a7f8e6ed7ee73d9a16a9",
+  "generated_at": "2026-07-15T06:03:13.046283+00:00",
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18 | packaged by conda-forge | (main, Jun  4 2025, 14:45:41) [GCC 13.3.0]",
+  "runtime_seconds": 0.9228399470448494,
+  "schema_id": "tes_bess_boundary.e0d39_service_aware_representative_weeks.v1.execution",
+  "source_paths": {
+    "d36_assignments": "/root/e0-b-20260711-019f4f64/formal_data/e0d36_week_assignments.csv",
+    "d36_periods": "/root/e0-b-20260711-019f4f64/formal_data/e0d36_representative_periods.csv",
+    "d38_failure_diagnostic": "/root/e0-b-20260711-019f4f64/results/e0d38_prevalidation/baseline_weekly_failure_diagnostic.json",
+    "heat": "/root/e0-b-20260711-019f4f64/formal_data/e0b_formal_2024/e0b_heat_hourly_2024.csv",
+    "vre": "/root/e0-b-20260711-019f4f64/formal_data/e0d17_legacy_vre_2024.csv"
+  }
+}

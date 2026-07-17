@@ -1,0 +1,164 @@
+{
+  "architecture": "hybrid",
+  "audit": {
+    "passed": true
+  },
+  "case_key": "hybrid_r1_bess0",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d41_structure_lock": {
+    "binary_inventory_matches": true,
+    "model_size_matches": true
+  },
+  "formal_project_tac_ready": false,
+  "input_sha256": {
+    "d40_gate_a_manifest": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_gate_a_manifest": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "lp_identity_audit": {
+    "audit": {
+      "passed": true
+    },
+    "binary_inventory": {
+      "all_binary_names_sha256": "7cb1636938cfcb26387e6739f009b73113aba1fbb5f91e0ead6f8c421decd3fb",
+      "all_binary_variable_count": 96625,
+      "classification_complete": true,
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].fuel_code_bit": 26352,
+        "chp[0].online": 8784,
+        "chp[1].fuel_code_bit": 26352,
+        "chp[1].online": 8784,
+        "tes.ht_receiving_mode": 8784,
+        "tes.mt_direct_charge_mode": 8784
+      },
+      "operational_binary_names_sha256": "ff6dd584a35b26a22e8628f762357bb65e38334904641f17859b6041acce9d38",
+      "operational_binary_variable_count": 96624,
+      "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "topology_binary_variable_count": 1,
+      "topology_component_allowlist": [
+        "bess.installed",
+        "tes.installed",
+        "tes.port_installed"
+      ]
+    },
+    "linearity_after_branch_fix": {
+      "active_binary_variable_count": 0,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "optimization_invoked": false,
+    "original_lp": {
+      "array_lengths": {
+        "col_cost": 685194,
+        "col_lower": 685194,
+        "col_upper": 685194,
+        "integrality": 0,
+        "matrix_index": 2688084,
+        "matrix_start": 685195,
+        "matrix_value": 2688084,
+        "row_lower": 667662,
+        "row_upper": 667662
+      },
+      "highs_version": "1.15.1",
+      "lp_sha256": "6a7db4bcd6209113d28973b42a9772e3b94fef7bbdececdb4ed6bfed96704498",
+      "noncontinuous_column_count": 0,
+      "num_col": 685194,
+      "num_nz": 2688084,
+      "num_row": 667662,
+      "objective_sense": "minimize",
+      "passed": true,
+      "pyomo_constraint_map_count": 667662,
+      "pyomo_variable_map_count": 685194,
+      "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1"
+    },
+    "presolve_invoked": true,
+    "presolved_lp": {
+      "array_lengths": {
+        "col_cost": 509287,
+        "col_lower": 509287,
+        "col_upper": 509287,
+        "integrality": 0,
+        "matrix_index": 1805925,
+        "matrix_start": 509288,
+        "matrix_value": 1805925,
+        "row_lower": 439016,
+        "row_upper": 439016
+      },
+      "highs_version": "1.15.1",
+      "noncontinuous_column_count": 0,
+      "num_col": 509287,
+      "num_nz": 1805925,
+      "num_row": 439016,
+      "objective_sense": "minimize",
+      "passed": true,
+      "presolve_status": "HighsPresolveStatus.kReduced",
+      "presolved_lp_sha256": "7e56532193c8b3b00c43ef9f872a844537445d9c0300818ef09565974588c43b",
+      "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1",
+      "source_lp_sha256": "6a7db4bcd6209113d28973b42a9772e3b94fef7bbdececdb4ed6bfed96704498"
+    },
+    "relaxation": {
+      "binary_bounds_preserved": true,
+      "classification_complete": true,
+      "expected_remaining_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "mode": "r1_topology_integer",
+      "passed": true,
+      "relaxed_binary_variable_count": 96624,
+      "remaining_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+      "remaining_binary_variable_count": 1,
+      "variable_count_unchanged": true
+    },
+    "software": {
+      "highs": "1.15.1",
+      "pyomo": "6.10.1",
+      "python": "3.10.18"
+    },
+    "timing_seconds": {
+      "presolve": 9.451938779093325,
+      "translate": 104.07096310239285
+    },
+    "topology_branch": {
+      "exact_fix_applied_before_domain_relaxation": true,
+      "fixed_value": 0,
+      "variable_name": "bess.installed"
+    }
+  },
+  "model_size": {
+    "active_binary_variable_count": 96625,
+    "active_constraint_count": 667662,
+    "active_variable_count": 685194,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "optimization_invoked": false,
+  "presolve_invoked": true,
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d42_full_year_structure_gate.py": "6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718",
+      "e0d42_native_highs_certificate.py": "3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "relaxation_mode": "r1_topology_integer",
+  "resource": {
+    "available_memory_gib_after": 95.80789947509766,
+    "process_peak_rss_gib": 2.3985824584960938
+  },
+  "schema_id": "tes_bess_boundary.e0d42_structure_case.v1",
+  "status": "structure_case_passed",
+  "timing_seconds": {
+    "model_build": 15.395933620631695,
+    "presolve": 9.451938779093325,
+    "translate": 104.07096310239285
+  },
+  "topology_value": 0
+}

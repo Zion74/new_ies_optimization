@@ -1,0 +1,205 @@
+{
+  "aggregate_reconstruction_diagnostics": {
+    "acceptance_role": "descriptive_only_not_post_result_tuning_target",
+    "ambient_temperature_c": {
+      "actual_mean": 13.656834016393443,
+      "mean_bias_c": 1.0424043715846985,
+      "reconstructed_mean": 14.699238387978141
+    },
+    "heat_demand_mwh": {
+      "actual": 1395670.599074074,
+      "reconstructed": 1470381.9083333332,
+      "relative_error_percent": 5.353076098960934
+    },
+    "pv_available_mwh": {
+      "actual": 269549.81457586423,
+      "reconstructed": 276577.5370696707,
+      "relative_error_percent": 2.607207318938262
+    },
+    "wind_available_mwh": {
+      "actual": 3126149.25,
+      "reconstructed": 2845574.55,
+      "relative_error_percent": -8.97508972100421
+    }
+  },
+  "audit": {
+    "all_52_weeks_assigned_once": true,
+    "canonical_line_endings": "LF",
+    "each_representative_weight_at_least_one": true,
+    "forced_extreme_roles_present": true,
+    "passed": true,
+    "representative_weights_sum": 52
+  },
+  "boundary_handoff": {
+    "cross_block_chronological_state_transfer_allowed": false,
+    "d37_required": true,
+    "optimization_run_in_d36": false,
+    "representative_weeks_are_independent_cyclic_blocks": true,
+    "tail_has_24h_unscored_warmup_and_48h_scored_segment": true
+  },
+  "calendar_contract": {
+    "complete_week_count": 52,
+    "complete_week_hours": 8736,
+    "model_period_count": 1080,
+    "representative_week_count": 6,
+    "scored_source_row_count": 1056,
+    "tail_scored_hours": 48,
+    "tail_warmup_hours": 24,
+    "weighted_scored_hours": 8784.0
+  },
+  "canonical_files": {
+    "e0d36_representative_periods.csv": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9",
+    "e0d36_week_assignments.csv": "31c7daae3faa5ffa91f3e5b31ad75fc666cf9f3952bac399352ec832607488a3"
+  },
+  "claim_scope": "representative_week_dataset_freeze_not_technology_comparison_not_formal_project_tac",
+  "feature_contract": {
+    "channels_in_concatenation_order": [
+      "heat_demand_mw",
+      "wind_cf",
+      "pv_cf",
+      "ambient_temperature_c"
+    ],
+    "dimension": 672,
+    "distance": "squared_euclidean_on_channelwise_z_scores",
+    "hours_per_channel": 168,
+    "price_feature_included": false,
+    "scales": [
+      {
+        "channel": "heat_demand_mw",
+        "mean": 157.6702365583876,
+        "population_std": 132.89806771523388
+      },
+      {
+        "channel": "wind_cf",
+        "mean": 0.33839732142857143,
+        "population_std": 0.2812878749217429
+      },
+      {
+        "channel": "pv_cf",
+        "mean": 0.1534205247051477,
+        "population_std": 0.22511720752491957
+      },
+      {
+        "channel": "ambient_temperature_c",
+        "mean": 13.730828754578756,
+        "population_std": 9.211835401794762
+      }
+    ],
+    "scaling_population": "first_8736_hours"
+  },
+  "formal_project_tac_ready": false,
+  "representatives": [
+    {
+      "end": "2024-01-28T23:00:00",
+      "mean_wind_cf": 0.1833154761904762,
+      "peak_heat_mw": 453.589351851852,
+      "peak_surplus_pressure_mw": 496.0826547862987,
+      "positive_surplus_pressure_mwh": 5340.217722823019,
+      "roles": [
+        "peak_heat_low_wind_extreme"
+      ],
+      "start": "2024-01-22T00:00:00",
+      "week_index": 4,
+      "weight_weeks": 1
+    },
+    {
+      "end": "2024-02-04T23:00:00",
+      "mean_wind_cf": 0.501,
+      "peak_heat_mw": 416.961574074074,
+      "peak_surplus_pressure_mw": 665.1164621528276,
+      "positive_surplus_pressure_mwh": 30859.951098182573,
+      "roles": [
+        "high_vre_low_absorption_extreme"
+      ],
+      "start": "2024-01-29T00:00:00",
+      "week_index": 5,
+      "weight_weeks": 3
+    },
+    {
+      "end": "2024-02-25T23:00:00",
+      "mean_wind_cf": 0.2054642857142857,
+      "peak_heat_mw": 410.349074074074,
+      "peak_surplus_pressure_mw": 139.66906378675594,
+      "positive_surplus_pressure_mwh": 1073.004193231131,
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-02-19T00:00:00",
+      "week_index": 8,
+      "weight_weeks": 10
+    },
+    {
+      "end": "2024-07-21T23:00:00",
+      "mean_wind_cf": 0.267375,
+      "peak_heat_mw": 85.347685185185,
+      "peak_surplus_pressure_mw": 161.22271261827234,
+      "positive_surplus_pressure_mwh": 615.5045978285041,
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-07-15T00:00:00",
+      "week_index": 29,
+      "weight_weeks": 13
+    },
+    {
+      "end": "2024-09-29T23:00:00",
+      "mean_wind_cf": 0.33269642857142856,
+      "peak_heat_mw": 106.730092592593,
+      "peak_surplus_pressure_mw": 275.44068319101484,
+      "positive_surplus_pressure_mwh": 5950.609115260857,
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-09-23T00:00:00",
+      "week_index": 39,
+      "weight_weeks": 21
+    },
+    {
+      "end": "2024-12-01T23:00:00",
+      "mean_wind_cf": 0.4506607142857143,
+      "peak_heat_mw": 394.829166666667,
+      "peak_surplus_pressure_mw": 656.593105779252,
+      "positive_surplus_pressure_mwh": 22252.325238099747,
+      "roles": [
+        "pam_medoid"
+      ],
+      "start": "2024-11-25T00:00:00",
+      "week_index": 48,
+      "weight_weeks": 4
+    }
+  ],
+  "schema_id": "tes_bess_boundary.e0d36_representative_weeks.v1",
+  "selection_contract": {
+    "algorithm": "deterministic_pam_build_swap_plus_forced_extremes",
+    "assignment_tie_break": "lowest_source_week_index",
+    "base_medoid_count": 4,
+    "base_medoid_week_indices": [
+      8,
+      29,
+      39,
+      48
+    ],
+    "distance_tolerance": 1e-12,
+    "diversity_fill_week_indices": [],
+    "final_feature_distance_objective": 16922.812879189427,
+    "high_vre_low_absorption_extreme_week_index": 5,
+    "peak_heat_low_wind_extreme_week_index": 4,
+    "surplus_pressure_proxy": {
+      "chp_basis": "two_locked_yangling_units_with_auxiliary_rates",
+      "formula": "max(0,min_heat_constrained_net_chp+wind_available+pv_available-pcc_capacity)",
+      "pcc_capacity_mw": 700.0,
+      "pv_capacity_mw": 200.0,
+      "selection_proxy_not_realized_curtailment": true,
+      "wind_capacity_mw": 1050.0
+    }
+  },
+  "source_data": {
+    "first_timestamp": "2024-01-01T00:00:00",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "hour_count": 8784,
+    "last_timestamp": "2024-12-31T23:00:00",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+    "renewable_baseline_formal": false,
+    "scope": "formal_2024_heat_plus_legacy_2019_vre_shapes"
+  }
+}

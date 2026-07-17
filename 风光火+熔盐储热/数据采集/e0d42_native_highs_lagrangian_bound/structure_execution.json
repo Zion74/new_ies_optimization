@@ -1,0 +1,10 @@
+{
+  "audit": {
+    "passed": true
+  },
+  "manifest_sha256": "2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1",
+  "optimization_invoked": false,
+  "runtime_seconds": 0.0009269313886761665,
+  "schema_id": "tes_bess_boundary.e0d42_structure_execution.v1",
+  "status": "gate_a_structure_passed"
+}

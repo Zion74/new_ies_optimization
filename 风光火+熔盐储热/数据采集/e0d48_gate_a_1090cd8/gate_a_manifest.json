@@ -1,0 +1,98 @@
+{
+  "audit": {
+    "passed": true
+  },
+  "build_audit_sha256": {
+    "bess": "00d196715de821ef35094428fa63a38ee4e047f7533bca34c7b9773645573029",
+    "hybrid": "8efb32f43a9b4d738ec72802bff90294c0044d16d17970854b5d87e03e433e79",
+    "tes": "d2dc97325f77046744ca44adec78efbebbe26d06418793309965261db1479982"
+  },
+  "build_model_size": {
+    "bess": {
+      "active_binary_variable_count": 79057,
+      "active_constraint_count": 527053,
+      "active_variable_count": 597318,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "hybrid": {
+      "active_binary_variable_count": 96625,
+      "active_constraint_count": 667662,
+      "active_variable_count": 685194,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "tes": {
+      "active_binary_variable_count": 87840,
+      "active_constraint_count": 606163,
+      "active_variable_count": 650052,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    }
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_input_sha256": {
+    "bess_guide": "b69f4035deb5aa5f83a504e1e40347a23fa352b4104087bc017da6940c828b1f",
+    "d40_gate_a": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_gate_a": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "d46_formal_manifest": "8693722ad362b2f604f08b3ebd2bfa2c45f085e42c2ece6cf334c097db80afa9",
+    "d46_postmortem_bundle": "c74a6943570690ace8573a0dee2f65aa763d0371854e01625337a46244a35b58",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "hybrid_guide": "9def0298195dbbebe477d9ff3b91f3b475082325eeea01dfc80c49930d532655",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "tes_guide": "d38004e6c3607cc2095c93def187de6d5300f5b9d9e97928872aaf6ce176e8e9",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "formal_optimization_invoked": false,
+  "formal_project_tac_ready": false,
+  "formal_run_permitted": true,
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d46_monitored_executor.py": "121600f3bb8088802d117c7808b3af1bf65b69e3797bcf0dd7ea7b64e175a0a8",
+      "e0d48_hamming_primal_recovery.py": "c82923d3e40ff93feefff62c98dd8aa75e96b76ecdd25b60863919d4b8e69c57",
+      "e0d48_monitored_executor.py": "bf2927a346856bc325e0cd01954e85384b4b21e497cc49f45a0ce805b215b0f2",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    },
+    "git_commit": "1090cd83b54aac8a99dce0041c1371b1e0b4320d",
+    "test_sha256": {
+      "test_e0d48_hamming_primal_recovery.py": "54e0555d80fbde2c26cacb95a28ea4736125b398c5b65ac522e2da278065e6ad",
+      "test_e0d48_monitored_executor.py": "f8190ddace25561e5ff210b64bb9ecddacb8df8407c1ac074efe6425575eed1e"
+    }
+  },
+  "quality_evidence": {
+    "pycompile": {
+      "file_sha256": "12be7d6e4dfd2c77dbbdff2d252600e93935646bd2494c9acf4990f133474705",
+      "sentinel_present": true
+    },
+    "ruff": {
+      "file_sha256": "73ec03442b09f4bf6e7f351d25a6fa3f7e615b71d2fbe6e75135481469fc4fa1",
+      "sentinel_present": true
+    }
+  },
+  "schema_id": "tes_bess_boundary.e0d48_gate_a_manifest.v1",
+  "status": "gate_a_passed",
+  "technical_ranking_permitted": false,
+  "test_evidence": {
+    "d48_targeted": {
+      "errors": 0,
+      "failures": 0,
+      "file_sha256": "fda58834b23d63938a008f47c06e8759d5e89d6f5256ae82220596dcdced2065",
+      "passed": true,
+      "skipped": 0,
+      "tests": 15
+    },
+    "full_package": {
+      "errors": 0,
+      "failures": 0,
+      "file_sha256": "34250f6948769ad36d1ea113a69f0c5dea87ed11b1382a778364f587868af750",
+      "passed": true,
+      "skipped": 0,
+      "tests": 659
+    }
+  }
+}

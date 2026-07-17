@@ -1,0 +1,5 @@
+chore: add archival scripts for pre-device-rebuild results
+
+Add PS1 and Python versions of the archival script that moves
+exp2a/2b/3/4 results to _pre_device_rebuild_2026-04-20/ before
+re-running with corrected SL data and device parameters.

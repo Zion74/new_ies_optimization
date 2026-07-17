@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d51_gate0_evidence.py", line 497, in <module>
+    main()
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d51_gate0_evidence.py", line 475, in main
+    run_gate0_24h_demonstration(
+  File "/root/e0-b-20260711-019f4f64/tes_bess_boundary/src/tes_bess_boundary/e0d51_gate0_evidence.py", line 178, in run_gate0_24h_demonstration
+    raise FileExistsError(f"D51 Gate 0 demonstration already exists: {output_dir}")
+FileExistsError: D51 Gate 0 demonstration already exists: /root/e0-b-20260711-019f4f64/results/e0d51_checkpointed_bounded_backtracking_gate0/demonstration

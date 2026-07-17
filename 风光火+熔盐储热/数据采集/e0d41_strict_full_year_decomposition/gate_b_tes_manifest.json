@@ -1,0 +1,21 @@
+{
+  "architecture": "tes",
+  "candidate_only": false,
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "gate_b_passed": false,
+  "global_original_milp_infeasibility_proven": false,
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_b_architecture.v1",
+  "selected_relaxation": null,
+  "stages": {
+    "r0": {
+      "status": "missing"
+    },
+    "r1": {
+      "status": "missing"
+    }
+  },
+  "status": "gate_b_failed",
+  "strict_lower_bound_cny": null,
+  "technical_ranking_permitted": false
+}

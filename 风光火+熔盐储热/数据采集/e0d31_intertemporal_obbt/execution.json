@@ -1,0 +1,31 @@
+{
+  "canonical": false,
+  "equivalence_probe_24h": {
+    "runtime_seconds": 29.28334446065128,
+    "threads": 28,
+    "time_limit_seconds": 300.0
+  },
+  "global_probe_336h_launched": false,
+  "screens": {
+    "winter_day_20240101": {
+      "candidate_solver_retry_count": 0,
+      "candidate_solver_runtime_seconds": 4.070573202334344,
+      "candidate_workers": 3,
+      "comparator_solver_retry_count": 0,
+      "comparator_solver_runtime_seconds": 1.9396458566188812,
+      "comparator_workers": 1,
+      "wall_runtime_seconds": 2.328104520216584,
+      "workers": 4
+    },
+    "winter_fortnight_20240101": {
+      "candidate_solver_retry_count": 1,
+      "candidate_solver_runtime_seconds": 1658.1042894637212,
+      "candidate_workers": 24,
+      "comparator_solver_retry_count": 0,
+      "comparator_solver_runtime_seconds": 249.68039081152529,
+      "comparator_workers": 4,
+      "wall_runtime_seconds": 73.80236951541156,
+      "workers": 28
+    }
+  }
+}

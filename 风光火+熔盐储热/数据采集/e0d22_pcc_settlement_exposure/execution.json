@@ -1,0 +1,20 @@
+{
+  "noncanonical": true,
+  "records": [
+    {
+      "candidate_runtime_seconds": 3.523907687049,
+      "candidate_service_feasibility_runtime_seconds": null,
+      "comparator_runtime_seconds": 0.636512971949,
+      "natural_runtime_seconds": 0.505866953172,
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "candidate_runtime_seconds": 265.967828396708,
+      "candidate_service_feasibility_runtime_seconds": 15.91377341887,
+      "comparator_runtime_seconds": 34.663916283753,
+      "natural_runtime_seconds": 24.559657264967,
+      "window_id": "winter_fortnight_20240101"
+    }
+  ],
+  "schema": "tes_bess_boundary.e0d22_pcc_settlement_exposure.v1.execution"
+}

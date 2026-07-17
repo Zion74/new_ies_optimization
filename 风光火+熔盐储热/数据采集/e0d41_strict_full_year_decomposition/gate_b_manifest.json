@@ -1,0 +1,40 @@
+{
+  "architecture_order": [
+    "bess",
+    "tes",
+    "hybrid"
+  ],
+  "architectures": {
+    "bess": {
+      "gate_b_passed": true,
+      "manifest_sha256": "ed4fcf7d08ab236b678f787c777903d7905197b1262d820371c93f9aef76cfc7",
+      "state": "passed",
+      "strict_lower_bound_cny": 1144950604.8368804
+    },
+    "hybrid": {
+      "gate_b_passed": false,
+      "manifest_sha256": null,
+      "state": "not_started",
+      "strict_lower_bound_cny": null
+    },
+    "tes": {
+      "gate_b_passed": false,
+      "manifest_sha256": "c69bc1d46de78f3734441bea70302e9e823f5132db7570fb5e91b6d2ee4cba43",
+      "state": "failed",
+      "strict_lower_bound_cny": null
+    }
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "conclusion": "missing_strict_lower_bound_for_at_least_one_architecture",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "formal_project_tac_ready": false,
+  "gate_b_passed": false,
+  "gate_c_permitted": false,
+  "gate_d_permitted": false,
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d41_gate_b_bundle.v1",
+  "serial_stop_rule_followed": true,
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false,
+  "weakest_or_first_nonpass_architecture": "tes"
+}

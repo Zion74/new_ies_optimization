@@ -1,0 +1,240 @@
+{
+  "architecture": "hybrid",
+  "audit": {
+    "passed": true
+  },
+  "binary_inventory_matches": true,
+  "case_key": "hybrid_r0",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_project_tac_ready": false,
+  "input_sha256": {
+    "d40_gate_a_manifest": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_gate_a_manifest": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "linearity": {
+    "active_binary_variable_count": 0,
+    "active_constraint_count": 667662,
+    "active_variable_count": 685194,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "lp_archive": {
+    "archive_file": "presolved_lp.bin.gz",
+    "archive_sha256": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "audit": {
+      "array_lengths": {
+        "col_cost": 539546,
+        "col_lower": 539546,
+        "col_upper": 539546,
+        "integrality": 0,
+        "matrix_index": 1985956,
+        "matrix_start": 539547,
+        "matrix_value": 1985956,
+        "row_lower": 495630,
+        "row_upper": 495630
+      },
+      "noncontinuous_column_count": 0,
+      "num_col": 539546,
+      "num_nz": 1985956,
+      "num_row": 495630,
+      "objective_sense": "minimize",
+      "passed": true,
+      "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1"
+    },
+    "highs_version": "1.15.1",
+    "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+    "num_col": 539546,
+    "num_nz": 1985956,
+    "num_row": 495630,
+    "objective_offset": 0.0,
+    "objective_sense": "minimize",
+    "schema_id": "tes_bess_boundary.e0d42_lp_archive.v1"
+  },
+  "lp_archive_roundtrip": {
+    "archive_file": "presolved_lp.bin.gz",
+    "archive_sha256": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "array_layout": [
+      {
+        "byte_count": 4316368,
+        "count": 539546,
+        "label": "col_cost",
+        "typecode": "d"
+      },
+      {
+        "byte_count": 4316368,
+        "count": 539546,
+        "label": "col_lower",
+        "typecode": "d"
+      },
+      {
+        "byte_count": 4316368,
+        "count": 539546,
+        "label": "col_upper",
+        "typecode": "d"
+      },
+      {
+        "byte_count": 3965040,
+        "count": 495630,
+        "label": "row_lower",
+        "typecode": "d"
+      },
+      {
+        "byte_count": 3965040,
+        "count": 495630,
+        "label": "row_upper",
+        "typecode": "d"
+      },
+      {
+        "byte_count": 0,
+        "count": 0,
+        "label": "integrality",
+        "typecode": "b"
+      },
+      {
+        "byte_count": 4316376,
+        "count": 539547,
+        "label": "matrix_start",
+        "typecode": "q"
+      },
+      {
+        "byte_count": 15887648,
+        "count": 1985956,
+        "label": "matrix_index",
+        "typecode": "q"
+      },
+      {
+        "byte_count": 15887648,
+        "count": 1985956,
+        "label": "matrix_value",
+        "typecode": "d"
+      }
+    ],
+    "audit": {
+      "array_lengths": {
+        "col_cost": 539546,
+        "col_lower": 539546,
+        "col_upper": 539546,
+        "integrality": 0,
+        "matrix_index": 1985956,
+        "matrix_start": 539547,
+        "matrix_value": 1985956,
+        "row_lower": 495630,
+        "row_upper": 495630
+      },
+      "noncontinuous_column_count": 0,
+      "num_col": 539546,
+      "num_nz": 1985956,
+      "num_row": 495630,
+      "objective_sense": "minimize",
+      "passed": true,
+      "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1"
+    },
+    "highs_version": "1.15.1",
+    "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+    "num_col": 539546,
+    "num_nz": 1985956,
+    "num_row": 495630,
+    "objective_offset": 0.0,
+    "objective_sense": "minimize",
+    "roundtrip_fingerprint_passed": true,
+    "schema_id": "tes_bess_boundary.e0d42_lp_archive.v1"
+  },
+  "model_size": {
+    "active_binary_variable_count": 96625,
+    "active_constraint_count": 667662,
+    "active_variable_count": 685194,
+    "nonlinear_component_count": 0,
+    "nonlinear_components": []
+  },
+  "optimization_invoked": false,
+  "original_lp": {
+    "array_lengths": {
+      "col_cost": 685194,
+      "col_lower": 685194,
+      "col_upper": 685194,
+      "integrality": 0,
+      "matrix_index": 2688087,
+      "matrix_start": 685195,
+      "matrix_value": 2688087,
+      "row_lower": 667662,
+      "row_upper": 667662
+    },
+    "highs_version": "1.15.1",
+    "lp_sha256": "3534a0c91e1f47bbd32b7125216c70bdfc06df91984b15136b5d8b5cd68e35c8",
+    "noncontinuous_column_count": 0,
+    "num_col": 685194,
+    "num_nz": 2688087,
+    "num_row": 667662,
+    "objective_sense": "minimize",
+    "passed": true,
+    "pyomo_constraint_map_count": 667662,
+    "pyomo_variable_map_count": 685194,
+    "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1"
+  },
+  "presolved_lp": {
+    "array_lengths": {
+      "col_cost": 539546,
+      "col_lower": 539546,
+      "col_upper": 539546,
+      "integrality": 0,
+      "matrix_index": 1985956,
+      "matrix_start": 539547,
+      "matrix_value": 1985956,
+      "row_lower": 495630,
+      "row_upper": 495630
+    },
+    "highs_version": "1.15.1",
+    "noncontinuous_column_count": 0,
+    "num_col": 539546,
+    "num_nz": 1985956,
+    "num_row": 495630,
+    "objective_sense": "minimize",
+    "passed": true,
+    "presolve_status": "HighsPresolveStatus.kReduced",
+    "presolved_lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+    "schema_id": "tes_bess_boundary.e0d42_highs_lp_fingerprint.v1",
+    "source_lp_sha256": "3534a0c91e1f47bbd32b7125216c70bdfc06df91984b15136b5d8b5cd68e35c8"
+  },
+  "provenance": {
+    "code_sha256": {
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_gate_b_lower_bound.py": "2dc3c654367b3a5d0d32e7937d1fe6b21e69c1599faa406be145ee5e60481217",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d42_full_year_structure_gate.py": "6ed295cb5a7c577a6bc04182f6c199671e80ba178184afd478d3dcb9f6544718",
+      "e0d42_gate_b_executor.py": "c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51",
+      "e0d42_gate_b_formal.py": "a2ba832e51a227b3ad9e3c3484ffe958ca1df39442555dfd397a4330666ca53e",
+      "e0d42_native_highs_certificate.py": "3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "relaxation": {
+    "binary_bounds_preserved": true,
+    "classification_complete": true,
+    "expected_remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": "r0_all_continuous",
+    "passed": true,
+    "relaxed_binary_variable_count": 96625,
+    "remaining_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remaining_binary_variable_count": 0,
+    "variable_count_unchanged": true
+  },
+  "relaxation_mode": "r0_all_continuous",
+  "schema_id": "tes_bess_boundary.e0d42_formal_lp_prepare.v1",
+  "single_explicit_presolve": true,
+  "single_original_model_build": true,
+  "status": "formal_lp_prepared",
+  "structure_case_sha256": "0923ae65d123e29691ff794828dfa9f2228ea81fbc93608bde0ccd914c23315b",
+  "structure_manifest_sha256": "2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1",
+  "technical_ranking_permitted": false,
+  "timing_seconds": {
+    "model_build": 15.076828270219266,
+    "presolve": 9.846515014767647,
+    "total": 155.37669472303241,
+    "translate": 103.20933392737061
+  },
+  "topology_value": null
+}

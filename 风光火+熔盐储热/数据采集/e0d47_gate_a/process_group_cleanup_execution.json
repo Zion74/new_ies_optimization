@@ -1,0 +1,48 @@
+{
+  "artifact_sha256": {
+    "certificate": null,
+    "chunks_manifest": null,
+    "chunks_tree": null,
+    "completion": null,
+    "heartbeat": "0a1d88db3089426615090159844c814357fb7aca372c0bbe2604a35603e48227",
+    "log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "partition": null,
+    "progress": null,
+    "result": null
+  },
+  "available_memory_sample_count": 5,
+  "hard_wall_enforced_by_parent": true,
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "minimum_available_memory_gib": 97.27903747558594,
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "peak_aggregate_rss_gib": 0.06575393676757812,
+  "peak_phase_process_tree_rss_gib": 0.014682769775390625,
+  "phase": "ipx",
+  "phase_runtime_seconds": 0.07341653667390347,
+  "process_group_cleanup_audit": {
+    "active_members_after_cleanup": [],
+    "active_members_before_cleanup": [],
+    "active_residual_detected": false,
+    "members_after_cleanup": {
+      "160706": "Z"
+    },
+    "members_before_cleanup": {
+      "160706": "Z"
+    },
+    "process_group_id": 160705,
+    "signal_sequence": [],
+    "zombie_members_after_cleanup": [
+      160706
+    ]
+  },
+  "residual_process_group_detected": false,
+  "resource_gate_passed": false,
+  "return_code": -15,
+  "rss_sample_count": 5,
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.phase.execution",
+  "status": "interrupted_or_failed",
+  "stop_reason": "phase_hard_wall_reached:ipx",
+  "technical_ranking_permitted": false,
+  "termination_signal": "sigterm"
+}

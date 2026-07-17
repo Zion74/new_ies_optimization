@@ -1,0 +1,812 @@
+{
+  "actual_minimum_curtailment_mwh": 565916.1220067485,
+  "actual_renewable_available_mwh": 3395699.0645758654,
+  "actual_service_deficit_above_epsilon_mwh": 226346.2155491619,
+  "actual_solve": {
+    "objective_lower_bound_mwh": 565791.8253304004,
+    "objective_upper_bound_mwh": 565916.1220067492,
+    "relative_mip_gap": 0.0002196379843500837,
+    "relaxed_fuel_segment_binary_count": 52704,
+    "runtime_seconds": 94.1744038220495,
+    "termination_condition": "optimal",
+    "weighted_minimum_curtailment_mwh": 565916.1220067485
+  },
+  "aggregate_curtailment_underrepresentation_mwh": 227211.4531313089,
+  "claim_scope": "post_failure_week_diagnostic_not_formal_project_tac",
+  "cluster_assignment_diagnostics": [
+    {
+      "actual_minimum_curtailment_mwh": 220324.17832411107,
+      "assigned_actual_week_count": 21,
+      "curtailment_underrepresentation_mwh": 95361.38690363306,
+      "representative_projected_curtailment_mwh": 124962.79142047801,
+      "representative_week_index": 39
+    },
+    {
+      "actual_minimum_curtailment_mwh": 92775.95329495727,
+      "assigned_actual_week_count": 10,
+      "curtailment_underrepresentation_mwh": 82044.80487296842,
+      "representative_projected_curtailment_mwh": 10731.148421988855,
+      "representative_week_index": 8
+    },
+    {
+      "actual_minimum_curtailment_mwh": 55007.82670865916,
+      "assigned_actual_week_count": 13,
+      "curtailment_underrepresentation_mwh": 47006.266936888605,
+      "representative_projected_curtailment_mwh": 8001.559771770555,
+      "representative_week_index": 29
+    },
+    {
+      "actual_minimum_curtailment_mwh": 92841.11073224791,
+      "assigned_actual_week_count": 4,
+      "curtailment_underrepresentation_mwh": 3831.809779848918,
+      "representative_projected_curtailment_mwh": 89009.30095239899,
+      "representative_week_index": 48
+    },
+    {
+      "actual_minimum_curtailment_mwh": 5340.21772282302,
+      "assigned_actual_week_count": 1,
+      "curtailment_underrepresentation_mwh": -0.28134911856614053,
+      "representative_projected_curtailment_mwh": 5340.499071941586,
+      "representative_week_index": 4
+    },
+    {
+      "actual_minimum_curtailment_mwh": 91547.31928163709,
+      "assigned_actual_week_count": 3,
+      "curtailment_underrepresentation_mwh": -1032.5340129106626,
+      "representative_projected_curtailment_mwh": 92579.85329454775,
+      "representative_week_index": 5
+    }
+  ],
+  "epsilon_10_percent_ceiling_mwh": 339569.90645758656,
+  "formal_project_tac_ready": false,
+  "generated_at": "2026-07-15T05:07:10.161356+00:00",
+  "largest_underrepresented_actual_week": {
+    "actual_curtailment_rate": 0.27195913779819303,
+    "actual_minimum_curtailment_mwh": 21620.435122916922,
+    "assigned_representative_week_index": 8,
+    "curtailment_underrepresentation_mwh": 20547.320280718035,
+    "original_week_index": 49,
+    "representative_week_curtailment_rate": 0.02572765096762827,
+    "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+    "week_end": "2024-12-08T23:00:00",
+    "week_start": "2024-12-02T00:00:00"
+  },
+  "method": {
+    "actual_horizon": "single_8784h_cyclic_block",
+    "assignments": "frozen_d36_week_assignments",
+    "fuel_segment_code": "continuous_exact_zero_fuel_objective_projection",
+    "objective": "zero_fuel_minimum_renewable_curtailment",
+    "representative_horizon": "frozen_d36_seven_cyclic_blocks"
+  },
+  "provenance": {
+    "diagnostic_code_sha256": "51e865d2696be8dd2068c15b2ff5d9057bb3d4e4a08dbede2c59a19dcf917a46",
+    "heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "representative_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9",
+    "vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+    "week_assignments_sha256": "31c7daae3faa5ffa91f3e5b31ad75fc666cf9f3952bac399352ec832607488a3"
+  },
+  "representative_service_margin_below_epsilon_mwh": 865.237582147005,
+  "representative_solve": {
+    "objective_lower_bound_mwh": 338668.8963331366,
+    "objective_upper_bound_mwh": 338704.6688754395,
+    "relative_mip_gap": 0.00010561573426689236,
+    "relaxed_fuel_segment_binary_count": 6480,
+    "runtime_seconds": 7.61986390594393,
+    "termination_condition": "optimal",
+    "weighted_minimum_curtailment_mwh": 338704.66887543956
+  },
+  "representative_weighted_minimum_curtailment_mwh": 338704.66887543956,
+  "schema_id": "tes_bess_boundary.e0d38_weekly_failure_diagnostic.v1",
+  "solver": {
+    "mip_rel_gap": 0.001,
+    "name": "appsi_highs",
+    "random_seed": 0,
+    "threads": 4,
+    "time_limit_seconds": 7200.0
+  },
+  "state": {
+    "heat_scale": 1.0,
+    "pcc_export_capacity_mw": 700.0,
+    "state_id": "baseline"
+  },
+  "status": "complete",
+  "top_10_underrepresented_actual_weeks": [
+    {
+      "actual_curtailment_rate": 0.27195913779819303,
+      "actual_minimum_curtailment_mwh": 21620.435122916922,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 20547.320280718035,
+      "original_week_index": 49,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-12-08T23:00:00",
+      "week_start": "2024-12-02T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.25160930872025483,
+      "actual_minimum_curtailment_mwh": 26014.31070537851,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 20063.70159011765,
+      "original_week_index": 16,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-04-21T23:00:00",
+      "week_start": "2024-04-15T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.2514339607393262,
+      "actual_minimum_curtailment_mwh": 14305.988531134486,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 13232.8736889356,
+      "original_week_index": 7,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-02-18T23:00:00",
+      "week_start": "2024-02-12T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.18771865706915697,
+      "actual_minimum_curtailment_mwh": 18597.01367907498,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 12646.40456381412,
+      "original_week_index": 20,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-19T23:00:00",
+      "week_start": "2024-05-13T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.2284309001022046,
+      "actual_minimum_curtailment_mwh": 13513.832033508726,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 12440.717191309841,
+      "original_week_index": 1,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-01-07T23:00:00",
+      "week_start": "2024-01-01T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.1513019956549869,
+      "actual_minimum_curtailment_mwh": 13046.309631041153,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 12430.80503321265,
+      "original_week_index": 40,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-10-06T23:00:00",
+      "week_start": "2024-09-30T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.20064660249960672,
+      "actual_minimum_curtailment_mwh": 13301.022640808384,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 12227.907798609498,
+      "original_week_index": 51,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-12-22T23:00:00",
+      "week_start": "2024-12-16T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.12002828298044091,
+      "actual_minimum_curtailment_mwh": 11123.618395384978,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 10508.113797556474,
+      "original_week_index": 36,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-09-08T23:00:00",
+      "week_start": "2024-09-02T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.23751394971573242,
+      "actual_minimum_curtailment_mwh": 16447.304888581733,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 10496.695773320875,
+      "original_week_index": 21,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-26T23:00:00",
+      "week_start": "2024-05-20T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.35240207079145996,
+      "actual_minimum_curtailment_mwh": 30641.634483387188,
+      "assigned_representative_week_index": 48,
+      "curtailment_underrepresentation_mwh": 8389.30924528744,
+      "original_week_index": 50,
+      "representative_week_curtailment_rate": 0.26674633720089186,
+      "representative_week_minimum_curtailment_mwh": 22252.325238099747,
+      "week_end": "2024-12-15T23:00:00",
+      "week_start": "2024-12-09T00:00:00"
+    }
+  ],
+  "weekly_diagnostics": [
+    {
+      "actual_curtailment_rate": 0.2284309001022046,
+      "actual_minimum_curtailment_mwh": 13513.832033508726,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 12440.717191309841,
+      "original_week_index": 1,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-01-07T23:00:00",
+      "week_start": "2024-01-01T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.18199501004578997,
+      "actual_minimum_curtailment_mwh": 8748.610172452129,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 7675.495330253243,
+      "original_week_index": 2,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-01-14T23:00:00",
+      "week_start": "2024-01-08T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.11420619675216746,
+      "actual_minimum_curtailment_mwh": 6400.095689834545,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 5326.980847635659,
+      "original_week_index": 3,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-01-21T23:00:00",
+      "week_start": "2024-01-15T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.1402476293592533,
+      "actual_minimum_curtailment_mwh": 5340.21772282302,
+      "assigned_representative_week_index": 4,
+      "curtailment_underrepresentation_mwh": -0.28134911856614053,
+      "original_week_index": 4,
+      "representative_week_curtailment_rate": 0.14025501829898374,
+      "representative_week_minimum_curtailment_mwh": 5340.499071941586,
+      "week_end": "2024-01-28T23:00:00",
+      "week_start": "2024-01-22T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.3269915023408821,
+      "actual_minimum_curtailment_mwh": 30860.216494627937,
+      "assigned_representative_week_index": 5,
+      "curtailment_underrepresentation_mwh": 0.2653964453529625,
+      "original_week_index": 5,
+      "representative_week_curtailment_rate": 0.32698869022897104,
+      "representative_week_minimum_curtailment_mwh": 30859.951098182584,
+      "week_end": "2024-02-04T23:00:00",
+      "week_start": "2024-01-29T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.11772279421305741,
+      "actual_minimum_curtailment_mwh": 6456.688577157343,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 5383.573734958458,
+      "original_week_index": 6,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-02-11T23:00:00",
+      "week_start": "2024-02-05T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.2514339607393262,
+      "actual_minimum_curtailment_mwh": 14305.988531134486,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 13232.8736889356,
+      "original_week_index": 7,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-02-18T23:00:00",
+      "week_start": "2024-02-12T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.025724998187226435,
+      "actual_minimum_curtailment_mwh": 1073.0041932311315,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": -0.11064896775405941,
+      "original_week_index": 8,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-02-25T23:00:00",
+      "week_start": "2024-02-19T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.06187409509219689,
+      "actual_minimum_curtailment_mwh": 2181.0419611722436,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 1107.9271189733581,
+      "original_week_index": 9,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-03-03T23:00:00",
+      "week_start": "2024-02-26T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.24508503364113968,
+      "actual_minimum_curtailment_mwh": 18987.031075457096,
+      "assigned_representative_week_index": 48,
+      "curtailment_underrepresentation_mwh": -3265.294162642651,
+      "original_week_index": 10,
+      "representative_week_curtailment_rate": 0.26674633720089186,
+      "representative_week_minimum_curtailment_mwh": 22252.325238099747,
+      "week_end": "2024-03-10T23:00:00",
+      "week_start": "2024-03-04T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.11698491817572979,
+      "actual_minimum_curtailment_mwh": 5175.234372741358,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 4102.119530542473,
+      "original_week_index": 11,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-03-17T23:00:00",
+      "week_start": "2024-03-11T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.20177069693818092,
+      "actual_minimum_curtailment_mwh": 12159.373485857252,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 6208.764370596393,
+      "original_week_index": 12,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-03-24T23:00:00",
+      "week_start": "2024-03-18T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.17751943796399725,
+      "actual_minimum_curtailment_mwh": 12137.383953751714,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 6186.7748384908555,
+      "original_week_index": 13,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-03-31T23:00:00",
+      "week_start": "2024-03-25T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.13058481613894485,
+      "actual_minimum_curtailment_mwh": 10187.092448629204,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 4236.4833333683455,
+      "original_week_index": 14,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-04-07T23:00:00",
+      "week_start": "2024-04-01T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.15415422821571306,
+      "actual_minimum_curtailment_mwh": 11113.951522611433,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 5163.342407350574,
+      "original_week_index": 15,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-04-14T23:00:00",
+      "week_start": "2024-04-08T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.25160930872025483,
+      "actual_minimum_curtailment_mwh": 26014.31070537851,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 20063.70159011765,
+      "original_week_index": 16,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-04-21T23:00:00",
+      "week_start": "2024-04-15T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.17364232594835022,
+      "actual_minimum_curtailment_mwh": 12703.46337354014,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 6752.854258279282,
+      "original_week_index": 17,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-04-28T23:00:00",
+      "week_start": "2024-04-22T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.14782285803971967,
+      "actual_minimum_curtailment_mwh": 13043.420366893219,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 7092.81125163236,
+      "original_week_index": 18,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-05T23:00:00",
+      "week_start": "2024-04-29T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.17035039097574872,
+      "actual_minimum_curtailment_mwh": 13350.279614083995,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 7399.670498823136,
+      "original_week_index": 19,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-12T23:00:00",
+      "week_start": "2024-05-06T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.18771865706915697,
+      "actual_minimum_curtailment_mwh": 18597.01367907498,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 12646.40456381412,
+      "original_week_index": 20,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-19T23:00:00",
+      "week_start": "2024-05-13T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.23751394971573242,
+      "actual_minimum_curtailment_mwh": 16447.304888581733,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 10496.695773320875,
+      "original_week_index": 21,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-05-26T23:00:00",
+      "week_start": "2024-05-20T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.07430814915656318,
+      "actual_minimum_curtailment_mwh": 5146.8631596479345,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -803.7459556129243,
+      "original_week_index": 22,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-06-02T23:00:00",
+      "week_start": "2024-05-27T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.08952480655537358,
+      "actual_minimum_curtailment_mwh": 4917.308512379202,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -1033.3006028816571,
+      "original_week_index": 23,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-06-09T23:00:00",
+      "week_start": "2024-06-03T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.04839166312595142,
+      "actual_minimum_curtailment_mwh": 2434.470965574228,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 1818.9663677457238,
+      "original_week_index": 24,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-06-16T23:00:00",
+      "week_start": "2024-06-10T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.06476183971649542,
+      "actual_minimum_curtailment_mwh": 4824.116898960149,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 4208.612301131645,
+      "original_week_index": 25,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-06-23T23:00:00",
+      "week_start": "2024-06-17T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.055662745372476605,
+      "actual_minimum_curtailment_mwh": 3107.7597059820628,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 2492.2551081535585,
+      "original_week_index": 26,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-06-30T23:00:00",
+      "week_start": "2024-06-24T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.1445720826985967,
+      "actual_minimum_curtailment_mwh": 11992.72481272147,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 6042.115697460611,
+      "original_week_index": 27,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-07-07T23:00:00",
+      "week_start": "2024-07-01T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.004300242018007656,
+      "actual_minimum_curtailment_mwh": 138.9127327640598,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": -476.5918650644444,
+      "original_week_index": 28,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-07-14T23:00:00",
+      "week_start": "2024-07-08T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.012213038031905448,
+      "actual_minimum_curtailment_mwh": 615.5045978285041,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": -1.1368683772161603e-13,
+      "original_week_index": 29,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-07-21T23:00:00",
+      "week_start": "2024-07-15T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.1918468284284362,
+      "actual_minimum_curtailment_mwh": 13412.784434453817,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 7462.175319192958,
+      "original_week_index": 30,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-07-28T23:00:00",
+      "week_start": "2024-07-22T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.024582076109481155,
+      "actual_minimum_curtailment_mwh": 1142.7748338829215,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 527.2702360544173,
+      "original_week_index": 31,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-08-04T23:00:00",
+      "week_start": "2024-07-29T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.03407735118496494,
+      "actual_minimum_curtailment_mwh": 2113.3907438737083,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 1497.886146045204,
+      "original_week_index": 32,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-08-11T23:00:00",
+      "week_start": "2024-08-05T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.043381290368254416,
+      "actual_minimum_curtailment_mwh": 2250.4976291180424,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -3700.1114861428164,
+      "original_week_index": 33,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-08-18T23:00:00",
+      "week_start": "2024-08-12T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.10412829220413038,
+      "actual_minimum_curtailment_mwh": 4730.420429678853,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 4114.915831850349,
+      "original_week_index": 34,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-08-25T23:00:00",
+      "week_start": "2024-08-19T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": -7.881509280658602e-19,
+      "actual_minimum_curtailment_mwh": -2.531308496145357e-14,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -5950.609115260859,
+      "original_week_index": 35,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-09-01T23:00:00",
+      "week_start": "2024-08-26T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.12002828298044091,
+      "actual_minimum_curtailment_mwh": 11123.618395384978,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 10508.113797556474,
+      "original_week_index": 36,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-09-08T23:00:00",
+      "week_start": "2024-09-02T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.12562582285953358,
+      "actual_minimum_curtailment_mwh": 7663.520459087926,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 7048.015861259421,
+      "original_week_index": 37,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-09-15T23:00:00",
+      "week_start": "2024-09-09T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.05309611832140558,
+      "actual_minimum_curtailment_mwh": 2440.5030024309785,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 1824.9984046024742,
+      "original_week_index": 38,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-09-22T23:00:00",
+      "week_start": "2024-09-16T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.09112070498256707,
+      "actual_minimum_curtailment_mwh": 5950.609115260858,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -9.094947017729282e-13,
+      "original_week_index": 39,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-09-29T23:00:00",
+      "week_start": "2024-09-23T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.1513019956549869,
+      "actual_minimum_curtailment_mwh": 13046.309631041153,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 12430.80503321265,
+      "original_week_index": 40,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-10-06T23:00:00",
+      "week_start": "2024-09-30T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.04713314413118582,
+      "actual_minimum_curtailment_mwh": 1626.5243121696317,
+      "assigned_representative_week_index": 29,
+      "curtailment_underrepresentation_mwh": 1011.0197143411275,
+      "original_week_index": 41,
+      "representative_week_curtailment_rate": 0.01221303803190545,
+      "representative_week_minimum_curtailment_mwh": 615.5045978285042,
+      "week_end": "2024-10-13T23:00:00",
+      "week_start": "2024-10-07T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.051029086503038196,
+      "actual_minimum_curtailment_mwh": 2215.5062027377626,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": -3735.102912523096,
+      "original_week_index": 42,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-10-20T23:00:00",
+      "week_start": "2024-10-14T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.12671639482803845,
+      "actual_minimum_curtailment_mwh": 8892.275930470669,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 2941.66681520981,
+      "original_week_index": 43,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-10-27T23:00:00",
+      "week_start": "2024-10-21T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.12877341697964212,
+      "actual_minimum_curtailment_mwh": 7474.381115097623,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 1523.7719998367638,
+      "original_week_index": 44,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-11-03T23:00:00",
+      "week_start": "2024-10-28T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.18866753658774224,
+      "actual_minimum_curtailment_mwh": 12317.633373821538,
+      "assigned_representative_week_index": 39,
+      "curtailment_underrepresentation_mwh": 6367.024258560679,
+      "original_week_index": 45,
+      "representative_week_curtailment_rate": 0.09112070498256708,
+      "representative_week_minimum_curtailment_mwh": 5950.609115260859,
+      "week_end": "2024-11-10T23:00:00",
+      "week_start": "2024-11-04T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.3010662311254683,
+      "actual_minimum_curtailment_mwh": 30077.648712490114,
+      "assigned_representative_week_index": 5,
+      "curtailment_underrepresentation_mwh": -782.3023856924701,
+      "original_week_index": 46,
+      "representative_week_curtailment_rate": 0.32698869022897104,
+      "representative_week_minimum_curtailment_mwh": 30859.951098182584,
+      "week_end": "2024-11-17T23:00:00",
+      "week_start": "2024-11-11T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.3039680196789027,
+      "actual_minimum_curtailment_mwh": 20908.53928712553,
+      "assigned_representative_week_index": 48,
+      "curtailment_underrepresentation_mwh": -1343.7859509742157,
+      "original_week_index": 47,
+      "representative_week_curtailment_rate": 0.26674633720089186,
+      "representative_week_minimum_curtailment_mwh": 22252.325238099747,
+      "week_end": "2024-11-24T23:00:00",
+      "week_start": "2024-11-18T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.26736465231289935,
+      "actual_minimum_curtailment_mwh": 22303.9058862781,
+      "assigned_representative_week_index": 48,
+      "curtailment_underrepresentation_mwh": 51.58064817835111,
+      "original_week_index": 48,
+      "representative_week_curtailment_rate": 0.26674633720089186,
+      "representative_week_minimum_curtailment_mwh": 22252.325238099747,
+      "week_end": "2024-12-01T23:00:00",
+      "week_start": "2024-11-25T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.27195913779819303,
+      "actual_minimum_curtailment_mwh": 21620.435122916922,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 20547.320280718035,
+      "original_week_index": 49,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-12-08T23:00:00",
+      "week_start": "2024-12-02T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.35240207079145996,
+      "actual_minimum_curtailment_mwh": 30641.634483387188,
+      "assigned_representative_week_index": 48,
+      "curtailment_underrepresentation_mwh": 8389.30924528744,
+      "original_week_index": 50,
+      "representative_week_curtailment_rate": 0.26674633720089186,
+      "representative_week_minimum_curtailment_mwh": 22252.325238099747,
+      "week_end": "2024-12-15T23:00:00",
+      "week_start": "2024-12-09T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.20064660249960672,
+      "actual_minimum_curtailment_mwh": 13301.022640808384,
+      "assigned_representative_week_index": 8,
+      "curtailment_underrepresentation_mwh": 12227.907798609498,
+      "original_week_index": 51,
+      "representative_week_curtailment_rate": 0.02572765096762827,
+      "representative_week_minimum_curtailment_mwh": 1073.1148421988855,
+      "week_end": "2024-12-22T23:00:00",
+      "week_start": "2024-12-16T00:00:00"
+    },
+    {
+      "actual_curtailment_rate": 0.34017200790650676,
+      "actual_minimum_curtailment_mwh": 30609.454074519028,
+      "assigned_representative_week_index": 5,
+      "curtailment_underrepresentation_mwh": -250.49702366355632,
+      "original_week_index": 52,
+      "representative_week_curtailment_rate": 0.32698869022897104,
+      "representative_week_minimum_curtailment_mwh": 30859.951098182584,
+      "week_end": "2024-12-29T23:00:00",
+      "week_start": "2024-12-23T00:00:00"
+    }
+  ],
+  "year_end_tail": {
+    "actual": {
+      "curtailment_mwh": 8079.5159423137,
+      "curtailment_rate": 0.3424717448984772,
+      "renewable_available_mwh": 23591.773811030173
+    },
+    "curtailment_underrepresentation_mwh": 9.094947017729282e-13,
+    "representative": {
+      "curtailment_mwh": 8079.515942313699,
+      "curtailment_rate": 0.34247174489847715,
+      "renewable_available_mwh": 23591.773811030173
+    }
+  }
+}

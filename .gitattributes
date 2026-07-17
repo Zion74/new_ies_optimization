@@ -3,8 +3,14 @@
 *.sh       text eol=lf
 *.bash     text eol=lf
 
-# Python / text assets: normalize to LF in repo, let Git auto-detect on checkout.
-*.py       text
+# Hash-audited source and scientific artifacts must remain byte-stable across
+# Windows and Linux checkouts.
+*.py       text eol=lf
+*.csv      text eol=lf
+*.json     text eol=lf
+风光火+熔盐储热/数据采集/e0d38_prevalidation/formal_baseline_chain.log -text
+
+# Other text assets: normalize in the repository and use the platform checkout.
 *.md       text
 *.yml      text
 *.yaml     text
@@ -26,3 +32,24 @@
 *.zip      binary
 *.pkl      binary
 *.npz      binary
+
+# Preserve D44 hash-audited execution evidence byte-for-byte on checkout.
+**/e0d44_gate_a/*.log -text
+**/e0d44_fork_parallel_lagrangian_certificate/*.log -text
+**/e0d44_fork_parallel_lagrangian_certificate/*.ndjson -text
+**/e0d44_fork_parallel_lagrangian_certificate/README.md -text
+
+# Preserve D46 formal evidence exactly as declared by formal_manifest.json.
+**/e0d46_full_year_feasible_upper_bound_repair/*.log -text whitespace=-blank-at-eol
+**/e0d46_full_year_feasible_upper_bound_repair/*.jsonl -text
+**/e0d46_full_year_feasible_upper_bound_repair/*.csv.gz -text
+
+# Preserve D52 Gate A evidence and checksum manifests byte-for-byte.
+**/e0d52_gate_a_work_c3b2e0c/** -text whitespace=-blank-at-eol
+**/e0d52_gate_a_c3b2e0c/** -text whitespace=-blank-at-eol
+
+# Preserve the closed D52 formal bundle exactly as declared by formal_manifest.json.
+**/e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery/** -text whitespace=-blank-at-eol
+
+# Preserve the D52 stage-0/1 live snapshots retained for chronological provenance.
+**/e0d52_full_year_checkpointed_bounded_backtracking_primal_recovery_live/** -text whitespace=-blank-at-eol

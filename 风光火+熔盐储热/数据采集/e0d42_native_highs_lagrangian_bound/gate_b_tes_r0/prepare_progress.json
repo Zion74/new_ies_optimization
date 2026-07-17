@@ -1,0 +1,8 @@
+{
+  "case_key": "tes_r0",
+  "elapsed_seconds": 144.2160117905587,
+  "pid": 151456,
+  "result_sha256": "387f32ac3cff2ead6c5296073d5d51ee409e955093ba52717f5451cc0ceebe43",
+  "schema_id": "tes_bess_boundary.e0d42_formal_lp_prepare.v1.execution",
+  "state": "formal_lp_archive_complete"
+}

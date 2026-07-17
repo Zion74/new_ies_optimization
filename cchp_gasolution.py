@@ -40,12 +40,19 @@ plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei", "Arial Unicode M
 plt.rcParams["axes.unicode_minus"] = False
 
 
+def _currency_label(case_config=None):
+    if not case_config:
+        return "€"
+    return case_config.get("currency") or "€"
+
+
 class MyNSGA2(ea.moea_NSGA2_templet):
     """自定义 NSGA-II 算法"""
 
-    def __init__(self, problem, population, method_name=""):
+    def __init__(self, problem, population, method_name="", currency="€"):
         super().__init__(problem, population)
         self.method_name = method_name
+        self.currency = currency
 
     def logging(self, pop):
         super().logging(pop)
@@ -54,7 +61,7 @@ class MyNSGA2(ea.moea_NSGA2_templet):
         best_eco_val = pop.ObjV[best_eco_idx, 0]
 
         print(f"\n  [{self.method_name}] 第 {self.currentGen} 代")
-        print(f"  ★ 最低成本: {best_eco_val:,.2f} €")
+        print(f"  ★ 最低成本: {best_eco_val:,.2f} {self.currency}")
 
         if pop.ObjV.shape[1] > 1:
             best_match_idx = np.argmin(pop.ObjV[:, 1])
@@ -66,16 +73,17 @@ class MyNSGA2(ea.moea_NSGA2_templet):
 class MySGA(ea.soea_DE_rand_1_bin_templet):
     """单目标差分进化算法（用于方案A）"""
 
-    def __init__(self, problem, population, method_name=""):
+    def __init__(self, problem, population, method_name="", currency="€"):
         super().__init__(problem, population)
         self.method_name = method_name
+        self.currency = currency
 
     def logging(self, pop):
         super().logging(pop)
         best_idx = np.argmin(pop.ObjV[:, 0])
         best_val = pop.ObjV[best_idx, 0]
         print(
-            f"\n  [{self.method_name}] 第 {self.currentGen} 代 | 最优成本: {best_val:,.2f} €"
+            f"\n  [{self.method_name}] 第 {self.currentGen} 代 | 最优成本: {best_val:,.2f} {self.currency}"
         )
 
 
@@ -138,10 +146,10 @@ def run_single_experiment(
 
     if method == "economic_only":
         # 单目标优化
-        algorithm = MySGA(problem, population, method_name=method_names[method])
+        algorithm = MySGA(problem, population, method_name=method_names[method], currency=_currency_label(case_config))
     else:
         # 多目标优化
-        algorithm = MyNSGA2(problem, population, method_name=method_names[method])
+        algorithm = MyNSGA2(problem, population, method_name=method_names[method], currency=_currency_label(case_config))
 
     algorithm.MAXGEN = maxgen
     algorithm.mutOper.Pm = 0.1
@@ -173,6 +181,7 @@ def run_comparative_study(
     methods_to_run=None,
     case_config=None,
     num_workers=None,
+    result_root=None,
     result_dir_name=None,
 ):
     """
@@ -208,7 +217,7 @@ def run_comparative_study(
         case_config = GERMAN_CASE
 
     case_name = case_config.get("name", "german")
-    currency = case_config.get("currency", "€")
+    currency = _currency_label(case_config)
     lambda_e = case_config.get("lambda_e", LAMBDA_E)
     lambda_h = case_config.get("lambda_h", LAMBDA_H)
     lambda_c = case_config.get("lambda_c", LAMBDA_C)
@@ -246,8 +255,8 @@ def run_comparative_study(
         if m in method_info:
             print(f"  - {method_info[m][0]}")
 
-    # 创建结果目录（统一放在 Results/ 子文件夹下）
-    results_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Results")
+    # 创建结果目录。论文实验默认仍放在 Results；设计接口可传入 DesignResults 或自定义目录。
+    results_root = result_root or os.path.join(os.path.dirname(os.path.abspath(__file__)), "Results")
     os.makedirs(results_root, exist_ok=True)
     if result_dir_name is not None:
         result_dir = os.path.join(results_root, result_dir_name)
@@ -366,6 +375,7 @@ def generate_comparison_report(results, result_dir, inherit_population, case_con
     print("\n" + "=" * 70)
     print("生成对比分析报告")
     print("=" * 70)
+    currency = _currency_label(case_config)
 
     report_lines = []
     report_lines.append("# 电-热-冷综合能源系统 源荷匹配优化配置 对比实验报告\n\n")
@@ -394,7 +404,7 @@ def generate_comparison_report(results, result_dir, inherit_population, case_con
 
     report_lines.append("## 实验结果汇总\n\n")
     report_lines.append(
-        "| 方案 | 最低成本(€) | 最佳匹配度 | 耗时(s) | Pareto解数量 |\n"
+        f"| 方案 | 最低成本({currency}) | 最佳匹配度 | 耗时(s) | Pareto解数量 |\n"
     )
     report_lines.append("|------|-----------|----------|---------|-------------|\n")
 
@@ -493,13 +503,13 @@ def generate_comparison_report(results, result_dir, inherit_population, case_con
     print(f"\n对比报告已保存: {report_path}")
 
     # 绘制Pareto前沿对比图
-    plot_pareto_comparison(results, result_dir)
+    plot_pareto_comparison(results, result_dir, currency=currency)
 
     # 打印到控制台
     print("\n" + "".join(report_lines))
 
 
-def plot_pareto_comparison(results, result_dir):
+def plot_pareto_comparison(results, result_dir, currency="€"):
     """绘制Pareto前沿对比图"""
     fig, ax = plt.subplots(figsize=(12, 8))
 
@@ -536,7 +546,7 @@ def plot_pareto_comparison(results, result_dir):
         BestIndi = result["best_indi"]
 
         if BestIndi.sizes > 0 and BestIndi.ObjV.shape[1] > 1:
-            costs = BestIndi.ObjV[:, 0] / 10000  # 转为万欧元
+            costs = BestIndi.ObjV[:, 0] / 10000
             matching = BestIndi.ObjV[:, 1]
 
             ax.scatter(
@@ -560,12 +570,12 @@ def plot_pareto_comparison(results, result_dir):
                 color=colors["economic_only"],
                 linestyle="--",
                 linewidth=2,
-                label=f"{labels['economic_only']} (成本={min_cost:.2f}万€)",
+                label=f"{labels['economic_only']} (成本={min_cost:.2f}万{currency})",
             )
             has_data = True
 
     if has_data:
-        ax.set_xlabel("年化总成本 (万€)", fontsize=12)
+        ax.set_xlabel(f"年化总成本 (万{currency})", fontsize=12)
         ax.set_ylabel("源荷匹配度指标", fontsize=12)
         ax.set_title("CCHP系统规划 Pareto前沿对比", fontsize=14)
         ax.legend(loc="best", fontsize=10)

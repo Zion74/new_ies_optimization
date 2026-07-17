@@ -1,0 +1,66 @@
+schema_version: "1.0"
+
+scenario:
+  id: third_placeholder_hydrogen_station
+  name: 第三场景占位-交通加氢站
+  scenario_type: highway_transport_green_energy
+  description: 用于第一版接口扩展性验证的氢需求场景，占位数据后续替换为真实课题组案例。
+  location: placeholder
+  currency: CNY
+
+system:
+  template: electric_hydrogen_station
+
+energy_carriers:
+  demands: [electricity, hydrogen]
+  inputs: [grid_electricity]
+  resources: [solar_resource, wind_resource, temperature]
+
+data:
+  input_type: placeholder
+  load_file: data/songshan_lake_data.csv
+  typical_day_file: data/songshan_lake_typical.xlsx
+
+simulation:
+  mode: typical_days
+  annualization: weighted
+  time_step_hours: 1
+  dispatch_horizon_hours: 24
+
+typical_day:
+  source: user_selected
+  file: data/songshan_lake_typical.xlsx
+
+prices:
+  electricity:
+    type: flat
+    unit: CNY_per_kWh
+    value: 0.6746
+  gas:
+    type: flat
+    unit: CNY_per_kWh
+    value: 0
+  capacity_charge:
+    unit: CNY_per_kW_year
+    value: 0
+
+devices:
+  pv:
+    library_id: pv_standard
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 1000
+  electrolyzer:
+    library_id: electrolyzer
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 500
+  hydrogen_storage:
+    library_id: hydrogen_storage
+    enabled: true
+    optimize_capacity: true
+    power_ub_kw: 200
+
+optimization:
+  mode: test
+  methods: [euclidean]

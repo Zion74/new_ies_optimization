@@ -1,0 +1,84 @@
+Running HiGHS 1.15.1 (git hash: 04024d7): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+LP has 439018 rows; 509289 cols; 1806011 nonzeros
+Coefficient ranges:
+  Matrix  [6e-09, 2e+04]
+  Cost    [1e+02, 1e+05]
+  Bound   [9e-01, 6e+04]
+  RHS     [2e-01, 3e+05]
+Not presolved: solving the LP
+IPX model has 439018 rows, 509289 columns and 1806011 nonzeros
+Input
+    Number of variables:                                509289
+    Number of free variables:                           0
+    Number of constraints:                              439018
+    Number of equality constraints:                     114158
+    Number of matrix entries:                           1806011
+    Matrix range:                                       [6e-09, 2e+04]
+    RHS range:                                          [2e-01, 3e+05]
+    Objective range:                                    [1e+02, 1e+05]
+    Bounds range:                                       [9e-01, 6e+04]
+Preprocessing
+    Dualized model:                                     no
+    Number of dense columns:                            6
+    Range of scaling factors:                           [1.56e-02, 8.19e+03]
+    Scaled cost norm:                                   14801.7
+    Scaled bounds norm:                                 3.76339e+06
+IPX version 1.0
+Interior point solve
+ Iter       primal obj         dual obj       pinf       dinf       gap      time
+   0    1.51247982e+08  -4.61904031e+12   9.12e-02   1.76e-01  2.00e+00       0.4
+   1   -1.98097559e+11  -4.86271159e+12   7.99e-02   1.47e-01  1.84e+00       1.1
+   2   -2.87971305e+11  -4.90074690e+12   7.61e-02   1.45e-01  1.78e+00       1.9
+   3   -3.26246739e+11  -4.99687543e+12   7.46e-02   1.42e-01  1.75e+00       2.5
+   4   -4.11741528e+11  -7.25872652e+12   7.06e-02   3.56e-02  1.79e+00       3.1
+   5   -6.22940504e+11  -8.11367471e+12   6.30e-02   2.54e-02  1.71e+00       3.4
+   6   -6.06033539e+11  -7.71528533e+12   1.10e-02   2.54e-08  1.71e+00       3.8
+   7   -3.34395255e+11  -4.52815005e+12   5.99e-03   4.66e-12  1.72e+00       4.1
+   8   -2.82422510e+11  -4.97054112e+12   4.95e-03   5.54e-12  1.78e+00       4.3
+   9   -6.31544436e+10  -2.19970492e+12   1.11e-03   1.09e-11  1.89e+00       4.5
+  10   -1.18474369e+10  -9.19940995e+11   2.09e-04   6.04e-12  1.95e+00       4.9
+  11   -8.31893523e+08  -4.34155919e+11   2.18e-05   2.83e-12  1.99e+00       6.1
+  12    2.74747538e+08  -9.20640614e+10   4.63e-06   7.83e-13  2.01e+00       9.6
+ Constructing starting basis...
+ Iter       primal obj         dual obj       pinf       dinf       gap      time
+    Start  factorization  31: nonzeros in basis =    707919                  78.2
+  13    5.19733657e+08  -2.27720347e+10   7.98e-07   2.03e-13  2.09e+00     100.9
+  14    5.62383493e+08  -1.65965568e+10   3.87e-07   1.75e-13  2.14e+00     120.8
+  15    6.05017301e+08  -9.49228128e+09   1.19e-07   7.13e-14  2.27e+00     129.4
+  16    6.09389297e+08  -2.71533728e+09   2.63e-08   1.06e-14  3.16e+00     148.9
+    Start  factorization  65: nonzeros in basis =    902390                 210.8
+  17    5.61785816e+08  -1.29541111e+09   1.42e-08   5.04e-15  5.06e+00     216.5
+  18    5.48004441e+08  -1.19689802e+09   1.26e-08   7.37e-15  5.38e+00     254.0
+  19    4.73592703e+08  -7.56826036e+08   6.51e-09   3.50e-15  8.69e+00     274.9
+  20    4.63189802e+08  -7.81750400e+08   6.26e-09   1.72e-15  7.82e+00     297.5
+  21    4.52498713e+08  -7.83033594e+08   6.13e-09   7.37e-15  7.48e+00     313.1
+  22    3.83181822e+08  -4.12831804e+08   3.20e-09   1.97e-15  5.37e+01     323.5
+  23    3.44063834e+08  -2.89881864e+08   1.59e-09   4.92e-15  2.34e+01     339.4
+  24    3.27763200e+08  -1.52999092e+08   1.02e-09   3.19e-15  5.50e+00     355.1
+  25    3.10540555e+08  -2.88897935e+07   4.40e-10   3.07e-15  2.41e+00     371.9
+  26    2.99121300e+08   7.44813898e+07   1.92e-10   1.29e-15  1.20e+00     388.8
+  27    2.91943162e+08   1.54955833e+08   1.10e-10   3.81e-15  6.13e-01     421.9
+  28    2.88336229e+08   1.97267947e+08   6.66e-11   5.04e-15  3.75e-01     462.2
+  29    2.83502010e+08   2.15609566e+08   4.08e-11   1.23e-15  2.72e-01     499.2
+    Start  factorization 127: nonzeros in basis =   1153232                 560.6
+  30    2.76370350e+08   2.37388035e+08   1.64e-11   1.84e-15  1.52e-01     570.4
+    Start  factorization 138: nonzeros in basis =   1173093                 631.8
+    Start  factorization 147: nonzeros in basis =   1190939                 693.8
+    Start  factorization 156: nonzeros in basis =   1208652                 759.7
+    Start  factorization 164: nonzeros in basis =   1225186                 822.2
+  31    2.74861503e+08   2.42515619e+08   1.24e-11   2.46e-15  1.25e-01     832.3
+    Start  factorization 173: nonzeros in basis =   1248090                 895.9
+Summary
+    Runtime:                                            900.03s
+    Status interior point solve:                        unknown
+    Status crossover:                                   not run
+WARNING: Ipx: Stopped
+WARNING: Ipx: IPM       user interrupt
+WARNING: Ipx: Crossover not run
+
+Model status        : Interrupted by user
+IPM       iterations: 31
+Objective value     :  2.7486150251e+08
+P-D objective error :  3.7393956594e-02
+HiGHS run time      :        900.14

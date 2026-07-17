@@ -1,0 +1,53 @@
+{
+  "architecture": "tes",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_lower_bound_decimal": null,
+  "formal_lower_bound_eligible": false,
+  "formal_lower_bound_float": null,
+  "formal_project_tac_ready": false,
+  "hybrid_lower_bound_contract_permitted": false,
+  "input_sha256": {
+    "bess_reuse_result": "ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36",
+    "case_execution": "49e2e21445c67a233ed2bc205a8266351ae800b566d0f89cbfa7883a059efc51",
+    "case_manifest": "cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944",
+    "ipx_phase_execution": "43bd8bb93120b917cf4a62433b2ab99ea349df7dfe5664c54ca9822febd4a206",
+    "ipx_solution": "d56109dabfc599ff996771924bc78f11b85c90f1dec001fd90edc9766fa5bfc6",
+    "lp_archive": "dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776",
+    "lp_execution": "621bc909b9fe6d7af759c96e4e83ea92c4a4f67ffd6a4255825ea8ace08c2fe7",
+    "lp_manifest": "23b10bd00abde649924f8f80901292188c60bf3a54d5dd2547ed60a44209fd84",
+    "simplex_1_phase_execution": "c872fbd63a72fc0f6b733220b86a57a9e2f75fbfe4e46204ef8586899317a7c1",
+    "simplex_1_solution": "bec595dfbc6b878659f588ed100d08c7368e55e4d89f91bafa22e49a9163b58b",
+    "structure_manifest": "2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1"
+  },
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "phase_audits": {
+    "ipx": {
+      "certificate_sha256": null,
+      "execution_sha256": "1691096160ab961efcc51b61de749672cad6e8caaf0f6750ae019a5ee1840a0e",
+      "formal_lower_bound_eligible": false,
+      "lower_bound_decimal": null,
+      "result_sha256": null,
+      "status": "child_hard_wall_reached:ipx"
+    },
+    "simplex_1": {
+      "certificate_sha256": null,
+      "execution_sha256": "957f7660904e82462c209402e08d573d40cbb95d031dbe7b48eb520c79353870",
+      "formal_lower_bound_eligible": false,
+      "lower_bound_decimal": null,
+      "result_sha256": null,
+      "status": "child_hard_wall_reached:ipx"
+    }
+  },
+  "relaxation_mode": "r0_all_continuous",
+  "schema_id": "tes_bess_boundary.e0d43_offline_dual_certificate.v1.manifest",
+  "selected_phase": null,
+  "source_sha256": {
+    "e0d42_gate_b_executor.py": "c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51",
+    "e0d42_native_highs_certificate.py": "3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298",
+    "e0d43_offline_dual_certificate.py": "684385d5a33a531a9034f52ad755b7655adc2e58690ca689ad4e2f08eb889791"
+  },
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false,
+  "tes_r0_certificate_covers_r1": false
+}

@@ -1,0 +1,33 @@
+{
+  "architecture": "bess",
+  "canonical_result_created": false,
+  "child_pid": 139227,
+  "child_process_group": 139227,
+  "classification_consequence": "monolithic_not_viable",
+  "execution_sha256": "1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a",
+  "gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "intervention": "SIGTERM",
+  "intervention_target": "child_process_group",
+  "intervention_time_utc": "2026-07-15T09:10:55.137712624+00:00",
+  "log_sha256": "3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9",
+  "mode": "formal",
+  "observed_execution_runtime_seconds": 4527.394683837891,
+  "parent_log_sha256": "6247d8e2ca082a09c1de3485ca5e6a7f1685f77d61f55a4ac09c93c24186ed03",
+  "parent_pid": 139223,
+  "parent_pid_file_sha256": "37a4ce3584dd349bf1bce650a018c41f1e98ea12318f8735c28cbe5a3ac242e3",
+  "process_start_time_utc": "2026-07-15T07:55:27+00:00",
+  "reason": "formal_case_exceeded_preregistered_3600_second_wall_clock_and_parent_monitor_had_no_hard_wall_clock_stop",
+  "resource_gate_passed": true,
+  "schema_id": "tes_bess_boundary.e0d40_gate_b_wall_clock_intervention.v1",
+  "scientific_interpretation": {
+    "bess_capacity_or_cost_inference_allowed": false,
+    "bess_physical_infeasibility_proven": false,
+    "d40_monolithic_route_passed": false,
+    "solver_infeasibility_proven": false,
+    "technology_ranking_allowed": false
+  },
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solver_adapter_sha256": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+  "solver_time_limit_seconds": 3600.0,
+  "termination_return_code": -15
+}

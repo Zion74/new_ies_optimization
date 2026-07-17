@@ -1,0 +1,59 @@
+{
+  "architecture": "hybrid",
+  "bess_strict_lower_bound_cny": "1144950604.8368804",
+  "chunk_count": 56,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d46_feasible_upper_bound_contract_permitted": true,
+  "dependency_source_sha256": {
+    "e0d44_fork_parallel_certificate.py": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "e0d45_hybrid_r0_strict_lower_bound.py": "cf977561f6471fd99fb9c4d3eed4dc04b65277f7b8a10f3013d10bd5e4a0866d"
+  },
+  "formal_lower_bound_decimal": "232011577.83593156905560264049764989154935073609620115224488377919660126326832988",
+  "formal_lower_bound_eligible": true,
+  "formal_project_tac_ready": false,
+  "formal_upper_interval_decimal": "3391819174.0195139161100476321219415875005205920146107618296368626924607177507169",
+  "gate_a_audit": {
+    "git_commit": "1515eca9cb24b0a3e073889b51480b8eefb0c413",
+    "manifest_sha256": "80591c66ef15a1d01c02513283eb86d5f5bca2edacdcf0041791c87e349cb22d",
+    "source_sha256": "a503a8c0d1544e7c4c35c6ffc80d00d4b96324560accd6fb2f755963472a5fb5",
+    "test_passed_count": 37,
+    "test_sha256": "9347f4e5ec4b9fe80864586c112aef8d31575bf44c28fa95af4ffa04049c9191"
+  },
+  "hybrid_r0_certificate_covers_r1_and_original_milp": true,
+  "input_sha256": {
+    "artifact_list": "ef53178bcfdab3cad719d94994c41f8e35906b1593ee95e55e679182303058e9",
+    "execution": "60af4ee5b16f9aed6ec1a048b87cd57cbaf58b9b90141001ad667bdc71dcbca0",
+    "ipx_solution": "eed2b064d13f31f6718dd7292374f545607709445705bdb9f54210c5688d4a80",
+    "ipx_solver_execution": "39b547a06bea1fdbd7924651e8e57b8be06322a2b6da7d205640fabfa2eed6f1",
+    "lp_archive": "e84eb73544153e0fa1381d753ae154404eed82a661a8397719a0973b0dd43b12",
+    "manifest": "668fb0ea4c9293f789781298ca54f56da2bdcb55a3a7806d5bf8171d6e24cc55",
+    "simplex_1_solution": "6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c",
+    "simplex_1_solver_execution": "8bf887665d6271d27963e8d90aa53822cc90eb037d8c0b56ddc539feeb0f1167"
+  },
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "phase_audits": {
+    "ipx": {
+      "certificate_sha256": "1caa1b6bd051d682e3fb001e64c39c94fcf28f62cd95256634ff269da22b1c05",
+      "chunks_tree_sha256": "999f3a6b62765f81524163e31fb2bc30e37184db92989998b9a39dc85122f664",
+      "execution_sha256": "9020d15db2e869081364d5c45b2c5697a4e090f96c0c4ff510b57b29a7b724f5",
+      "formal_lower_bound_eligible": true,
+      "lower_bound_decimal": "232011577.83593156905560264049764989154935073609620115224488377919660126326832988",
+      "partition_sha256": "840cd949626b44f4c891a96117b545aa0d681f4196cb26027a28334c4fc2ba23",
+      "result_sha256": "f8c33ca2fab2882e0a444b24351de45301592c18a147fc0b70b0ae17ad54b725",
+      "status": "certified_finite_lower_bound",
+      "upper_bound_decimal": "3391819174.0195139161100476321219415875005205920146107618296368626924607177507169"
+    }
+  },
+  "phase_order": [
+    "ipx",
+    "simplex_1"
+  ],
+  "relaxation_mode": "r0_all_continuous",
+  "schema_id": "tes_bess_boundary.e0d47_hybrid_weighted_persistent_certificate.v1.manifest",
+  "selected_phase": "ipx",
+  "status": "hybrid_r0_lower_bound_recovered",
+  "technical_ranking_permitted": false,
+  "tes_strict_lower_bound_cny": "254860566.61931588889075258309724606578637338890918249419801438224278086471875331",
+  "workers": 56
+}

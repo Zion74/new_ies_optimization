@@ -1,0 +1,49 @@
+{
+  "actual_renewable_available_mwh": 3395699.0645758654,
+  "claim_scope": "temporal_aggregation_prevalidation_not_formal_project_tac",
+  "epsilon_curtailment_ceiling_mwh": 339569.90645758656,
+  "epsilon_curtailment_fraction": 0.1,
+  "error_message": "A feasible solution was not found, so no solution can be loaded. If using the appsi.solvers.Highs interface, you can set opt.config.load_solution=False. If using the environ.SolverFactory interface, you can set opt.solve(model, load_solutions = False). Then you can check results.termination_condition and results.best_feasible_objective before loading a solution.",
+  "error_type": "RuntimeError",
+  "failed_stage": "minimum_curtailment_search",
+  "formal_project_tac_ready": false,
+  "generated_at": "2026-07-15T04:18:06.877900+00:00",
+  "minimum_curtailment_search_formulation": {
+    "fuel_segment_code": "continuous_exact_zero_fuel_objective_projection",
+    "physical_commitment_and_ramping": "unchanged"
+  },
+  "physical_service_key": "high_heat_pcc490",
+  "provenance": {
+    "actual_heat_file_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "actual_vre_file_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+    "code_sha256": {
+      "capacity_planning.py": "c22adbdaa9fcd2b8947d3b19b0c59f9ad44c21417699bef5bf6cad436680eedb",
+      "e0d37_block_horizon.py": "f15395f7288107fad561355695c730e016f75d5ca36325ac3a90d3f0174b6b57",
+      "e0d38_prevalidation.py": "953b4b1c98375368d9a2a6d5a3872d697dec9e81ca73b70125c3fcd20eec5b79",
+      "model.py": "a629300cf288c0080f066b0ee24d35aad84d82a8b6152f45d6c2884ddac43a83",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    },
+    "d36_periods_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+    "price_basis_tree_sha256": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "representative_periods_file_sha256": "02b168d6b4169101c1d601a548c7a475d8aea8a8a280de5f52fcaaf6ec09aaa9"
+  },
+  "runtime_seconds": 58.86688723042607,
+  "schema_id": "tes_bess_boundary.e0d38_service_contract.v1",
+  "solver": {
+    "mip_rel_gap": 0.001,
+    "name": "appsi_highs",
+    "random_seed": 0,
+    "threads": 4,
+    "time_limit_seconds": 7200.0
+  },
+  "state": {
+    "heat_scale": 1.824264742834285,
+    "pcc_export_capacity_mw": 490.0,
+    "physical_service_key": "high_heat_pcc490",
+    "state_id": "high_heat_tight_pcc",
+    "storage_duration_hours": null
+  },
+  "status": "infeasible"
+}

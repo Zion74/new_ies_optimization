@@ -1,0 +1,89 @@
+{
+  "admissibility_contract": {
+    "common_annual_pcc_service": true,
+    "common_heat_and_renewable_inputs": true,
+    "cost_cap": "comparator:D19_exact_selected_cost;candidate:D19_primary_primal_bound_plus_D19_primary_tolerance;both_plus_locked_CSV_rounding_tolerance",
+    "curtailment_cap": "D19_selected_secondary_curtailment_plus_locked_CSV_rounding_tolerance",
+    "interpretation": "conservative_superset_of_D19_fixed_primary_integer_secondary_dispatch_face",
+    "locked_csv_rounding_tolerance": 0.001,
+    "primary_integer_patterns_reopened": true
+  },
+  "d19_source_lock": {
+    "csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63"
+  },
+  "d22_source_lock": {
+    "exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2"
+  },
+  "inputs": {
+    "formal_heat": {
+      "file": "e0b_heat_hourly_2024.csv",
+      "locked_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+      "sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e"
+    },
+    "renewable_shape": {
+      "file": "口径3_统一数据集_2024.csv",
+      "locked_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f",
+      "status": "legacy_2019_resource_year_mapped_to_2024_calendar"
+    }
+  },
+  "mathematical_contract": {
+    "bounded_price_identity": "abs(settlement_delta)<=price_spread*redistribution_mwh",
+    "maximum": "exact_big_M_MILP_maximum_over_D19_admissible_joint_dispatches",
+    "minimum": "MILP_minimum_over_D19_admissible_joint_dispatches",
+    "redistribution_mwh": "0.5*sum_t(period_weight_t*dt*abs(P_candidate_t-P_comparator_t))",
+    "robust_upper_coefficient": "maximum_dual_bound_mwh",
+    "same_service_identity": "sum_t(delta_E_t)=0"
+  },
+  "output": {
+    "csv": "e0d23_alternative_dispatch_envelope.csv",
+    "csv_sha256": "7711d894e947ee9bc942606a0936e01b4bc5c3e7015cde9e65a7f5021dac4fbd",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "schema": "tes_bess_boundary.e0d23_alternative_dispatch_envelope.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "time_varying_settlement_complete": false
+  },
+  "scientific_scope": "alternative_dispatch_price_spread_envelope_not_formal_tac_not_e1",
+  "solver_contract": {
+    "incomplete_maximization": "primal_is_feasible_lower_bound;dual_is_certified_upper_bound",
+    "incomplete_minimization": "primal_is_feasible_upper_bound;dual_is_certified_lower_bound",
+    "joint_warm_start_336h": "reproduce_D19_PCC_feasibility_then_primary_cost_then_fixed_integer_secondary_dispatch_and_copy_values_only;admissible_constraints_and_extreme_objectives_unchanged",
+    "mip_gap_by_hours": {
+      "24": 0.0,
+      "336": 0.005
+    },
+    "random_seed": 0,
+    "solver": "appsi_highs",
+    "threads": 1,
+    "time_limit_seconds_per_extreme": 900.0
+  },
+  "sources": {
+    "alternative_dispatch_envelope.py": "92fc66a4b6ba84bbeccc332f53adab68b3be40b4d11a4f7aa66e148394cea787",
+    "components/chp.py": "6e16cedb711631fa03f7c647db6559c5a5f37eef46b2576a293fee968ff45b32",
+    "components/molten_salt.py": "7843c16d5ab42b229720b72258e2948c44eb508b05e6f9794547a0adb8f1068b",
+    "e0d18_performance.py": "ebc6b8c9e277d3b30ddead1c2aab8bcc21b08d2c85813268402705cd3cab0d66",
+    "e0d19_same_pcc_service.py": "2a3bc7305f24dff595906c24c665c87e62990e635b4d11e9ec91eecd42861382",
+    "model.py": "4a1dfe24a2242681862ab6f5dd2879f94abd23f49ac654ddc64e72613404d260",
+    "solver.py": "c069be2a497ef242a03ef7cd97af49d9962598a7b08cd76b79d427b94dc1ae4c"
+  },
+  "windows": [
+    {
+      "hours": 24,
+      "scientific_status": "exact_alternative_dispatch_envelope_not_formal_tac",
+      "window_id": "winter_day_20240101"
+    },
+    {
+      "hours": 336,
+      "scientific_status": "bounded_alternative_dispatch_envelope_not_formal_tac",
+      "window_id": "winter_fortnight_20240101"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "execution_sidecar": {
+    "canonical": false,
+    "file": "execution.json",
+    "sha256": "35ab773e13418d73ca550c461a978d57444d15e36c43b10ce4e61d27605404b6"
+  },
+  "output": {
+    "csv": "e0d31_intertemporal_obbt_screening.csv",
+    "csv_sha256": "93cee79a930c32920f7eb0e89326ed3190fea5c5c3ca461cafe9a10200d3aad0",
+    "float_decimals": 9,
+    "rows": 2
+  },
+  "probes": {
+    "24h.json": "32a0589b26cda583feff3d85d10ad60ab3b406ace88bf064ab5f73347389ac3e"
+  },
+  "relaxation_contract": {
+    "all_integer_domains_relaxed": true,
+    "annual_service_and_admissibility_retained": true,
+    "feasible_set_changed_for_integer_solutions": false,
+    "intertemporal_constraints_retained": true,
+    "primary_integer_patterns_reopened": true,
+    "sign_binaries_reopened": true
+  },
+  "schema": "tes_bess_boundary.e0d31_intertemporal_obbt_screening.v1",
+  "scientific_boundary": {
+    "actual_price_path_assigned": false,
+    "e1_ready": false,
+    "formal_tac": false,
+    "global_dual_is_valid_l1_upper_bound": true,
+    "latest_336h_global_bound_source": "E0-D-30"
+  },
+  "scientific_scope": "intertemporal_continuous_relaxation_obbt_screening_not_settlement_or_tac",
+  "screening_gate": {
+    "adopted_after_obbt_screen_before_any_336h_global_probe": true,
+    "global_probe_336h_launched": false,
+    "metric": "max_positive_or_negative_mean_sign_width_reduction_vs_d30",
+    "preregistered_before_obbt_results": false,
+    "threshold_fraction": 0.01
+  },
+  "screens": {
+    "screen_24h.json": "acf2c49126485ad9d4d41e9d036ed45ec0487fdeeeab71958412d370c03f5836",
+    "screen_336h.json": "1789b76b5589f890e14b9dcbece0cec0dfdea486baa89613f24284bc670f668e"
+  },
+  "source_locks": {
+    "d19_csv_sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786",
+    "d19_manifest_sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63",
+    "d22_exposure_sha256": "3f84d3b0ee4ef03c9edb4ccf395bedc2291262f2cb5e82746a001bcdce5a319f",
+    "d22_manifest_sha256": "74ed9edb644a40af1ca9ede489958a25e430fa3b87f8760e6bf6b358692b2f87",
+    "d22_trace_sha256": "ad196e3bce2c1f02287de74d42a61c91dd98f8703c753172f5acc014b655ccc2",
+    "d30_csv_sha256": "32ca2a7171d35da1311c3316127b9285eb3ab2af5c9e8680741e7c5efc735e6c",
+    "d30_manifest_sha256": "c430fa852f3934c8466387a32f2ce67152764b8bd7fb1d228fc1fc416f08520e",
+    "formal_heat_sha256": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "legacy_vre_sha256": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "sources": {
+    "d31_intertemporal_obbt.py": "ee9da51267bfa4ac52b97fa25f19129f14574a232b8a06d86201b551f7ed651d",
+    "d31_screening_bundle.py": "f2989a26cf099014f4ee263dec2e8f50a2e480780a6ae5bda49e41f3d6512efa"
+  }
+}

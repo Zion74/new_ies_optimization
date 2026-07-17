@@ -1,0 +1,90 @@
+{
+  "candidate_artifact": {
+    "all_values_finite": true,
+    "binary_names_sha256": "a53558e55897ac1c17aea86afd8fe758fc533eeb60398152031b67bca4f36a6d",
+    "binary_variable_count": 73,
+    "candidate_only": true,
+    "file_name": "candidate.csv.gz",
+    "file_sha256": "8737e17905c8328a67748aaec38e550a4cf46be4a849b35aa72ee33cdd223b10",
+    "formal_upper_bound_eligible": false,
+    "schema_id": "tes_bess_boundary.e0d46_deterministic_seed.v1",
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af",
+    "variable_row_count": 534
+  },
+  "candidate_audit_passed": true,
+  "candidate_independent_feasibility_audit": {
+    "absolute_tolerance": 1e-07,
+    "evaluated_constraint_count": 615,
+    "evaluated_variable_count": 534,
+    "max_constraint_violation": 3.809321112515004e-10,
+    "max_variable_bound_violation": 3.2481953634747435e-12,
+    "nonfinite_constraint_count": 0,
+    "nonfinite_variable_count": 0,
+    "passed": true,
+    "worst_constraint": "planning_bess_ac_throughput_limit",
+    "worst_variable": "bess.energy_capacity_mwh"
+  },
+  "candidate_requires_original_cost_repair": true,
+  "candidate_service_audit": {
+    "annual_curtailment_mwh": 0.0,
+    "annual_pcc_export_mwh": 4035354.738554195,
+    "curtailment_ceiling_mwh": 339569.90645758656,
+    "curtailment_ceiling_violation_mwh": 0.0,
+    "curtailment_tolerance_mwh": 1e-06,
+    "passed": true,
+    "pcc_export_average_power_residual_mw": 1.0602488326678945e-13,
+    "pcc_export_residual_mwh": 9.313225746154785e-10,
+    "pcc_export_target_mwh": 4035354.738554194,
+    "pcc_export_tolerance_mw": 1e-08
+  },
+  "checkpoint_count": 3,
+  "checkpoint_manifest_sha256": {
+    "stage_00_attempt_00.json": "f43f2e6aae11d97d4c39cededa7c94e4cf1852819376e92c6d257fdfd131217d",
+    "stage_01_attempt_00.json": "33bbd11c7e6e7ed9b73167ec858f270efe0f11a390f30b5b7b2204d12fbdfcff",
+    "stage_02_attempt_00.json": "c105479ebb637d60502482cc09fee24b8b489c0c259245742155a0ad07de3dfe"
+  },
+  "completed_stage_count": 3,
+  "controller_terminal_status": "checkpointed_path_complete",
+  "exact_fuel_lift_audit": {
+    "changed_strict_nonfuel_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changed_strict_nonfuel_variable_count": 0,
+    "fuel_variable_count_rewritten": 96,
+    "gross_power_variable_count": 24,
+    "internal_knot_tie_break": "lowest_adjacent_segment_index",
+    "lifted_chp_point_count": 24,
+    "max_gross_power_numerical_clamp_mw": 0.0,
+    "maximum_knot_segment": "last_segment",
+    "maximum_power_clamp_to_allowed_ratio": 0.0,
+    "offline_chp_point_count": 0,
+    "offline_power_clamp_tolerance_mw": 1e-07,
+    "online_power_clamp_tolerance_mw": 1e-09,
+    "passed": true,
+    "selected_segment_counts": {
+      "0": 24
+    },
+    "strict_nonfuel_variable_count": 414
+  },
+  "formal_8784h_optimization_invoked": false,
+  "formal_upper_bound_eligible": false,
+  "objective_restore_audit": {
+    "passed": true,
+    "restored_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    }
+  },
+  "physical_snapshot_artifact": {
+    "fixed_physical_count": 49,
+    "fixed_physical_names_sha256": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "path": "/root/e0-b-20260711-019f4f64/results/e0d51_checkpointed_bounded_backtracking_gate0/demonstration_24h_run1/physical_snapshot.json",
+    "sha256": "028a567fe997773c227fc6e3dcdbba5e50956affe640678628b5b978fcc4ea34"
+  },
+  "registered_no_good_cut_count": 0,
+  "schema_id": "tes_bess_boundary.e0d51_gate0_candidate.v1",
+  "stage_count": 3,
+  "status": "gate0_checkpointed_candidate_exactly_lifted",
+  "total_rollback_events": 0
+}

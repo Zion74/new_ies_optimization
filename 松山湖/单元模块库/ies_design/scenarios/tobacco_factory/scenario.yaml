@@ -1,0 +1,87 @@
+schema_version: "1.0"
+scenario:
+  id: "tobacco_factory_001"
+  name: "某卷烟厂低碳多能互补综合能源系统案例"
+  scenario_type: "tobacco_factory_multi_energy"
+  description: "由 Excel 模板导入: 课题组场景整理模板_烟厂_清洗版.xlsx"
+  location: "待确定"
+  currency: "CNY"
+system:
+  template: "tobacco_factory_multi_energy"
+energy_carriers:
+  demands: ["electricity", "cooling", "steam"]
+  inputs: ["grid_electricity", "natural_gas"]
+  resources: ["solar_resource", "waste_heat", "temperature"]
+data:
+  input_type: "excel_template"
+  source_workbook: "D:\OneDrive\研究生\我的成果\小论文\源荷匹配的分布式电热综合能源系统优化规划\代码探索\ies_optimization\松山湖\单元模块库\课题组场景整理\课题组场景整理模板_烟厂_清洗版.xlsx"
+  load_file: "typical_profiles.csv"
+  typical_day_file: ""
+  resource_file: "input_resource_profiles.csv"
+simulation:
+  mode: "typical_days"
+  annualization: "weighted"
+  time_step_hours: 1
+  dispatch_horizon_hours: 24
+typical_day:
+  source: "monthly_template"
+  file: "typical_profiles.csv"
+prices:
+  electricity:
+    type: "tou_24h"
+    unit: "CNY_per_kWh"
+    values: [0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.7, 1.05, 1.05, 1.05, 0.7, 0.7, 0.7, 0.7, 1.05, 1.05, 1.3, 1.3, 1.3, 1.05, 0.7, 0.35, 0.35]
+  gas:
+    type: "flat"
+    unit: "CNY_per_kWh"
+    value: 0.42
+  capacity_charge:
+    unit: "CNY_per_kW_year"
+    value: 0
+devices:
+  pv:
+    library_id: "pv_standard"
+    enabled: true
+    optimize_capacity: true
+  chp:
+    library_id: "chp_gas_turbine"
+    enabled: true
+    optimize_capacity: true
+  electric_heat_pump:
+    library_id: "electric_heat_pump"
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 13937.4
+  electric_chiller:
+    library_id: "electric_chiller"
+    enabled: true
+    optimize_capacity: true
+  absorption_chiller:
+    library_id: "absorption_chiller"
+    enabled: true
+    optimize_capacity: true
+  electric_storage:
+    library_id: "electric_storage"
+    enabled: true
+    optimize_capacity: true
+  heat_storage:
+    library_id: "heat_storage"
+    enabled: true
+    optimize_capacity: true
+    energy_capacity_ub_kwh: 25586.9
+  cold_storage:
+    library_id: "cold_storage"
+    enabled: true
+    optimize_capacity: true
+  steam_boiler:
+    library_id: "steam_boiler"
+    enabled: true
+    optimize_capacity: true
+  waste_heat_recovery:
+    library_id: "waste_heat_recovery"
+    enabled: true
+    optimize_capacity: true
+    capacity_ub_kw: 13937.4
+optimization:
+  mode: "test"
+  methods: ["euclidean"]

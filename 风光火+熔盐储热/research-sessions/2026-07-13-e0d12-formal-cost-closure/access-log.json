@@ -1,0 +1,54 @@
+{
+  "session": "2026-07-13-e0d12-formal-cost-closure",
+  "retrieval_date": "2026-07-13",
+  "events": [
+    {
+      "channel": "InstSci search",
+      "target": "three BESS/TES cost queries",
+      "result": "rate_limited",
+      "interpretation": "Semantic Scholar backend failure; not evidence that no papers exist"
+    },
+    {
+      "channel": "InstSci fetch",
+      "target": "10.1016/j.apenergy.2020.116343",
+      "result": "timeout_after_approximately_124_seconds",
+      "interpretation": "Rahman full text and numeric tables remain unresolved"
+    },
+    {
+      "channel": "ScienceDirect publisher page",
+      "target": "Rahman 2021",
+      "result": "abstract_and_indexed_text_accessible_full_tables_unavailable",
+      "interpretation": "method/provenance can be described, formal numeric extraction cannot"
+    },
+    {
+      "channel": "DiVA portal",
+      "target": "Guccione 2023 and 2024 records",
+      "result": "initial_rate_limit",
+      "interpretation": "retried through KTH institutional full-text endpoint"
+    },
+    {
+      "channel": "KTH institutional repository",
+      "target": "Guccione 2023 Energy 128528",
+      "result": "success",
+      "sha256": "83d181356f710161ad7af2c1b971c80d101633328eeba9d15f4dfb1476ed1f5b"
+    },
+    {
+      "channel": "KTH institutional repository",
+      "target": "Guccione 2024 Energy 133500",
+      "result": "success",
+      "sha256": "2e03c7ad60a07651bb6f1ee5d089e1208c5e8cfeb13defc039c25b2ed612e4cf"
+    },
+    {
+      "channel": "PDF text extraction and visual table inspection",
+      "target": "Guccione 2024 Table 6",
+      "result": "success",
+      "interpretation": "temperature factor is visibly printed as 16; it is not an OCR decimal-loss artifact"
+    },
+    {
+      "channel": "open full text",
+      "target": "Applied Energy 2025 DOI 10.1016/j.apenergy.2025.126706",
+      "result": "success",
+      "sha256": "439998c9b11bcac6c54584ddc75b07e89bf23d938f8674a457a369e0aa3d2c4b"
+    }
+  ]
+}

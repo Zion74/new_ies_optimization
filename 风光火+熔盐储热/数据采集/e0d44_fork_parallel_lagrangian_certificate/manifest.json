@@ -1,0 +1,69 @@
+{
+  "architecture": "tes",
+  "chunk_count_per_phase": 24,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_lower_bound_decimal": "254860566.61931588889075258309724606578637338890918249419801438224278086471875331",
+  "formal_lower_bound_eligible": true,
+  "formal_lower_bound_float": 254860566.6193159,
+  "formal_project_tac_ready": false,
+  "gate_a_audit": {
+    "git_commit": "b52c7227646faa8c340f917f96e0c6010b470ff8",
+    "manifest_sha256": "49b81748508bd517afa9c8b43fac4b3400d6844a0b294838010c10adac89f289",
+    "source_sha256": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "test_passed_count": 24,
+    "test_sha256": "eca55183bb8cd4e7eed133409556cdc2ad84ef1fca42b169406f459aa4f62a2e"
+  },
+  "hybrid_lower_bound_contract_permitted": true,
+  "input_sha256": {
+    "bess_reuse_result": "ae30997a4dcf4fb3ed599ff17b9f5bb1238d66ad4eda677312e91a69bd4f5d36",
+    "case_execution": "49e2e21445c67a233ed2bc205a8266351ae800b566d0f89cbfa7883a059efc51",
+    "case_manifest": "cacd6cc2e32e2b8849398db4b75afa835a4796310e404e3301099c3942261944",
+    "d43_manifest": "c7b7e42973c30778efb791e2369ec5dc60dd4c70c75db333bfb5d3e1ac8f4526",
+    "d44_gate_a_manifest": "49b81748508bd517afa9c8b43fac4b3400d6844a0b294838010c10adac89f289",
+    "ipx_phase_execution": "43bd8bb93120b917cf4a62433b2ab99ea349df7dfe5664c54ca9822febd4a206",
+    "ipx_solution": "d56109dabfc599ff996771924bc78f11b85c90f1dec001fd90edc9766fa5bfc6",
+    "lp_archive": "dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776",
+    "lp_execution": "621bc909b9fe6d7af759c96e4e83ea92c4a4f67ffd6a4255825ea8ace08c2fe7",
+    "lp_manifest": "23b10bd00abde649924f8f80901292188c60bf3a54d5dd2547ed60a44209fd84",
+    "simplex_1_phase_execution": "c872fbd63a72fc0f6b733220b86a57a9e2f75fbfe4e46204ef8586899317a7c1",
+    "simplex_1_solution": "bec595dfbc6b878659f588ed100d08c7368e55e4d89f91bafa22e49a9163b58b",
+    "structure_manifest": "2d049208e8d8bafffce6a69878555d4d478bb305f8e5c2de42743c69cc9831d1"
+  },
+  "native_solver_invoked": false,
+  "optimization_invoked": false,
+  "partition_rule": "floor(k*num_col/24):floor((k+1)*num_col/24)",
+  "phase_audits": {
+    "ipx": {
+      "certificate_sha256": "4f7c7826762b261cf5f025111cb1f70ee28f701d90d8b766f88d551c1c402710",
+      "chunks_sha256": "99ed82614f9f730e0e4f882a541c0b483135d30808c252672779088a2bb22007",
+      "execution_sha256": "373cfa0f31e84951dd88886e22b7d06e73f4beb3c16c0609841c7e40d60a3c1a",
+      "formal_lower_bound_eligible": true,
+      "lower_bound_decimal": "254860566.61931588889075258309724606578637338890918249419801438224278086471875331",
+      "result_sha256": "5ec8c13d73565a58443019d883d739081c88fa2771112069bd8c4be949da3656",
+      "status": "certified_finite_lower_bound"
+    },
+    "simplex_1": {
+      "certificate_sha256": "396043dd2cf0bb05c48ed9e830250799dceabe5461f3fddfe8f89fc4318b9d64",
+      "chunks_sha256": "43a14529f3a4feb509a56c298032d3b76e4c38180aeb27c13b86970254213dc3",
+      "execution_sha256": "df24de71b013c8955284b64bd6c49f61532cba852b097efaffaf579633b9fce2",
+      "formal_lower_bound_eligible": false,
+      "lower_bound_decimal": null,
+      "result_sha256": "f0e8127c3ec4214ee651f71eebe34233fd0cbdd8d9619a599c890eca39c9d8e6",
+      "status": "nonfinite_required_column_endpoint"
+    }
+  },
+  "relaxation_mode": "r0_all_continuous",
+  "schema_id": "tes_bess_boundary.e0d44_fork_parallel_certificate.v1.manifest",
+  "selected_phase": "ipx",
+  "source_sha256": {
+    "e0d42_gate_b_executor.py": "c46f7fac9013c8101699d04ee7a6d449e89ff7cd665fd0edceb6a80655c3ff51",
+    "e0d42_native_highs_certificate.py": "3806db0ab7f878b4aea115f0b8f263a114b9eff3f3c90d7896390cd8cfdbb298",
+    "e0d43_offline_dual_certificate.py": "684385d5a33a531a9034f52ad755b7655adc2e58690ca689ad4e2f08eb889791",
+    "e0d44_fork_parallel_certificate.py": "16786dd98757851dc2829b335d12ddb8dfeab38fd9bc03fcf3ac840e9df41c4c",
+    "test_e0d44_fork_parallel_certificate.py": "eca55183bb8cd4e7eed133409556cdc2ad84ef1fca42b169406f459aa4f62a2e"
+  },
+  "status": "tes_lower_bound_recovered",
+  "technical_ranking_permitted": false,
+  "tes_r0_certificate_covers_r1": true,
+  "workers_per_phase": 24
+}

@@ -1,0 +1,168 @@
+{
+  "attempt_failure_artifacts": [
+    {
+      "path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/attempt_results/stage_02_attempt_00_failure.json",
+      "sha256": "2a524c758ce70901f5a0d93fc26abff4a37887d4ffd6f87f13c70983ae34ff1a"
+    }
+  ],
+  "binary_snapshot_names_sha256": "a53558e55897ac1c17aea86afd8fe758fc533eeb60398152031b67bca4f36a6d",
+  "binary_snapshot_variable_count": 73,
+  "candidate_artifact": {
+    "all_values_finite": true,
+    "binary_names_sha256": "a53558e55897ac1c17aea86afd8fe758fc533eeb60398152031b67bca4f36a6d",
+    "binary_variable_count": 73,
+    "candidate_only": true,
+    "file_name": "candidate.csv.gz",
+    "file_sha256": "9ee6d0f2ff87804dedac3d83c11aa2527160b17a312e2c15a22225e510eeb416",
+    "formal_upper_bound_eligible": false,
+    "schema_id": "tes_bess_boundary.e0d46_deterministic_seed.v1",
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af",
+    "variable_row_count": 534
+  },
+  "candidate_audit_passed": true,
+  "candidate_independent_feasibility_audit": {
+    "absolute_tolerance": 1e-07,
+    "evaluated_constraint_count": 616,
+    "evaluated_variable_count": 534,
+    "max_constraint_violation": 1.1377565556358604e-11,
+    "max_variable_bound_violation": 1.4210854715202004e-14,
+    "nonfinite_constraint_count": 0,
+    "nonfinite_variable_count": 0,
+    "passed": true,
+    "worst_constraint": "planning_bess_ac_throughput_limit",
+    "worst_variable": "bess.energy_mwh[17]"
+  },
+  "candidate_requires_original_cost_repair": true,
+  "candidate_service_audit": {
+    "annual_curtailment_mwh": 0.0,
+    "annual_pcc_export_mwh": 4035354.738554197,
+    "curtailment_ceiling_mwh": 339569.90645758656,
+    "curtailment_ceiling_violation_mwh": 0.0,
+    "curtailment_tolerance_mwh": 1e-06,
+    "passed": true,
+    "pcc_export_average_power_residual_mw": 3.1807464980036835e-13,
+    "pcc_export_residual_mwh": 2.7939677238464355e-09,
+    "pcc_export_target_mwh": 4035354.738554194,
+    "pcc_export_tolerance_mw": 1e-08
+  },
+  "checkpoint_artifacts": [
+    {
+      "attempt_index": 0,
+      "manifest_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_00_attempt_00.json",
+      "manifest_sha256": "2d985237555832d1c0829f87784e467c7056ed57669fbf38db80b746ab067948",
+      "stage_index": 0,
+      "values_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_00_attempt_00.values.csv.gz",
+      "values_sha256": "2af7bcce4100589d8b3f18ae6ff53be955ca56d4881666decbf905660b34bce9"
+    },
+    {
+      "attempt_index": 0,
+      "manifest_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_01_attempt_00.json",
+      "manifest_sha256": "287e4da97073a9a982af0ea6ae84f4e52cb3fe4325341ff1fcae1a48594fd5b1",
+      "stage_index": 1,
+      "values_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_01_attempt_00.values.csv.gz",
+      "values_sha256": "4a854b7ebc73f03a98d48d9cba349b76364c771cfb2b67f6e4a916948d9f9552"
+    },
+    {
+      "attempt_index": 1,
+      "manifest_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_01_attempt_01.json",
+      "manifest_sha256": "847c20d54f1dd3113ce99c22af38105d10d237c4aa66f368ce03fded71ca40c3",
+      "stage_index": 1,
+      "values_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_01_attempt_01.values.csv.gz",
+      "values_sha256": "4c5869eeb46b470b1fe5c6197c7beddf6f753416ac151a62561b3fa059692759"
+    },
+    {
+      "attempt_index": 0,
+      "manifest_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_02_attempt_00.json",
+      "manifest_sha256": "1f539ca7d0fe34653712c5aaa3f2d64f01814c7b105a76a672490863fc36d096",
+      "stage_index": 2,
+      "values_path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/checkpoints/stage_02_attempt_00.values.csv.gz",
+      "values_sha256": "ab58634d94346525972966f1dd0f47b22d8e84e82bc009b64a0c8c8afaae6c76"
+    }
+  ],
+  "checkpoint_count": 4,
+  "clean_rebuild_audits": [
+    {
+      "fixed_parent_prefix_replayed": true,
+      "objective_identity_reproduced": true,
+      "parent_checkpoint_sha256": "2d985237555832d1c0829f87784e467c7056ed57669fbf38db80b746ab067948",
+      "parent_checkpoint_stage_index": 0,
+      "passed": true,
+      "preparation_identity_reproduced": true,
+      "registered_cut_count_replayed": 1,
+      "registered_cut_order_sha256": "dc0e81c82be338ba4fdc28fb2ae1f3cce734245ba82fa53bdf58de89b1d28cd2",
+      "rollback_source_checkpoint_sha256": "287e4da97073a9a982af0ea6ae84f4e52cb3fe4325341ff1fcae1a48594fd5b1",
+      "runtime_seconds": 0.07825905084609985,
+      "target_stage_index": 1,
+      "variable_boundary_identity_reproduced": true
+    }
+  ],
+  "completed_stage_count": 3,
+  "exact_fuel_lift_audit": {
+    "changed_strict_nonfuel_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changed_strict_nonfuel_variable_count": 0,
+    "fuel_variable_count_rewritten": 96,
+    "gross_power_variable_count": 24,
+    "internal_knot_tie_break": "lowest_adjacent_segment_index",
+    "lifted_chp_point_count": 24,
+    "max_gross_power_numerical_clamp_mw": 0.0,
+    "maximum_knot_segment": "last_segment",
+    "maximum_power_clamp_to_allowed_ratio": 0.0,
+    "offline_chp_point_count": 0,
+    "offline_power_clamp_tolerance_mw": 1e-07,
+    "online_power_clamp_tolerance_mw": 1e-09,
+    "passed": true,
+    "selected_segment_counts": {
+      "0": 24
+    },
+    "strict_nonfuel_variable_count": 414
+  },
+  "formal_8784h_optimization_invoked": false,
+  "formal_upper_bound_eligible": false,
+  "maximum_solver_attempts": 19,
+  "objective_restore_audit": {
+    "passed": true,
+    "restored_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    }
+  },
+  "physical_snapshot_artifact": {
+    "fixed_physical_count": 49,
+    "fixed_physical_names_sha256": "54eadd4fef42017274997af2dd47e7c752df3330f0bcee846187a14df1c96968",
+    "path": "/root/e0-b-20260711-019f4f64/results/e0d52_gate_a_work_c3b2e0c/demonstration_24h/physical_snapshot.json",
+    "sha256": "09fd546d8d39abd3c7e0c18813b5cc4344fb68e87ddfa6959b49033d8bce7c99"
+  },
+  "registered_no_good_cuts": [
+    {
+      "binary_values": {
+        "bess.charge_mode[10]": 1,
+        "bess.charge_mode[11]": 0,
+        "bess.charge_mode[12]": 0,
+        "bess.charge_mode[13]": 0,
+        "bess.charge_mode[14]": 1,
+        "bess.charge_mode[15]": 0,
+        "bess.charge_mode[8]": 0,
+        "bess.charge_mode[9]": 0,
+        "chp[0].online[10]": 1,
+        "chp[0].online[11]": 1,
+        "chp[0].online[12]": 1,
+        "chp[0].online[13]": 1,
+        "chp[0].online[14]": 1,
+        "chp[0].online[15]": 1,
+        "chp[0].online[8]": 1,
+        "chp[0].online[9]": 1
+      },
+      "block_index": 1,
+      "cut_sha256": "fa83185e435b38c6ddbdf9d691aef1b2cb923739eb87d0254ea97c4fca86bf3d",
+      "stage_index": 1
+    }
+  ],
+  "schema_id": "tes_bess_boundary.e0d52_checkpointed_candidate.v1",
+  "solver_attempt_count": 5,
+  "stage_count": 3,
+  "status": "candidate_incumbent_captured_and_exactly_lifted",
+  "total_rollback_events": 1
+}

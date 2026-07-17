@@ -1,0 +1,37 @@
+{
+  "active_residual_process_count": 0,
+  "architecture": "tes",
+  "available_memory_before_gib": 97.30115127563477,
+  "available_memory_sample_count": 795,
+  "declared_artifact_sha256": {
+    "tes_guide.csv.gz": "d38004e6c3607cc2095c93def187de6d5300f5b9d9e97928872aaf6ce176e8e9",
+    "tes_guide.json": "9a1854c3e2863481c7294127cc6ef6e0dd95a121a125169358798ca40543eee4"
+  },
+  "hard_wall_enforced_by_parent": true,
+  "heartbeat_sha256": "62248777495e470a26addb8bc7753962477ae21dc8f37dd18df325d6ea8862d8",
+  "minimum_available_memory_gib": 94.51502990722656,
+  "peak_child_process_tree_rss_gib": 2.8036537170410156,
+  "peak_parent_child_aggregate_rss_gib": 2.8290023803710938,
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "residual_termination_signal": null,
+  "resource_gate_passed": true,
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 45.0,
+    "hard_wall_seconds": 1020.0,
+    "heartbeat_interval_seconds": 5.0,
+    "host_memory_reserve_gib": 30.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_limit_gib": 35.0
+  },
+  "result_sha256": "9a1854c3e2863481c7294127cc6ef6e0dd95a121a125169358798ca40543eee4",
+  "return_code": 0,
+  "rss_sample_count": 795,
+  "runtime_seconds": 401.16588731482625,
+  "schema_id": "tes_bess_boundary.e0d46_stage_execution.v1",
+  "solver_log_sha256": "24ccfa27676c1c2c7a56d280cf81c911ba1bbbdb6959a939f781c4632947d4bb",
+  "stage": "guide",
+  "status": "complete",
+  "stop_reason": null,
+  "termination_signal": null
+}

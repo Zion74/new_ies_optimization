@@ -1,0 +1,43 @@
+{
+  "all_native_models_continuous": true,
+  "audit": {
+    "passed": true
+  },
+  "case_sha256": {
+    "hybrid_r0": "0923ae65d123e29691ff794828dfa9f2228ea81fbc93608bde0ccd914c23315b",
+    "hybrid_r1_bess0": "5bf41e2e91a3d7fa42cd6609cab7059625bf9e9ece829ca17980a58bd05068aa",
+    "hybrid_r1_bess1": "bfa701131670ac3eeabfd5dbc403d56f54556ac7891520ef70769a42253196d3",
+    "tes_r0": "4e65f31f1736ba6e089373c948758bda065063aebeade672ca4ef4efea877995",
+    "tes_r1": "6593646c0750af1707fdf549a9818894486084f3befb6da6ee7c714c937dfa1c"
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_gate_b_permitted": true,
+  "formal_project_tac_ready": false,
+  "hybrid_r1_branch_coverage": {
+    "complete": true,
+    "fixed_values": [
+      0,
+      1
+    ],
+    "topology_variable": "bess.installed"
+  },
+  "input_sha256": {
+    "d40_gate_a_manifest": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_gate_a_manifest": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "optimization_invoked": false,
+  "presolve_invoked": true,
+  "schema_id": "tes_bess_boundary.e0d42_structure_manifest.v1",
+  "status": "gate_a_structure_passed",
+  "technical_ranking_permitted": false,
+  "tes_r0_r1_identity": {
+    "original_lp_fingerprint_equal": true,
+    "original_lp_sha256": "c479a3bc96e4431534ada769e1aef209573f1e83192e07f24a38858efcce3a17",
+    "presolved_lp_fingerprint_equal": true,
+    "presolved_lp_sha256": "c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5"
+  }
+}

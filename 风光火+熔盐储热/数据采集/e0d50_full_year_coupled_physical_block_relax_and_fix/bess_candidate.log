@@ -1,0 +1,214 @@
+MIP has 527053 rows; 597318 cols; 2187237 nonzeros; 1009 integer variables (1009 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 2e+03]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+483132 rows, 548857 cols, 1826795 nonzeros 1s
+381805 rows, 447374 cols, 1584521 nonzeros 2s
+323101 rows, 405206 cols, 1444748 nonzeros 6s
+Presolve reductions: rows 323101(-203952); columns 405206(-192112); nonzeros 1444748(-742489) 
+
+Solving MIP model with:
+   323101 rows
+   405206 cols (1009 binary, 0 integer, 0 implied int., 404197 continuous, 0 domain fixed)
+   1444748 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -332703284.619  inf                  inf        0      0      0         0    11.3s
+ R       0       0         0   0.00%   1144950604.837  1159884554.622     1.29%        0      0      0    270654   119.5s
+         0       0         0   0.00%   1144950604.837  1159884554.622     1.29%        0      0      0    270654   131.2s
+         0       0         0   0.00%   1144950604.837  1159884554.622     1.29%        0      0      0    270654   131.2s
+
+Solving report
+  Status            Interrupted by user
+  Primal bound      1159884554.62
+  Dual bound        1144950604.84
+  Gap               1.29% (tolerance: 0%)
+  P-D integral      0.15114716212
+  Solution status   feasible
+                    1159884554.62 (objective)
+                    0 (bound viol.)
+                    2.22044604925e-16 (int. viol.)
+                    0 (row viol.)
+  Timing            131.20
+                    6.92 (Presolve)
+                    124.28 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     270654
+                    0 (strong br.)
+                    0 (separation)
+                    0 (heuristics)
+WARNING: Received unhandled status=<HighsModelStatus.kInterrupt: 17> from
+solver HiGHS.
+MIP has 527053 rows; 597318 cols; 2182866 nonzeros; 1513 integer variables (1008 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+477567 rows, 542984 cols, 1805883 nonzeros 1s
+385636 rows, 451180 cols, 1575681 nonzeros 2s
+318419 rows, 401502 cols, 1426433 nonzeros 6s
+Presolve reductions: rows 318419(-208634); columns 401502(-195816); nonzeros 1426433(-756433) 
+
+Solving MIP model with:
+   318419 rows
+   401502 cols (1008 binary, 0 integer, 0 implied int., 400494 continuous, 0 domain fixed)
+   1426433 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -367589567.8128 inf                  inf        0      0      0         0    11.5s
+         0       0         0   0.00%   1151579533.301  inf                  inf        0      0      0    262022   127.3s
+ R       0       0         0   0.00%   1160033891.211  1160520268.338     0.04%     6308    573      0    263840   229.3s
+         0       0         0   0.00%   1160033891.211  1160520268.338     0.04%     6308    573      0    263840   240.3s
+         0       0         0   0.00%   1160033891.211  1160520268.338     0.04%     6308    573      0    263840   240.3s
+
+Solving report
+  Status            Interrupted by user
+  Primal bound      1160520268.34
+  Dual bound        1160033891.21
+  Gap               0.0419% (tolerance: 0%)
+  P-D integral      0.00459592453055
+  Solution status   feasible
+                    1160520268.34 (objective)
+                    0 (bound viol.)
+                    2.22044604925e-16 (int. viol.)
+                    0 (row viol.)
+  Timing            240.30
+                    7.16 (Presolve)
+                    233.13 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     263840
+                    0 (strong br.)
+                    1818 (separation)
+                    0 (heuristics)
+WARNING: Received unhandled status=<HighsModelStatus.kInterrupt: 17> from
+solver HiGHS.
+MIP has 527053 rows; 597318 cols; 2178498 nonzeros; 2017 integer variables (1008 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+472040 rows, 537132 cols, 1785088 nonzeros 1s
+380686 rows, 446212 cols, 1557105 nonzeros 2s
+313734 rows, 396996 cols, 1406757 nonzeros 6s
+Presolve reductions: rows 313734(-213319); columns 396996(-200322); nonzeros 1406757(-771741) 
+
+Solving MIP model with:
+   313734 rows
+   396996 cols (984 binary, 0 integer, 0 implied int., 396012 continuous, 0 domain fixed)
+   1406757 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -359529170.5496 inf                  inf        0      0      0         0    11.4s
+ R       0       0         0   0.00%   1157861102.528  1166063535.698     0.70%        0      0      0    258229   114.7s
+         0       0         0   0.00%   1157861102.528  1166063535.698     0.70%        0      0      0    258229   122.2s
+         0       0         0   0.00%   1157861102.528  1166063535.698     0.70%        0      0      0    258229   122.2s
+
+Solving report
+  Status            Interrupted by user
+  Primal bound      1166063535.7
+  Dual bound        1157861102.53
+  Gap               0.703% (tolerance: 0%)
+  P-D integral      0.0526281866273
+  Solution status   feasible
+                    1166063535.7 (objective)
+                    0 (bound viol.)
+                    0 (int. viol.)
+                    0 (row viol.)
+  Timing            122.17
+                    7.14 (Presolve)
+                    115.02 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             0
+  Repair LPs        0
+  LP iterations     258229
+                    0 (strong br.)
+                    0 (separation)
+                    0 (heuristics)
+WARNING: Received unhandled status=<HighsModelStatus.kInterrupt: 17> from
+solver HiGHS.
+MIP has 527053 rows; 597318 cols; 2174130 nonzeros; 2521 integer variables (1008 binary)
+Coefficient ranges:
+  Matrix  [1e-04, 4e+02]
+  Cost    [7e+02, 5e+05]
+  Bound   [1e+00, 2e+03]
+  RHS     [8e-02, 3e+05]
+Presolving model
+466483 rows, 531257 cols, 1764205 nonzeros 1s
+375752 rows, 441234 cols, 1538547 nonzeros 2s
+309217 rows, 392579 cols, 1387630 nonzeros 6s
+Presolve reductions: rows 309217(-217836); columns 392579(-204739); nonzeros 1387630(-786500) 
+
+Solving MIP model with:
+   309217 rows
+   392579 cols (984 binary, 0 integer, 0 implied int., 391595 continuous, 0 domain fixed)
+   1387630 nonzeros
+   Thread count 12 (of 60 threads). Using 1 max workers. Parallel search off
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+         0       0         0   0.00%   -351787592.5039 inf                  inf        0      0      0         0    11.2s
+         0       0         0   0.00%   1164564872.879  inf                  inf        2      0      0    253699   120.9s
+         1       0         1 100.00%   inf             inf                  inf     6021    527      0    256108   203.3s
+
+Solving report
+  Status            Infeasible
+  Primal bound      inf
+  Dual bound        inf
+  Gap               inf
+  P-D integral      0
+  Solution status   -
+  Timing            203.27
+                    7.05 (Presolve)
+                    196.22 (Solve)
+                    0.00 (Postsolve)
+  Max sub-MIP depth 0
+  Nodes             1
+  Repair LPs        0
+  LP iterations     256108
+                    0 (strong br.)
+                    2404 (separation)
+                    0 (heuristics)

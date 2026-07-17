@@ -1,0 +1,163 @@
+# E0-D-40 全年优先可计算性与证据门合同
+
+状态：**第 1–9 节结果前合同已冻结；Gate A 已通过；正式 BESS 为 `monolithic_not_viable`；D40 全年单体路线未通过**
+
+适用范围：D38-R1 与 D39 时间聚合连续失败后的全年直接求解路线判定
+
+日期：2026-07-15
+
+## 1. 本关回答的问题
+
+D40 只回答：在锁定的真实 2024 年 8784 h 输入、baseline 物理状态和同一绝对服务约束下，当前 Pyomo + HiGHS 单体 MILP 能否在 OpenBayes 60 核、约 97 GiB 内存的服务器上，为 BESS、TES 与 Hybrid 三种内生容量架构产生达到正式精度的可审计全年结果。
+
+D40 不再验证代表周，也不把 D36 或 D39 代表期用于容量规划。D36、D38-R1 和 D39 可以保留为失败证据与方法学对照，但不能向 D40 模型提供时序、权重、容量初值、目标缩放或技术排序。
+
+本关是计算与证据路线门，不是正式 E2/E3/E4，不生成杨凌正式 TAC，不比较或宣布技术赢家，也不因公开代理成本较低而选择下一种架构。只有本关达到第 7 节的“全年路线合格”，才允许另立结果前合同设计全年优先的局部状态网格或分解算法。
+
+## 2. 不可覆盖的既有失败
+
+- D38-R1 中，原六周代表期把 baseline 自然最小弃电低估 `227,211.453 MWh`，并造成 10% 服务可行性反转；
+- D39 一次性增加第 49/16 周后，真实全年与八周代表期的服务分类均为不可行，但自然最小弃电率仍相差 `5.17618942467652` 个百分点，超过结果前冻结的 1 个百分点门；
+- D39 Gate B 结果 SHA-256 为 `47f33db2d3a00bbe5f70cd342198fd5daa1538663c49b8ec7d39641fd27b645b`，Gate C/D 永久保持未运行。
+
+D40 的任何成功都不能把 D38-R1 或 D39 改写为通过；它只能证明“绕过失真的代表期、直接使用全年时序”是否在当前算力与实现下可行。
+
+## 3. 锁定输入、物理状态与服务
+
+### 3.1 全年输入
+
+- 热需求：2024 年 8784 h `net_clipped` 序列，SHA-256 `a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e`；
+- 风电、光伏与气温：旧 2019 形状映射至 2024 年的锁定序列，SHA-256 `515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f`；该输入仍不属于正式杨凌风光实测年；
+- 价格基准树 SHA-256 `a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3`；
+- baseline 状态：热需求尺度 `1.0`、PCC 外送容量 `700 MW`，BESS/TES 连续容量边界和全部 CHP、损失、伴热、泵耗、额定服务约束沿用 D34–D38 已验证实现；
+- 时间边界：单个真实 8784 h 循环块，全部小时权重为 1；CHP、BESS 与三层 TES 状态只在这一全年块首尾闭合。
+
+### 3.2 全年服务合同
+
+D40 新建独立的 `e0d40_full_year_service.json`，只从真实全年输入和已完成的 D38 baseline 两阶段无储能服务搜索提取以下冻结值：
+
+- 实际全年可再生可用量：`3,395,699.0645758654 MWh`；
+- 10% 绝对弃电上限：`339,569.90645758656 MWh`；
+- 年度 PCC 外送目标：`4,035,354.738554194 MWh`；
+- 原始 D38 baseline 服务 JSON SHA-256：`93f3d7b5c50312d08ea3dd78b1af70661facf880fcc882b1bb1ac32a783977b3`。
+
+新服务文件必须逐项复核上述数值、输入哈希、原服务哈希、D39 Gate B 结果哈希、生成代码哈希与 claim scope；其 schema 不得包含代表期文件、代表周权重或 D36/D39 period 哈希。该处理只切断无关的代表期 provenance 依赖，不重新求服务值，也不改变物理约束。
+
+## 4. 架构与目标边界
+
+Gate A 构造 No storage、BESS、TES、Hybrid 四种全年模型；Gate B 只求解 BESS、TES、Hybrid。No storage 的自然最小弃电 `565,916.1220067485 MWh` 已由 D39 的真实全年分支确认高于 10% 上限，故不重复运行同一已知不可行的正式服务案例。
+
+三种储能架构均使用完整内生容量模型和 D33 公共敏感性成本账：
+
+- BESS 使用共同 PCS、能量/充放电功率、安装状态、寿命循环费和公开 VOM 口径；
+- TES 使用盐量、HT/MT/LT 罐、五个端口、损失、伴热与泵耗；
+- Hybrid 同时保留 BESS 与 TES 的全部变量和约束，不允许先固定任一技术容量。
+
+目标仍是锁定公开成本代理下的年化容量—运行总成本。所有结果必须标记 `controlled_public_cost_sensitivity_not_formal_project_tac` 与 `formal_project_tac_ready=false`。D40 不允许用该目标宣布杨凌项目经济赢家。
+
+## 5. Gate A：8784 h 建模与资源审计
+
+Gate A 不调用求解器。四种架构必须分别从干净 Python 进程构造，记录输入/服务/代码哈希、构造时间、活动变量、二元变量、活动约束、非线性组件、单进程峰值 RSS 和服务器可用内存快照。
+
+Gate A 必须同时满足：
+
+1. 只读取第 3 节的真实全年输入和 D40 服务文件，模型期数与加权小时均严格为 `8784`；
+2. 只有一个全年块，每种有状态设备的块首尾循环完整，不能拆成逐周或逐月独立循环；
+3. No storage、BESS、TES、Hybrid 四种模型全部构造成功，活动变量/二元变量/活动约束均为正且架构差异符合预期；
+4. Pyomo 非线性目标与非线性约束计数均为零；
+5. 所有内生容量变量具有锁定且有限的上下界，未安装通道不能通过遗漏上界逃逸；
+6. 任一模型构造阶段单进程峰值 RSS 不超过 `20 GiB`，四个案例顺序构造时服务器剩余可用内存不得低于 `40 GiB`；
+7. OpenBayes 是 D40 全年构造的规范执行端；同一代码与输入重复构造时，共同结构字段和计数必须一致。Windows 只运行单元/小样本 provenance 回归，不强制重复四个 8784 h 大模型；若实际进行跨平台全年构造，则共同字段和计数必须一致。峰值 RSS、运行时间、平台和时间戳仅进入非规范 execution sidecar；
+8. Gate A 不生成容量、成本、技术排序或任何求解器结果。
+
+任一项失败，D40 登记为 `build_or_resource_failure`，不进入 Gate B。允许修复纯接入或审计缺陷后在同一冻结合同下重跑 Gate A，但必须保留首轮拒绝日志；不得修改物理、服务、容量边界或资源阈值。
+
+## 6. Gate B：全年直接求解可计算性门
+
+Gate A 通过后，分别求解 BESS、TES、Hybrid baseline 全年内生容量模型。求解器仅为 HiGHS，随机种子 0；每个案例 `12` 个 HiGHS 线程、墙钟上限 `3600 s`、目标相对 MIP gap `0.1%`。每个案例必须保存终止状态、有限 incumbent、有限 dual bound、实际 gap、运行时间、峰值 RSS、模型规模、服务残差、完整容量快照和输入/服务/代码哈希。
+
+执行并发只属于算力调度，不属于科学参数：
+
+- 最多同时启动 3 个案例，总 HiGHS 线程不超过 36；
+- 服务器总采样 RSS 达到 `75 GiB` 或可用内存低于 `15 GiB` 时，必须停止新增任务并安全终止超限批次；
+- 内存超限后允许把同一命令改为顺序执行一次，单案例线程、墙钟、模型、种子和 gap 不变，并同时保留超限日志；这不属于结果后调参；
+- 任一单案例峰值 RSS 超过 `35 GiB`，即使顺序执行完成，也登记资源失败；
+- 不得因中间容量、目标值或技术排序修改线程、时间上限、架构顺序、服务或容量边界。
+
+可行解还必须满足：电、热、库存和循环残差在求解容差内，缺热为零，同品位无同时充放，年度弃电不超过冻结上限且 PCC 目标残差不超过 `1e-3 MWh/a`。若 HiGHS 返回 `infeasible`，只有完成全局不可行性证明的终止状态才可记为物理不可行；时间耗尽且无 incumbent 不能冒充不可行。
+
+## 7. 预注册判定
+
+三个 Gate B 案例分别分类，D40 总判定取最弱一档：
+
+| 等级 | 单案例要求 | D40 后续权限 |
+|---|---|---|
+| `qualified_full_year` | 在 `3600 s`、`35 GiB` 内得到满足全部服务/守恒审计的有限解，实际 gap `≤0.1%`；或由 HiGHS 完成全局不可行性证明 | 三个案例全部达到该等级时，全年直接求解路线合格；可另立全年优先的小规模局部网格合同 |
+| `bounded_but_not_qualified` | 有有限 incumbent 与 dual，服务/守恒审计通过，但 `0.1% < gap ≤0.5%` | 只证明当前单体模型有界；不得进入 E2–E4，下一步必须先做等价求解强化或分解合同 |
+| `monolithic_not_viable` | gap `>0.5%`、无有限 incumbent/dual、未证明不可行、超时无解，或触发内存门 | 当前单体全年路线失败；下一步另立分解/滚动协调合同，不得退回代表周主证据路线 |
+
+即使某一技术目标值明显更低，也不改变上述判定。只有 BESS、TES、Hybrid 三个案例全部为 `qualified_full_year`，D40 才登记为通过。任何 amber/red 结果都不允许启动 699 次边界扫描，不允许放宽 gap 或删除困难架构后宣称全年路线合格。
+
+## 8. 失败后的唯一允许路线
+
+- 若 Gate A 失败：先修复可审计的线性/边界/内存实现，保持本合同科学输入不变；
+- 若 Gate B 为 `bounded_but_not_qualified`：另立结果前合同研究 warm start、等价有效不等式、对称性消除或严格分解，正式接受门仍为 `0.1%`；
+- 若 Gate B 为 `monolithic_not_viable`：另立具有有限主问题上下界、全年服务守恒和可审计收敛证书的分解方法合同；
+- 不得回到 D39 名下继续加周、重新赋权或放宽 1 个百分点门，也不得把代表期结果恢复为正式边界证据；
+- 代表期今后最多用于候选点生成或 warm start，最终证据必须来自全年模型或具有严格全年界的分解证书。
+
+## 9. Agentic 定位
+
+D40 可作为硕士论文第 5 章 Agentic 决策支持案例：agent 负责读取冻结合同、核验哈希、编排受限并发、监测内存、保存失败日志、审计求解 gap，并按第 7 节自动停止或路由到新的方法合同。agent 不修改物理方程、服务阈值、成本口径、求解精度，也不根据中间赢家删除困难架构。
+
+## 10. 结果登记规则
+
+本文件提交后，才允许实现 D40 服务包、Gate A 审计器和 Gate B 受限执行器。任何数值结果只能追加在本节之后或写入独立失败/通过记录，不得反向修改第 1–9 节的输入、资源预算、阈值与判定。D40 的规范证据目录固定为：
+
+- 本地：`风光火+熔盐储热/数据采集/e0d40_full_year_compute_gate/`；
+- OpenBayes：`/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate/`。
+
+## 11. 实现与 Gate A 结果登记
+
+结果前提交 `2529ae5` 之后才新增 `e0d40_full_year_compute_gate.py` 与 6 项定向测试。实现已完成三类隔离入口：从 D38/D39 冻结证据生成无代表期依赖的 D40 服务文件；在独立进程中为单一架构执行 build-only 线性/容量边界/全年循环审计；汇总四架构 manifest 与 execution sidecar 并施加 20 GiB/40 GiB 资源门。服务和结构 manifest 不含平台时间与内存，execution sidecar 单独记录这些非规范字段。
+
+Gate A 首轮服务器构造在 No storage/BESS 通过后，由审计器错误地把 D34 连续 TES 容量口径当成必须带安装二元的半连续口径，因此 TES 结构审计返回 false；模型本身的 8784 h、线性、有限上界和循环边界均已通过，Hybrid 未启动。修订后的审计器显式接受两种预先存在的容量策略：有安装二元时核验全部 materiality 联动；无安装二元时核验连续零容量、有限上界、三罐库存—罐容、五端口—额定容量和服务盐量—总盐量联动。该修订不改变模型、服务、成本、资源阈值或 Gate B 精度，并保证失败 manifest 先落盘再返回非零。
+
+修订后源码与测试 SHA-256 分别为 `9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877` 与 `437bc138e2111f8dc56af9832621c1d9c80855315c40aa011b84346757693f9c`，Windows 定向回归为 `8 passed`，OpenBayes 完整回归为 `462 passed in 33.82s`。首轮服务器产物已整体隔离到 `/root/e0-b-20260711-019f4f64/results/e0d40_full_year_compute_gate_pre_audit_fix_20260715/`，不进入正式结果目录。
+
+正式 Gate A 随后从 No storage 重新执行。服务文件 SHA-256 为 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95`，明确记录 `representative_period_input_used=false`、baseline 10% 绝对弃电帽和同一 PCC 目标。四架构均通过 8784 h 单循环、服务、容量联动、线性和资源审计：
+
+| 架构 | 活动变量 | 二元变量 | 活动约束 | 峰值 RSS / GiB | 构造后可用内存 / GiB | 构造 manifest SHA-256 |
+|---|---:|---:|---:|---:|---:|---|
+| No storage | 562,176 | 70,272 | 465,554 | 0.482 | 96.863 | `535d75358dd20ada888ee56f687ab7ecf31132bea28fd7ec82601a6c45a7f3b9` |
+| BESS | 597,318 | 79,057 | 527,053 | 0.518 | 96.833 | `1c1f775a9bb7d00968e2186ac78c77ecd4109800db4fd8e6b041e7ca4c411baf` |
+| TES | 650,052 | 87,840 | 606,163 | 0.610 | 96.735 | `2f12564fb9b261b27f10ca3a859ffc317923b2f41d80027062bc5862df952816` |
+| Hybrid | 685,194 | 96,625 | 667,662 | 0.645 | 96.705 | `063a8081d9bce3f675d00e2c094df6e4c2e25371b1e44ce10d8e21c265b7b4f9` |
+
+全部非线性组件计数为零，四案均满足 20 GiB/40 GiB 资源门，架构规模排序符合预期。Gate A manifest SHA-256 为 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`，execution sidecar SHA-256 为 `30dceb1aa52acbc051ae735c287c5506334aeda268de50671cce90268e86c223`。规范目录已下载至本地并逐文件验哈，manifest—execution—服务引用链全部一致。Gate A 全程 `solver_invoked=false`，因此仍不存在容量、成本、gap 或技术排序结果；下一步只能实现并执行第 6–7 节锁定的 Gate B。
+
+## 12. Gate B 执行接入预注册（尚无 Gate B 数值）
+
+Gate B 使用独立模块 `e0d40_gate_b_solver.py`，不修改已经进入 Gate A 服务 provenance 的 `e0d40_full_year_compute_gate.py`。新模块必须逐字节锁定服务文件 SHA-256 `1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95` 和 Gate A manifest SHA-256 `23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577`，并复核 Gate A 的服务引用、四架构结构哈希和 `solver_invoked=false` 后才可启动子进程。
+
+正式执行固定为 BESS → TES → Hybrid 顺序串行运行，不使用 D36/D39 容量、D35 结果、跨架构 incumbent 或任何 warm start。每案继续使用 HiGHS 12 线程、随机种子 0、`3600 s`、目标 gap `0.1%`，并设置 `1e-7` primal/dual/MIP feasibility tolerance。父进程每 `0.5 s` 监测求解子进程 RSS 与主机可用内存；单案 RSS 达到 `35 GiB` 或主机可用内存低于 `15 GiB` 时终止子进程，保留原始日志和 execution sidecar，并将该案降级为 `monolithic_not_viable`。串行执行使 D40 自身聚合 RSS 不超过单案门，仍需在汇总时复核 `75 GiB` 聚合上限。
+
+有 incumbent 的结果必须在载入 Pyomo 后同时满足：
+
+- PCC 年度服务绝对残差不超过 `1e-3 MWh`；
+- 弃电帽松弛不小于 `-1e-3 MWh`；
+- `planning_pcc_balance`、`planning_heat_allocation` 和 `planning_heat_balance` 的最大绝对等式残差均不超过 `1e-5 MW`；
+- 全部活动约束的最大归一化违反量不超过 `1e-6`；
+- 模型目标与 HiGHS incumbent 的相对差不超过 `1e-8`，容量与成本快照均为有限值。
+
+上述审计失败时，即使 HiGHS 报告较小 gap，也只能记为 `monolithic_not_viable`。若 HiGHS 明确返回全局 `infeasible`，可按第 7 节直接记为 `qualified_full_year`，但必须没有伪造的 incumbent 或容量快照。
+
+正式运行前只允许一次 BESS `60 s` 接入预检，仍用 12 线程和同一模型/服务，但写入独立 `preflight_*` 文件并标记 `formal_gate_b_eligible=false`。预检只检查父子进程、日志、bounds、incumbent 载入和资源监测接口；其目标值、gap、容量或终止状态不得进入 D40 正式判定，不得据此修改正式时限、gap、容差、架构顺序或删除任何架构。若预检只暴露纯接入缺陷，可在不改变本节数值口径的前提下修复并重新运行预检；正式 Gate B 每个架构只运行一次。
+
+结果前提交 `03ad51a` 之后新增独立 Gate B 模块及 7 项测试。模块/测试 SHA-256 为 `2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca` 与 `e33a14a0fa75268325d7711c7d8449a4ebfa69fd6d806b3bb06dac36c6e6b93a`；D40 Gate A/B 合并定向回归为 `15 passed`，OpenBayes 完整回归为 `469 passed in 33.93s`。
+
+唯一一次 BESS 60 s 接入预检已完成。result/execution/log SHA-256 分别为 `96c0d7eb3031063444b8fb5513d242baaa7c01d1b5ba7f61f60dc56447c15497`、`8dabc0d22c9b2a4740af7ffdb144ab1c2f3c60195a855d623c28fad08252a227` 与 `32759ea62f69c6f54a85a27fe81603a51c57377835c282af80989ab63d7b50db`。预检在 60 s 返回 `maxtimelimit`、有限 dual 和无 incumbent；父进程 250 次采样的子进程/父子合计峰值 RSS 为 `2.913/2.936 GiB`，最低可用内存 `94.417 GiB`，资源门通过。该结果保持 `formal_gate_b_eligible=false`，不进入正式分类，也不改变任何参数。
+
+正式 BESS 随后按冻结输入、12 线程、随机种子 0、HiGHS `3600 s` 选项和 `0.1%` 目标 gap 启动。父进程完成 8,995 次采样，子进程/父子合计峰值 RSS 为 `2.916/2.939 GiB`、最低可用内存为 `94.416 GiB`，资源门通过。但现有适配器只把时间选项传给 HiGHS，未在父进程实现独立硬墙钟；子进程启动后约 75 分钟仍未返回，且没有结果 JSON、有限 incumbent/dual 或不可行证明。为阻止软时限无限延伸，于 `2026-07-15T09:10:55.137712624+00:00` 对子进程组发送与内部资源停止相同的 `SIGTERM`。父进程最终记录 `runtime_seconds=4527.394684`、`return_code=-15`、`status=resource_or_process_failure` 与 `effective_classification=monolithic_not_viable`。
+
+execution/log/parent-log/PID/intervention SHA-256 分别为 `1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a`、`3a58eb0fde0c040dc0510ced82d5bddda72511a46216dc183c71ae1c5f94ade9`、`6247d8e2ca082a09c1de3485ca5e6a7f1685f77d61f55a4ac09c93c24186ed03`、`37a4ce3584dd349bf1bce650a018c41f1e98ea12318f8735c28cbe5a3ac242e3` 与 `76b0ff3bcc41f246e1dfac1096cbb97abc2fc8cc710e8e28600cb796547568c5`；人工 route-decision JSON SHA-256 为 `c455df496a0134e2af23122f71f7d31aaefc016f74bcd2ecf50761a8ae90aed1`，明确标记 `compiler_generated=false`。75 分钟不是新的科学预算，只是记录执行器缺少硬墙钟的滞后终止保护。该案不证明 BESS 物理不可行，也不提供容量、成本或技术排序。根据第 7 节最弱案例规则，D40 已不能通过；TES/Hybrid 不在失效执行器下继续消耗正式单次机会，下一步按第 8 节另立带父进程硬墙钟、有限主问题上下界和严格全年服务守恒的求解强化/分解合同。

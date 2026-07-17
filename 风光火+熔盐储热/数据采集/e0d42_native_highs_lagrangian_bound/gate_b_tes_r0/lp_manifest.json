@@ -1,0 +1,74 @@
+{
+  "formal_lower_bound_decimal": null,
+  "formal_lower_bound_eligible": false,
+  "formal_lower_bound_float": null,
+  "formal_phase_plan": [
+    {
+      "checkpoint_index": null,
+      "key": "ipx",
+      "parent_hard_wall_seconds": 1020.0,
+      "prior_simplex_basis_required": false,
+      "soft_wall_seconds": 900.0,
+      "solver_name": "ipx"
+    },
+    {
+      "checkpoint_index": 1,
+      "key": "simplex_1",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": false,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 2,
+      "key": "simplex_2",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 3,
+      "key": "simplex_3",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 4,
+      "key": "simplex_4",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    }
+  ],
+  "lp_sha256": "c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5",
+  "phase_audits": {
+    "ipx": {
+      "eligible": false,
+      "status": "missing"
+    },
+    "simplex_1": {
+      "eligible": false,
+      "status": "missing"
+    },
+    "simplex_2": {
+      "eligible": false,
+      "status": "missing"
+    },
+    "simplex_3": {
+      "eligible": false,
+      "status": "missing"
+    },
+    "simplex_4": {
+      "eligible": false,
+      "status": "missing"
+    }
+  },
+  "schema_id": "tes_bess_boundary.e0d42_gate_b_lp_manifest.v1",
+  "selected_phase": null,
+  "status": "no_strict_certificate",
+  "technical_ranking_permitted": false
+}

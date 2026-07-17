@@ -1,0 +1,317 @@
+{
+  "architecture": "bess",
+  "build_audit": {
+    "binary_inventory_audit": {
+      "actual": {
+        "all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+        "all_binary_variable_count": 79057,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784
+        },
+        "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21",
+        "operational_binary_variable_count": 79056,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "expected": {
+        "all_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+        "all_binary_variable_count": 79057,
+        "classification_complete": true,
+        "component_counts": {
+          "bess.charge_mode": 8784,
+          "bess.installed": 1,
+          "chp[0].fuel_code_bit": 26352,
+          "chp[0].online": 8784,
+          "chp[1].fuel_code_bit": 26352,
+          "chp[1].online": 8784
+        },
+        "operational_binary_names_sha256": "7386e5875ac54a0ec21169c7baf8b5c74140a2b6d94509aa60456aac561d6d21",
+        "operational_binary_variable_count": 79056,
+        "topology_binary_names_sha256": "43a2a598f1501d0bacf59b7983cff89e1b3a4a1b93f65cccb8a19031d293359e",
+        "topology_binary_variable_count": 1,
+        "topology_component_allowlist": [
+          "bess.installed",
+          "tes.installed",
+          "tes.port_installed"
+        ]
+      },
+      "mismatches": {},
+      "passed": true
+    },
+    "model_size": {
+      "active_binary_variable_count": 79057,
+      "active_constraint_count": 527053,
+      "active_variable_count": 597318,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    },
+    "original_capacity_boundary_audit": {
+      "architecture": "bess",
+      "bounds": {
+        "bess.charge_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        },
+        "bess.discharge_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        },
+        "bess.energy_capacity_mwh": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 2400.0
+        },
+        "bess.pcs_power_capacity_mw": {
+          "fixed": false,
+          "lower": 0.0,
+          "passed": true,
+          "upper": 100.0
+        }
+      },
+      "continuous_capacity_variable_count": 4,
+      "d46_capacity_anchor_applied": false,
+      "expected_continuous_capacity_variable_count": 4,
+      "fixed_continuous_capacity_variable_count": 0,
+      "passed": true
+    },
+    "post_build_model_size": {
+      "active_binary_variable_count": 79057,
+      "active_constraint_count": 527053,
+      "active_variable_count": 597318,
+      "nonlinear_component_count": 0,
+      "nonlinear_components": []
+    }
+  },
+  "candidate_artifact": null,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "completed_stage_count": 3,
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "failed_stage_index": 3,
+  "formal_project_tac_ready": false,
+  "formal_upper_bound_eligible": false,
+  "input_sha256": {
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "preparation_audit": {
+    "binary_partition_audit": {
+      "architecture": "bess",
+      "formal_counts_passed": true,
+      "formal_counts_required": true,
+      "original_binary_count": 79057,
+      "original_binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+      "partition_complete_and_disjoint": true,
+      "passed": true,
+      "physical_binary_count": 26353,
+      "physical_binary_names_sha256": "d1923e2348fa5cf980b74b858d41ca6eeed66a44e208ad882000102b026e9e92",
+      "projected_component_names": [
+        "chp[0].fuel_code_bit",
+        "chp[1].fuel_code_bit"
+      ],
+      "projected_components_valid": true,
+      "projected_fuel_code_binary_count": 52704,
+      "projected_fuel_code_names_sha256": "79341c53213df2da3bd2aeaad00e13f6a60dbe2c8fbd777d3bfc6a5c9b471ae7"
+    },
+    "commit_block_coverage_audit": {
+      "block_hours": [
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        168,
+        48
+      ],
+      "exact_ordered_coverage_without_wraparound": true,
+      "formal_counts_passed": true,
+      "formal_counts_required": true,
+      "passed": true,
+      "period_count": 8784,
+      "stage_count": 53
+    },
+    "fuel_projection_dependency_audit": {
+      "active_objective_count": 1,
+      "allowed_code_constraint_components": [
+        "chp[0].fuel_code",
+        "chp[1].fuel_code"
+      ],
+      "allowed_flow_constraint_components": [
+        "chp[0].fuel_flow_definition",
+        "chp[1].fuel_flow_definition"
+      ],
+      "code_bad_occurrence_count": 0,
+      "code_bad_occurrence_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "flow_bad_occurrence_count": 0,
+      "flow_bad_occurrence_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "forbidden_code_constraint_count": 0,
+      "forbidden_code_constraint_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "forbidden_flow_constraint_count": 0,
+      "forbidden_flow_constraint_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fuel_code_variable_count": 52704,
+      "fuel_flow_used_only_by_definition_and_original_objective": true,
+      "fuel_flow_variable_count": 17568,
+      "fuel_or_emissions_cap_detected": false,
+      "objective_code_variable_count": 0,
+      "objective_fuel_flow_variable_count": 17568,
+      "passed": true,
+      "touched_code_constraint_components": [
+        "chp[0].fuel_code",
+        "chp[1].fuel_code"
+      ],
+      "touched_flow_constraint_components": [
+        "chp[0].fuel_flow_definition",
+        "chp[1].fuel_flow_definition"
+      ]
+    },
+    "guide_identity_audit": {
+      "binary_classified_count": 79057,
+      "binary_identity_passed": true,
+      "binary_names_sha256": "ca8eb40a1859b80f4ed0c91ddad110dee7a28f55e8ce5bec475e7d12f85b3d92",
+      "binary_seed_applied": false,
+      "continuous_partial_warmstart_applied": false,
+      "expected_guide_sha256": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+      "fractional_binary_value_count": 31120,
+      "guide_hash_required": true,
+      "guide_sha256": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+      "passed": true,
+      "values_applied_to_model": false,
+      "variable_count": 597318,
+      "variable_identity_passed": true,
+      "variable_names_sha256": "b6996a6d377ac667cb24fdfbb0f5b3c3100dee433966d4ab7ce18df5dd1bfae1"
+    },
+    "hamming_objective_added": false,
+    "original_constraint_identity": {
+      "active_constraint_count": 527053,
+      "active_constraint_expressions_sha256": "7969b2f47f5036ed014978017adc3e03aebc5c4a38bb75c1d76d579a7dec5ed9",
+      "active_constraint_names_sha256": "d67f933adef0ae4e20b3d5756c3a312fcc89ee32d392b2a25a4d0349342da9c9"
+    },
+    "original_economic_objective_retained": true,
+    "original_objective_identity": {
+      "active_objective_count": 1,
+      "active_objective_expressions_sha256": "6ed3cd64f12b83ce2d20e4107d0fd48acc4db327de0e70e8eadbd56e22376662",
+      "active_objective_names": [
+        "planning_cost"
+      ]
+    },
+    "passed": true,
+    "physical_time_layout_audit": {
+      "component_counts": {
+        "bess.charge_mode": 8784,
+        "bess.installed": 1,
+        "chp[0].online": 8784,
+        "chp[1].online": 8784
+      },
+      "constant_hourly_width": true,
+      "forbidden_physical_name_count": 0,
+      "forbidden_physical_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "formal_counts_passed": true,
+      "formal_counts_required": true,
+      "global_physical_binary_count": 1,
+      "global_physical_names": [
+        "bess.installed"
+      ],
+      "hourly_binary_count_per_period": 3,
+      "hourly_physical_binary_count": 26352,
+      "layout_complete_and_disjoint": true,
+      "passed": true,
+      "period_count": 8784,
+      "physical_binary_count": 26353,
+      "physical_names_sha256": "d1923e2348fa5cf980b74b858d41ca6eeed66a44e208ad882000102b026e9e92"
+    }
+  },
+  "provenance": {
+    "code_sha256": {
+      "capacity_planning.py": "c22adbdaa9fcd2b8947d3b19b0c59f9ad44c21417699bef5bf6cad436680eedb",
+      "components/chp.py": "ead644a19b5d26913e8211958e789ad37cd1b876685fdb31bd25111950afd296",
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d48_hamming_primal_recovery.py": "c82923d3e40ff93feefff62c98dd8aa75e96b76ecdd25b60863919d4b8e69c57",
+      "e0d49_physics_first_fuel_projection_primal_recovery.py": "9d2dd610a2d7e59e9b8d9631e676277b0d36077c7a40d3448889defc041b3b14",
+      "e0d50_full_year_coupled_physical_block_relax_and_fix.py": "3fa1a3e4e2934a8b8ce763841e13a2d37c3945fa9803aed7c1aebd6b70bb2934",
+      "e0d50_monitored_executor.py": "9b16c431be0fa57cb2b871410348241753c8f4e6fd2b83ae1de4910fb275c0a1",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d50_block_relax_and_fix.v1",
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "single_clean_candidate_model_build": true,
+  "solver_invoked": true,
+  "stage": "candidate",
+  "stage_count": 53,
+  "stage_result_sha256": {
+    "stage_00.json": "26f17de7ec26f89b2e8f6b201dff07e974ef45df6393a5acf54258acaddd25ba",
+    "stage_01.json": "cdc16ad11dbae3750e0284385ab185061df3ee141f93612a43987fbacaf31f41",
+    "stage_02.json": "d8a1df9f1685d6cf13a7260d1e5776923409f378caaa6b2a18665f2d28f99bcd",
+    "stage_03.json": "b65ef6b469c8847f4a1c2886e93c0967a9a893a38c128c59f061aa7167f22b9d"
+  },
+  "status": "block_path_no_incumbent",
+  "technical_ranking_permitted": false,
+  "total_solver_runtime_seconds": 703.3786935126409
+}

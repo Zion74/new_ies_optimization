@@ -1,0 +1,29 @@
+{
+  "artifact_sha256": {
+    "certificate": null,
+    "chunks": null,
+    "heartbeat": "f415f56267d5b0fa0a97d78dcc6c193d4d08d23f6fbd4112117ac4a0e7e3386e",
+    "log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "progress": "5f6983bd9cd8709f01c762b6373bcd1d18e1c28663d7620651b75b2d928b2b76",
+    "result": null
+  },
+  "available_memory_sample_count": 1750,
+  "hard_wall_enforced_by_parent": true,
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "minimum_available_memory_gib": 87.73542022705078,
+  "peak_phase_process_tree_rss_gib": 8.414146423339844,
+  "peak_stage_aggregate_rss_gib": 16.827327728271484,
+  "phase": "simplex_1",
+  "phase_runtime_seconds": 905.5154768228531,
+  "residual_process_group_detected": false,
+  "resource_gate_passed": false,
+  "return_code": -15,
+  "rss_sample_count": 1749,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.certificate_phase.execution",
+  "stage": "certificate",
+  "stage_runtime_seconds": 905.5175921982154,
+  "status": "interrupted_or_failed",
+  "stop_reason": "phase_hard_wall_reached:simplex_1",
+  "technical_ranking_permitted": false,
+  "termination_signal": "sigterm"
+}

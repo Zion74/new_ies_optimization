@@ -1,0 +1,150 @@
+{
+  "architecture": {
+    "bess": {
+      "architecture": "bess",
+      "audited_feasible_upper_bound_cny": null,
+      "candidate_status": "block_path_no_incumbent",
+      "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+      "failed_block_stage_index": 3,
+      "formal_project_tac_ready": false,
+      "guide_sha256": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+      "repair_status": null,
+      "runtime_seconds": 1218.7089260490611,
+      "schema_id": "tes_bess_boundary.e0d50_architecture_manifest.v1",
+      "stage_execution": {
+        "candidate": {
+          "active_residual_process_count": 0,
+          "architecture": "bess",
+          "available_memory_before_gib": 97.30170059204102,
+          "available_memory_sample_count": 2415,
+          "block_stage_artifact_sha256": {
+            "bess_candidate_stages/stage_00.json": "26f17de7ec26f89b2e8f6b201dff07e974ef45df6393a5acf54258acaddd25ba",
+            "bess_candidate_stages/stage_01.json": "cdc16ad11dbae3750e0284385ab185061df3ee141f93612a43987fbacaf31f41",
+            "bess_candidate_stages/stage_02.json": "d8a1df9f1685d6cf13a7260d1e5776923409f378caaa6b2a18665f2d28f99bcd",
+            "bess_candidate_stages/stage_03.json": "b65ef6b469c8847f4a1c2886e93c0967a9a893a38c128c59f061aa7167f22b9d"
+          },
+          "declared_artifact_sha256": {
+            "bess_candidate.csv.gz": null,
+            "bess_candidate.json": "8614391c0ba815080772274a0cf102a08dfe10deb6f876a56ae616b8654f0615",
+            "bess_candidate_progress.jsonl": "a02e3d7a3cbb20fd8ec535000252ecbc5e2145316bceb66ea8101d686697c909",
+            "bess_physical_snapshot.json": null
+          },
+          "hard_wall_enforced_by_parent": true,
+          "heartbeat_sha256": "ed70e5b6c351a9263ca73a58b33bedc42a38400dea8eae9355a3fb0374fc8777",
+          "last_block_progress": {
+            "event": "stage_failed",
+            "incumbent_captured": false,
+            "stage_count": 53,
+            "stage_index": 3,
+            "stage_result": "../results/e0d50_full_year_coupled_physical_block_relax_and_fix/bess_candidate_stages/stage_03.json",
+            "unix_time": 1784268475.7158191
+          },
+          "minimum_available_memory_gib": 93.73883438110352,
+          "peak_child_process_tree_rss_gib": 3.5815391540527344,
+          "peak_parent_child_aggregate_rss_gib": 3.6066818237304688,
+          "per_block_stage_hard_wall_enforced_by_parent": true,
+          "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+          "process_tree_rss_warning_triggered": false,
+          "python_version": "3.10.18",
+          "residual_termination_signal": null,
+          "resource_gate_passed": true,
+          "resource_thresholds": {
+            "aggregate_rss_stop_gib": 45.0,
+            "block_stage_hard_wall_seconds": 390.0,
+            "hard_wall_seconds": 21600.0,
+            "heartbeat_interval_seconds": 30.0,
+            "host_memory_reserve_gib": 30.0,
+            "monitor_interval_seconds": 0.5,
+            "process_tree_rss_warning_gib": 35.0
+          },
+          "result_sha256": "8614391c0ba815080772274a0cf102a08dfe10deb6f876a56ae616b8654f0615",
+          "return_code": 0,
+          "rss_sample_count": 2415,
+          "runtime_seconds": 1218.7048763195053,
+          "schema_id": "tes_bess_boundary.e0d50_stage_execution.v1",
+          "solver_log_sha256": "fb4e4040b6319cc9ba3a13424814e6b0d095c2a1f599026c65361f95512c65b9",
+          "stage": "candidate",
+          "status": "complete",
+          "stop_reason": null,
+          "termination_signal": null
+        }
+      },
+      "status": "block_path_no_incumbent",
+      "technical_ranking_permitted": false
+    }
+  },
+  "architecture_order": [
+    "bess"
+  ],
+  "artifact_sha256": {
+    "bess_candidate.json": "8614391c0ba815080772274a0cf102a08dfe10deb6f876a56ae616b8654f0615",
+    "bess_candidate.log": "fb4e4040b6319cc9ba3a13424814e6b0d095c2a1f599026c65361f95512c65b9",
+    "bess_candidate_execution.json": "ecf9591d8173c167400909b0aa79c4cbe7db052328322095b531a9ca2d766d44",
+    "bess_candidate_heartbeat.jsonl": "ed70e5b6c351a9263ca73a58b33bedc42a38400dea8eae9355a3fb0374fc8777",
+    "bess_candidate_progress.jsonl": "a02e3d7a3cbb20fd8ec535000252ecbc5e2145316bceb66ea8101d686697c909",
+    "bess_candidate_stages/stage_00.json": "26f17de7ec26f89b2e8f6b201dff07e974ef45df6393a5acf54258acaddd25ba",
+    "bess_candidate_stages/stage_01.json": "cdc16ad11dbae3750e0284385ab185061df3ee141f93612a43987fbacaf31f41",
+    "bess_candidate_stages/stage_02.json": "d8a1df9f1685d6cf13a7260d1e5776923409f378caaa6b2a18665f2d28f99bcd",
+    "bess_candidate_stages/stage_03.json": "b65ef6b469c8847f4a1c2886e93c0967a9a893a38c128c59f061aa7167f22b9d",
+    "bess_manifest.json": "ac8c9522afb23da6213bf88b3023e24d597550b9682abd38723325053efd8e56"
+  },
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "engineering_numerical_feasibility_only": true,
+  "formal_input_sha256": {
+    "d40_gate_a": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+    "d41_bess_r1_guide": "2d03ab0ae229583bbf46e3ebdd84ab0924627d7ac20e2af68dad42ff11de4614",
+    "d41_gate_a": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+    "d46_formal_manifest": "8693722ad362b2f604f08b3ebd2bfa2c45f085e42c2ece6cf334c097db80afa9",
+    "d46_postmortem_bundle": "c74a6943570690ace8573a0dee2f65aa763d0371854e01625337a46244a35b58",
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "service": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "formal_project_tac_ready": false,
+  "gate_a": {
+    "execution_sha256": "35827275786f11aaaf6038f1d9cbbdff2141e3f144458df39d761b05e055cca0",
+    "git_commit": "04e17643ea06efe67b60804202e18fca7e2ce2f5",
+    "manifest_sha256": "d74891b9c9d8499918f0bdddfd25cf4badf0af09ad76504898fc97aaa199eef7",
+    "passed": true
+  },
+  "predecessor_manifest_sha256": {
+    "d48_r1_formal_manifest": "ca0248805ce72d1b25dd69a0cf20c5c68dee8b60a5d0a2d575a192f3e8455165",
+    "d49_formal_manifest": "0d66f06defcc8ecabe247bc7eb38c3f9e7f457d41dac82927295f54b0ad62a14"
+  },
+  "provenance": {
+    "code_sha256": {
+      "capacity_planning.py": "c22adbdaa9fcd2b8947d3b19b0c59f9ad44c21417699bef5bf6cad436680eedb",
+      "components/chp.py": "ead644a19b5d26913e8211958e789ad37cd1b876685fdb31bd25111950afd296",
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d48_hamming_primal_recovery.py": "c82923d3e40ff93feefff62c98dd8aa75e96b76ecdd25b60863919d4b8e69c57",
+      "e0d49_physics_first_fuel_projection_primal_recovery.py": "9d2dd610a2d7e59e9b8d9631e676277b0d36077c7a40d3448889defc041b3b14",
+      "e0d50_full_year_coupled_physical_block_relax_and_fix.py": "3fa1a3e4e2934a8b8ce763841e13a2d37c3945fa9803aed7c1aebd6b70bb2934",
+      "e0d50_monitored_executor.py": "9b16c431be0fa57cb2b871410348241753c8f4e6fd2b83ae1de4910fb275c0a1",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "rational_exact_feasibility_certificate": false,
+  "resource_contract": {
+    "aggregate_rss_stop_gib": 45.0,
+    "block_stage_count": 53,
+    "block_stage_hard_wall_seconds": 390.0,
+    "block_stage_soft_time_limit_seconds": 360.0,
+    "candidate_total_hard_wall_seconds": 21600.0,
+    "heartbeat_interval_seconds": 30.0,
+    "host_memory_reserve_gib": 30.0,
+    "process_tree_rss_warning_gib": 35.0,
+    "repair_hard_wall_seconds": 1500.0,
+    "threads_per_stage": 12,
+    "total_hard_wall_seconds": 23400.0
+  },
+  "runtime_seconds": 1218.7134410617873,
+  "schema_id": "tes_bess_boundary.e0d50_formal_manifest.v1",
+  "status": "block_path_no_incumbent",
+  "successful_architecture_count": 0,
+  "technical_ranking_permitted": false,
+  "tes_or_hybrid_executed": false
+}

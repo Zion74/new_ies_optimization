@@ -1,0 +1,32 @@
+{
+  "architecture": "tes",
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "d40_gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "d41_gate_a_manifest_sha256": "50240e7ae557afa5633b29904585f1c1297a527343e467ce76d7766ce0177937",
+  "error_message": "D46 fallback seed is forbidden outside BESS",
+  "error_type": "ValueError",
+  "formal_project_tac_ready": false,
+  "formal_upper_bound_eligible": false,
+  "input_sha256": {
+    "heat": "a89d3654600eac53768529ad9ef6d304b7d756783359fc1f1db95fd2bd4c709e",
+    "price_basis_tree": "a01eb224bccbf27fdf61d11fe440a73ce45ef085f6973da6b07146be2d704cb3",
+    "vre": "515892a944dacf75c4bae3f41f008b01924f30dbd9b004d132afbdb7c0e25b6f"
+  },
+  "provenance": {
+    "code_sha256": {
+      "e0d40_full_year_compute_gate.py": "9d722dcb8dd182033e52727637ad20bdc4fab97ef423251f65c3fad3e2b10877",
+      "e0d40_gate_b_solver.py": "2e4c994c5877da60bcf144ae20ad41f8e7bc281612a1e3d4b77b8f137cb84aca",
+      "e0d41_strict_full_year_decomposition.py": "c7f45f8c071bb92c6cf7576a76bed71b71e606b7239881cb8baac09b195d2f1e",
+      "e0d46_full_year_feasible_upper_bound_repair.py": "c69ebf4ea5fc50c9fd7368b4181dbb2eb212e6a4ea6bdb65d581ab3fdcee7975",
+      "e0d46_monitored_executor.py": "121600f3bb8088802d117c7808b3af1bf65b69e3797bcf0dd7ea7b64e175a0a8",
+      "planning_model.py": "fd894fbba0c5aba6cd50f9afb85088b6a9ffb3bad8efb66f1261d620e8bc90e2"
+    }
+  },
+  "representative_period_input_used": false,
+  "schema_id": "tes_bess_boundary.e0d46_feasible_upper_bound.v1",
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95",
+  "solver_invoked": false,
+  "stage": "candidate",
+  "status": "no_candidate_incumbent",
+  "technical_ranking_permitted": false
+}

@@ -1,0 +1,37 @@
+{
+  "architecture_status": {
+    "bess": {
+      "canonical_result_created": false,
+      "classification": "monolithic_not_viable",
+      "execution_sha256": "1e0cffdec05f650f6d2d06fe12f0061ba12480264df91702891806b099dd115a",
+      "intervention_sha256": "76b0ff3bcc41f246e1dfac1096cbb97abc2fc8cc710e8e28600cb796547568c5",
+      "resource_gate_passed": true,
+      "runtime_seconds": 4527.394683837891
+    },
+    "hybrid": {
+      "classification": "not_executed_after_route_failure",
+      "formal_case_started": false
+    },
+    "tes": {
+      "classification": "not_executed_after_route_failure",
+      "formal_case_started": false
+    }
+  },
+  "compiler_generated": false,
+  "d40_classification": "monolithic_not_viable",
+  "d40_full_year_monolithic_route_passed": false,
+  "decision_basis": "the_preregistered_weakest_case_rule_cannot_be_recovered_after_the_bess_case_is_monolithic_not_viable",
+  "formal_project_tac_ready": false,
+  "gate_a_manifest_sha256": "23e0831ed017ca794a73b897196495079db3ace847fe840d51c1fa60af0de577",
+  "manual_evidence_summary": true,
+  "next_route": "preregister_strict_full_year_solver_strengthening_or_decomposition_with_parent_hard_wall_clock_finite_master_bounds_and_annual_service_conservation",
+  "representative_period_formal_evidence_allowed": false,
+  "remaining_case_stop_reason": "continuing_tes_and_hybrid_under_the_known_missing_parent_hard_wall_clock_cannot_change_the_d40_weakest_case_decision_and_would_consume_formal_single_run_opportunities_under_a_defective_executor",
+  "schema_id": "tes_bess_boundary.e0d40_gate_b_route_decision.v1",
+  "scientific_claims": {
+    "bess_physical_infeasibility_proven": false,
+    "capacity_or_cost_results_available": false,
+    "technology_ranking_allowed": false
+  },
+  "service_contract_sha256": "1752dd232bc309592d165199a90a0c10fe56ac526cf91762e45139193aca6c95"
+}

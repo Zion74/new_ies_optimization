@@ -19,6 +19,7 @@ env/
 
 # Results (too large for git, regenerate locally)
 Results/
+DesignResults/
 Population Info/
 
 # Gurobi license

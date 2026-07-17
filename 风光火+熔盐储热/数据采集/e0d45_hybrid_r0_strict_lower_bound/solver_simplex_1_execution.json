@@ -1,0 +1,28 @@
+{
+  "artifact_sha256": {
+    "heartbeat": "a0e42ed1912731e1ccb454def06ba7f191c6d8454883d272067adcd21a92a9a0",
+    "log": "bea7385d9c0512bd574d1ed2236e8699e110f7dc9c689e1f680bf0946bba3322",
+    "progress": "ed2a1dc35770c0a2a4aede1f863ebd798460c13938bc99e30603a8b4c51b95ff",
+    "result": "f8a03dad990c542aeceadc1b08a1bf356202ee1a13b016f7718b8baf5585a75c",
+    "solution": "6f4d0276ae62a58ee8053f0be60373068c883782b113c15455fdf2ade3a5c25c"
+  },
+  "available_memory_sample_count": 1786,
+  "hard_wall_enforced_by_parent": true,
+  "lp_sha256": "756014eca3a93581a09f0abf99b42fd52e73a94694d532798d60290d7ddf740a",
+  "minimum_available_memory_gib": 95.74405288696289,
+  "peak_phase_process_tree_rss_gib": 0.8210372924804688,
+  "peak_stage_aggregate_rss_gib": 1.6270408630371094,
+  "phase": "simplex_1",
+  "phase_runtime_seconds": 903.9524558577687,
+  "residual_process_group_detected": false,
+  "resource_gate_passed": true,
+  "return_code": 0,
+  "rss_sample_count": 1192,
+  "schema_id": "tes_bess_boundary.e0d45_hybrid_r0_strict_lower_bound.v1.solver_snapshot.execution",
+  "stage": "solver",
+  "stage_runtime_seconds": 903.9547508209944,
+  "status": "complete",
+  "stop_reason": null,
+  "technical_ranking_permitted": false,
+  "termination_signal": null
+}

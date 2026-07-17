@@ -1,0 +1,38 @@
+{
+  "canonical_files": {
+    "e0d21_shadow_cost_stress.csv": {
+      "rows": 10,
+      "sha256": "6c17825508a50d4eb351776f3ef410cb9ac1859d45f983acef96233e76572334"
+    },
+    "e0d21_shadow_cost_thresholds.csv": {
+      "rows": 10,
+      "sha256": "e56e1ee00925237f9b9137eed160662986a62f225065181630229daf42930ae9"
+    }
+  },
+  "interval_contract": {
+    "adjusted_headroom": "B_shadow=[L+sum(s_lower),U+sum(s_upper)]",
+    "fuel_headroom": "B=[L,U] from E0-D-19",
+    "robustly_negative": "adjusted upper bound < 0",
+    "robustly_positive": "adjusted lower bound > 0",
+    "signed_account_effect": "positive increases TES ownership headroom; negative decreases it",
+    "unallocated_adverse_stress": "B_adverse=[L-A,U-A] for A>=0"
+  },
+  "schema": "tes_bess_boundary.e0d21_shadow_cost_robustness.v1",
+  "scientific_boundary": {
+    "account_threshold_assumption": "single-account rows hold all other omitted accounts at zero",
+    "account_values_are_estimates": false,
+    "allowed_use": "sensitivity_only",
+    "claim": "minimum adverse omitted-cost budget needed to erase the fuel-only TES ownership headroom; not a project cost estimate",
+    "d20_formal_portfolio_ready": false,
+    "formal_tac": false
+  },
+  "source": {
+    "e0d19_same_pcc_service.csv": {
+      "sha256": "4b07e91b010fa9d5aa525f196037bbf0c93bae16ac74035f6ca32292e36cf786"
+    },
+    "manifest.json": {
+      "schema": "tes_bess_boundary.e0d19_same_pcc_service.v2",
+      "sha256": "c112c210aa9a86edfcb116f614c1f4a5da14f314a128e31ee329fbefd65aab63"
+    }
+  }
+}

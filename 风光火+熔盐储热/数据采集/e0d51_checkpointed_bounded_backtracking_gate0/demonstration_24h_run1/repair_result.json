@@ -1,0 +1,207 @@
+{
+  "binary_fixing_audit": {
+    "fixed_binary_snapshot_sha256": "20963f748f973a46b2af7d31c5e6417b1e5b1cb36e2ca60963d9fbb71775aa3f",
+    "fixed_binary_variable_count": 73,
+    "original_binary_variable_count": 73,
+    "passed": true,
+    "unfixed_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unfixed_binary_variable_count": 0
+  },
+  "candidate_artifact_sha256": "8737e17905c8328a67748aaec38e550a4cf46be4a849b35aa72ee33cdd223b10",
+  "candidate_complete_physical_block_path_required": true,
+  "candidate_exact_fuel_lift_required": true,
+  "claim_scope": "controlled_public_cost_sensitivity_not_formal_project_tac",
+  "formal_8784h_optimization_invoked": false,
+  "formal_project_tac_ready": false,
+  "gate0_shortened_horizon_only": true,
+  "original_capacity_boundary_audit_before_solve": {
+    "architecture": "bess",
+    "bounds": {
+      "bess.charge_power_capacity_mw": {
+        "fixed": false,
+        "lower": 0.0,
+        "passed": true,
+        "upper": 100.0
+      },
+      "bess.discharge_power_capacity_mw": {
+        "fixed": false,
+        "lower": 0.0,
+        "passed": true,
+        "upper": 100.0
+      },
+      "bess.energy_capacity_mwh": {
+        "fixed": false,
+        "lower": 0.0,
+        "passed": true,
+        "upper": 2400.0
+      },
+      "bess.pcs_power_capacity_mw": {
+        "fixed": false,
+        "lower": 0.0,
+        "passed": true,
+        "upper": 100.0
+      }
+    },
+    "continuous_capacity_variable_count": 4,
+    "d46_capacity_anchor_applied": false,
+    "expected_continuous_capacity_variable_count": 4,
+    "fixed_continuous_capacity_variable_count": 0,
+    "passed": true
+  },
+  "runtime_seconds": 0.07486412301659584,
+  "schema_id": "tes_bess_boundary.e0d51_original_cost_repair.v1",
+  "solution_artifact": {
+    "all_values_finite": true,
+    "binary_names_sha256": "a53558e55897ac1c17aea86afd8fe758fc533eeb60398152031b67bca4f36a6d",
+    "binary_variable_count": 73,
+    "candidate_only": true,
+    "file_name": "repaired_solution.csv.gz",
+    "file_sha256": "4ce7b215cdee7333abe9d36822eee1256aead7a1f5711b063aa2b880ca7a9614",
+    "formal_upper_bound_eligible": false,
+    "schema_id": "tes_bess_boundary.e0d46_deterministic_seed.v1",
+    "variable_names_sha256": "7aa7593cea98ed4c5a874762eb2aeb41a584f0900b5ff986706e6ae76d6563af",
+    "variable_row_count": 534
+  },
+  "solution_audit": {
+    "audited_feasible_upper_bound_cny": "944784784.8362548352",
+    "bounds_and_constraints": {
+      "absolute_tolerance": 1e-07,
+      "evaluated_constraint_count": 615,
+      "evaluated_variable_count": 534,
+      "max_constraint_violation": 4.149569576838985e-12,
+      "max_variable_bound_violation": 0.0,
+      "nonfinite_constraint_count": 0,
+      "nonfinite_variable_count": 0,
+      "passed": true,
+      "worst_constraint": "planning_pcc_balance[19]",
+      "worst_variable": null
+    },
+    "capacity_policy": {
+      "continuous_capacity_values": {
+        "bess.charge_power_capacity_mw": 0.0,
+        "bess.discharge_power_capacity_mw": 0.0,
+        "bess.energy_capacity_mwh": 0.0,
+        "bess.pcs_power_capacity_mw": 5.0
+      },
+      "continuous_capacity_variable_count": 4,
+      "d46_capacity_anchor_applied": false,
+      "fixed_continuous_capacity_count": 0,
+      "fixed_continuous_capacity_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "invalid_continuous_capacity_count": 0,
+      "invalid_continuous_capacity_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_capacity_bounds_retained": true,
+      "passed": true
+    },
+    "engineering_numerical_feasibility_only": true,
+    "fixed_binaries": {
+      "binary_names_sha256": "a53558e55897ac1c17aea86afd8fe758fc533eeb60398152031b67bca4f36a6d",
+      "binary_variable_count": 73,
+      "invalid_binary_count": 0,
+      "invalid_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true,
+      "unfixed_binary_count": 0,
+      "unfixed_binary_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "named_constraint_groups": {
+      "groups": {
+        "bess_throughput": {
+          "evaluated_constraint_count": 1,
+          "max_absolute_violation": 0.0,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": null
+        },
+        "capacity_linkage_and_duration": {
+          "evaluated_constraint_count": 53,
+          "max_absolute_violation": 0.0,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": null
+        },
+        "chp_transition_and_ramp": {
+          "evaluated_constraint_count": 24,
+          "max_absolute_violation": 0.0,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": null
+        },
+        "pcc_and_heat_balances": {
+          "evaluated_constraint_count": 72,
+          "max_absolute_violation": 4.149569576838985e-12,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": "planning_pcc_balance[19]"
+        },
+        "storage_cycles": {
+          "evaluated_constraint_count": 1,
+          "max_absolute_violation": 0.0,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": null
+        },
+        "storage_mutual_exclusion": {
+          "evaluated_constraint_count": 48,
+          "max_absolute_violation": 0.0,
+          "nonfinite_constraint_count": 0,
+          "passed": true,
+          "required": true,
+          "tolerance": 1e-07,
+          "worst_constraint": null
+        }
+      },
+      "passed": true
+    },
+    "named_constraint_groups_required": true,
+    "objective": {
+      "components": {
+        "annual_bess_cycle_cost_cny": 0.0,
+        "annual_bess_variable_om_cost_cny": 0.0,
+        "annual_operating_cost_cny": 942447573.6803164,
+        "annual_storage_capacity_cost_cny": 2337211.155938436
+      },
+      "highs_objective_value_cny": 944784784.8362551,
+      "model_minus_highs_objective_cny": -2.384185791015625e-07,
+      "model_objective_cny": 944784784.8362548,
+      "passed": true,
+      "recomposed_objective_cny": 944784784.8362548,
+      "recomposition_difference_cny": 0.0,
+      "solver_objective_match": true,
+      "tolerance_cny": 0.09447847848362549
+    },
+    "passed": true,
+    "rational_exact_feasibility_certificate": false,
+    "service": {
+      "annual_curtailment_mwh": 0.0,
+      "annual_pcc_export_mwh": 4035354.738554195,
+      "curtailment_ceiling_mwh": 339569.90645758656,
+      "curtailment_ceiling_violation_mwh": 0.0,
+      "curtailment_tolerance_mwh": 1e-06,
+      "passed": true,
+      "pcc_export_average_power_residual_mw": 1.0602488326678945e-13,
+      "pcc_export_residual_mwh": 9.313225746154785e-10,
+      "pcc_export_target_mwh": 4035354.738554194,
+      "pcc_export_tolerance_mw": 1e-08
+    },
+    "solver_primal": {
+      "highs_objective_value_cny": 944784784.8362551,
+      "max_primal_infeasibility": 4.149569576838985e-12,
+      "num_primal_infeasibilities": 0,
+      "passed": true,
+      "tolerance": 1e-08
+    }
+  },
+  "solution_loaded": true,
+  "status": "audited_feasible_upper_bound_recovered",
+  "technical_ranking_permitted": false,
+  "termination_condition": "optimal"
+}

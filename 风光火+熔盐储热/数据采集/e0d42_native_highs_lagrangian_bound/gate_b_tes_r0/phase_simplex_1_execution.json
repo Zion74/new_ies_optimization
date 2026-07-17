@@ -1,0 +1,93 @@
+{
+  "artifact_sha256": {
+    "basis": null,
+    "basis_meta": null,
+    "certificate": null,
+    "heartbeat": "fa000cd3b7cc5a8563e559893a0b5d666d51d07adb7e50232a553ab7c3a53aab",
+    "progress": "fea224b538e5a349297dcedb03a3b40f84755a1a2a20dd19de4dc09cba6f3acc",
+    "result": null,
+    "solution": "bec595dfbc6b878659f588ed100d08c7368e55e4d89f91bafa22e49a9163b58b",
+    "solver_log": "da62c06847db4063fcbdac74be13fb7760e8e2c570da23ff554acb1c3ecbebde"
+  },
+  "available_memory_before_gib": 97.28763580322266,
+  "available_memory_sample_count": 1424,
+  "formal_lower_bound_eligible": false,
+  "formal_phase_plan": [
+    {
+      "checkpoint_index": null,
+      "key": "ipx",
+      "parent_hard_wall_seconds": 1020.0,
+      "prior_simplex_basis_required": false,
+      "soft_wall_seconds": 900.0,
+      "solver_name": "ipx"
+    },
+    {
+      "checkpoint_index": 1,
+      "key": "simplex_1",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": false,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 2,
+      "key": "simplex_2",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 3,
+      "key": "simplex_3",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    },
+    {
+      "checkpoint_index": 4,
+      "key": "simplex_4",
+      "parent_hard_wall_seconds": 720.0,
+      "prior_simplex_basis_required": true,
+      "soft_wall_seconds": 600.0,
+      "solver_name": "simplex"
+    }
+  ],
+  "hard_wall_enforced_by_parent": true,
+  "lp_archive_sha256": "dd362f179fd00052ecbca4c25d5d8d285811fbdd5700fa2d4adb49a2f7626776",
+  "lp_sha256": "c2049cacd4b32aef3206998d2d47e792c4ad024aa72c80eaba9722b312fa5da5",
+  "minimum_available_memory_gib": 96.39007949829102,
+  "peak_child_process_tree_rss_gib": 0.9142303466796875,
+  "peak_parent_child_aggregate_rss_gib": 0.9634666442871094,
+  "phase": "simplex_1",
+  "phase_runtime_seconds": 720.3129235729575,
+  "phase_spec": {
+    "checkpoint_index": 1,
+    "key": "simplex_1",
+    "parent_hard_wall_seconds": 720.0,
+    "prior_simplex_basis_required": false,
+    "soft_wall_seconds": 600.0,
+    "solver_name": "simplex"
+  },
+  "platform": "Linux-5.15.0-47-generic-x86_64-with-glibc2.35",
+  "python_version": "3.10.18",
+  "resource_gate_passed": false,
+  "resource_thresholds": {
+    "aggregate_rss_limit_gib": 75.0,
+    "heartbeat_interval_seconds": 5.0,
+    "host_memory_reserve_gib": 15.0,
+    "monitor_interval_seconds": 0.5,
+    "process_tree_rss_limit_gib": 35.0,
+    "termination_grace_seconds": 30.0,
+    "total_lp_parent_wall_seconds": 4500.0
+  },
+  "return_code": -15,
+  "rss_sample_count": 1424,
+  "schema_id": "tes_bess_boundary.e0d42_gate_b_phase.v1.execution",
+  "status": "interrupted_or_failed",
+  "stop_reason": "phase_parent_hard_wall_reached",
+  "technical_ranking_permitted": false,
+  "termination_signal": "sigterm",
+  "total_elapsed_seconds_after": 1894.2158432155848
+}
